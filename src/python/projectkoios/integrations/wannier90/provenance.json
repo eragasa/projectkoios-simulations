@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "component": "wannier90-native-artifact-parsers",
+  "donor": {
+    "repository": "https://github.com/eragasa/ksdft2effmass",
+    "commit": "7bd913151f7e61ed2bdba593df920be36573b502",
+    "root_tree": "4f7ca69afbd1381c0cb736b0efe6b8ac5431acf6",
+    "source_namespace": "ksdft2effmass.integration.wannier90",
+    "target_namespace": "projectkoios.integrations.wannier90",
+    "implementation_tree": "1b5c6cd4a46f2fe70859c3aa1fded938a497e4dc",
+    "test_tree": "e5093059c62650e2afe14dccd80f25544e05c1df",
+    "license": "Apache-2.0",
+    "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+  },
+  "source_files": [
+    ["python/src/ksdft2effmass/integration/wannier90/__init__.py","f5d62f7cf4d41a7351f543908cce9499cd9e8b28"],
+    ["python/src/ksdft2effmass/integration/wannier90/artifacts.py","c9ec6533846df8fd099ec6df3a6e61d9de6de5c7"],
+    ["python/src/ksdft2effmass/integration/wannier90/hamiltonian_blocks.py","74f1c111162467bb83e323cf11eebf779951f32c"],
+    ["python/src/ksdft2effmass/integration/wannier90/interface_data.py","f047240f54d90f8c1eb4257a8a06ddb81d93ebdb"],
+    ["python/src/ksdft2effmass/integration/wannier90/localization.py","c8ad5ab129a2e027066a3583d17fc1ec590b188d"],
+    ["python/src/ksdft2effmass/integration/wannier90/neighbor_lists.py","06f10483e6264ea6bc949e31344b3fcd981584cb"],
+    ["python/src/ksdft2effmass/integration/wannier90/unitary_matrices.py","6b9eef22b55794cda33c328ecb50adaa4a5f8a06"]
+  ],
+  "test_files": [
+    ["resources/native-artifact-correlator-first.txt","9c59e24b8393179a5d712de4f990178df5734d99"],
+    ["resources/native-artifact-correlator-second.txt","e019be006cf33489e2d0177a3837a2384eddebc5"],
+    ["resources/periodic-test-ownership.json","1b251200428a0bf10504b95927ea714dec73b93e"],
+    ["test__Wannier90EigenvalueData.py","4493268cfb476235c9b3c9a75d5da94323a95f06"],
+    ["test__Wannier90EigenvalueParser.py","64be65bdbf4d7adaaae931f9f1d285e1428850c0"],
+    ["test__Wannier90HamiltonianBlockData.py","57b22f4eba1d50cfbf276669130d73f0895fbbd8"],
+    ["test__Wannier90HamiltonianBlockParser.py","9057c3f7829f56facde6d00a99af6cff263f86cb"],
+    ["test__Wannier90LocalizationData.py","a8d02f816cc54006da79bb1178633819606d5193"],
+    ["test__Wannier90LocalizationParser.py","77920996c587cbb4279ab38e1b42578f0c428e73"],
+    ["test__Wannier90NativeArtifactCorrelator.py","dbdd172d40fbfc3c313cf95d8e0a134a14a094fd"],
+    ["test__Wannier90NeighborListData.py","7c3c2ac9f96f02e53ba98e21e69461167d7cac60"],
+    ["test__Wannier90NeighborListParser.py","b4510045e7d80914f19a330a0386c230b9155cb8"],
+    ["test__Wannier90NeighborOverlapData.py","15a6e6e71b706847dfaa243c475c9e37e60c03b3"],
+    ["test__Wannier90NeighborOverlapParser.py","00f9ce0585e1e45957f20fc3f247936c1ceafa5a"],
+    ["test__Wannier90ProjectionData.py","33e8b59949f8d814334a0c004f46470a2274ea3e"],
+    ["test__Wannier90ProjectionParser.py","e3bf63489934b4236ea562fe46c6c81a73d36028"],
+    ["test__Wannier90UnitaryMatrixData.py","348e3b8e6d8ab39865ab44774252396ce4fa1b16"],
+    ["test__Wannier90UnitaryMatrixParser.py","fd54e7d96c375d58363dd69e93233e0c198b942c"]
+  ],
+  "adaptations": [
+    "namespace rewrite",
+    "quantity imports redirected to the exact PhysKit distribution",
+    "native-dimension, inventory, numeric, unit-label, and resource-bound corrections",
+    "additional adversarial and wheel-provenance tests"
+  ],
+  "consumer_closure": [
+    {"path":"python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90NativeArtifactWorkflow.py","blob":"15f83f6895102931c7c1f9a3a69eadffff34d3d9","ownership":"campaign workflow; excluded"},
+    {"path":"python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90VerifiedNativeWorkflow.py","blob":"e3799be8926dad6c13ac09a9f00907c7f67aa68f","ownership":"campaign workflow and Wilson composition; excluded"},
+    {"path":"python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90WilsonVerifier.py","blob":"9abab30964b4985647b8f917e1da17648207d2f6","ownership":"Wilson verification; excluded"},
+    {"path":"python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/resources/native-artifact-correlation-fixture.json","blob":"8b508c43979e6442980b80c9a7edf306b32e33f8","ownership":"campaign/Wilson fixture; excluded; parser-composition assertion ported independently"}
+  ],
+  "physkit": {
+    "repository": "https://github.com/eragasa/physkit",
+    "commit": "97032f16c9125aa124750508f8513cca9f6dab02",
+    "tree": "3a323d2436d4b5e86fe312e810e03c5d21ce37b3",
+    "quantities_blob": "686d075852ed01aab0a8d74fdec1be5a440c075d",
+    "distribution": "physkit==0.1.0",
+    "license": "MIT",
+    "license_sha256": "0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410"
+  }
+}

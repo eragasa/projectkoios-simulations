@@ -4,16 +4,17 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from ._parsing import BoundedParser, decode_text, positive_dimension
+
 
 @dataclass(frozen=True, slots=True)
 class Wannier90NeighborListData:
-    """Retain ordered one-based native neighbor records and reciprocal shifts."""
+    """Retain a normalized ordered one-based native neighbor inventory."""
 
     neighbor_count: int
     records: tuple[tuple[int, int, int, int, int], ...]
 
     def __post_init__(self) -> None:
-        """Validate positive indices and complete equal-size neighbor groups."""
         if type(self.neighbor_count) is not int:
             raise TypeError("neighbor_count must be a built-in int")
         if self.neighbor_count <= 0:
@@ -22,6 +23,7 @@ class Wannier90NeighborListData:
             raise TypeError("records must be a nonempty tuple")
         if len(self.records) % self.neighbor_count != 0:
             raise ValueError("record count must be divisible by neighbor_count")
+        kpoint_count = len(self.records) // self.neighbor_count
         for record in self.records:
             if (
                 not isinstance(record, tuple)
@@ -29,49 +31,52 @@ class Wannier90NeighborListData:
                 or any(type(value) is not int for value in record)
             ):
                 raise TypeError("neighbor records must contain five built-in integers")
-            if record[0] <= 0 or record[1] <= 0:
-                raise ValueError(
-                    "native k-point indices must be one-based and positive"
-                )
-        kpoint_count = len(self.records) // self.neighbor_count
-        counts = tuple(
-            sum(record[0] == kpoint for record in self.records)
-            for kpoint in range(1, kpoint_count + 1)
+            if not (1 <= record[0] <= kpoint_count):
+                raise ValueError("source k-point index lies outside inferred count")
+            if not (1 <= record[1] <= kpoint_count):
+                raise ValueError("target k-point index lies outside inferred count")
+        expected_sources = tuple(
+            source
+            for source in range(1, kpoint_count + 1)
+            for _ in range(self.neighbor_count)
         )
-        if any(count != self.neighbor_count for count in counts):
-            raise ValueError("each first k point must own neighbor_count records")
+        if tuple(record[0] for record in self.records) != expected_sources:
+            raise ValueError(
+                "each first k point must own neighbor_count records "
+                "in normalized native order"
+            )
+        if len(set(self.records)) != len(self.records):
+            raise ValueError("neighbor inventory contains a duplicate record")
 
     @property
     def kpoint_count(self) -> int:
-        """Return the inferred reciprocal-point count."""
         return len(self.records) // self.neighbor_count
 
 
-class Wannier90NeighborListParser:
-    """Parse the ``begin nnkpts`` block from caller-supplied UTF-8 bytes."""
-
-    __slots__ = ()
+class Wannier90NeighborListParser(BoundedParser):
+    """Parse exactly one bounded ``begin nnkpts`` block."""
 
     def execute(self, payload: bytes) -> Wannier90NeighborListData:
-        """Return the declared neighbor count and ordered five-integer records."""
-        if type(payload) is not bytes:
-            raise TypeError("payload must be bytes")
-        try:
-            lines = tuple(line.strip() for line in payload.decode("utf-8").splitlines())
-        except UnicodeDecodeError as error:
-            raise ValueError("nnkp payload must be valid UTF-8") from error
-        try:
-            begin = lines.index("begin nnkpts")
-            end = lines.index("end nnkpts", begin + 1)
-        except ValueError as error:
-            raise ValueError("nnkp payload lacks one complete nnkpts block") from error
-        block = tuple(line for line in lines[begin + 1 : end] if line)
+        text = decode_text(payload, "nnkp", self.limits)
+        lines = tuple(line.strip() for line in text.splitlines())
+        begins = tuple(
+            index for index, line in enumerate(lines) if line == "begin nnkpts"
+        )
+        ends = tuple(index for index, line in enumerate(lines) if line == "end nnkpts")
+        if len(begins) != 1 or len(ends) != 1 or ends[0] <= begins[0]:
+            raise ValueError("nnkp payload lacks exactly one complete nnkpts block")
+        block = tuple(line for line in lines[begins[0] + 1 : ends[0]] if line)
         if not block:
             raise ValueError("nnkpts block must be nonempty")
         try:
-            neighbor_count = int(block[0])
+            raw_neighbor_count = int(block[0])
         except ValueError as error:
             raise ValueError("nnkpts neighbor count must be an integer") from error
+        neighbor_count = positive_dimension(
+            raw_neighbor_count, "neighbor_count", self.limits
+        )
+        if len(block) - 1 > self.limits.maximum_records:
+            raise ValueError("neighbor record count exceeds maximum_records")
         records: list[tuple[int, int, int, int, int]] = []
         for line in block[1:]:
             fields = line.split()
@@ -82,4 +87,7 @@ class Wannier90NeighborListParser:
             except ValueError as error:
                 raise ValueError("nnkpts entry must contain integers") from error
             records.append((values[0], values[1], values[2], values[3], values[4]))
+        if not records or len(records) % neighbor_count:
+            raise ValueError("record count must be divisible by neighbor_count")
+        positive_dimension(len(records) // neighbor_count, "kpoint_count", self.limits)
         return Wannier90NeighborListData(neighbor_count, tuple(records))

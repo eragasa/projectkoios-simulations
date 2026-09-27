@@ -5,18 +5,26 @@ stored by PhysKit as immutable binary64 or complex128 NumPy arrays.
 
 | Native artifact | Parser | Record | Preserved structure |
 | --- | --- | --- | --- |
-| `.eig` | `Wannier90EigenvalueParser` | `Wannier90EigenvalueData` | one-based indexed complete table |
-| `.amn` | `Wannier90ProjectionParser` | `Wannier90ProjectionData` | declared dimensions and ordered k-point matrices |
+| `.eig` | `Wannier90EigenvalueParser` | `Wannier90EigenvalueData` | one-based complete table in mandatory native band/k-point record order |
+| `.amn` | `Wannier90ProjectionParser` | `Wannier90ProjectionData` | `(band_count, projection_count)` matrices at ordered k points |
 | `.mmn` | `Wannier90NeighborOverlapParser` | `Wannier90NeighborOverlapData` | neighbor headers, reciprocal shifts, column-major matrix entries |
 | `.nnkp` | `Wannier90NeighborListParser` | `Wannier90NeighborListData` | one-based native record order and grouping |
-| `.wout` | `Wannier90LocalizationParser` | `Wannier90LocalizationData` | final centers, spreads, Omega labels, maximum converged iteration |
-| `_u.mat` | `Wannier90UnitaryMatrixParser` | `Wannier90UnitaryMatrixData` | fractional k-point order and column-major matrices |
+| `.wout` | `Wannier90LocalizationParser` | `Wannier90LocalizationData` | final centers/spreads, standard Omega labels, source unit label, reported iterations |
+| `_u.mat` | `Wannier90UnitaryMatrixParser` | `Wannier90UnitaryMatrixData` | fractional k-point order and square `(num_wann, num_wann)` matrices |
 | `_hr.dat` | `Wannier90HamiltonianBlockParser` | `Wannier90HamiltonianBlockData` | representative order, degeneracies, indexed complex blocks |
 
-Energy and length units are explicit caller-supplied `ModelSystemUnit` values;
-unitless native matrices use `Unitless`. The parsers do not infer, convert, or
-normalize units. Floating-point adaptation preserves the donor's binary64 and
-complex128 semantics, including input order where the format carries order.
+Energy units are explicit caller-supplied `ModelSystemUnit` values. WOUT length
+labels `Ang` and `Bohr` are retained and must agree with the caller unit; no
+conversion is performed. Unitless native matrices use `Unitless`. One shared
+finite Fortran-real tokenizer accepts `E/e` and `D/d` exponents.
 
-Malformed UTF-8, invalid headers, duplicate or out-of-range indices, incomplete
-inventories, truncated matrices, and unexpected trailing content are rejected.
+`_u_dis.mat` is deliberately unsupported: rectangular disentanglement matrices
+are never interpreted as `_u.mat`. Selective-localization `Omega IOD`,
+`Omega Rest`, and `_C` variants are also rejected rather than misrepresented.
+
+Malformed UTF-8, invalid headers, duplicate/out-of-range indices, incomplete or
+contradictory inventories, truncated matrices, and trailing content are
+rejected. `Wannier90ParserLimits` defaults to 64 MiB per payload, 1,000,000 per
+individual dimension, and 10,000,000 numeric records. Checked products and
+actual record cardinality are validated before NumPy allocation; callers may
+supply stricter positive limits to any parser.

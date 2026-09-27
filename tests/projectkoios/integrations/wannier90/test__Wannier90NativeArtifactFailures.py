@@ -31,7 +31,7 @@ LENGTH_UNIT = PhysicalUnit("angstrom")
 def _valid_artifacts() -> tuple[Wannier90NativeArtifact, ...]:
     """Return one minimal internally consistent seven-artifact inventory."""
     payloads = {
-        "tiny.eig": b"2 2 -4.0E+0\n1 1 -0.0\n2 1 2.5e-1\n1 2 +1.25E-2\n",
+        "tiny.eig": b"1 1 -0.0d0\n2 1 2.5D-1\n1 2 +1.25E-2\n2 2 -4.0E+0\n",
         "tiny.amn": (
             b"fixture\n2 2 1\n"
             b"2 1 2 4.0 -4.0\n1 1 1 1.0 -1.0\n"
@@ -42,16 +42,19 @@ def _valid_artifacts() -> tuple[Wannier90NativeArtifact, ...]:
             b"1 2 0 0 0\n1.0 0.0\n2.0 0.0\n3.0 0.0\n4.0 0.0\n"
             b"2 1 1 -1 0\n5.0 0.0\n6.0 0.0\n7.0 0.0\n8.0 0.0\n"
         ),
-        "tiny.nnkp": (b"begin nnkpts\n1\n2 1 1 -1 0\n1 2 0 0 0\nend nnkpts\n"),
+        "tiny.nnkp": (b"begin nnkpts\n1\n1 2 0 0 0\n2 1 1 -1 0\nend nnkpts\n"),
         "tiny.wout": (
-            b"  3  0.0 <-- CONV\n  7  0.0 <-- CONV\nFinal State\n"
-            b"WF centre and spread 1 ( -0.0, +1.25E-2, 2.0 ) 3.0e-1\n"
+            b"Length Unit : Ang\nCycle: 3\n"
+            b"WF centre and spread 1 ( 0.0, 0.0, 0.0 ) 0.4\n"
+            b"  3  0.0 <-- CONV\nCycle: 7\n"
+            b"WF centre and spread 1 ( 0.0, 0.0, 0.0 ) 0.3\n"
+            b"  7  0.0 <-- CONV\nFinal State\n"
+            b"WF centre and spread 1 ( -0.0, +1.25D-2, 2.0 ) 3.0e-1\n"
             b"Omega I = 0.1\nOmega D = 0.2\nOmega OD = 0.3\n"
             b"Omega Total = 0.6\n"
         ),
         "tiny_u.mat": (
-            b"fixture\n2 2 1\n\n0.0 0.0 0.0\n1.0 0.0\n2.0 -0.0\n"
-            b"\n0.5 -0.5 +1.25E-2\n3.0 0.0\n4.0 0.0\n"
+            b"fixture\n2 1 1\n\n0.0 0.0 0.0\n1.0 0.0\n\n0.5 -0.5 +1.25D-2\n3.0 0.0\n"
         ),
         "tiny_hr.dat": (b"fixture\n1\n1\n1\n0 0 0 1 1 -1.25E-2 +0.0\n"),
     }
@@ -100,17 +103,14 @@ def test_set_parser_preserves_units_ordering_and_awkward_numbers() -> None:
     assert np.signbit(parsed.eigenvalues.eigenvalues.magnitude[0, 0])
     assert parsed.eigenvalues.eigenvalues.magnitude[1, 0] == 1.25e-2
     assert parsed.neighbor_list.records == (
-        (2, 1, 1, -1, 0),
         (1, 2, 0, 0, 0),
+        (2, 1, 1, -1, 0),
     )
     assert parsed.neighbor_overlaps.matrices[0].magnitude.tolist() == [
         [(1 + 0j), (3 + 0j)],
         [(2 + 0j), (4 + 0j)],
     ]
-    assert parsed.unitary_matrices.matrices[0].magnitude.tolist() == [
-        [(1 + 0j)],
-        [(2 - 0j)],
-    ]
+    assert parsed.unitary_matrices.matrices[0].magnitude.tolist() == [[(1 + 0j)]]
     assert parsed.hamiltonian_blocks.blocks[0].magnitude[0, 0] == -1.25e-2 + 0j
 
 
@@ -159,6 +159,9 @@ def test_parsed_set_rejects_cross_artifact_wannier_count_mismatch() -> None:
         "tiny", artifacts, ENERGY_UNIT, LENGTH_UNIT
     )
     two_wannier_localization = Wannier90LocalizationParser().execute(
+        b"Length Unit : Ang\nCycle: 1\n"
+        b"WF centre and spread 1 ( 0, 0, 0 ) 0.1\n"
+        b"WF centre and spread 2 ( 0, 0, 0 ) 0.2\n"
         b"1 0.0 <-- CONV\nFinal State\n"
         b"WF centre and spread 1 ( 0, 0, 0 ) 0.1\n"
         b"WF centre and spread 2 ( 0, 0, 0 ) 0.2\n"

@@ -120,6 +120,13 @@
       "evidence_class": "software_verification",
       "evidence_profile": "claim_bearing",
       "sut": "Wannier90 native-artifact parser bundle"
+    },
+    {
+      "path": "tests/projectkoios/integrations/wannier90/test__Wannier90AdversarialParsing.py",
+      "mode": "module_owned",
+      "evidence_class": "software_verification",
+      "evidence_profile": "claim_bearing",
+      "sut": "Wannier90 native formats, integrity, and parser resource limits"
     }
   ]
 }

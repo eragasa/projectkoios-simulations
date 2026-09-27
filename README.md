@@ -22,8 +22,10 @@ The original software lineage comes from the historical
 [PyPosPack](https://github.com/eragasa/pypospack) projects. Their notices and
 license texts remain available in [`licenses/`](licenses/) and
 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The extractions from `projectkoios-frankenstein` and the provenance-bound
-Wannier90 parser donor are bound to exact commits and Git trees in
-[`TRANSFER.toml`](TRANSFER.toml).
+Wannier90 parser donor are bound to exact commits and Git trees. Installed
+Wannier parser provenance and its offline dependency lock are machine-readable
+package resources named `provenance.json` and `offline-wheel-lock.json` under
+`projectkoios.integrations.wannier90`.
 
 Research provenance is documented in [`CITATIONS.md`](CITATIONS.md) and
 [`docs/provenance/origins.md`](docs/provenance/origins.md). In particular:

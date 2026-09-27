@@ -1,5 +1,6 @@
 """Execution-independent typed adapters for retained Wannier90 artifacts."""
 
+from projectkoios.integrations.wannier90._parsing import Wannier90ParserLimits
 from projectkoios.integrations.wannier90.artifacts import (
     Wannier90NativeArtifact,
     Wannier90NativeArtifactCorrelationResult,
@@ -49,6 +50,7 @@ __all__ = [
     "Wannier90NativeArtifactIdentity",
     "Wannier90NativeArtifactSetParser",
     "Wannier90ParsedNativeArtifactSet",
+    "Wannier90ParserLimits",
     "Wannier90LocalizationParser",
     "Wannier90NeighborListData",
     "Wannier90NeighborListParser",

@@ -1,27 +1,30 @@
-"""Typed adaptation of Wannier90 ``_u.mat`` matrix files."""
+"""Typed adaptation of native Wannier90 ``_u.mat`` matrix files."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
 import numpy as np
+import numpy.typing as npt
 from physkit.units.quantities import ComplexMatrixQuantity, MatrixQuantity, Unitless
+
+from ._parsing import (
+    BoundedParser,
+    checked_product,
+    decode_text,
+    parse_fortran_real,
+    positive_dimension,
+)
 
 
 @dataclass(frozen=True, slots=True, eq=False)
 class Wannier90UnitaryMatrixData:
-    """Retain ordered fractional k points and native gauge matrices.
-
-    Matrix rows follow the native outer subspace and columns follow the Wannier
-    subspace. Square matrices are expected when no disentanglement is present, but the
-    adapter preserves rectangular native matrices.
-    """
+    """Retain ordered fractional k points and square Wannier gauge matrices."""
 
     fractional_kpoints: MatrixQuantity
     matrices: tuple[ComplexMatrixQuantity, ...]
 
     def __post_init__(self) -> None:
-        """Validate unitless three-coordinate points and homogeneous matrix shapes."""
         if type(self.fractional_kpoints) is not MatrixQuantity:
             raise TypeError("fractional_kpoints must be MatrixQuantity")
         if not isinstance(self.fractional_kpoints.unit, Unitless):
@@ -35,103 +38,105 @@ class Wannier90UnitaryMatrixData:
             raise TypeError("matrices must be a nonempty tuple")
         if len(self.matrices) != self.fractional_kpoints.magnitude.shape[0]:
             raise ValueError("matrix count must equal k-point count")
-        if type(self.matrices[0]) is not ComplexMatrixQuantity:
+        first = self.matrices[0]
+        if type(first) is not ComplexMatrixQuantity:
             raise TypeError("every matrix must be ComplexMatrixQuantity")
-        first_shape = self.matrices[0].magnitude.shape
-        if first_shape[0] == 0 or first_shape[1] == 0:
-            raise ValueError("native gauge matrices must have nonzero dimensions")
+        dimension = first.magnitude.shape[0]
+        if dimension == 0 or first.magnitude.shape != (dimension, dimension):
+            raise ValueError("_u.mat gauge matrices must be nonempty and square")
         for matrix in self.matrices:
             if type(matrix) is not ComplexMatrixQuantity:
                 raise TypeError("every matrix must be ComplexMatrixQuantity")
             if not isinstance(matrix.unit, Unitless):
                 raise ValueError("native gauge matrices must be unitless")
-            if matrix.magnitude.shape != first_shape:
-                raise ValueError("all native gauge matrices must have equal shape")
+            if matrix.magnitude.shape != (dimension, dimension):
+                raise ValueError(
+                    "all native gauge matrices must have equal square shape"
+                )
 
     @property
     def kpoint_count(self) -> int:
-        """Return the native reciprocal-point count."""
         return len(self.matrices)
 
     @property
-    def outer_dimension(self) -> int:
-        """Return the native gauge-matrix row count."""
+    def wannier_count(self) -> int:
         return int(self.matrices[0].magnitude.shape[0])
 
-    @property
-    def wannier_count(self) -> int:
-        """Return the native gauge-matrix column count."""
-        return int(self.matrices[0].magnitude.shape[1])
 
+class Wannier90UnitaryMatrixParser(BoundedParser):
+    """Parse bounded square native ``_u.mat`` payloads.
 
-class Wannier90UnitaryMatrixParser:
-    """Parse one UTF-8 Wannier90 ``_u.mat`` payload without filesystem access."""
-
-    __slots__ = ()
+    Rectangular ``_u_dis.mat`` data have different native semantics and are
+    deliberately unsupported rather than being interpreted as ``_u.mat``.
+    """
 
     def execute(self, payload: bytes) -> Wannier90UnitaryMatrixData:
-        """Return ordered k points and column-major native matrix entries."""
-        if type(payload) is not bytes:
-            raise TypeError("payload must be bytes")
-        try:
-            lines = payload.decode("utf-8").splitlines()
-        except UnicodeDecodeError as error:
-            raise ValueError("u-matrix payload must be valid UTF-8") from error
+        text = decode_text(payload, "u-matrix", self.limits)
+        lines = text.splitlines()
         if len(lines) < 2:
             raise ValueError("u-matrix payload lacks its dimension header")
         dimension_fields = lines[1].split()
         if len(dimension_fields) != 3:
             raise ValueError("u-matrix dimension header must contain three integers")
         try:
-            kpoint_count, row_count, column_count = (
-                int(field) for field in dimension_fields
-            )
+            raw_dimensions = tuple(int(field) for field in dimension_fields)
         except ValueError as error:
             raise ValueError("u-matrix dimensions must be integers") from error
-        if kpoint_count <= 0 or row_count <= 0 or column_count <= 0:
-            raise ValueError("u-matrix dimensions must be positive")
-        kpoints = np.empty((kpoint_count, 3), dtype=np.float64)
+        kpoint_count = positive_dimension(
+            raw_dimensions[0], "kpoint_count", self.limits
+        )
+        row_count = positive_dimension(raw_dimensions[1], "row_count", self.limits)
+        column_count = positive_dimension(
+            raw_dimensions[2], "column_count", self.limits
+        )
+        if row_count != column_count:
+            raise ValueError(
+                "_u.mat dimensions must be square; rectangular "
+                "_u_dis.mat is unsupported"
+            )
+        matrix_entry_count = checked_product(
+            (kpoint_count, row_count, column_count), "u-matrix", self.limits
+        )
+        content = tuple(line for line in lines[2:] if line.strip())
+        expected_line_count = kpoint_count + matrix_entry_count
+        if len(content) < expected_line_count:
+            raise ValueError("u-matrix payload ends within a matrix")
+        if len(content) > expected_line_count:
+            raise ValueError("u-matrix payload contains trailing records")
+        kpoint_values: list[tuple[float, float, float]] = []
         matrices: list[ComplexMatrixQuantity] = []
-        line_index = 2
-        for kpoint_index in range(kpoint_count):
-            while line_index < len(lines) and not lines[line_index].strip():
-                line_index += 1
-            if line_index >= len(lines):
-                raise ValueError("u-matrix payload ends before all k points")
-            coordinate_fields = lines[line_index].split()
-            if len(coordinate_fields) < 3:
-                raise ValueError("u-matrix k-point line must contain three coordinates")
-            try:
-                kpoints[kpoint_index] = [
-                    float(coordinate_fields[0]),
-                    float(coordinate_fields[1]),
-                    float(coordinate_fields[2]),
-                ]
-            except ValueError as error:
-                raise ValueError("u-matrix k-point coordinates must be real") from error
+        line_index = 0
+        for _ in range(kpoint_count):
+            coordinate_fields = content[line_index].split()
             line_index += 1
-            matrix = np.empty((row_count, column_count), dtype=np.complex128)
-            for column in range(column_count):
-                for row in range(row_count):
-                    if line_index >= len(lines):
-                        raise ValueError("u-matrix payload ends within a matrix")
-                    fields = lines[line_index].split()
-                    if len(fields) != 2:
-                        raise ValueError(
-                            "u-matrix entry must contain real and imaginary parts"
-                        )
-                    try:
-                        matrix[row, column] = complex(
-                            float(fields[0]), float(fields[1])
-                        )
-                    except ValueError as error:
-                        raise ValueError(
-                            "u-matrix entries must contain real numbers"
-                        ) from error
-                    line_index += 1
+            if len(coordinate_fields) != 3:
+                raise ValueError("u-matrix k-point line must contain three coordinates")
+            kpoint_values.append(
+                (
+                    parse_fortran_real(coordinate_fields[0], "k-point coordinate"),
+                    parse_fortran_real(coordinate_fields[1], "k-point coordinate"),
+                    parse_fortran_real(coordinate_fields[2], "k-point coordinate"),
+                )
+            )
+            values: list[complex] = []
+            for _ in range(row_count * column_count):
+                fields = content[line_index].split()
+                line_index += 1
+                if len(fields) != 2:
+                    raise ValueError(
+                        "u-matrix entry must contain real and imaginary parts"
+                    )
+                values.append(
+                    complex(
+                        parse_fortran_real(fields[0], "u-matrix real part"),
+                        parse_fortran_real(fields[1], "u-matrix imaginary part"),
+                    )
+                )
+            matrix: npt.NDArray[np.complex128] = np.asarray(
+                values, dtype=np.complex128
+            ).reshape((row_count, column_count), order="F")
             matrices.append(ComplexMatrixQuantity(matrix, Unitless()))
-        if any(line.strip() for line in lines[line_index:]):
-            raise ValueError("u-matrix payload contains trailing nonempty lines")
+        kpoints: npt.NDArray[np.float64] = np.asarray(kpoint_values, dtype=np.float64)
         return Wannier90UnitaryMatrixData(
             MatrixQuantity(kpoints, Unitless()), tuple(matrices)
         )

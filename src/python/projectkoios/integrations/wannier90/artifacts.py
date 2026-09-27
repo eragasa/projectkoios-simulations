@@ -7,6 +7,7 @@ from dataclasses import dataclass
 
 from physkit.units.quantities import ModelSystemUnit, PhysicalUnit, Unitless
 
+from ._parsing import BoundedParser
 from .hamiltonian_blocks import (
     Wannier90HamiltonianBlockData,
     Wannier90HamiltonianBlockParser,
@@ -182,21 +183,23 @@ class Wannier90ParsedNativeArtifactSet:
             self.eigenvalues.band_count,
             self.projections.band_count,
             self.neighbor_overlaps.band_count,
-            self.unitary_matrices.outer_dimension,
         )
         if len(set(band_counts)) != 1:
             raise ValueError("parsed native artifacts must agree on band count")
         wannier_counts = (
-            self.projections.wannier_count,
             self.localization.wannier_count,
             self.unitary_matrices.wannier_count,
             self.hamiltonian_blocks.wannier_count,
         )
         if len(set(wannier_counts)) != 1:
             raise ValueError("parsed native artifacts must agree on Wannier count")
+        if self.neighbor_list.neighbor_count != self.neighbor_overlaps.neighbor_count:
+            raise ValueError("nnkp and mmn neighbor counts do not agree")
+        if self.neighbor_list.records != self.neighbor_overlaps.normalized_records:
+            raise ValueError("nnkp and mmn ordered neighbor inventories do not agree")
 
 
-class Wannier90NativeArtifactSetParser:
+class Wannier90NativeArtifactSetParser(BoundedParser):
     """Parse supported scientific files from one authenticated named artifact set."""
 
     __slots__ = ()
@@ -236,17 +239,23 @@ class Wannier90NativeArtifactSetParser:
                 ) from error
 
         return Wannier90ParsedNativeArtifactSet(
-            Wannier90EigenvalueParser().execute(
+            Wannier90EigenvalueParser(self.limits).execute(
                 payload(f"{seed_name}.eig"), energy_unit
             ),
-            Wannier90ProjectionParser().execute(payload(f"{seed_name}.amn")),
-            Wannier90NeighborOverlapParser().execute(payload(f"{seed_name}.mmn")),
-            Wannier90NeighborListParser().execute(payload(f"{seed_name}.nnkp")),
-            Wannier90LocalizationParser().execute(
+            Wannier90ProjectionParser(self.limits).execute(payload(f"{seed_name}.amn")),
+            Wannier90NeighborOverlapParser(self.limits).execute(
+                payload(f"{seed_name}.mmn")
+            ),
+            Wannier90NeighborListParser(self.limits).execute(
+                payload(f"{seed_name}.nnkp")
+            ),
+            Wannier90LocalizationParser(self.limits).execute(
                 payload(f"{seed_name}.wout"), length_unit
             ),
-            Wannier90UnitaryMatrixParser().execute(payload(f"{seed_name}_u.mat")),
-            Wannier90HamiltonianBlockParser().execute(
+            Wannier90UnitaryMatrixParser(self.limits).execute(
+                payload(f"{seed_name}_u.mat")
+            ),
+            Wannier90HamiltonianBlockParser(self.limits).execute(
                 payload(f"{seed_name}_hr.dat"), energy_unit
             ),
         )

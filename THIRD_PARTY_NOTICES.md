@@ -40,7 +40,7 @@ license.
 The Wannier90 parser extraction reuses PhysKit's generic unit and immutable
 quantity contracts rather than copying that infrastructure into the simulations
 distribution. The parser donor and this repository share the exact Apache-2.0
-text identified in [`TRANSFER.toml`](TRANSFER.toml).
+text identified by the wheel-carried Wannier90 `provenance.json` resource.
 
 These notices document origin and preserve upstream terms. They do not mean the
 historical projects endorse this repository, and they do not turn research

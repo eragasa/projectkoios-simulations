@@ -30,11 +30,11 @@ SUT = Wannier90LocalizationParser
 class TestWannier90LocalizationParser:
     """Own parser evidence for retained native localization observations."""
 
-    def test_method__execute__selects_final_state_and_converged_iteration(self) -> None:
+    def test_method__execute__selects_final_state_and_reported_iteration(self) -> None:
         """Evidence ID: SV-INTEGRATION-WANNIER90-005
 
-        Requirement: Final centers, spreads, Omega decomposition, and the maximum
-        converged iteration are retained separately.
+        Requirement: Final centers, spreads, Omega decomposition, source unit label,
+        and the last reported Wannierisation iteration are retained separately.
 
         Method: Parse an authored final-state section and convergence records.
 
@@ -48,7 +48,15 @@ class TestWannier90LocalizationParser:
 
         Provenance: The payload is an authored synthetic native-format fixture.
         """
-        payload = b"""  3  -1.0  0.1 <-- CONV
+        payload = b""" |  Length Unit : Ang  |
+Cycle: 3
+ WF centre and spread    1  ( 0.10, 0.0, 0.0 )  0.30
+ WF centre and spread    2  ( -0.10, 0.0, 0.0 )  0.40
+  3  -1.0  0.1 <-- CONV
+Cycle: 7
+ WF centre and spread    1  ( 0.20, 0.0, 0.0 )  0.20
+ WF centre and spread    2  ( -0.20, 0.0, 0.0 )  0.30
+  7  -2.0  0.01 <-- CONV
 Final State
  WF centre and spread    1  ( 0.25, 0.0, 0.0 )  0.10
  WF centre and spread    2  ( -0.25, 0.0, 0.0 )  0.20
@@ -56,7 +64,6 @@ Final State
  Omega D = 0.02
  Omega OD = 0.03
  Omega Total = 0.06
-  7  -2.0  0.01 <-- CONV
 """
 
         result = Wannier90LocalizationParser().execute(
@@ -69,4 +76,6 @@ Final State
         )
         np.testing.assert_array_equal(result.spreads.magnitude, np.asarray([0.1, 0.2]))
         assert result.omega_total.magnitude == 0.06
-        assert result.maximum_converged_iteration == 7
+        assert result.source_length_unit_label == "Ang"
+        assert result.reported_wannierisation_iterations == (3, 7)
+        assert result.last_reported_wannierisation_iteration == 7

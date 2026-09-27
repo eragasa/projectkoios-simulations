@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "environment": {
+    "python": "3.14",
+    "platform": "macOS arm64"
+  },
+  "physkit_source": {
+    "repository": "https://github.com/eragasa/physkit",
+    "commit": "97032f16c9125aa124750508f8513cca9f6dab02",
+    "tree": "3a323d2436d4b5e86fe312e810e03c5d21ce37b3",
+    "declared_distribution": "physkit",
+    "declared_version": "0.1.0",
+    "archive_method": "git archive 97032f16c9125aa124750508f8513cca9f6dab02",
+    "source_date_epoch": 1790492718,
+    "build_method": "python3.14 -m pip wheel --no-index --no-deps --no-build-isolation",
+    "reproducible_build_count": 2,
+    "wheel_sha256": "bd35dd8431b1f8d1ecd74cbb39378863f4c3ee0d2401ae723c58ead59ae496ff"
+  },
+  "runtime_wheels": [
+    {"filename":"contourpy-1.3.3-cp314-cp314-macosx_11_0_arm64.whl","sha256":"cbedb772ed74ff5be440fa8eee9bd49f64f6e3fc09436d9c7d8f1c287b121d77"},
+    {"filename":"cycler-0.12.1-py3-none-any.whl","sha256":"85cef7cff222d8644161529808465972e51340599459b8ac3ccbac5a854e0d30"},
+    {"filename":"flexcache-0.3-py3-none-any.whl","sha256":"d43c9fea82336af6e0115e308d9d33a185390b8346a017564611f1466dcd2e32"},
+    {"filename":"flexparser-0.4-py3-none-any.whl","sha256":"3738b456192dcb3e15620f324c447721023c0293f6af9955b481e91d00179846"},
+    {"filename":"fonttools-4.63.0-cp314-cp314-macosx_10_15_universal2.whl","sha256":"fd1e3094f42d806d3d7c79162fc59e5910fcbe3a7360c385b8da969bc4493745"},
+    {"filename":"kiwisolver-1.5.0-cp314-cp314-macosx_11_0_arm64.whl","sha256":"0cbe94b69b819209a62cb27bdfa5dc2a8977d8de2f89dfd97ba4f53ed3af754e"},
+    {"filename":"matplotlib-3.11.1-cp314-cp314-macosx_11_0_arm64.whl","sha256":"ac104be2768ffdd8655db9e71b768cbb45f2b9aa7b450cf1595e8f65d3822319"},
+    {"filename":"mpmath-1.3.0-py3-none-any.whl","sha256":"a0b2b9fe80bbcd81a6647ff13108738cfb482d481d826cc0e02f5b35e5c88d2c"},
+    {"filename":"numpy-2.5.3-cp314-cp314-macosx_14_0_arm64.whl","sha256":"adc1ada2662f8a5f960b8a10d9986897e7499ef07e06d4cfe7197f8cce923c07"},
+    {"filename":"packaging-26.3-py3-none-any.whl","sha256":"d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"},
+    {"filename":"pandas-3.0.5-cp314-cp314-macosx_11_0_arm64.whl","sha256":"53730687fcd161883b24e10411c06d6a4c0f2275d2faf3bb2bc25deb4ba8007c"},
+    {"filename":"physkit-0.1.0-py3-none-any.whl","sha256":"bd35dd8431b1f8d1ecd74cbb39378863f4c3ee0d2401ae723c58ead59ae496ff"},
+    {"filename":"pillow-12.3.0-cp314-cp314-macosx_11_0_arm64.whl","sha256":"e158cb00350dc278f3b91551101aa7d12415a66ebf2c91d8d5ac14e56ddd3ad0"},
+    {"filename":"pint-0.26.1-py3-none-any.whl","sha256":"e982b129415c09c63308f314ae44697d83e5c96f253bcc0d5b833fc3329eb6d4"},
+    {"filename":"platformdirs-4.10.0-py3-none-any.whl","sha256":"fb516cdb12eb0d857d0cd85a7c57cea4d060bee4578d6cf5a14dfdf8cbf8784a"},
+    {"filename":"pyparsing-3.3.2-py3-none-any.whl","sha256":"850ba148bd908d7e2411587e247a1e4f0327839c40e2e5e6d05a007ecc69911d"},
+    {"filename":"python_dateutil-2.9.0.post0-py2.py3-none-any.whl","sha256":"a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"},
+    {"filename":"scipy-1.18.0-cp314-cp314-macosx_14_0_arm64.whl","sha256":"f2a6af57bd9e4a75d70e4117e78a1bbee84f79ae3fbb6d0111005d6ebcc4cb8d"},
+    {"filename":"six-1.17.0-py2.py3-none-any.whl","sha256":"4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"},
+    {"filename":"sympy-1.14.0-py3-none-any.whl","sha256":"e091cc3e99d2141a0ba2847328f5479b05d94a6635cb96148ccb3f34671bd8f5"},
+    {"filename":"typing_extensions-4.16.0-py3-none-any.whl","sha256":"481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8"}
+  ]
+}

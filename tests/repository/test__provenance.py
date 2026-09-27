@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import tomllib
+from importlib.resources import files
 from pathlib import Path
 from typing import Any
 
@@ -88,6 +90,43 @@ def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     assert dependency["commit"] == "97032f16c9125aa124750508f8513cca9f6dab02"
     assert dependency["blob"] == "686d075852ed01aab0a8d74fdec1be5a440c075d"
     assert len(extraction["file_mappings"]) == 7
+    assert [item["blob"] for item in extraction["consumer_closure"]] == [
+        "15f83f6895102931c7c1f9a3a69eadffff34d3d9",
+        "e3799be8926dad6c13ac09a9f00907c7f67aa68f",
+        "9abab30964b4985647b8f917e1da17648207d2f6",
+        "8b508c43979e6442980b80c9a7edf306b32e33f8",
+    ]
+
+
+def test_physkit_runtime_dependency_is_an_exact_distribution_constraint() -> None:
+    with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as stream:
+        project = tomllib.load(stream)["project"]
+
+    assert "physkit==0.1.0" in project["dependencies"]
+    assert not any("git+" in dependency for dependency in project["dependencies"])
+    assert "TRANSFER.toml" not in (REPOSITORY_ROOT / "README.md").read_text()
+
+
+def test_wannier90_distribution_resources_bind_provenance_and_offline_wheels() -> None:
+    package = files("projectkoios.integrations.wannier90")
+    provenance = json.loads(package.joinpath("provenance.json").read_text())
+    lock = json.loads(package.joinpath("offline-wheel-lock.json").read_text())
+
+    assert provenance["donor"]["commit"] == ("7bd913151f7e61ed2bdba593df920be36573b502")
+    assert len(provenance["source_files"]) == 7
+    assert len(provenance["test_files"]) == 18
+    assert [entry["blob"] for entry in provenance["consumer_closure"]] == [
+        "15f83f6895102931c7c1f9a3a69eadffff34d3d9",
+        "e3799be8926dad6c13ac09a9f00907c7f67aa68f",
+        "9abab30964b4985647b8f917e1da17648207d2f6",
+        "8b508c43979e6442980b80c9a7edf306b32e33f8",
+    ]
+    assert provenance["physkit"]["distribution"] == "physkit==0.1.0"
+    assert lock["physkit_source"]["reproducible_build_count"] == 2
+    assert lock["physkit_source"]["wheel_sha256"] == (
+        "bd35dd8431b1f8d1ecd74cbb39378863f4c3ee0d2401ae723c58ead59ae496ff"
+    )
+    assert len(lock["runtime_wheels"]) == 21
 
 
 def test_wannier90_donor_license_is_the_distribution_license() -> None:

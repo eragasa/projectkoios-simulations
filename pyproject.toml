@@ -15,7 +15,7 @@ authors = [
 ]
 dependencies = [
     "numpy>=2.3,<3",
-    "physkit @ git+https://github.com/eragasa/physkit.git@97032f16c9125aa124750508f8513cca9f6dab02",
+    "physkit==0.1.0",
 ]
 
 [project.urls]
@@ -47,6 +47,7 @@ namespaces = true
 [tool.setuptools.package-data]
 "projectkoios.simulations" = ["py.typed"]
 "projectkoios.integrations" = ["py.typed"]
+"projectkoios.integrations.wannier90" = ["provenance.json", "offline-wheel-lock.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

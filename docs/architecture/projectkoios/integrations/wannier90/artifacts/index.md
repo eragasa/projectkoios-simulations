@@ -14,8 +14,14 @@ seven supported files. Parsing is in-memory and does not discover or open
 paths. The returned `Wannier90ParsedNativeArtifactSet` enforces agreement of:
 
 - k-point counts across `.eig`, `.amn`, `.mmn`, `.nnkp`, and `_u.mat`;
-- band counts across `.eig`, `.amn`, `.mmn`, and `_u.mat`; and
-- Wannier counts across `.amn`, `.wout`, `_u.mat`, and `_hr.dat`.
+- band counts across `.eig`, `.amn`, and `.mmn`;
+- Wannier counts across `.wout`, square `_u.mat`, and `_hr.dat`; and
+- exact `.nnkp`/`.mmn` neighbor count and ordered `(source, target, shift)`
+  inventories.
+
+The AMN third dimension is a `projection_count`; it is not equated to the
+Wannier count without unavailable explicit selection metadata. Likewise,
+`_u.mat` dimensions are not equated to the band count.
 
 Authentication and parsing remain explicit steps so a caller can retain the
 correlation result alongside the parsed set.
