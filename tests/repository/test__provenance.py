@@ -64,6 +64,11 @@ def test_vasp_extraction_is_bound_to_exact_source_trees() -> None:
         inventory["excluded_source_file_count"],
         inventory["target_file_count"],
     ) == (18, 11, 7, 11)
+    assert (
+        inventory["excluded_destination_repository"],
+        inventory["excluded_destination_namespace"],
+        inventory["excluded_capability"],
+    ) == ("projectkoios-applications", "projectkoios.applications", "pw_dft_scf")
     assert [item["git_blob"] for item in extraction["example_exclusions"]] == [
         "6e83532fcde923909053b92ed02df61d978746ee",
         "e8626e8ed6a442a0abbfe7f399f211cfb28465bb",
@@ -73,6 +78,9 @@ def test_vasp_extraction_is_bound_to_exact_source_trees() -> None:
         "5f540029e83636efd54f1a0c79f3d8ebbc5dc751",
         "6343b3a0880479e220e7f42f6755856b740ec2fa",
     ]
+    assert {item["owner_boundary"] for item in extraction["example_exclusions"]} == {
+        "projectkoios.applications"
+    }
     assert extraction["compatibility_sources"][0]["git_blob"] == (
         "c9f500c376cfaf6dedb557258e76ca7378cc8587"
     )
