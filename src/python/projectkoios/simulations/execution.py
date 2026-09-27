@@ -33,6 +33,7 @@ class CalculatorExecutionRequest:
     record_filename: str = "execution.json"
     required_input_filenames: tuple[str, ...] = ()
     timeout_seconds: float | None = None
+    execution_authorized: bool = False
 
     def __post_init__(self) -> None:
         if type(self.command) is not tuple or not self.command:
@@ -83,6 +84,8 @@ class CalculatorExecutionRequest:
                 raise TypeError("timeout_seconds must be a float or None")
             if self.timeout_seconds <= 0.0:
                 raise ValueError("timeout_seconds must be positive")
+        if type(self.execution_authorized) is not bool:
+            raise TypeError("execution_authorized must be a bool")
 
 
 @dataclass(frozen=True, slots=True)
@@ -142,6 +145,8 @@ class CalculatorExecutor:
         """Execute, record terminal state, and raise after recording any failure."""
         if type(request) is not CalculatorExecutionRequest:
             raise TypeError("request must be a CalculatorExecutionRequest")
+        if not request.execution_authorized:
+            raise PermissionError("calculator execution is not authorized")
         stdout_path = request.working_directory / request.stdout_filename
         stderr_path = request.working_directory / request.stderr_filename
         record_path = request.working_directory / request.record_filename

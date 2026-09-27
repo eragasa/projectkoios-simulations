@@ -1,0 +1,57 @@
+"""Quantum ESPRESSO fixed-cell relaxation integration."""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, replace
+
+from projectkoios.integrations.quantumespresso.pw.relax.configuration import (  # noqa: E501
+    QeRelaxProjectionConfiguration,
+)
+from projectkoios.integrations.quantumespresso.pw.relax.projection import (  # noqa: E501
+    QeRelaxInputProjector,
+)
+from projectkoios.simulations.calculator import CalculatorIntegrationId
+from projectkoios.simulations.dft.pw.relaxation.base import (
+    PwDftRelaxationRequest,
+    PwDftRelaxationScope,
+)
+from projectkoios.simulations.dft.pw.relaxation.capabilities import (
+    PW_DFT_RELAXATION_BACKEND_DESCRIPTIONS,
+    PwDftRelaxationBackendDescription,
+)
+from projectkoios.simulations.dft.pw.relaxation.integration import (
+    PwDftRelaxationInputProjection,
+    PwDftRelaxationIntegration,
+)
+
+
+@dataclass(frozen=True, slots=True)
+class QePwRelaxIntegration(PwDftRelaxationIntegration):
+    """Implement the calculator-neutral fixed-cell relaxation contract."""
+
+    configuration: QeRelaxProjectionConfiguration
+
+    def __post_init__(self) -> None:
+        if type(self.configuration) is not QeRelaxProjectionConfiguration:
+            raise TypeError("configuration must be a QeRelaxProjectionConfiguration")
+
+    @property
+    def description(self) -> PwDftRelaxationBackendDescription:
+        """Return the reviewed QE backend description."""
+        matches = tuple(
+            item
+            for item in PW_DFT_RELAXATION_BACKEND_DESCRIPTIONS
+            if item.integration_id == CalculatorIntegrationId("quantum-espresso")
+        )
+        if len(matches) != 1:
+            raise RuntimeError("QE relaxation backend description is not unique")
+        return replace(
+            matches[0],
+            supported_scopes=(PwDftRelaxationScope.ATOMIC_POSITIONS,),
+        )
+
+    def project(
+        self, request: PwDftRelaxationRequest
+    ) -> PwDftRelaxationInputProjection:
+        """Return deterministic fixed-cell QE input."""
+        return QeRelaxInputProjector(self.configuration).project(request)

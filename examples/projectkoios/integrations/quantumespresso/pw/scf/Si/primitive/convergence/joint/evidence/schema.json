@@ -1,0 +1,383 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://projectkoios.org/schemas/qe-pw-scf-convergence-evidence-v1.json",
+  "title": "Retained Quantum ESPRESSO pw.x SCF convergence evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_kind",
+    "evidence_id",
+    "qualifications",
+    "structure",
+    "calculator",
+    "pseudopotentials",
+    "policy",
+    "observations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "evidence_kind": {
+      "const": "qe-pw-scf-convergence-grid"
+    },
+    "evidence_id": {
+      "$ref": "#/$defs/nonemptyString"
+    },
+    "qualifications": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/nonemptyString"
+      }
+    },
+    "structure": {
+      "$ref": "#/$defs/structure"
+    },
+    "calculator": {
+      "$ref": "#/$defs/calculator"
+    },
+    "pseudopotentials": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/pseudopotential"
+      }
+    },
+    "policy": {
+      "$ref": "#/$defs/policy"
+    },
+    "observations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/observation"
+      }
+    }
+  },
+  "$defs": {
+    "nonemptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "positiveInteger": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "positiveNumber": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "structure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "structure_id",
+        "repository_path",
+        "sha256",
+        "byte_size",
+        "atom_count"
+      ],
+      "properties": {
+        "structure_id": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "repository_path": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "byte_size": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "atom_count": {
+          "$ref": "#/$defs/positiveInteger"
+        }
+      }
+    },
+    "calculator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "program",
+        "program_version",
+        "source_revision",
+        "sha256",
+        "byte_size",
+        "retained"
+      ],
+      "properties": {
+        "program": {
+          "const": "pw.x"
+        },
+        "program_version": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "source_revision": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "byte_size": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "retained": {
+          "const": false
+        }
+      }
+    },
+    "pseudopotential": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "species",
+        "artifact_name",
+        "exchange_correlation",
+        "formalism",
+        "relativistic_treatment",
+        "upf_version",
+        "sha256",
+        "byte_size",
+        "retained"
+      ],
+      "properties": {
+        "species": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "artifact_name": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "exchange_correlation": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "formalism": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "relativistic_treatment": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "upf_version": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "byte_size": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "retained": {
+          "const": false
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tolerance_mev_per_atom",
+        "required_consecutive_deltas",
+        "mesh_increment",
+        "cutoff_increment_ry",
+        "extension_steps",
+        "maximum_mesh_density",
+        "maximum_cutoff_ry",
+        "maximum_grid_points"
+      ],
+      "properties": {
+        "tolerance_mev_per_atom": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "required_consecutive_deltas": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "mesh_increment": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "cutoff_increment_ry": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "extension_steps": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "maximum_mesh_density": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "maximum_cutoff_ry": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "maximum_grid_points": {
+          "$ref": "#/$defs/positiveInteger"
+        }
+      }
+    },
+    "coordinate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mesh_density",
+        "wavefunction_cutoff_ry",
+        "charge_density_cutoff_ry"
+      ],
+      "properties": {
+        "mesh_density": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "wavefunction_cutoff_ry": {
+          "$ref": "#/$defs/positiveNumber"
+        },
+        "charge_density_cutoff_ry": {
+          "$ref": "#/$defs/positiveNumber"
+        }
+      }
+    },
+    "nativeObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "program_version",
+        "job_completed",
+        "scf_converged",
+        "total_energy_ry",
+        "atom_count",
+        "irreducible_kpoint_count",
+        "scf_iteration_count",
+        "execution_status",
+        "returncode"
+      ],
+      "properties": {
+        "program_version": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "job_completed": {
+          "const": true
+        },
+        "scf_converged": {
+          "const": true
+        },
+        "total_energy_ry": {
+          "type": "number"
+        },
+        "atom_count": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "irreducible_kpoint_count": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "scf_iteration_count": {
+          "$ref": "#/$defs/positiveInteger"
+        },
+        "execution_status": {
+          "const": "succeeded"
+        },
+        "returncode": {
+          "const": 0
+        }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "severity",
+        "native_flag",
+        "artifact_role"
+      ],
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "severity": {
+          "const": "warning"
+        },
+        "native_flag": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "artifact_role": {
+          "const": "pw-stderr"
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "role",
+        "artifact_id",
+        "sha256",
+        "byte_size"
+      ],
+      "properties": {
+        "role": {
+          "enum": [
+            "pw-input",
+            "pw-stdout",
+            "pw-stderr",
+            "execution-record"
+          ]
+        },
+        "artifact_id": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "byte_size": {
+          "$ref": "#/$defs/positiveInteger"
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "stage",
+        "coordinate",
+        "native_observation",
+        "diagnostics",
+        "artifacts"
+      ],
+      "properties": {
+        "run_id": {
+          "$ref": "#/$defs/nonemptyString"
+        },
+        "stage": {
+          "enum": [
+            "initial-grid",
+            "adaptive-extension"
+          ]
+        },
+        "coordinate": {
+          "$ref": "#/$defs/coordinate"
+        },
+        "native_observation": {
+          "$ref": "#/$defs/nativeObservation"
+        },
+        "diagnostics": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/diagnostic"
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/artifact"
+          }
+        }
+      }
+    }
+  }
+}
