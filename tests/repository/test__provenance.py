@@ -98,19 +98,18 @@ def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     ]
 
 
-def test_physkit_runtime_dependency_is_an_exact_distribution_constraint() -> None:
+def test_physkit_runtime_dependency_has_a_compatible_lower_bound() -> None:
     with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as stream:
         project = tomllib.load(stream)["project"]
 
-    assert "physkit==0.1.0" in project["dependencies"]
+    assert "physkit>=0.1.0" in project["dependencies"]
     assert not any("git+" in dependency for dependency in project["dependencies"])
     assert "TRANSFER.toml" not in (REPOSITORY_ROOT / "README.md").read_text()
 
 
-def test_wannier90_distribution_resources_bind_provenance_and_offline_wheels() -> None:
+def test_wannier90_distribution_resource_binds_provenance() -> None:
     package = files("projectkoios.integrations.wannier90")
     provenance = json.loads(package.joinpath("provenance.json").read_text())
-    lock = json.loads(package.joinpath("offline-wheel-lock.json").read_text())
 
     assert provenance["donor"]["commit"] == ("7bd913151f7e61ed2bdba593df920be36573b502")
     assert len(provenance["source_files"]) == 7
@@ -121,12 +120,7 @@ def test_wannier90_distribution_resources_bind_provenance_and_offline_wheels() -
         "9abab30964b4985647b8f917e1da17648207d2f6",
         "8b508c43979e6442980b80c9a7edf306b32e33f8",
     ]
-    assert provenance["physkit"]["distribution"] == "physkit==0.1.0"
-    assert lock["physkit_source"]["reproducible_build_count"] == 2
-    assert lock["physkit_source"]["wheel_sha256"] == (
-        "bd35dd8431b1f8d1ecd74cbb39378863f4c3ee0d2401ae723c58ead59ae496ff"
-    )
-    assert len(lock["runtime_wheels"]) == 21
+    assert provenance["physkit"]["distribution"] == "physkit>=0.1.0"
 
 
 def test_wannier90_donor_license_is_the_distribution_license() -> None:

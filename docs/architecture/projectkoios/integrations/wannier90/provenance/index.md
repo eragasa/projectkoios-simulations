@@ -8,18 +8,16 @@ The parser source is bound to `ksdft2effmass` commit
 SHA-256 `c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4`
 and is byte-identical to this repository's `LICENSE`.
 
-The installed distribution includes machine-readable `provenance.json` and
-`offline-wheel-lock.json` resources in
-`projectkoios.integrations.wannier90`. The
+The installed distribution includes the machine-readable `provenance.json`
+resource in `projectkoios.integrations.wannier90`. The
 [static transitive import closure](import-closure.md) records both semantic and
 incidental package-facade dependencies. The only semantic in-repository
 dependency was the donor quantity module, blob
 `d98be473e19e17a59563fc7c3e00cca02fd822d3`. Generic quantity ownership is
-PhysKit, so the extraction uses the exact `physkit==0.1.0` distribution from
-commit `97032f16c9125aa124750508f8513cca9f6dab02` instead of copying it here.
-A safe Git archive produced the same wheel twice; SHA-256
-`bd35dd8431b1f8d1ecd74cbb39378863f4c3ee0d2401ae723c58ead59ae496ff` and
-all cached transitive wheel hashes are recorded in the packaged offline lock.
+PhysKit, so the extraction depends on the current compatible
+`physkit>=0.1.0` distribution instead of copying it here. Commit
+`97032f16c9125aa124750508f8513cca9f6dab02` identifies the implementation
+reviewed during extraction, not an installation pin.
 
 ## Residual scientific limits
 

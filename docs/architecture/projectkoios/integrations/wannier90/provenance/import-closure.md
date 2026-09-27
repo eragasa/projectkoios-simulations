@@ -74,8 +74,8 @@ The facade's serialization adapter would also load serialization tree
 
 Those incidental operators, solvers, Hamiltonians, workflows, and serializers
 are not parser requirements and were not extracted. External dependencies of
-the generic donor quantity module remain owned through the exact PhysKit
-`0.1.0` distribution, while NumPy is also declared directly because parser
+the generic donor quantity module remain owned through the compatible PhysKit
+`>=0.1.0` distribution, while NumPy is also declared directly because parser
 modules import it.
 
 ## Campaign-consumer closure explicitly excluded
@@ -87,7 +87,7 @@ local independent assertion without importing workflow or Wilson code.
 
 | Donor path | Blob | Ownership disposition |
 | --- | --- | --- |
-| `python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90NativeArtifactWorkflow.py` | `15f83f6895102931c7c1f9a3a69eadffff34d3d9` | campaign workflow; excluded |
+| `python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90NativeArtifactWorkflow.py` | `15f83f6895102931c7c1f9a3a69eadffff34d3d9` | campaign workflow excluded; execution-free artifact assembly adapted into the standalone example |
 | `python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90VerifiedNativeWorkflow.py` | `e3799be8926dad6c13ac09a9f00907c7f67aa68f` | campaign/Wilson composition; excluded |
 | `python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90WilsonVerifier.py` | `9abab30964b4985647b8f917e1da17648207d2f6` | Wilson verification; excluded |
 | `python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/resources/native-artifact-correlation-fixture.json` | `8b508c43979e6442980b80c9a7edf306b32e33f8` | campaign/Wilson fixture; excluded |

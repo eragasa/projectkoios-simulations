@@ -43,12 +43,12 @@
   ],
   "adaptations": [
     "namespace rewrite",
-    "quantity imports redirected to the exact PhysKit distribution",
+    "quantity imports redirected to the compatible PhysKit distribution",
     "native-dimension, inventory, numeric, unit-label, and resource-bound corrections",
     "additional adversarial and wheel-provenance tests"
   ],
   "consumer_closure": [
-    {"path":"python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90NativeArtifactWorkflow.py","blob":"15f83f6895102931c7c1f9a3a69eadffff34d3d9","ownership":"campaign workflow; excluded"},
+    {"path":"python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90NativeArtifactWorkflow.py","blob":"15f83f6895102931c7c1f9a3a69eadffff34d3d9","ownership":"campaign workflow excluded; execution-free artifact assembly adapted into the standalone example"},
     {"path":"python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90VerifiedNativeWorkflow.py","blob":"e3799be8926dad6c13ac09a9f00907c7f67aa68f","ownership":"campaign workflow and Wilson composition; excluded"},
     {"path":"python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90WilsonVerifier.py","blob":"9abab30964b4985647b8f917e1da17648207d2f6","ownership":"Wilson verification; excluded"},
     {"path":"python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/resources/native-artifact-correlation-fixture.json","blob":"8b508c43979e6442980b80c9a7edf306b32e33f8","ownership":"campaign/Wilson fixture; excluded; parser-composition assertion ported independently"}
@@ -58,7 +58,7 @@
     "commit": "97032f16c9125aa124750508f8513cca9f6dab02",
     "tree": "3a323d2436d4b5e86fe312e810e03c5d21ce37b3",
     "quantities_blob": "686d075852ed01aab0a8d74fdec1be5a440c075d",
-    "distribution": "physkit==0.1.0",
+    "distribution": "physkit>=0.1.0",
     "license": "MIT",
     "license_sha256": "0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410"
   }

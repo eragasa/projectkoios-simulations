@@ -15,7 +15,7 @@ authors = [
 ]
 dependencies = [
     "numpy>=2.3,<3",
-    "physkit==0.1.0",
+    "physkit>=0.1.0",
 ]
 
 [project.urls]
@@ -47,7 +47,7 @@ namespaces = true
 [tool.setuptools.package-data]
 "projectkoios.simulations" = ["py.typed"]
 "projectkoios.integrations" = ["py.typed"]
-"projectkoios.integrations.wannier90" = ["provenance.json", "offline-wheel-lock.json"]
+"projectkoios.integrations.wannier90" = ["provenance.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
