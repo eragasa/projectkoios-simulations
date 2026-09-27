@@ -66,7 +66,7 @@ namespace_from = "projectkoios.frankensteins.integrations.vasp"
 namespace_to = "projectkoios.integrations.vasp"
 dependency_adaptation = "Replaced the commit-bound PhysKit direct URL with the released physkit>=0.1.0 requirement."
 neutral_contract_adaptation = "Added explicit, default-false authorization to CalculatorExecutionRequest and enforced it before CalculatorExecutor creates files or starts a process."
-example_adaptation = "Removed commands and replay declarations that referenced an application runner and successful artifact tree not transferred into this repository; retained inputs and failure evidence are identified as static inspection artifacts."
+example_adaptation = "Retained only provider-native static inputs and raw failure evidence. Removed seven application-layer campaign and convergence paths and routed them to the unmigrated projectkoios.frankensteins.applications.pw_dft_scf owner boundary."
 summary = "Removed the incubation namespace segment, adapted repository-root test discovery, and retained fail-closed execution and scientific-claim boundaries."
 
 [[extractions.subtrees]]
@@ -87,11 +87,15 @@ path = "docs/projectkoios/frankensteins/integrations/vasp"
 git_tree = "4f4d5d71750095eb8efc92bf6336095230a0d7cc"
 target = "docs/architecture/projectkoios/integrations/vasp"
 
-[[extractions.subtrees]]
-role = "examples"
+[[extractions.source_inventories]]
+role = "example-source-inventory"
 path = "examples/projectkoios/frankensteins/integrations/vasp"
 git_tree = "b84a7f0fe5ae549179a7c9ddb11c210726813108"
-target = "examples/projectkoios/integrations/vasp"
+source_file_count = 18
+retained_source_file_count = 11
+excluded_source_file_count = 7
+target_file_count = 11
+selection_rule = "Retain all namespace-rewritten files except the exact exclusions below."
 
 [[extractions.compatibility_sources]]
 role = "repository-root test discovery"
@@ -100,3 +104,45 @@ source_tree = "e5daec9f5a16e03f998afb9158a101246acd40d1"
 path = "tests/support/repository_root.py"
 git_blob = "c9f500c376cfaf6dedb557258e76ca7378cc8587"
 target = "tests/support/repository_root.py"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/vasp/pw_dft_scf/Si/primitive/campaign.toml"
+git_blob = "6e83532fcde923909053b92ed02df61d978746ee"
+owner_boundary = "projectkoios.frankensteins.applications.pw_dft_scf"
+reason = "application campaign declaration"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/vasp/pw_dft_scf/Si/primitive/convergence/joint/README.md"
+git_blob = "e8626e8ed6a442a0abbfe7f399f211cfb28465bb"
+owner_boundary = "projectkoios.frankensteins.applications.pw_dft_scf"
+reason = "application convergence policy documentation"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/vasp/pw_dft_scf/Si/primitive/convergence/joint/campaign.toml"
+git_blob = "57a0c96c0d0e50797929c80e9b172f57de39f0d3"
+owner_boundary = "projectkoios.frankensteins.applications.pw_dft_scf"
+reason = "application convergence campaign declaration"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/vasp/pw_dft_scf/Si/primitive/convergence/kpoint/README.md"
+git_blob = "76ff2883f252a4163e2d26690535e8ab02b52302"
+owner_boundary = "projectkoios.frankensteins.applications.pw_dft_scf"
+reason = "application convergence policy documentation"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/vasp/pw_dft_scf/Si/primitive/convergence/kpoint/campaign.toml"
+git_blob = "70b46512c60dc68252aa04569b0661a977121a4c"
+owner_boundary = "projectkoios.frankensteins.applications.pw_dft_scf"
+reason = "application convergence campaign declaration"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/vasp/pw_dft_scf/Si/primitive/convergence/wavefunction_cutoff/README.md"
+git_blob = "5f540029e83636efd54f1a0c79f3d8ebbc5dc751"
+owner_boundary = "projectkoios.frankensteins.applications.pw_dft_scf"
+reason = "application convergence policy documentation"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/vasp/pw_dft_scf/Si/primitive/convergence/wavefunction_cutoff/campaign.toml"
+git_blob = "6343b3a0880479e220e7f42f6755856b740ec2fa"
+owner_boundary = "projectkoios.frankensteins.applications.pw_dft_scf"
+reason = "application convergence campaign declaration"

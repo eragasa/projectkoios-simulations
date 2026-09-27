@@ -11,5 +11,5 @@ failure demonstrates that a zero process return code does not imply calculator
 or workflow success. It is failure evidence, not a successful reference result,
 numerical verification, or scientific validation.
 
-`campaign.toml` preserves the calculator and projection declaration associated
-with these artifacts. It does not grant calculator-execution authority.
+Application-layer campaign and convergence declarations are intentionally not
+part of this provider example. Their owner boundary remains unmigrated.
