@@ -1,0 +1,18 @@
+{
+  "command": [
+    "vasp_std"
+  ],
+  "error_message": null,
+  "error_type": null,
+  "required_input_filenames": [
+    "INCAR",
+    "KPOINTS",
+    "POSCAR",
+    "POTCAR"
+  ],
+  "returncode": 0,
+  "schema_version": 1,
+  "status": "succeeded",
+  "stderr_filename": "vasp.err",
+  "stdout_filename": "vasp.out"
+}

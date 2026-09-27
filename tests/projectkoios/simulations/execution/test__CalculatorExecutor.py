@@ -19,6 +19,20 @@ pytestmark = pytest.mark.integration
 
 
 class CalculatorExecutorTest(unittest.TestCase):
+    def test_rejects_execution_without_explicit_authorization(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            working_directory = Path(temporary_directory)
+            request = CalculatorExecutionRequest(
+                command=(sys.executable, "-c", "raise SystemExit('must not run')"),
+                working_directory=working_directory,
+            )
+
+            with self.assertRaisesRegex(PermissionError, "not authorized"):
+                CalculatorExecutor().execute(request)
+
+            self.assertFalse((working_directory / "stdout.txt").exists())
+            self.assertFalse((working_directory / "execution.json").exists())
+
     def test_records_success_before_returning(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             working_directory = Path(temporary_directory)
@@ -26,6 +40,7 @@ class CalculatorExecutorTest(unittest.TestCase):
                 CalculatorExecutionRequest(
                     command=(sys.executable, "-c", "print('complete')"),
                     working_directory=working_directory,
+                    execution_authorized=True,
                 )
             )
 
@@ -57,6 +72,7 @@ class CalculatorExecutorTest(unittest.TestCase):
                         ),
                         working_directory=working_directory,
                         required_input_filenames=("Si.upf",),
+                        execution_authorized=True,
                     )
                 )
 
@@ -84,6 +100,7 @@ class CalculatorExecutorTest(unittest.TestCase):
                             "import sys; print('bad'); sys.exit(7)",
                         ),
                         working_directory=working_directory,
+                        execution_authorized=True,
                     )
                 )
 
@@ -109,6 +126,7 @@ class CalculatorExecutorTest(unittest.TestCase):
                         ),
                         working_directory=working_directory,
                         timeout_seconds=0.05,
+                        execution_authorized=True,
                     )
                 )
 
@@ -129,6 +147,7 @@ class CalculatorExecutorTest(unittest.TestCase):
                     CalculatorExecutionRequest(
                         command=("/definitely/not/a/calculator",),
                         working_directory=working_directory,
+                        execution_authorized=True,
                     )
                 )
 

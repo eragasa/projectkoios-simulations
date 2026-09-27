@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "evidence_id": "si-primitive-vasp-negative-lattice-orientation",
+  "interpretation": {
+    "code": "negative-lattice-orientation",
+    "message": "VASP rejected the POSCAR because the triple product of its basis vectors is negative.",
+    "process_returncode": 0,
+    "calculation_completed": false
+  },
+  "calculator": {
+    "program": "vasp",
+    "version": "5.3.5",
+    "byte_size": 8463640,
+    "sha256": "ebe4117fef93d0752d2fc2c4ae0159d4a8cbd24aec58fc7305f58871cbab2b86"
+  },
+  "inputs": {
+    "commit": "f9ec33d5a7390d524c366f98e2ffe9a1f23fcdfb",
+    "INCAR": {
+      "repository_path": "examples/projectkoios/Si/single_scf/vasp/input/INCAR",
+      "git_blob_oid": "476762d91615ca8c9825b5aebb1ddd7d0d36a34b",
+      "byte_size": 162,
+      "sha256": "15703162fd60018469973248d32f51b6d35d1a3e716b3201b25f6c0ce0c1734f"
+    },
+    "KPOINTS": {
+      "repository_path": "examples/projectkoios/Si/single_scf/vasp/input/KPOINTS",
+      "git_blob_oid": "35c3cab1ce51a85fab471a7ea7415c04e6092a42",
+      "byte_size": 35,
+      "sha256": "37c762ac822ae18c3c1abb39def8c008a1afc3beb75a58971376df313da597cd"
+    },
+    "POSCAR": {
+      "repository_path": "examples/projectkoios/Si/single_scf/vasp/input/POSCAR",
+      "git_blob_oid": "a22615493a58fef266144b1832d2154e02ac556a",
+      "byte_size": 324,
+      "sha256": "38b718c8c976817ed7fe5824b32de744e8be91166c220eefbb46d2a42109a9c4"
+    },
+    "POTCAR": {
+      "committed": false,
+      "byte_size": 195673,
+      "sha256": "79d9987ad8750f624c4d6acb2a16d13abf6a777132adc04dc6c8399be72b42bb",
+      "titel": "PAW_PBE Si 05Jan2001"
+    }
+  },
+  "artifacts": {
+    "execution.json": {
+      "byte_size": 310,
+      "sha256": "c3032a5f56825e4b2c93195f61a9b9c059872c9e120e6f3b9c623485e46ece41"
+    },
+    "OUTCAR": {
+      "byte_size": 158,
+      "sha256": "700eedf07668158aec938caed30cc9888797c27309b7338a5607b17843d23075"
+    },
+    "vasp.out": {
+      "byte_size": 169,
+      "sha256": "23654a620b68202f58d51b6c81ce8e271836256e5af003acd15515932ebcfd38"
+    },
+    "vasp.err": {
+      "committed": false,
+      "byte_size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}

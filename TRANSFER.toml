@@ -55,3 +55,48 @@ commit = "be453fa7191e55a0426f66e8b5b5b0b103c8b29d"
 tree = "7ac9c9f255aa7731f39ce35a0e561fc113082a6f"
 license_file = "licenses/PYPOSPACK-MIT.txt"
 license_sha256 = "05f25c4caf59b20bbcadbb1e3e1c33b154d273ef7daa7e7740bca8a0ed0f4c83"
+
+[[extractions]]
+component = "projectkoios.integrations.vasp"
+status = "native-format-and-scf-integration"
+source_repository = "https://github.com/eragasa/projectkoios-frankenstein"
+source_commit = "3eb562f2d6167ec20d6f2c892c517509a7abf283"
+source_tree = "e5daec9f5a16e03f998afb9158a101246acd40d1"
+namespace_from = "projectkoios.frankensteins.integrations.vasp"
+namespace_to = "projectkoios.integrations.vasp"
+dependency_adaptation = "Replaced the commit-bound PhysKit direct URL with the released physkit>=0.1.0 requirement."
+neutral_contract_adaptation = "Added explicit, default-false authorization to CalculatorExecutionRequest and enforced it before CalculatorExecutor creates files or starts a process."
+example_adaptation = "Removed commands and replay declarations that referenced an application runner and successful artifact tree not transferred into this repository; retained inputs and failure evidence are identified as static inspection artifacts."
+summary = "Removed the incubation namespace segment, adapted repository-root test discovery, and retained fail-closed execution and scientific-claim boundaries."
+
+[[extractions.subtrees]]
+role = "implementation"
+path = "src/projectkoios/frankensteins/integrations/vasp"
+git_tree = "fa1baa70a40cd221aab7da4ec4e68980506c00df"
+target = "src/python/projectkoios/integrations/vasp"
+
+[[extractions.subtrees]]
+role = "tests"
+path = "tests/projectkoios/frankensteins/integrations/vasp"
+git_tree = "1a0d251fff584c2c6cacfdfe0bc596bb75230aa4"
+target = "tests/projectkoios/integrations/vasp"
+
+[[extractions.subtrees]]
+role = "documentation"
+path = "docs/projectkoios/frankensteins/integrations/vasp"
+git_tree = "4f4d5d71750095eb8efc92bf6336095230a0d7cc"
+target = "docs/architecture/projectkoios/integrations/vasp"
+
+[[extractions.subtrees]]
+role = "examples"
+path = "examples/projectkoios/frankensteins/integrations/vasp"
+git_tree = "b84a7f0fe5ae549179a7c9ddb11c210726813108"
+target = "examples/projectkoios/integrations/vasp"
+
+[[extractions.compatibility_sources]]
+role = "repository-root test discovery"
+source_commit = "3eb562f2d6167ec20d6f2c892c517509a7abf283"
+source_tree = "e5daec9f5a16e03f998afb9158a101246acd40d1"
+path = "tests/support/repository_root.py"
+git_blob = "c9f500c376cfaf6dedb557258e76ca7378cc8587"
+target = "tests/support/repository_root.py"

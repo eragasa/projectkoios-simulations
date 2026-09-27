@@ -1,0 +1,10 @@
+schema_version = 2
+integration = "vasp"
+mode = "single"
+campaign_id = "silicon-scf-vasp"
+structure_id = "Si.PrimitiveUnitCell"
+sampling_profile = "single-vasp"
+projection_profile = "vasp-static-scf"
+
+[runtime]
+maximum_internal_firings = 1000

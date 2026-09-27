@@ -1,0 +1,7 @@
+{
+  "integration_id": "vasp",
+  "qualification": "This selects a static ionic calculation; electronic, k-point, and restart settings still determine the complete VASP calculation.",
+  "required_external_inputs": [
+    "POTCAR"
+  ]
+}
