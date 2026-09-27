@@ -13,6 +13,13 @@ projected inputs are runnable, or establish numerical or scientific validation.
 Workflow orchestration, convergence campaigns, recipes, and scientific
 acceptance policy do not belong here.
 
+The LAMMPS package is a provenance-bound reconstruction scaffold for inspecting
+retained templates and data text and for rendering bounded data artifacts. It
+does not run LAMMPS, parse calculator results, control convergence, or claim
+behavioral conformance, numerical verification, or scientific validation.
+Workflow orchestration, campaigns, recipes, and scientific acceptance policy do
+not belong here.
+
 The Quantum ESPRESSO integration provides native input, output, saved-state,
 SCF, NSCF, relaxation, and `pw2wannier90.x` contracts. Calculator execution is
 fail-closed and requires explicit authorization; process success does not imply

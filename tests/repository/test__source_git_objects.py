@@ -49,13 +49,18 @@ def _target_files(path: Path) -> tuple[Path, ...]:
     reason="PROJECTKOIOS_FRANKENSTEIN_CHECKOUT is not set",
 )
 def test_declared_source_git_objects_and_example_counts() -> None:
-    extractions = _transfer()["extractions"]
-    assert [extraction["component"] for extraction in extractions] == [
+    extractions_by_component = {
+        extraction["component"]: extraction for extraction in _transfer()["extractions"]
+    }
+    components = (
         "projectkoios.integrations.vasp",
         "projectkoios.integrations.quantumespresso",
-    ]
+        "projectkoios.integrations.lammps",
+    )
+    assert set(components) <= extractions_by_component.keys()
 
-    for extraction in extractions:
+    for component in components:
+        extraction = extractions_by_component[component]
         commit = extraction["source_commit"]
 
         assert _git("cat-file", "-t", commit) == "commit"
@@ -65,7 +70,7 @@ def test_declared_source_git_objects_and_example_counts() -> None:
             assert _source_object(commit, subtree["path"]) == subtree["git_tree"]
             assert _git("cat-file", "-t", subtree["git_tree"]) == "tree"
 
-        for inventory in extraction["source_inventories"]:
+        for inventory in extraction.get("source_inventories", ()):
             assert _source_object(commit, inventory["path"]) == inventory["git_tree"]
             assert _git("cat-file", "-t", inventory["git_tree"]) == "tree"
 
@@ -75,7 +80,7 @@ def test_declared_source_git_objects_and_example_counts() -> None:
                 ).splitlines()
             )
             exclusion_paths = {
-                item["source_path"] for item in extraction["example_exclusions"]
+                item["source_path"] for item in extraction.get("example_exclusions", ())
             }
             assert len(source_paths) == inventory["source_file_count"]
             assert exclusion_paths <= set(source_paths)
@@ -95,12 +100,12 @@ def test_declared_source_git_objects_and_example_counts() -> None:
                 == inventory["target_file_count"]
             )
 
-        for source in extraction["compatibility_sources"]:
+        for source in extraction.get("compatibility_sources", ()):
             source_commit = source.get("source_commit", commit)
             assert _source_object(source_commit, source["path"]) == source["git_blob"]
             assert _git("cat-file", "-t", source["git_blob"]) == "blob"
 
-        for exclusion in extraction["example_exclusions"]:
+        for exclusion in extraction.get("example_exclusions", ()):
             assert (
                 _source_object(commit, exclusion["source_path"])
                 == exclusion["git_blob"]

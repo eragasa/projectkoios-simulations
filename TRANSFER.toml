@@ -276,3 +276,48 @@ source_path = "examples/projectkoios/frankensteins/integrations/quantumespresso/
 git_blob = "6e8a34dd48aa20be7cca08c018475e2bbecca2ad"
 owner_boundary = "projectkoios.applications"
 reason = "application convergence campaign declaration"
+
+[[extractions]]
+component = "projectkoios.integrations.lammps"
+status = "reconstruction-scaffold"
+source_repository = "https://github.com/eragasa/projectkoios-frankenstein"
+source_commit = "2b996036f84b3cb72a0fc7cc9e7f71095d94ce53"
+source_tree = "e0cb377ba799a5a87c3ad9f16958c1ee166a3ed8"
+namespace_from = "projectkoios.frankensteins.integrations.lammps"
+namespace_to = "projectkoios.integrations.lammps"
+example_limitation = "The pinned recovery source has no owned examples/projectkoios/frankensteins/integrations/lammps tree. Historical PyFlamestk, PyPosPack, and separately owned ksdft2effmass example evidence is excluded; no synthetic example is claimed by this transfer."
+summary = "Removed the incubation namespace segment and replaced removed shared dependencies with narrow local contracts; no execution capability was added."
+
+[[extractions.subtrees]]
+role = "implementation"
+path = "src/projectkoios/frankensteins/integrations/lammps"
+git_tree = "53fa084f96df6f20706625f5971547b0322d1123"
+target = "src/python/projectkoios/integrations/lammps"
+
+[[extractions.subtrees]]
+role = "tests"
+path = "tests/projectkoios/frankensteins/integrations/lammps"
+git_tree = "be951fede4d31192b427f756c291501d5164f053"
+target = "tests/projectkoios/integrations/lammps"
+
+[[extractions.subtrees]]
+role = "documentation"
+path = "docs/projectkoios/frankensteins/integrations/lammps"
+git_tree = "5f3b7bbc3f4e36e8a98e459c8edd94b15050e1e9"
+target = "docs/architecture/projectkoios/integrations/lammps"
+
+[[extractions.compatibility_sources]]
+role = "source-file evidence and observed-setting contracts"
+source_commit = "cd278d84dbb37d8454668bc3102951fe7a068546"
+source_tree = "1c6a8e69c53c6ac05db0b8c1ed95347f25eea4e7"
+path = "src/projectkoios/frankensteins/core.py"
+git_blob = "9f7d1d0bc8ca55c777d727a252fc21fc93380ac0"
+target = "src/python/projectkoios/integrations/lammps/models.py"
+
+[[extractions.compatibility_sources]]
+role = "bounded regular-file reader"
+source_commit = "cd278d84dbb37d8454668bc3102951fe7a068546"
+source_tree = "1c6a8e69c53c6ac05db0b8c1ed95347f25eea4e7"
+path = "src/projectkoios/frankensteins/evidence.py"
+git_blob = "75988b31d42bc3cb06a55f51da51f6245a5f3961"
+target = "src/python/projectkoios/integrations/lammps/_files.py"
