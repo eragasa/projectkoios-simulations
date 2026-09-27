@@ -92,6 +92,7 @@ target = "docs/architecture/projectkoios/integrations/quantumespresso"
 role = "example-source-inventory"
 path = "examples/projectkoios/frankensteins/integrations/quantumespresso"
 git_tree = "293780bc51fa117bfe47981d0da1ee3cb52f59f1"
+target = "examples/projectkoios/integrations/quantumespresso"
 source_file_count = 171
 retained_source_file_count = 161
 excluded_source_file_count = 10

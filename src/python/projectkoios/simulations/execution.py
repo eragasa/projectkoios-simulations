@@ -219,6 +219,8 @@ class CalculatorExecutor:
         """Write a failed-preflight record and then raise its execution error."""
         if type(request) is not CalculatorExecutionRequest:
             raise TypeError("request must be a CalculatorExecutionRequest")
+        if not request.execution_authorized:
+            raise PermissionError("calculator execution is not authorized")
         if not isinstance(error, Exception):
             raise TypeError("error must be an Exception")
         record_path = request.working_directory / request.record_filename
