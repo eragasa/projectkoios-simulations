@@ -106,6 +106,14 @@ def test_physkit_runtime_dependency_has_a_compatible_lower_bound() -> None:
     assert not any("git+" in dependency for dependency in project["dependencies"])
     assert "TRANSFER.toml" not in (REPOSITORY_ROOT / "README.md").read_text()
 
+    for relative_path in (
+        "TRANSFER.toml",
+        "docs/provenance/origins.md",
+        "docs/architecture/projectkoios/integrations/wannier90/provenance/import-closure.md",
+    ):
+        text = (REPOSITORY_ROOT / relative_path).read_text(encoding="utf-8")
+        assert "pinned physkit" not in text.casefold()
+
 
 def test_wannier90_distribution_resource_binds_provenance() -> None:
     package = files("projectkoios.integrations.wannier90")

@@ -130,25 +130,25 @@ adaptation = "Namespace rewrite only."
 source = "python/src/ksdft2effmass/integration/wannier90/artifacts.py"
 source_blob = "c9ec6533846df8fd099ec6df3a6e61d9de6de5c7"
 target = "src/python/projectkoios/integrations/wannier90/artifacts.py"
-adaptation = "Namespace rewrite and quantity imports redirected to the pinned PhysKit owner."
+adaptation = "Namespace rewrite and quantity imports redirected to the compatible PhysKit distribution."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/hamiltonian_blocks.py"
 source_blob = "74f1c111162467bb83e323cf11eebf779951f32c"
 target = "src/python/projectkoios/integrations/wannier90/hamiltonian_blocks.py"
-adaptation = "Quantity imports redirected to the pinned PhysKit owner."
+adaptation = "Quantity imports redirected to the compatible PhysKit distribution."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/interface_data.py"
 source_blob = "f047240f54d90f8c1eb4257a8a06ddb81d93ebdb"
 target = "src/python/projectkoios/integrations/wannier90/interface_data.py"
-adaptation = "Quantity imports redirected to the pinned PhysKit owner."
+adaptation = "Quantity imports redirected to the compatible PhysKit distribution."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/localization.py"
 source_blob = "c8ad5ab129a2e027066a3583d17fc1ec590b188d"
 target = "src/python/projectkoios/integrations/wannier90/localization.py"
-adaptation = "Quantity imports redirected to the pinned PhysKit owner."
+adaptation = "Quantity imports redirected to the compatible PhysKit distribution."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/neighbor_lists.py"
@@ -160,7 +160,7 @@ adaptation = "Copied unchanged."
 source = "python/src/ksdft2effmass/integration/wannier90/unitary_matrices.py"
 source_blob = "6b9eef22b55794cda33c328ecb50adaa4a5f8a06"
 target = "src/python/projectkoios/integrations/wannier90/unitary_matrices.py"
-adaptation = "Quantity imports redirected to the pinned PhysKit owner."
+adaptation = "Quantity imports redirected to the compatible PhysKit distribution."
 
 [[origins]]
 component = "physkit"

@@ -47,8 +47,9 @@ identity are recorded in [`../../TRANSFER.toml`](../../TRANSFER.toml).
 The donor imported generic unit-bearing array contracts from its broad
 `ksdft2effmass.operators` facade. Static closure analysis identified
 `operators/quantities.py` as the only semantic dependency. Those generic
-contracts are already owned by the pinned PhysKit dependency at commit
-`97032f16c9125aa124750508f8513cca9f6dab02`; imports therefore target
+contracts are already owned by the compatible PhysKit distribution. Commit
+`97032f16c9125aa124750508f8513cca9f6dab02` identifies the implementation
+reviewed during extraction, not an installation pin. Imports therefore target
 `physkit.units.quantities`, and no operator, Hamiltonian, workflow, calculator,
 execution, or campaign package was copied. PhysKit's MIT text is retained in
 [`../../licenses/PHYSKIT-MIT.txt`](../../licenses/PHYSKIT-MIT.txt).

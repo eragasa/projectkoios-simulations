@@ -30,10 +30,12 @@ The donor test directly covering the used complex matrix wrapper is
 blob `2e81f0cc1189a7d818c17c25637be408ec286d1e`. The complete operator test tree is
 `6c01d90651f6d389c86882a2c6d9f61d723b7ab8`.
 
-The pinned PhysKit replacement is `src/physkit/units/quantities.py`, blob
+The PhysKit implementation reviewed for extraction is
+`src/physkit/units/quantities.py`, blob
 `686d075852ed01aab0a8d74fdec1be5a440c075d`, within units tree
 `3314b0954e1d8e281e43f8f286e3e7c25361503d` at commit
-`97032f16c9125aa124750508f8513cca9f6dab02`. Its used unit and quantity behavior
+`97032f16c9125aa124750508f8513cca9f6dab02`; that identity is provenance, not an
+installation pin. Its used unit and quantity behavior
 matches the donor module; PhysKit additionally provides nominal base classes.
 Its MIT license has SHA-256
 `0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410`.
