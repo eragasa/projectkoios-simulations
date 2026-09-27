@@ -1,0 +1,1 @@
+"""Calculator-neutral simulation contracts."""

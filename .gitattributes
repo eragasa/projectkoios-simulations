@@ -1,0 +1,2 @@
+# Preserve exact historical license bytes, including upstream whitespace.
+/licenses/*.txt -whitespace

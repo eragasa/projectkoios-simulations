@@ -1,0 +1,57 @@
+schema_version = 1
+component = "projectkoios-simulations"
+repository = "https://github.com/eragasa/projectkoios-simulations"
+python_namespace = "projectkoios.simulations"
+license = "Apache-2.0"
+
+[source]
+repository = "https://github.com/eragasa/projectkoios-frankenstein"
+commit = "3eb562f2d6167ec20d6f2c892c517509a7abf283"
+tree = "e5daec9f5a16e03f998afb9158a101246acd40d1"
+
+[[source.subtrees]]
+role = "implementation"
+path = "src/projectkoios/frankensteins/simulations"
+git_tree = "2952b4030c68716c9a25cacb9c9f7ebe4cf0b25a"
+target = "src/python/projectkoios/simulations"
+
+[[source.subtrees]]
+role = "tests"
+path = "tests/projectkoios/frankensteins/simulations"
+git_tree = "807a05f2b07dac16dce2f128a2dbd1a2f96bca25"
+target = "tests/projectkoios/simulations"
+
+[[source.subtrees]]
+role = "documentation"
+path = "docs/projectkoios/frankensteins/simulations"
+git_tree = "69351637bc876405cc848fef086a5dae787d2233"
+target = "docs/projectkoios/simulations"
+
+[adaptation]
+namespace_from = "projectkoios.frankensteins.simulations"
+namespace_to = "projectkoios.simulations"
+test_namespace_from = "tests.projectkoios.frankensteins.simulations"
+test_namespace_to = "tests.projectkoios.simulations"
+summary = "Removed only the incubation namespace segment and added repository scaffolding."
+
+[authority]
+license_decision = "Apache-2.0"
+rightsholder_authorization = "Explicit operator authorization for this extraction."
+upstream_notices_retained = true
+
+[[origins]]
+component = "pyflamestk"
+repository = "https://github.com/eragasa/pyflamestk"
+commit = "5b8368cc88d91bc56f9cc1c8a7fa8d9ea3d6b359"
+tree = "02e20f61a9b554ed0dcbda15bb24adc21e942007"
+license_file = "licenses/PYFLAMESTK-BSD-2-CLAUSE.txt"
+license_sha256 = "8e8ff7b5f5de2f4f1b48a18108d6268769739d622cfb671078565ab56bef28aa"
+
+[[origins]]
+component = "pypospack"
+repository = "https://github.com/eragasa/pypospack"
+release = "v0.1.0"
+commit = "be453fa7191e55a0426f66e8b5b5b0b103c8b29d"
+tree = "7ac9c9f255aa7731f39ce35a0e561fc113082a6f"
+license_file = "licenses/PYPOSPACK-MIT.txt"
+license_sha256 = "05f25c4caf59b20bbcadbb1e3e1c33b154d273ef7daa7e7740bca8a0ed0f4c83"

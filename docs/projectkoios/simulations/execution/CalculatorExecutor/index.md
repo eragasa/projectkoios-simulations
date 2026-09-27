@@ -1,0 +1,3 @@
+# `CalculatorExecutor`
+
+The public `execute` action first verifies every `required_input_filename`, then opens explicit stdout and stderr files, invokes the declared command without a shell or stdin, and atomically writes `execution.json`. It returns `CalculatorExecutionRecord` only for return code zero. The public `record_preflight_failure` action lets calculator-specific staging integrations durably record repository-resolution or staging exceptions before raising the same `CalculatorExecutionError`. For a missing required input, nonzero exit, launch failure, or timeout, it writes the failure record first and then raises `CalculatorExecutionError`.
