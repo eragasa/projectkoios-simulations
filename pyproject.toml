@@ -14,6 +14,7 @@ authors = [
     { name = "Eugene Ragasa", email = "eugene@projectkoios.com" },
 ]
 dependencies = [
+    "numpy>=2.3,<3",
     "physkit @ git+https://github.com/eragasa/physkit.git@97032f16c9125aa124750508f8513cca9f6dab02",
 ]
 
@@ -35,17 +36,24 @@ package-dir = {"" = "src/python"}
 
 [tool.setuptools.packages.find]
 where = ["src/python"]
-include = ["projectkoios.simulations*"]
+include = [
+    "projectkoios.simulations",
+    "projectkoios.simulations.*",
+    "projectkoios.integrations",
+    "projectkoios.integrations.*",
+]
 namespaces = true
 
 [tool.setuptools.package-data]
 "projectkoios.simulations" = ["py.typed"]
+"projectkoios.integrations" = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--strict-markers"
 markers = [
     "integration: interaction between multiple components, files, or retained artifacts",
+    "software_verification: bounded software-contract evidence without scientific validation",
     "smoke: quick check that a non-calculator entry point performs its basic operation",
     "validation: opt-in numerical, statistical, or scientific validation",
 ]
@@ -64,5 +72,8 @@ known-first-party = ["projectkoios", "tests"]
 python_version = "3.14"
 strict = true
 explicit_package_bases = true
-files = ["src/python/projectkoios/simulations"]
+files = [
+    "src/python/projectkoios/simulations",
+    "src/python/projectkoios/integrations",
+]
 mypy_path = "src/python"

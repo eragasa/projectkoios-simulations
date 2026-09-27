@@ -5,3 +5,7 @@ This product includes maintained reconstructions and adaptations whose
 historical software lineage traces to PyFlamestk and PyPosPack, originally
 developed by Eugene J. Ragasa. Their retained license and attribution notices
 are provided in the licenses directory and THIRD_PARTY_NOTICES.md.
+
+The execution-independent Wannier90 native-artifact parsers were extracted from
+ksdft2effmass under Apache-2.0. Generic quantity contracts remain owned by and
+are imported from PhysKit under its retained MIT license.

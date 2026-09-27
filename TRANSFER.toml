@@ -55,3 +55,96 @@ commit = "be453fa7191e55a0426f66e8b5b5b0b103c8b29d"
 tree = "7ac9c9f255aa7731f39ce35a0e561fc113082a6f"
 license_file = "licenses/PYPOSPACK-MIT.txt"
 license_sha256 = "05f25c4caf59b20bbcadbb1e3e1c33b154d273ef7daa7e7740bca8a0ed0f4c83"
+
+[[extractions]]
+component = "wannier90-native-artifact-parsers"
+repository = "https://github.com/eragasa/ksdft2effmass"
+commit = "7bd913151f7e61ed2bdba593df920be36573b502"
+tree = "4f7ca69afbd1381c0cb736b0efe6b8ac5431acf6"
+source_namespace = "ksdft2effmass.integration.wannier90"
+target_namespace = "projectkoios.integrations.wannier90"
+license = "Apache-2.0"
+license_file = "LICENSE"
+license_sha256 = "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+authorization = "Explicit operator authorization for the provenance-bound parser extraction."
+test_adaptation = "Rewrote namespaces, PhysKit quantity imports, and ownership-resource paths; retained all donor tests/resources and added malformed, truncated, count, name, hash, ordering, and cross-artifact cases."
+documentation_target = "docs/architecture/projectkoios/integrations/wannier90"
+
+[[extractions.subtrees]]
+role = "implementation"
+path = "python/src/ksdft2effmass/integration/wannier90"
+git_tree = "1b5c6cd4a46f2fe70859c3aa1fded938a497e4dc"
+target = "src/python/projectkoios/integrations/wannier90"
+
+[[extractions.subtrees]]
+role = "tests"
+path = "python/tests/software_verification/ksdft2effmass/integration/wannier90"
+git_tree = "e5093059c62650e2afe14dccd80f25544e05c1df"
+target = "tests/projectkoios/integrations/wannier90"
+
+[[extractions.dependencies]]
+source_path = "python/src/ksdft2effmass/operators/quantities.py"
+source_blob = "d98be473e19e17a59563fc7c3e00cca02fd822d3"
+source_package_tree = "adfbe02b04b5b2b066213ac9266a704bed16d517"
+classification = "generic physical-unit and immutable numerical-quantity infrastructure"
+destination_owner = "physkit.units.quantities"
+resolution = "Reused the already pinned PhysKit contract; not copied into this distribution."
+repository = "https://github.com/eragasa/physkit"
+commit = "97032f16c9125aa124750508f8513cca9f6dab02"
+tree = "3a323d2436d4b5e86fe312e810e03c5d21ce37b3"
+subtree = "3314b0954e1d8e281e43f8f286e3e7c25361503d"
+blob = "686d075852ed01aab0a8d74fdec1be5a440c075d"
+license = "MIT"
+license_file = "licenses/PHYSKIT-MIT.txt"
+license_sha256 = "0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410"
+semantic_note = "Used quantity classes have the donor behavior plus nominal PhysKit base classes; numeric storage, units, validation, and immutability are unchanged."
+
+[[extractions.file_mappings]]
+source = "python/src/ksdft2effmass/integration/wannier90/__init__.py"
+source_blob = "f5d62f7cf4d41a7351f543908cce9499cd9e8b28"
+target = "src/python/projectkoios/integrations/wannier90/__init__.py"
+adaptation = "Namespace rewrite only."
+
+[[extractions.file_mappings]]
+source = "python/src/ksdft2effmass/integration/wannier90/artifacts.py"
+source_blob = "c9ec6533846df8fd099ec6df3a6e61d9de6de5c7"
+target = "src/python/projectkoios/integrations/wannier90/artifacts.py"
+adaptation = "Namespace rewrite and quantity imports redirected to the pinned PhysKit owner."
+
+[[extractions.file_mappings]]
+source = "python/src/ksdft2effmass/integration/wannier90/hamiltonian_blocks.py"
+source_blob = "74f1c111162467bb83e323cf11eebf779951f32c"
+target = "src/python/projectkoios/integrations/wannier90/hamiltonian_blocks.py"
+adaptation = "Quantity imports redirected to the pinned PhysKit owner."
+
+[[extractions.file_mappings]]
+source = "python/src/ksdft2effmass/integration/wannier90/interface_data.py"
+source_blob = "f047240f54d90f8c1eb4257a8a06ddb81d93ebdb"
+target = "src/python/projectkoios/integrations/wannier90/interface_data.py"
+adaptation = "Quantity imports redirected to the pinned PhysKit owner."
+
+[[extractions.file_mappings]]
+source = "python/src/ksdft2effmass/integration/wannier90/localization.py"
+source_blob = "c8ad5ab129a2e027066a3583d17fc1ec590b188d"
+target = "src/python/projectkoios/integrations/wannier90/localization.py"
+adaptation = "Quantity imports redirected to the pinned PhysKit owner."
+
+[[extractions.file_mappings]]
+source = "python/src/ksdft2effmass/integration/wannier90/neighbor_lists.py"
+source_blob = "06f10483e6264ea6bc949e31344b3fcd981584cb"
+target = "src/python/projectkoios/integrations/wannier90/neighbor_lists.py"
+adaptation = "Copied unchanged."
+
+[[extractions.file_mappings]]
+source = "python/src/ksdft2effmass/integration/wannier90/unitary_matrices.py"
+source_blob = "6b9eef22b55794cda33c328ecb50adaa4a5f8a06"
+target = "src/python/projectkoios/integrations/wannier90/unitary_matrices.py"
+adaptation = "Quantity imports redirected to the pinned PhysKit owner."
+
+[[origins]]
+component = "physkit"
+repository = "https://github.com/eragasa/physkit"
+commit = "97032f16c9125aa124750508f8513cca9f6dab02"
+tree = "3a323d2436d4b5e86fe312e810e03c5d21ce37b3"
+license_file = "licenses/PHYSKIT-MIT.txt"
+license_sha256 = "0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410"

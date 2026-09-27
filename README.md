@@ -3,11 +3,14 @@
 `projectkoios-simulations` owns calculator-neutral simulation identities,
 execution records, density-functional-theory and pseudopotential contracts, and
 plane-wave SCF, NSCF, and structural-relaxation contracts under
-`projectkoios.simulations`.
+`projectkoios.simulations`. The same distribution also carries bounded outward
+adapters under `projectkoios.integrations`.
 
-Calculator-native inputs, parsers, and runners belong in provider repositories.
-Workflow orchestration, convergence campaigns, recipes, and scientific
-acceptance policy do not belong here.
+`projectkoios.integrations.wannier90` authenticates and parses retained native
+Wannier90 text artifacts without filesystem access or calculator execution.
+The inward simulation namespace never imports this outward integration.
+Workflow orchestration, calculator execution, convergence campaigns, recipes,
+and scientific acceptance policy do not belong in the parser bundle.
 
 ## License and origin
 
@@ -18,8 +21,8 @@ The original software lineage comes from the historical
 [PyFlamestk](https://github.com/eragasa/pyflamestk) and
 [PyPosPack](https://github.com/eragasa/pypospack) projects. Their notices and
 license texts remain available in [`licenses/`](licenses/) and
-[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The extraction from
-`projectkoios-frankenstein` is bound to an exact commit and Git trees in
+[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The extractions from `projectkoios-frankenstein` and the provenance-bound
+Wannier90 parser donor are bound to exact commits and Git trees in
 [`TRANSFER.toml`](TRANSFER.toml).
 
 Research provenance is documented in [`CITATIONS.md`](CITATIONS.md) and
@@ -50,6 +53,6 @@ python3.14 -m venv .venv
 .venv/bin/python -m ruff check .
 .venv/bin/python -m ruff format --check src/python tests
 MYPYPATH=src/python .venv/bin/python -m mypy --strict \
-  src/python/projectkoios/simulations
+  src/python/projectkoios/simulations src/python/projectkoios/integrations
 .venv/bin/python -m build --wheel
 ```

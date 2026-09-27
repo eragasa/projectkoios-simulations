@@ -50,3 +50,49 @@ def test_preserved_historical_license_files_have_declared_identities() -> None:
         path = REPOSITORY_ROOT / origin["license_file"]
         assert path.is_file()
         assert hashlib.sha256(path.read_bytes()).hexdigest() == origin["license_sha256"]
+
+
+def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
+    transfer = _transfer()
+    extraction = transfer["extractions"][0]
+
+    assert {
+        key: extraction[key]
+        for key in (
+            "component",
+            "repository",
+            "commit",
+            "tree",
+            "source_namespace",
+            "target_namespace",
+            "license_sha256",
+        )
+    } == {
+        "component": "wannier90-native-artifact-parsers",
+        "repository": "https://github.com/eragasa/ksdft2effmass",
+        "commit": "7bd913151f7e61ed2bdba593df920be36573b502",
+        "tree": "4f7ca69afbd1381c0cb736b0efe6b8ac5431acf6",
+        "source_namespace": "ksdft2effmass.integration.wannier90",
+        "target_namespace": "projectkoios.integrations.wannier90",
+        "license_sha256": (
+            "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+        ),
+    }
+    assert [subtree["git_tree"] for subtree in extraction["subtrees"]] == [
+        "1b5c6cd4a46f2fe70859c3aa1fded938a497e4dc",
+        "e5093059c62650e2afe14dccd80f25544e05c1df",
+    ]
+    dependency = extraction["dependencies"][0]
+    assert dependency["source_blob"] == "d98be473e19e17a59563fc7c3e00cca02fd822d3"
+    assert dependency["destination_owner"] == "physkit.units.quantities"
+    assert dependency["commit"] == "97032f16c9125aa124750508f8513cca9f6dab02"
+    assert dependency["blob"] == "686d075852ed01aab0a8d74fdec1be5a440c075d"
+    assert len(extraction["file_mappings"]) == 7
+
+
+def test_wannier90_donor_license_is_the_distribution_license() -> None:
+    transfer = _transfer()
+    extraction = transfer["extractions"][0]
+    path = REPOSITORY_ROOT / extraction["license_file"]
+
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == extraction["license_sha256"]
