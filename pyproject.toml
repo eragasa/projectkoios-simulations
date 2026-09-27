@@ -14,6 +14,7 @@ authors = [
     { name = "Eugene Ragasa", email = "eugene@projectkoios.com" },
 ]
 dependencies = [
+    "numpy>=2.3,<3",
     "physkit>=0.1.0",
 ]
 

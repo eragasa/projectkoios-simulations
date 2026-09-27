@@ -151,3 +151,128 @@ source_path = "examples/projectkoios/frankensteins/integrations/vasp/pw_dft_scf/
 git_blob = "6343b3a0880479e220e7f42f6755856b740ec2fa"
 owner_boundary = "projectkoios.applications"
 reason = "application convergence campaign declaration"
+
+[[extractions]]
+component = "projectkoios.integrations.quantumespresso"
+status = "native-format-and-plane-wave-integration"
+source_repository = "https://github.com/eragasa/projectkoios-frankenstein"
+source_commit = "3eb562f2d6167ec20d6f2c892c517509a7abf283"
+source_tree = "e5daec9f5a16e03f998afb9158a101246acd40d1"
+namespace_from = "projectkoios.frankensteins.integrations.quantumespresso"
+namespace_to = "projectkoios.integrations.quantumespresso"
+dependency_adaptation = "Replaced the commit-bound PhysKit direct URL with the released physkit>=0.1.0 requirement."
+neutral_contract_adaptation = "Added explicit, default-false authorization to CalculatorExecutionRequest and enforced it before CalculatorExecutor creates files or starts a process."
+test_adaptation = "Removed the VASP half of one cross-provider registry test so this independently reviewable Quantum ESPRESSO migration does not depend on a separate provider migration; Quantum ESPRESSO stable-ID resolution remains covered. Added data-only verification of every retained convergence-evidence identity."
+example_adaptation = "Retained provider-native static fixtures and raw provider evidence. Removed ten application-layer runner, replay, campaign, convergence-policy, and workflow paths and routed them generically to the projectkoios.applications composition owner in projectkoios-applications; pw_dft_scf remains one composable capability rather than a standalone application. Reworded two static relaxation-fixture qualification strings and their manifest copy to deny current acceptance-policy ownership."
+summary = "Removed the incubation namespace segment, adapted repository-root test discovery, and retained fail-closed execution and scientific-claim boundaries."
+
+[[extractions.subtrees]]
+role = "implementation"
+path = "src/projectkoios/frankensteins/integrations/quantumespresso"
+git_tree = "b7e9837b6857ba04969507be747d5d4133cbd42c"
+target = "src/python/projectkoios/integrations/quantumespresso"
+
+[[extractions.subtrees]]
+role = "tests"
+path = "tests/projectkoios/frankensteins/integrations/quantumespresso"
+git_tree = "86bfa8976f02b0f0243b6c994f758392337ddbc9"
+target = "tests/projectkoios/integrations/quantumespresso"
+
+[[extractions.subtrees]]
+role = "documentation"
+path = "docs/projectkoios/frankensteins/integrations/quantumespresso"
+git_tree = "e5a2525464a548bbb3b4105bdb2bd7cd901fe6cb"
+target = "docs/architecture/projectkoios/integrations/quantumespresso"
+
+[[extractions.source_inventories]]
+role = "example-source-inventory"
+path = "examples/projectkoios/frankensteins/integrations/quantumespresso"
+git_tree = "293780bc51fa117bfe47981d0da1ee3cb52f59f1"
+target = "examples/projectkoios/integrations/quantumespresso"
+source_file_count = 171
+retained_source_file_count = 161
+excluded_source_file_count = 10
+added_compatibility_file_count = 1
+target_file_count = 162
+excluded_destination_repository = "projectkoios-applications"
+excluded_destination_namespace = "projectkoios.applications"
+excluded_capability = "pw_dft_scf"
+excluded_capability_role = "composable workflow/CPN capability, not a standalone application"
+selection_rule = "Retain all namespace-rewritten files except the exact exclusions below; add the exact structure byte dependency needed to verify the retained provider-evidence manifest."
+
+[[extractions.compatibility_sources]]
+role = "repository-root test discovery"
+source_commit = "3eb562f2d6167ec20d6f2c892c517509a7abf283"
+source_tree = "e5daec9f5a16e03f998afb9158a101246acd40d1"
+path = "tests/support/repository_root.py"
+git_blob = "c9f500c376cfaf6dedb557258e76ca7378cc8587"
+target = "tests/support/repository_root.py"
+
+[[extractions.compatibility_sources]]
+role = "retained provider-evidence structure identity"
+source_commit = "3eb562f2d6167ec20d6f2c892c517509a7abf283"
+source_tree = "e5daec9f5a16e03f998afb9158a101246acd40d1"
+path = "examples/projectkoios/frankensteins/applications/pw_dft_scf/support/structures/Si.PrimitiveUnitCell.json"
+git_blob = "40d1788c48e37b0b487a54701daa14eb5bf55580"
+target = "examples/projectkoios/integrations/quantumespresso/pw/scf/Si/primitive/convergence/joint/evidence/structure/Si.PrimitiveUnitCell.json"
+boundary_note = "Copied as exact inert structure evidence only; no application code, workflow, policy, or facade is transferred."
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/quantumespresso/pw/relaxation/Si/primitive/execute_relaxation.py"
+git_blob = "9dbc3d602ec2f028e0e59a519479f2cf9281f071"
+owner_boundary = "projectkoios.applications"
+reason = "application execution facade"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/quantumespresso/pw/scf/Si/primitive/campaign.toml"
+git_blob = "472e6a3dabfb01336205274300038ca6ca24dac2"
+owner_boundary = "projectkoios.applications"
+reason = "application campaign declaration"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/quantumespresso/pw/scf/Si/primitive/convergence/charge_density_cutoff/README.md"
+git_blob = "edb91025c4317924db29878ef5eb5ceaa1d39785"
+owner_boundary = "projectkoios.applications"
+reason = "application convergence policy documentation"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/quantumespresso/pw/scf/Si/primitive/convergence/joint/README.md"
+git_blob = "a0f33e5766e946387824c4e3bfe354b8d719c124"
+owner_boundary = "projectkoios.applications"
+reason = "application convergence policy documentation"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/quantumespresso/pw/scf/Si/primitive/convergence/joint/campaign.toml"
+git_blob = "07ea4d1dd29c3e51313fd20cdf74ffd57bef34c4"
+owner_boundary = "projectkoios.applications"
+reason = "application convergence campaign declaration"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/quantumespresso/pw/scf/Si/primitive/convergence/joint/replay.py"
+git_blob = "ee22a2f3594d11df90a140e5e9f1310699824a09"
+owner_boundary = "projectkoios.applications"
+reason = "application convergence replay and policy behavior"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/quantumespresso/pw/scf/Si/primitive/convergence/kpoint/README.md"
+git_blob = "546214df299427dcad96beacfce1459b935cf845"
+owner_boundary = "projectkoios.applications"
+reason = "application convergence policy documentation"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/quantumespresso/pw/scf/Si/primitive/convergence/kpoint/campaign.toml"
+git_blob = "c1ac4c2374fb57a8bd1fafd35e61a6f44f6a5d64"
+owner_boundary = "projectkoios.applications"
+reason = "application convergence campaign declaration"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/quantumespresso/pw/scf/Si/primitive/convergence/wavefunction_cutoff/README.md"
+git_blob = "09dca3452d1e9e611a511b9193d93651845466e4"
+owner_boundary = "projectkoios.applications"
+reason = "application convergence policy documentation"
+
+[[extractions.example_exclusions]]
+source_path = "examples/projectkoios/frankensteins/integrations/quantumespresso/pw/scf/Si/primitive/convergence/wavefunction_cutoff/campaign.toml"
+git_blob = "6e8a34dd48aa20be7cca08c018475e2bbecca2ad"
+owner_boundary = "projectkoios.applications"
+reason = "application convergence campaign declaration"

@@ -49,51 +49,60 @@ def _target_files(path: Path) -> tuple[Path, ...]:
     reason="PROJECTKOIOS_FRANKENSTEIN_CHECKOUT is not set",
 )
 def test_declared_source_git_objects_and_example_counts() -> None:
-    extraction = _transfer()["extractions"][0]
-    commit = extraction["source_commit"]
+    extractions = _transfer()["extractions"]
+    assert [extraction["component"] for extraction in extractions] == [
+        "projectkoios.integrations.vasp",
+        "projectkoios.integrations.quantumespresso",
+    ]
 
-    assert _git("cat-file", "-t", commit) == "commit"
-    assert _git("rev-parse", f"{commit}^{{tree}}") == extraction["source_tree"]
+    for extraction in extractions:
+        commit = extraction["source_commit"]
 
-    for subtree in extraction["subtrees"]:
-        assert _source_object(commit, subtree["path"]) == subtree["git_tree"]
-        assert _git("cat-file", "-t", subtree["git_tree"]) == "tree"
+        assert _git("cat-file", "-t", commit) == "commit"
+        assert _git("rev-parse", f"{commit}^{{tree}}") == extraction["source_tree"]
 
-    for inventory in extraction["source_inventories"]:
-        assert _source_object(commit, inventory["path"]) == inventory["git_tree"]
-        assert _git("cat-file", "-t", inventory["git_tree"]) == "tree"
+        for subtree in extraction["subtrees"]:
+            assert _source_object(commit, subtree["path"]) == subtree["git_tree"]
+            assert _git("cat-file", "-t", subtree["git_tree"]) == "tree"
 
-        source_paths = tuple(
-            _git(
-                "ls-tree", "-r", "--name-only", commit, "--", inventory["path"]
-            ).splitlines()
-        )
-        exclusion_paths = {
-            item["source_path"] for item in extraction["example_exclusions"]
-        }
-        assert len(source_paths) == inventory["source_file_count"]
-        assert exclusion_paths <= set(source_paths)
-        assert len(exclusion_paths) == inventory["excluded_source_file_count"]
-        assert (
-            len(source_paths) - len(exclusion_paths)
-            == inventory["retained_source_file_count"]
-        )
+        for inventory in extraction["source_inventories"]:
+            assert _source_object(commit, inventory["path"]) == inventory["git_tree"]
+            assert _git("cat-file", "-t", inventory["git_tree"]) == "tree"
 
-        added_count = inventory.get("added_compatibility_file_count", 0)
-        assert (
-            inventory["retained_source_file_count"] + added_count
-            == inventory["target_file_count"]
-        )
-        assert (
-            len(_target_files(REPOSITORY_ROOT / inventory["target"]))
-            == inventory["target_file_count"]
-        )
+            source_paths = tuple(
+                _git(
+                    "ls-tree", "-r", "--name-only", commit, "--", inventory["path"]
+                ).splitlines()
+            )
+            exclusion_paths = {
+                item["source_path"] for item in extraction["example_exclusions"]
+            }
+            assert len(source_paths) == inventory["source_file_count"]
+            assert exclusion_paths <= set(source_paths)
+            assert len(exclusion_paths) == inventory["excluded_source_file_count"]
+            assert (
+                len(source_paths) - len(exclusion_paths)
+                == inventory["retained_source_file_count"]
+            )
 
-    for source in extraction["compatibility_sources"]:
-        source_commit = source.get("source_commit", commit)
-        assert _source_object(source_commit, source["path"]) == source["git_blob"]
-        assert _git("cat-file", "-t", source["git_blob"]) == "blob"
+            added_count = inventory.get("added_compatibility_file_count", 0)
+            assert (
+                inventory["retained_source_file_count"] + added_count
+                == inventory["target_file_count"]
+            )
+            assert (
+                len(_target_files(REPOSITORY_ROOT / inventory["target"]))
+                == inventory["target_file_count"]
+            )
 
-    for exclusion in extraction["example_exclusions"]:
-        assert _source_object(commit, exclusion["source_path"]) == exclusion["git_blob"]
-        assert _git("cat-file", "-t", exclusion["git_blob"]) == "blob"
+        for source in extraction["compatibility_sources"]:
+            source_commit = source.get("source_commit", commit)
+            assert _source_object(source_commit, source["path"]) == source["git_blob"]
+            assert _git("cat-file", "-t", source["git_blob"]) == "blob"
+
+        for exclusion in extraction["example_exclusions"]:
+            assert (
+                _source_object(commit, exclusion["source_path"])
+                == exclusion["git_blob"]
+            )
+            assert _git("cat-file", "-t", exclusion["git_blob"]) == "blob"

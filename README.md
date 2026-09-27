@@ -13,6 +13,13 @@ projected inputs are runnable, or establish numerical or scientific validation.
 Workflow orchestration, convergence campaigns, recipes, and scientific
 acceptance policy do not belong here.
 
+The Quantum ESPRESSO integration provides native input, output, saved-state,
+SCF, NSCF, relaxation, and `pw2wannier90.x` contracts. Calculator execution is
+fail-closed and requires explicit authorization; process success does not imply
+numerical verification, convergence, or scientific validation. Workflow
+orchestration, campaigns, recipes, and scientific acceptance policy do not
+belong here.
+
 ## License and origin
 
 Maintained Project Koios code in this repository is licensed under the

@@ -1,0 +1,2643 @@
+{
+  "calculator": {
+    "byte_size": 9673048,
+    "program": "pw.x",
+    "program_version": "7.5",
+    "retained": false,
+    "sha256": "87aa72158e2c103c63fce1deca977dc42ff4ba344519a9662aadb96d33eab910",
+    "source_revision": "770a0b2d12928a67048e2f3da8d10d057e52179e"
+  },
+  "evidence_id": "si-primitive-qe75-actual1-grid",
+  "evidence_kind": "qe-pw-scf-convergence-grid",
+  "observations": [
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e30/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "50be349cabd6ca6cfc11070c6417d1772ad184e19a5effa12a8e71fe861157ca"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e30/pw.out",
+          "byte_size": 21914,
+          "role": "pw-stdout",
+          "sha256": "85bc3bc2e37122640085e2eb6431ba5e7d87618c3100668086d5cfad9fd8d9ac"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e30/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e30/execution.json",
+          "byte_size": 495,
+          "role": "execution-record",
+          "sha256": "b52341d241cb4f544ba8b707c40c20885c98c29d2718539105ac38abb4450ddd"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 240.0,
+        "mesh_density": 12,
+        "wavefunction_cutoff_ry": 30.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 72,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83958
+      },
+      "run_id": "actual1-adaptive-k12-e30",
+      "stage": "adaptive-extension"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e35/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "ff384cae72d680d6010e61407c80867eecf7b33d39b8409697d78e95095f6887"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e35/pw.out",
+          "byte_size": 21914,
+          "role": "pw-stdout",
+          "sha256": "e639900312d783c3292e3c833fc667708e4f1fa0d7b9fb3b25261d95c8c39416"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e35/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e35/execution.json",
+          "byte_size": 495,
+          "role": "execution-record",
+          "sha256": "ba295a3d46829c951b14cd40371c7da3288dda4e506eb0068dc91d963d4df058"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 280.0,
+        "mesh_density": 12,
+        "wavefunction_cutoff_ry": 35.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 72,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83965912
+      },
+      "run_id": "actual1-adaptive-k12-e35",
+      "stage": "adaptive-extension"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e40/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "1669f40f673a04c5f5868ea0755d718882b4644fd92b857c06afd2f5284e867d"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e40/pw.out",
+          "byte_size": 21914,
+          "role": "pw-stdout",
+          "sha256": "af0560ff2f615cadfbb712703ddb7f983fbc80df3dfda4fb4b9e2100321f012d"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e40/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k12-e40/execution.json",
+          "byte_size": 495,
+          "role": "execution-record",
+          "sha256": "b41bc752ea7404438561db1ac904b00e194adfea671e0bdd5a90fde0950cefd7"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 320.0,
+        "mesh_density": 12,
+        "wavefunction_cutoff_ry": 40.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 72,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83970577
+      },
+      "run_id": "actual1-adaptive-k12-e40",
+      "stage": "adaptive-extension"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e30/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "93d2452c64b9d27e3305af90445681de4c817dcd694c372fc0404edd4b54b0a2"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e30/pw.out",
+          "byte_size": 9115,
+          "role": "pw-stdout",
+          "sha256": "b07cc1011cb9f785159b616948427ea21171d18991b1b657ee673ad14e26ebc4"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e30/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e30/execution.json",
+          "byte_size": 495,
+          "role": "execution-record",
+          "sha256": "ed01d83b6aa47ecfacc7a8cc6d86c9f668467a84f83adbb86836c69cc31d39d6"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 240.0,
+        "mesh_density": 14,
+        "wavefunction_cutoff_ry": 30.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 104,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83958877
+      },
+      "run_id": "actual1-adaptive-k14-e30",
+      "stage": "adaptive-extension"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e35/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "a711816279f85157da7723b938bb53a7716dbccc98685d69b5e99fe3edcf7322"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e35/pw.out",
+          "byte_size": 9115,
+          "role": "pw-stdout",
+          "sha256": "db438e7d09c77f7a38fc090f271440c6a01656007fe17888b926ac7e1e4ed1bf"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e35/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e35/execution.json",
+          "byte_size": 495,
+          "role": "execution-record",
+          "sha256": "59d3a3b085dd81c94a73b1281cbd2b1130e57ca47af6103a8eddbe6bb41f0199"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 280.0,
+        "mesh_density": 14,
+        "wavefunction_cutoff_ry": 35.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 104,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83966792
+      },
+      "run_id": "actual1-adaptive-k14-e35",
+      "stage": "adaptive-extension"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e40/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "0fca958b2afefb36ce67e7486c3e89c01e2715f7cf0b086de65d86e6c25d6613"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e40/pw.out",
+          "byte_size": 9115,
+          "role": "pw-stdout",
+          "sha256": "6ab5024c7cc10f9b409f1888e220c0ff4e1107318618214d34ec57e0bf13234f"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e40/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-adaptive-k14-e40/execution.json",
+          "byte_size": 495,
+          "role": "execution-record",
+          "sha256": "f943f3925dc86e22b44cc37a012d2ab4002f28e5b6998a9a7a3d7649ddf644d5"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 320.0,
+        "mesh_density": 14,
+        "wavefunction_cutoff_ry": 40.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 104,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83971457
+      },
+      "run_id": "actual1-adaptive-k14-e40",
+      "stage": "adaptive-extension"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e15/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "453c1b9863dcbd66b384fc9be12058cebaaa7967e4c211a577626c663700e933"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e15/pw.out",
+          "byte_size": 17486,
+          "role": "pw-stdout",
+          "sha256": "dd1cfc2a89121f0fdf0abe020ab692c5dcf595c5c216b14155f6c97518a1db97"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e15/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e15/execution.json",
+          "byte_size": 491,
+          "role": "execution-record",
+          "sha256": "e3a7eed292ddaea1de5ff06f46dc643b48432fe52297ae6c339c563bc61320bc"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 120.0,
+        "mesh_density": 10,
+        "wavefunction_cutoff_ry": 15.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 47,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83495011
+      },
+      "run_id": "actual1-grid-k10-e15",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e20/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "83ad94192c1b684a0cca5a36932487a7b7b1a75974c870ba4f31e510274ea2e9"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e20/pw.out",
+          "byte_size": 17486,
+          "role": "pw-stdout",
+          "sha256": "5d937d197605baff6e3c45ea68fbb85782180b52d0665d930ebc14e70c1fc87c"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e20/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e20/execution.json",
+          "byte_size": 491,
+          "role": "execution-record",
+          "sha256": "98af6966b295119eabfd3c0131f0645cbae93c4d79c173088eb677c7a28b4cea"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 160.0,
+        "mesh_density": 10,
+        "wavefunction_cutoff_ry": 20.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 47,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83776009
+      },
+      "run_id": "actual1-grid-k10-e20",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e25/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "fb6d53b9d3f84effb9bb8cbfcfd6acc4d22594b4ff43d71116832ebedb2c1552"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e25/pw.out",
+          "byte_size": 17439,
+          "role": "pw-stdout",
+          "sha256": "a56691615e43411a20a438204279b4c76afaf8ba31028c6b4762f833f375f460"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e25/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e25/execution.json",
+          "byte_size": 491,
+          "role": "execution-record",
+          "sha256": "2c4115bafb2c536828a4b245e9e3c0b493706b2392ddb7e87477d9fbe9c761ff"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 200.0,
+        "mesh_density": 10,
+        "wavefunction_cutoff_ry": 25.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 47,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83905087
+      },
+      "run_id": "actual1-grid-k10-e25",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e30/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "ce97d2409e71a51ee37ca04a144cd379afc9100928fe000da0710d3f7e6d671e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e30/pw.out",
+          "byte_size": 17439,
+          "role": "pw-stdout",
+          "sha256": "a7b14aecb965cf2e9a41f10892c58c3ed57545fc852f8f7225419393279c5878"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e30/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e30/execution.json",
+          "byte_size": 491,
+          "role": "execution-record",
+          "sha256": "7f782f553eb4f531fb93383012325da87fb486b7c6f28ca24e6d86adfe9caa0f"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 240.0,
+        "mesh_density": 10,
+        "wavefunction_cutoff_ry": 30.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 47,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83953752
+      },
+      "run_id": "actual1-grid-k10-e30",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e35/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "ed10f61c8f22f58a327ec4c5ffadf98bdc3a8a4f49a09e8b75b57123035f56e9"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e35/pw.out",
+          "byte_size": 17439,
+          "role": "pw-stdout",
+          "sha256": "1ff07cf36c6f632604b1ee29c6f13579e425c8459786af6ae09278190f909be3"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e35/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e35/execution.json",
+          "byte_size": 491,
+          "role": "execution-record",
+          "sha256": "680f5fe17b91698867d6fddfe010833f5b336b7a7a2129e7d8a9e4aee755b5b1"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 280.0,
+        "mesh_density": 10,
+        "wavefunction_cutoff_ry": 35.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 47,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.8396168
+      },
+      "run_id": "actual1-grid-k10-e35",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e40/pw.in",
+          "byte_size": 549,
+          "role": "pw-input",
+          "sha256": "f194a25f8be465942e61dbd7a761b1e98bf5b58be4beedfe9ef1c6035dfb59c8"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e40/pw.out",
+          "byte_size": 17439,
+          "role": "pw-stdout",
+          "sha256": "4bae2e96be14f5cd56578f7f946f643e2a2cd2da4521147a3dea0c2a8157a735"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e40/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k10-e40/execution.json",
+          "byte_size": 491,
+          "role": "execution-record",
+          "sha256": "0c827aa82ee57b46a62113ebc99f6b8c0c529a7ef65f78702f289215f0eee072"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 320.0,
+        "mesh_density": 10,
+        "wavefunction_cutoff_ry": 40.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 47,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83966348
+      },
+      "run_id": "actual1-grid-k10-e40",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e15/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "638fb06f13ce39d7e174449ebf70d0573d154ee40e39a8c505f1d7a64a17326c"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e15/pw.out",
+          "byte_size": 9420,
+          "role": "pw-stdout",
+          "sha256": "250cc119e146841d7c50d01116ad6880316ba1d07b86a61de5b9c70266b7289a"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e15/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e15/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "16a7c5b3287b56c68d841c8dc856e7f391d5e39372d8646315e84101e894cbb6"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 120.0,
+        "mesh_density": 2,
+        "wavefunction_cutoff_ry": 15.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 3,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.64690241
+      },
+      "run_id": "actual1-grid-k2-e15",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e20/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "8f2409699daef9b8c3ed20f908829f99b552f6bc368a385ad591e939fb8d3a5e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e20/pw.out",
+          "byte_size": 9735,
+          "role": "pw-stdout",
+          "sha256": "c42d7e300e181a167c7ee37b2d1c2a0a03ea2e509eae4f91e240c950e6324575"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e20/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e20/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "b0f73649de7652b4dcc8a90d91d4bfc496fb4a84c99b9465b828b5b40952ddf6"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 160.0,
+        "mesh_density": 2,
+        "wavefunction_cutoff_ry": 20.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 3,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 6,
+        "total_energy_ry": -22.64981246
+      },
+      "run_id": "actual1-grid-k2-e20",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e25/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "24f7193c79f39de69ce6e6492e75459ce0ceb7300c22d60115dc181ea666e0fa"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e25/pw.out",
+          "byte_size": 9373,
+          "role": "pw-stdout",
+          "sha256": "19228f402fbaf32b896f0907b7bb515342baa5207564416bdc1be50e6022fc25"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e25/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e25/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "9b3529b65a4c05f88c280c90a62ed7f883109cbc43144be3dc44dca71ff53539"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 200.0,
+        "mesh_density": 2,
+        "wavefunction_cutoff_ry": 25.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 3,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.65124318
+      },
+      "run_id": "actual1-grid-k2-e25",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e30/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "13f3e3710b6a05376bf578129d998d1ad9d87ae13ebd39eace020446884990af"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e30/pw.out",
+          "byte_size": 9373,
+          "role": "pw-stdout",
+          "sha256": "ef91eb1d1bb231fd711392a6bdfad6c323b45f18ecf72d2b000f865c5dfeaafa"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e30/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e30/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "5482a5bc942f5b0ff7c273510a60ef62b48bef29bfbf46e26d31753b8814379a"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 240.0,
+        "mesh_density": 2,
+        "wavefunction_cutoff_ry": 30.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 3,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.65170438
+      },
+      "run_id": "actual1-grid-k2-e30",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e35/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "5751dd7c066d6eb7d835b8660fc6fee2a1d8e392ec0bdb2079e8c604e6f6e239"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e35/pw.out",
+          "byte_size": 9688,
+          "role": "pw-stdout",
+          "sha256": "14fa88edc41f3f422fdd20dafd95b50ed6c1ee259d43097adb5764d55660faca"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e35/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e35/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "37a601e3af0e4b46c210574fe4f557d06cfef728e261328bbc131e5f45d841d8"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 280.0,
+        "mesh_density": 2,
+        "wavefunction_cutoff_ry": 35.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 3,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 6,
+        "total_energy_ry": -22.65180276
+      },
+      "run_id": "actual1-grid-k2-e35",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e40/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "759015742d577df693a49717e0ee249a0d6337a3b35d0d9248b68af9d6b9f4b8"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e40/pw.out",
+          "byte_size": 9688,
+          "role": "pw-stdout",
+          "sha256": "edde5eceab87011c4e098ea13cd7fbbd1d66a4d52f426b41e9c33a4ae4db85ed"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e40/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k2-e40/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "2e71ba189343be7747bdcfdbf4782f00221a2bbd82b45fec6ccac34c92072ff9"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 320.0,
+        "mesh_density": 2,
+        "wavefunction_cutoff_ry": 40.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 3,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 6,
+        "total_energy_ry": -22.65184545
+      },
+      "run_id": "actual1-grid-k2-e40",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e15/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "7bc8d57f69bd0ef8b832c76dfb8734c00bada16b8b25612d593349e881e1878d"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e15/pw.out",
+          "byte_size": 10505,
+          "role": "pw-stdout",
+          "sha256": "aa5d43cce52b22a2de241310ff078c4086672512c27a132ba0e6c55e3742c89a"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e15/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e15/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "4a893d827de77b428513c78870ed715ac76df2f341ae91c05a8e88dbba08e270"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 120.0,
+        "mesh_density": 4,
+        "wavefunction_cutoff_ry": 15.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 8,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.82109289
+      },
+      "run_id": "actual1-grid-k4-e15",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e20/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "fa61abcc5f43ca98500bd3c41471cd5806aa0b5032fbb07f83f7237052f0e866"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e20/pw.out",
+          "byte_size": 10505,
+          "role": "pw-stdout",
+          "sha256": "6278ec3f61012c9d3344a48d0f355c51150ad99f284afd3bc248173c47023e53"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e20/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e20/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "994b35a51ac82bdaf0896fa6baa5936afdd7d599f20acb57191467f5221bcc65"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 160.0,
+        "mesh_density": 4,
+        "wavefunction_cutoff_ry": 20.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 8,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.82399511
+      },
+      "run_id": "actual1-grid-k4-e20",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e25/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "b8abfd4cd9bad7bcb3e82d0aa99d3713df0b5bd3eb17d4db64c0a462d6c177b2"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e25/pw.out",
+          "byte_size": 10458,
+          "role": "pw-stdout",
+          "sha256": "b98dab6051f8a17a5e4b758f9dfbd8b79f248cc85509323315ccb204e39f1d9f"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e25/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e25/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "114485a6b8d80cf266bdf3cf1a29fbff28a128e7ba5a0d01b9462a502f9bcc11"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 200.0,
+        "mesh_density": 4,
+        "wavefunction_cutoff_ry": 25.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 8,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.82526584
+      },
+      "run_id": "actual1-grid-k4-e25",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e30/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "fcaa1dccca73eff6c175cf85664a503bd9d5c94f2f23c2b8602536890cd05ac8"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e30/pw.out",
+          "byte_size": 10458,
+          "role": "pw-stdout",
+          "sha256": "57c2f3cc06849a5ca5d2f3329d8e5bc15dc322458b72a4522ce4a47eb4aa517d"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e30/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e30/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "a420efa469ab26cac052fd66bbb30212541f256b74ceaca90c6c1ab26e0b5f40"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 240.0,
+        "mesh_density": 4,
+        "wavefunction_cutoff_ry": 30.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 8,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.825758
+      },
+      "run_id": "actual1-grid-k4-e30",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e35/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "e8c4308ad8c35aa8ba341261fbbdf4252256b6317508f78a88547034993e93f6"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e35/pw.out",
+          "byte_size": 10458,
+          "role": "pw-stdout",
+          "sha256": "841aebf03804de6b4088a53ebce637e264af9673570ad493c26a5cf190d65a7b"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e35/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e35/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "4a203029df17e5a2dff4015feeb1d0defb5f2f18eeab9c60df47fd224b16eb76"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 280.0,
+        "mesh_density": 4,
+        "wavefunction_cutoff_ry": 35.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 8,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.82584204
+      },
+      "run_id": "actual1-grid-k4-e35",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e40/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "af92c7a40fd96910751e015e8b9db00a518c120e10a0116302287a619a77cbef"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e40/pw.out",
+          "byte_size": 10458,
+          "role": "pw-stdout",
+          "sha256": "68f13abe7e1121c145a8f82d143d1c923ad7a8754e65217890997f88e2718bf1"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e40/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k4-e40/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "a473f8b83656961a233932fcfd6ceaedb7437e3ee28df572c3adb441d838be87"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 320.0,
+        "mesh_density": 4,
+        "wavefunction_cutoff_ry": 40.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 8,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.82588903
+      },
+      "run_id": "actual1-grid-k4-e40",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e15/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "7b03abacc6686334ed96e5c0c89abd9db7b7ac370afddad2034075ac9a671b11"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e15/pw.out",
+          "byte_size": 11937,
+          "role": "pw-stdout",
+          "sha256": "10c935fa404a57f3295feef882d29f76c403b5fa6942c0422b6804a77726d9fe"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e15/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e15/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "7be530c958c07c3976786d523c62312c5210aba1dc549443c8739283f8832582"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 120.0,
+        "mesh_density": 6,
+        "wavefunction_cutoff_ry": 15.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 16,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83324291
+      },
+      "run_id": "actual1-grid-k6-e15",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e20/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "490fea44f3bd7c5435152dc6dcab2221e824c472a352b9d52f3590ceca3605e8"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e20/pw.out",
+          "byte_size": 11937,
+          "role": "pw-stdout",
+          "sha256": "64efbde4b94961cc1f71b721425db54d182c877349e581cd2635ea798f582432"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e20/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e20/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "c43d5997c89b8446512c53f29cabb6bf89f0976389bcbc4a07dbc98ee38b4e99"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 160.0,
+        "mesh_density": 6,
+        "wavefunction_cutoff_ry": 20.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 16,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83601933
+      },
+      "run_id": "actual1-grid-k6-e20",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e25/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "d202471f943e9747adb290225cdb2ecff976c45e2ce7f8c58a033e520b18fcab"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e25/pw.out",
+          "byte_size": 11890,
+          "role": "pw-stdout",
+          "sha256": "4a14fd6d7116f4f336a3b21652ed01da52ea178d279f1f026b4d7768ffb540b0"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e25/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e25/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "d96a76ebcb6a6c8f90e4ad91608266de9f09094e441d78e6d865cfd5401e0441"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 200.0,
+        "mesh_density": 6,
+        "wavefunction_cutoff_ry": 25.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 16,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83733962
+      },
+      "run_id": "actual1-grid-k6-e25",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e30/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "f0c09bb089a03279d1785c8a9c9895696d3e11030730fa5525260e2187117ef0"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e30/pw.out",
+          "byte_size": 11890,
+          "role": "pw-stdout",
+          "sha256": "85a60171ec068722bfafeae7aaf150fb3a20355d4ac837f6378cee83b52845da"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e30/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e30/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "2238cdd77963dbc7fb9d247d2743f3b6afa00dfc6f13bb9d08035bad5777e3aa"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 240.0,
+        "mesh_density": 6,
+        "wavefunction_cutoff_ry": 30.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 16,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83782922
+      },
+      "run_id": "actual1-grid-k6-e30",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e35/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "1a5943bdde3633b827541af57fa9f1a65bc2d522f6c38a3b9acd49cc6def94d9"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e35/pw.out",
+          "byte_size": 11890,
+          "role": "pw-stdout",
+          "sha256": "2e756aad24099617678c74bf3b370224212718fff40a099facccb1b8cdf9efac"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e35/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e35/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "b4a93f9cf9dadb033b8d6b56b8ff1c1af312b5804ce4370b6998f9e7cb93c1ba"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 280.0,
+        "mesh_density": 6,
+        "wavefunction_cutoff_ry": 35.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 16,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83790818
+      },
+      "run_id": "actual1-grid-k6-e35",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e40/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "4b3d9aac6d010a21fd63f77dcf607c14c31944b42193a3bd7523425252b88460"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e40/pw.out",
+          "byte_size": 11890,
+          "role": "pw-stdout",
+          "sha256": "f339c8604b9f7eb2176586a90d9468c1db3fc15a44232fd96e191b49cfcb8760"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e40/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k6-e40/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "ad23736c506e37af91ac36af8afc29284d7a0ae138e614176516fab2ddff4a9e"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 320.0,
+        "mesh_density": 6,
+        "wavefunction_cutoff_ry": 40.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 16,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83795464
+      },
+      "run_id": "actual1-grid-k6-e40",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e15/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "82fb14f537776ced1f97a88c7f291cda64405a594fb2fc274ccbea478e51bf2c"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e15/pw.out",
+          "byte_size": 14264,
+          "role": "pw-stdout",
+          "sha256": "b3db27d38de2a4c7e8f659f38a5fa49908c5b8655bcada2b60ec51738cd4f435"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e15/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e15/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "0eea27a6c3c9af32da31d4290a559a0eea766ca595401918ba6085ffc11b1065"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 120.0,
+        "mesh_density": 8,
+        "wavefunction_cutoff_ry": 15.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 29,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83469415
+      },
+      "run_id": "actual1-grid-k8-e15",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e20/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "5807018b18e813d2389818428763d8288162169b87409dd4d70160397f0124dd"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e20/pw.out",
+          "byte_size": 14264,
+          "role": "pw-stdout",
+          "sha256": "5e4fd1b696234a8ca7a71d5fd07fae1e7a6a5b8e9fef637b175bf325e2ff2e71"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e20/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e20/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "9921a2161bec18757d8e2b8ce937192dca5589af3870d1162b16df2afe6ab936"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 160.0,
+        "mesh_density": 8,
+        "wavefunction_cutoff_ry": 20.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 29,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83752769
+      },
+      "run_id": "actual1-grid-k8-e20",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e25/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "d674643da0b17745ef8c61188c3da08c65e2df9c21fdd83295f954e85c368ad2"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e25/pw.out",
+          "byte_size": 14217,
+          "role": "pw-stdout",
+          "sha256": "13aae5f34adab6c5f6fd74c242eabf022904d9774a7fbf9e7c95a319d4204a65"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e25/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e25/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "ac650ceccaca7dba43675f3f83d87f7ee8beda3149e16cd67c5886c24f0ffd34"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 200.0,
+        "mesh_density": 8,
+        "wavefunction_cutoff_ry": 25.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 29,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83881933
+      },
+      "run_id": "actual1-grid-k8-e25",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e30/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "e8bd23f58474797334810ee2333d53468278e6abbb785916d221d34685fdbbcd"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e30/pw.out",
+          "byte_size": 14217,
+          "role": "pw-stdout",
+          "sha256": "8f20c4dcd31734957ad04392edc0f8e609a4f7288509f3b1402782a342d49536"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e30/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e30/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "ab59b24bc79e0c00826636819dccd9821dbe819389419403ea254633da5bc296"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 240.0,
+        "mesh_density": 8,
+        "wavefunction_cutoff_ry": 30.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 29,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83930406
+      },
+      "run_id": "actual1-grid-k8-e30",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e35/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "3b0fbcb961de571e6a7c54127d5738f6fc1d89bf82bc007b9dd3eb0f3f8c80a0"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e35/pw.out",
+          "byte_size": 14217,
+          "role": "pw-stdout",
+          "sha256": "82dda6ae20046406759b1eb90736f21d0a311a1f220e7be9c0a0a99cf42e6bf9"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e35/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e35/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "76139b34d899883f1597173bbc686af5455c30a87caf291a8db95dbc1a4fda44"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 280.0,
+        "mesh_density": 8,
+        "wavefunction_cutoff_ry": 35.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 29,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83938395
+      },
+      "run_id": "actual1-grid-k8-e35",
+      "stage": "initial-grid"
+    },
+    {
+      "artifacts": [
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e40/pw.in",
+          "byte_size": 546,
+          "role": "pw-input",
+          "sha256": "0c5b811163cf592a91a97140ce49ed1610f9748d42daa7db30d5801c3b1b07ed"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e40/pw.out",
+          "byte_size": 14217,
+          "role": "pw-stdout",
+          "sha256": "bca7321451254afa665506c590057fbc8753ed6f8eec265290f0918a2a1265e1"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e40/pw.err",
+          "byte_size": 139,
+          "role": "pw-stderr",
+          "sha256": "f382ec8367e667a70bf57907b4d4298dc573e3a6569c53218739fdb92f87b99e"
+        },
+        {
+          "artifact_id": "artifacts/actual1-grid-k8-e40/execution.json",
+          "byte_size": 490,
+          "role": "execution-record",
+          "sha256": "b6faedcb51924675da37c1a024fb4cc1f8e93aa8173b7a753e0597574b05d36d"
+        }
+      ],
+      "coordinate": {
+        "charge_density_cutoff_ry": 320.0,
+        "mesh_density": 8,
+        "wavefunction_cutoff_ry": 40.0
+      },
+      "diagnostics": [
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-invalid-flag",
+          "native_flag": "IEEE_INVALID_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-divide-by-zero",
+          "native_flag": "IEEE_DIVIDE_BY_ZERO",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-overflow-flag",
+          "native_flag": "IEEE_OVERFLOW_FLAG",
+          "severity": "warning"
+        },
+        {
+          "artifact_role": "pw-stderr",
+          "code": "ieee-underflow-flag",
+          "native_flag": "IEEE_UNDERFLOW_FLAG",
+          "severity": "warning"
+        }
+      ],
+      "native_observation": {
+        "atom_count": 2,
+        "execution_status": "succeeded",
+        "irreducible_kpoint_count": 29,
+        "job_completed": true,
+        "program_version": "7.5",
+        "returncode": 0,
+        "scf_converged": true,
+        "scf_iteration_count": 5,
+        "total_energy_ry": -22.83943062
+      },
+      "run_id": "actual1-grid-k8-e40",
+      "stage": "initial-grid"
+    }
+  ],
+  "policy": {
+    "cutoff_increment_ry": 5.0,
+    "extension_steps": 2,
+    "maximum_cutoff_ry": 80.0,
+    "maximum_grid_points": 80,
+    "maximum_mesh_density": 20,
+    "mesh_increment": 2,
+    "required_consecutive_deltas": 2,
+    "tolerance_mev_per_atom": 1.0
+  },
+  "pseudopotentials": [
+    {
+      "artifact_name": "Si.pbe-n-rrkjus_psl.1.0.0.UPF",
+      "byte_size": 1299382,
+      "exchange_correlation": "PBE",
+      "formalism": "USPP",
+      "relativistic_treatment": "scalar-relativistic",
+      "retained": false,
+      "sha256": "ae3aefd0811f9499dbc4a72f1f9ae02ef4fc7f3568bf6f559b68668719c69e2b",
+      "species": "Si",
+      "upf_version": "2.0.1"
+    }
+  ],
+  "qualifications": [
+    "Finite-grid total-energy convergence under the declared policy only.",
+    "Does not establish force, stress, band, NSCF, Wannier, effective-mass, dopant, or charged-defect convergence.",
+    "Retained outputs were produced by an ignored local prototype whose Python source has no committed identity.",
+    "Executable and pseudopotential bytes are identified but are not retained in this repository."
+  ],
+  "schema_version": 1,
+  "structure": {
+    "atom_count": 2,
+    "byte_size": 680,
+    "repository_path": "examples/projectkoios/integrations/quantumespresso/pw/scf/Si/primitive/convergence/joint/evidence/structure/Si.PrimitiveUnitCell.json",
+    "sha256": "6e048c7001f329459e85f321e7bd406f4dd871d6fabf8d12fa349a1623f87ccc",
+    "structure_id": "Si.PrimitiveUnitCell"
+  }
+}

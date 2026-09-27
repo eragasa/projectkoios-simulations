@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/Users/eugene/projects/q-e-qe-7.5/build/bin/pw.x",
+    "-in",
+    "pw.in"
+  ],
+  "error_message": null,
+  "error_type": null,
+  "required_input_filenames": [
+    "pw.in",
+    "Si.pbe-n-rrkjus_psl.1.0.0.UPF"
+  ],
+  "returncode": 0,
+  "schema_version": 1,
+  "status": "succeeded",
+  "stderr_filename": "pw.err",
+  "stdout_filename": "pw.out",
+  "working_directory": "/Users/eugene/projects/projectkoios-frankenstein/workspace/runs/actual1-qe-grid/actual1-adaptive-k14-e40"
+}

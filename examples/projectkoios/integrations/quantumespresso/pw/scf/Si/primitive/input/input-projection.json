@@ -1,0 +1,7 @@
+{
+  "integration_id": "quantum-espresso",
+  "qualification": "QE ibrav=0 projection with explicit angstrom cell vectors, crystal positions, automatic k-point sampling, and calculator-native SCF policy.",
+  "required_external_inputs": [
+    "Si.pbe-n-rrkjus_psl.1.0.0.UPF"
+  ]
+}
