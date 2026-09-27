@@ -65,6 +65,11 @@ def test_quantum_espresso_extraction_is_bound_to_exact_source_trees() -> None:
         inventory["added_compatibility_file_count"],
         inventory["target_file_count"],
     ) == (171, 161, 10, 1, 162)
+    assert (
+        inventory["excluded_destination_repository"],
+        inventory["excluded_destination_namespace"],
+        inventory["excluded_capability"],
+    ) == ("projectkoios-applications", "projectkoios.applications", "pw_dft_scf")
     assert [item["git_blob"] for item in extraction["example_exclusions"]] == [
         "9dbc3d602ec2f028e0e59a519479f2cf9281f071",
         "472e6a3dabfb01336205274300038ca6ca24dac2",
@@ -77,6 +82,9 @@ def test_quantum_espresso_extraction_is_bound_to_exact_source_trees() -> None:
         "09dca3452d1e9e611a511b9193d93651845466e4",
         "6e8a34dd48aa20be7cca08c018475e2bbecca2ad",
     ]
+    assert {item["owner_boundary"] for item in extraction["example_exclusions"]} == {
+        "projectkoios.applications"
+    }
     assert [item["git_blob"] for item in extraction["compatibility_sources"]] == [
         "c9f500c376cfaf6dedb557258e76ca7378cc8587",
         "40d1788c48e37b0b487a54701daa14eb5bf55580",

@@ -27,10 +27,11 @@ check.
 
 ## Boundary
 
-The removed application replay depended on the unmigrated
-`projectkoios.frankensteins.applications.pw_dft_scf` owner boundary. This
-integration does not reproduce its convergence assessment, extension decision,
-or acceptance outcome.
+The removed application replay belongs generically to the
+`projectkoios.applications` composition owner in the `projectkoios-applications`
+repository. `pw_dft_scf` is one composable workflow/CPN capability there, not a
+standalone application. This integration does not reproduce its convergence
+assessment, extension decision, or acceptance outcome.
 
 These artifacts are historical finite-grid total-energy observations. Their
 provenance and byte integrity do not establish current policy acceptance,
