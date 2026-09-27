@@ -53,9 +53,9 @@ ERROR: the triple product of the basis vectors is negative exchange two basis ve
 ```
 
 The maintained VASP SCF output analyzer maps this native observation to the
-stable failure code `negative-lattice-orientation`. The calculator-neutral CPN
-workflow carries that code to its terminal failure outcome. This behavior keeps
-process completion distinct from calculator and workflow success.
+stable failure code `negative-lattice-orientation` for external application
+composition. The provider evidence itself defines no CPN or workflow outcome.
+This behavior keeps process completion distinct from calculator success.
 
 The canonical silicon relaxation declaration performs the right-handed
 transformation explicitly and preserves all basis-indexed quantities.

@@ -91,6 +91,7 @@ target = "docs/architecture/projectkoios/integrations/vasp"
 role = "example-source-inventory"
 path = "examples/projectkoios/frankensteins/integrations/vasp"
 git_tree = "b84a7f0fe5ae549179a7c9ddb11c210726813108"
+target = "examples/projectkoios/integrations/vasp"
 source_file_count = 18
 retained_source_file_count = 11
 excluded_source_file_count = 7

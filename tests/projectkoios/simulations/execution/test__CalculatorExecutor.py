@@ -33,6 +33,23 @@ class CalculatorExecutorTest(unittest.TestCase):
             self.assertFalse((working_directory / "stdout.txt").exists())
             self.assertFalse((working_directory / "execution.json").exists())
 
+    def test_rejects_preflight_record_without_explicit_authorization(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            working_directory = Path(temporary_directory)
+            request = CalculatorExecutionRequest(
+                command=("/must/not/run",),
+                working_directory=working_directory,
+            )
+
+            with self.assertRaisesRegex(PermissionError, "not authorized"):
+                CalculatorExecutor().record_preflight_failure(
+                    request,
+                    FileNotFoundError("missing input"),
+                )
+
+            self.assertFalse((working_directory / "execution.json").exists())
+            self.assertEqual(tuple(working_directory.iterdir()), ())
+
     def test_records_success_before_returning(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             working_directory = Path(temporary_directory)

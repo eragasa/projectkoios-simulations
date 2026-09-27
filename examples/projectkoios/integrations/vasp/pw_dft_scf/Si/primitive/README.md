@@ -12,4 +12,6 @@ or workflow success. It is failure evidence, not a successful reference result,
 numerical verification, or scientific validation.
 
 Application-layer campaign and convergence declarations are intentionally not
-part of this provider example. Their owner boundary remains unmigrated.
+part of this provider example. They are routed to the `projectkoios.applications`
+composition owner in the `projectkoios-applications` repository. `pw_dft_scf`
+is one composable capability there, not a standalone application.
