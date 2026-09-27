@@ -30,17 +30,20 @@ license.
 ## PhysKit
 
 - Repository: <https://github.com/eragasa/physkit>
-- Pinned commit: `97032f16c9125aa124750508f8513cca9f6dab02`
-- Pinned Git tree: `3a323d2436d4b5e86fe312e810e03c5d21ce37b3`
+- Extraction-reviewed source commit: `97032f16c9125aa124750508f8513cca9f6dab02`
+- Extraction-reviewed source Git tree: `3a323d2436d4b5e86fe312e810e03c5d21ce37b3`
+- Runtime dependency: compatible `physkit>=0.1.0` distribution
 - License: MIT
 - Preserved text: [`licenses/PHYSKIT-MIT.txt`](licenses/PHYSKIT-MIT.txt)
 - License SHA-256:
   `0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410`
 
-The Wannier90 parser extraction reuses PhysKit's generic unit and immutable
-quantity contracts rather than copying that infrastructure into the simulations
-distribution. The parser donor and this repository share the exact Apache-2.0
-text identified by the wheel-carried Wannier90 `provenance.json` resource.
+The PhysKit commit and tree above identify source reviewed during extraction;
+they are provenance identities, not installation constraints. The Wannier90
+parser extraction reuses PhysKit's generic unit and immutable quantity contracts
+rather than copying that infrastructure into the simulations distribution. The
+parser donor and this repository share the exact Apache-2.0 text identified by
+the wheel-carried Wannier90 `provenance.json` resource.
 
 These notices document origin and preserve upstream terms. They do not mean the
 historical projects endorse this repository, and they do not turn research

@@ -16,6 +16,19 @@ and failure coverage was added. The destination implementation is not an
 unchanged copy: its per-file mappings record parser-limit, numeric, dimension,
 ordering, inventory, unit-label, and trailing-content hardening where applicable.
 
+## Destination object identity
+
+The initial extraction candidate is commit
+`7031f0fbc93f8a7b9247be6184469fb55151a364`, tree
+`9ed74ae15d36b7c4ac0e80830519386b229ea998`. Reviewed corrections through
+commit `9b50f320d1e8998ecb087c769edc6100edb13d19`, tree
+`d5078887ec526edae2c6d91845dc1df9ac570d8f`, corrected dependency wording and
+added cross-section `.wout` WF-inventory validation. `TRANSFER.toml` binds that
+stable correction snapshot and records the exact target blob for every mapped
+parser source file. Subsequent transfer-metadata corrections are tested against
+those prior Git objects rather than against the current commit, avoiding a
+current-HEAD-dependent provenance assertion.
+
 The common donor and destination Apache-2.0 license has SHA-256
 `c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4`.
 

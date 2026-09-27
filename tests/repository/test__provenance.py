@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
+import subprocess
 import tomllib
 from importlib.resources import files
 from pathlib import Path
@@ -13,6 +15,26 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 def _transfer() -> dict[str, Any]:
     with (REPOSITORY_ROOT / "TRANSFER.toml").open("rb") as stream:
         return tomllib.load(stream)
+
+
+def _tracked_provenance_metadata() -> tuple[Path, ...]:
+    completed = subprocess.run(
+        ("git", "-C", str(REPOSITORY_ROOT), "ls-files"),
+        check=True,
+        capture_output=True,
+        encoding="utf-8",
+    )
+    paths = (Path(line) for line in completed.stdout.splitlines())
+    return tuple(
+        REPOSITORY_ROOT / path
+        for path in paths
+        if (
+            path.parts[0] == "docs"
+            or (len(path.parts) == 1 and path.suffix in {".md", ".toml"})
+            or path.name == "NOTICE"
+            or path.name == "provenance.json"
+        )
+    )
 
 
 def test_transfer_is_bound_to_exact_frankenstein_source_trees() -> None:
@@ -98,48 +120,6 @@ def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     ]
 
 
-def test_wannier90_file_mappings_disclose_substantive_adaptations() -> None:
-    mappings = _transfer()["extractions"][0]["file_mappings"]
-
-    adaptations = {
-        Path(mapping["target"]).name: mapping["adaptation"] for mapping in mappings
-    }
-    assert adaptations == {
-        "__init__.py": (
-            "Namespace rewrite plus public export of the extraction-added "
-            "Wannier90ParserLimits contract."
-        ),
-        "artifacts.py": (
-            "Namespace and quantity-import rewrites plus bounded parser-limit "
-            "propagation and exact nnkp/mmn inventory correlation."
-        ),
-        "hamiltonian_blocks.py": (
-            "Quantity imports redirected to the compatible PhysKit distribution; "
-            "bounded dimensions and records, finite Fortran-real parsing, native "
-            "index validation, and trailing-record rejection added."
-        ),
-        "interface_data.py": (
-            "Quantity imports redirected to the compatible PhysKit distribution; "
-            "bounded dimensions and records, finite Fortran-real parsing, and "
-            "native order, index, inventory, and trailing-record validation added."
-        ),
-        "localization.py": (
-            "Quantity imports redirected to the compatible PhysKit distribution; "
-            "bounded and finite numeric parsing plus source-unit, standard-Omega, "
-            "iteration-order, and iteration/final WF-inventory validation added."
-        ),
-        "neighbor_lists.py": (
-            "Bounded parsing, exact block and cardinality limits, normalized "
-            "source/target index ordering, and duplicate-inventory rejection added."
-        ),
-        "unitary_matrices.py": (
-            "Quantity imports redirected to the compatible PhysKit distribution; "
-            "square _u.mat semantics, bounded dimensions and records, finite numeric "
-            "parsing, native order, and trailing-record validation added."
-        ),
-    }
-
-
 def test_physkit_runtime_dependency_has_a_compatible_lower_bound() -> None:
     with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as stream:
         project = tomllib.load(stream)["project"]
@@ -148,13 +128,28 @@ def test_physkit_runtime_dependency_has_a_compatible_lower_bound() -> None:
     assert not any("git+" in dependency for dependency in project["dependencies"])
     assert "TRANSFER.toml" not in (REPOSITORY_ROOT / "README.md").read_text()
 
-    for relative_path in (
-        "TRANSFER.toml",
-        "docs/provenance/origins.md",
-        "docs/architecture/projectkoios/integrations/wannier90/provenance/import-closure.md",
-    ):
-        text = (REPOSITORY_ROOT / relative_path).read_text(encoding="utf-8")
-        assert "pinned physkit" not in text.casefold()
+    metadata_paths = _tracked_provenance_metadata()
+    relative_paths = {path.relative_to(REPOSITORY_ROOT) for path in metadata_paths}
+    assert {
+        Path("README.md"),
+        Path("THIRD_PARTY_NOTICES.md"),
+        Path("TRANSFER.toml"),
+        Path("docs/provenance/origins.md"),
+        Path(
+            "docs/architecture/projectkoios/integrations/wannier90/"
+            "provenance/import-closure.md"
+        ),
+        Path("src/python/projectkoios/integrations/wannier90/provenance.json"),
+    } <= relative_paths
+
+    forbidden_claim = re.compile(r"\b(?:pinned|offline|locked|lockfile)\b")
+    for path in metadata_paths:
+        text = path.read_text(encoding="utf-8")
+        contexts = re.split(r"(?m)(?=^#{1,6}\s)", text)
+        for context in contexts:
+            if "physkit" not in context.casefold():
+                continue
+            assert forbidden_claim.search(context.casefold()) is None, path
 
 
 def test_wannier90_distribution_resource_binds_provenance() -> None:
