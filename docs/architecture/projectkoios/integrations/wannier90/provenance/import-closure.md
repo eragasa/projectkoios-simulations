@@ -12,7 +12,9 @@ donor test path is
 `python/tests/software_verification/ksdft2effmass/integration/wannier90`, tree
 `e5093059c62650e2afe14dccd80f25544e05c1df`; all 15 test modules and three
 resources were transferred, then namespace/import/resource paths were rewritten
-and failure coverage was added.
+and failure coverage was added. The destination implementation is not an
+unchanged copy: its per-file mappings record parser-limit, numeric, dimension,
+ordering, inventory, unit-label, and trailing-content hardening where applicable.
 
 The common donor and destination Apache-2.0 license has SHA-256
 `c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4`.

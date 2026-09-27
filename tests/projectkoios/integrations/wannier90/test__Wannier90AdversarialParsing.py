@@ -155,6 +155,13 @@ def test_wout_rejects_duplicate_iteration_wf_indices() -> None:
         Wannier90LocalizationParser().execute(payload, LENGTH)
 
 
+def test_wout_rejects_iteration_and_final_state_wf_inventory_mismatch() -> None:
+    payload = _wout(final_indices=(1, 2))
+
+    with pytest.raises(ValueError, match="inventories do not agree"):
+        Wannier90LocalizationParser().execute(payload, LENGTH)
+
+
 @pytest.mark.parametrize(
     ("parser", "payload", "arguments"),
     [

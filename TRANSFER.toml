@@ -124,43 +124,43 @@ ownership = "Campaign/Wilson fixture; excluded, with parser-composition coverage
 source = "python/src/ksdft2effmass/integration/wannier90/__init__.py"
 source_blob = "f5d62f7cf4d41a7351f543908cce9499cd9e8b28"
 target = "src/python/projectkoios/integrations/wannier90/__init__.py"
-adaptation = "Namespace rewrite only."
+adaptation = "Namespace rewrite plus public export of the extraction-added Wannier90ParserLimits contract."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/artifacts.py"
 source_blob = "c9ec6533846df8fd099ec6df3a6e61d9de6de5c7"
 target = "src/python/projectkoios/integrations/wannier90/artifacts.py"
-adaptation = "Namespace rewrite and quantity imports redirected to the compatible PhysKit distribution."
+adaptation = "Namespace and quantity-import rewrites plus bounded parser-limit propagation and exact nnkp/mmn inventory correlation."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/hamiltonian_blocks.py"
 source_blob = "74f1c111162467bb83e323cf11eebf779951f32c"
 target = "src/python/projectkoios/integrations/wannier90/hamiltonian_blocks.py"
-adaptation = "Quantity imports redirected to the compatible PhysKit distribution."
+adaptation = "Quantity imports redirected to the compatible PhysKit distribution; bounded dimensions and records, finite Fortran-real parsing, native index validation, and trailing-record rejection added."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/interface_data.py"
 source_blob = "f047240f54d90f8c1eb4257a8a06ddb81d93ebdb"
 target = "src/python/projectkoios/integrations/wannier90/interface_data.py"
-adaptation = "Quantity imports redirected to the compatible PhysKit distribution."
+adaptation = "Quantity imports redirected to the compatible PhysKit distribution; bounded dimensions and records, finite Fortran-real parsing, and native order, index, inventory, and trailing-record validation added."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/localization.py"
 source_blob = "c8ad5ab129a2e027066a3583d17fc1ec590b188d"
 target = "src/python/projectkoios/integrations/wannier90/localization.py"
-adaptation = "Quantity imports redirected to the compatible PhysKit distribution."
+adaptation = "Quantity imports redirected to the compatible PhysKit distribution; bounded and finite numeric parsing plus source-unit, standard-Omega, iteration-order, and iteration/final WF-inventory validation added."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/neighbor_lists.py"
 source_blob = "06f10483e6264ea6bc949e31344b3fcd981584cb"
 target = "src/python/projectkoios/integrations/wannier90/neighbor_lists.py"
-adaptation = "Copied unchanged."
+adaptation = "Bounded parsing, exact block and cardinality limits, normalized source/target index ordering, and duplicate-inventory rejection added."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/unitary_matrices.py"
 source_blob = "6b9eef22b55794cda33c328ecb50adaa4a5f8a06"
 target = "src/python/projectkoios/integrations/wannier90/unitary_matrices.py"
-adaptation = "Quantity imports redirected to the compatible PhysKit distribution."
+adaptation = "Quantity imports redirected to the compatible PhysKit distribution; square _u.mat semantics, bounded dimensions and records, finite numeric parsing, native order, and trailing-record validation added."
 
 [[origins]]
 component = "physkit"

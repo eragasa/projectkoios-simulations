@@ -98,6 +98,48 @@ def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     ]
 
 
+def test_wannier90_file_mappings_disclose_substantive_adaptations() -> None:
+    mappings = _transfer()["extractions"][0]["file_mappings"]
+
+    adaptations = {
+        Path(mapping["target"]).name: mapping["adaptation"] for mapping in mappings
+    }
+    assert adaptations == {
+        "__init__.py": (
+            "Namespace rewrite plus public export of the extraction-added "
+            "Wannier90ParserLimits contract."
+        ),
+        "artifacts.py": (
+            "Namespace and quantity-import rewrites plus bounded parser-limit "
+            "propagation and exact nnkp/mmn inventory correlation."
+        ),
+        "hamiltonian_blocks.py": (
+            "Quantity imports redirected to the compatible PhysKit distribution; "
+            "bounded dimensions and records, finite Fortran-real parsing, native "
+            "index validation, and trailing-record rejection added."
+        ),
+        "interface_data.py": (
+            "Quantity imports redirected to the compatible PhysKit distribution; "
+            "bounded dimensions and records, finite Fortran-real parsing, and "
+            "native order, index, inventory, and trailing-record validation added."
+        ),
+        "localization.py": (
+            "Quantity imports redirected to the compatible PhysKit distribution; "
+            "bounded and finite numeric parsing plus source-unit, standard-Omega, "
+            "iteration-order, and iteration/final WF-inventory validation added."
+        ),
+        "neighbor_lists.py": (
+            "Bounded parsing, exact block and cardinality limits, normalized "
+            "source/target index ordering, and duplicate-inventory rejection added."
+        ),
+        "unitary_matrices.py": (
+            "Quantity imports redirected to the compatible PhysKit distribution; "
+            "square _u.mat semantics, bounded dimensions and records, finite numeric "
+            "parsing, native order, and trailing-record validation added."
+        ),
+    }
+
+
 def test_physkit_runtime_dependency_has_a_compatible_lower_bound() -> None:
     with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as stream:
         project = tomllib.load(stream)["project"]

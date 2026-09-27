@@ -143,6 +143,7 @@ class Wannier90LocalizationParser(BoundedParser):
             raise ValueError("selective-localization Omega variants are unsupported")
 
         reported_iterations: list[int] = []
+        reported_wf_inventories: list[tuple[int, ...]] = []
         current_wf_indices: list[int] | None = None
         expected_iteration: int | None = None
         for line in lines[:final_index]:
@@ -166,7 +167,9 @@ class Wannier90LocalizationParser(BoundedParser):
             iteration = int(iteration_match.group(1))
             if expected_iteration is None or iteration != expected_iteration:
                 raise ValueError("wout iteration record lacks its matching state block")
-            self._require_ordered_wf_indices(current_wf_indices, "iteration")
+            reported_wf_inventories.append(
+                self._require_ordered_wf_indices(current_wf_indices, "iteration")
+            )
             reported_iterations.append(iteration)
             current_wf_indices = None
             expected_iteration = None
@@ -179,7 +182,15 @@ class Wannier90LocalizationParser(BoundedParser):
         if not center_matches:
             raise ValueError("wout final state lacks centers and spreads")
         final_wf_indices = [int(match.group(1)) for match in center_matches]
-        self._require_ordered_wf_indices(final_wf_indices, "final state")
+        final_wf_inventory = self._require_ordered_wf_indices(
+            final_wf_indices, "final state"
+        )
+        if any(
+            inventory != final_wf_inventory for inventory in reported_wf_inventories
+        ):
+            raise ValueError(
+                "wout iteration and final-state WF inventories do not agree"
+            )
         if len(center_matches) > self.limits.maximum_dimension:
             raise ValueError("wannier_count exceeds maximum_dimension")
         centers: npt.NDArray[np.float64] = np.asarray(
@@ -219,10 +230,13 @@ class Wannier90LocalizationParser(BoundedParser):
         )
 
     @staticmethod
-    def _require_ordered_wf_indices(indices: list[int] | None, label: str) -> None:
+    def _require_ordered_wf_indices(
+        indices: list[int] | None, label: str
+    ) -> tuple[int, ...]:
         if not indices:
             raise ValueError(f"wout {label} lacks WF centre and spread records")
         if indices != list(range(1, len(indices) + 1)):
             raise ValueError(
                 f"wout {label} WF indices must be ordered, unique, and one-based"
             )
+        return tuple(indices)
