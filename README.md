@@ -3,11 +3,15 @@
 `projectkoios-simulations` owns calculator-neutral simulation identities,
 execution records, density-functional-theory and pseudopotential contracts, and
 plane-wave SCF, NSCF, and structural-relaxation contracts under
-`projectkoios.simulations`.
+`projectkoios.simulations`. Outward provider integrations owned by this
+distribution live under `projectkoios.integrations`.
 
-Calculator-native inputs, parsers, and runners belong in provider repositories.
-Workflow orchestration, convergence campaigns, recipes, and scientific
-acceptance policy do not belong here.
+The LAMMPS package is a provenance-bound reconstruction scaffold for inspecting
+retained templates and data text and for rendering bounded data artifacts. It
+does not run LAMMPS, parse calculator results, control convergence, or claim
+behavioral conformance, numerical verification, or scientific validation.
+Workflow orchestration, campaigns, recipes, and scientific acceptance policy do
+not belong here.
 
 ## License and origin
 
@@ -50,6 +54,6 @@ python3.14 -m venv .venv
 .venv/bin/python -m ruff check .
 .venv/bin/python -m ruff format --check src/python tests
 MYPYPATH=src/python .venv/bin/python -m mypy --strict \
-  src/python/projectkoios/simulations
+  src/python/projectkoios/simulations src/python/projectkoios/integrations
 .venv/bin/python -m build --wheel
 ```

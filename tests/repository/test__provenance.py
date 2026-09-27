@@ -43,6 +43,25 @@ def test_transfer_is_bound_to_exact_frankenstein_source_trees() -> None:
     }
 
 
+def test_lammps_extraction_is_bound_to_exact_recovery_trees() -> None:
+    transfer = _transfer()
+
+    extraction = transfer["extractions"][0]
+    assert extraction["component"] == "projectkoios.integrations.lammps"
+    assert extraction["status"] == "reconstruction-scaffold"
+    assert extraction["source_commit"] == ("2b996036f84b3cb72a0fc7cc9e7f71095d94ce53")
+    assert extraction["source_tree"] == "e0cb377ba799a5a87c3ad9f16958c1ee166a3ed8"
+    assert [item["git_tree"] for item in extraction["subtrees"]] == [
+        "53fa084f96df6f20706625f5971547b0322d1123",
+        "be951fede4d31192b427f756c291501d5164f053",
+        "5f3b7bbc3f4e36e8a98e459c8edd94b15050e1e9",
+    ]
+    assert [item["git_blob"] for item in extraction["compatibility_sources"]] == [
+        "9f7d1d0bc8ca55c777d727a252fc21fc93380ac0",
+        "75988b31d42bc3cb06a55f51da51f6245a5f3961",
+    ]
+
+
 def test_preserved_historical_license_files_have_declared_identities() -> None:
     transfer = _transfer()
 
