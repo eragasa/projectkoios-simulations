@@ -8,6 +8,11 @@ Effect-free LAMMPS reconstruction boundary.
 > parse calculator results, control convergence, or establish behavioral
 > conformance, numerical verification, or scientific validation.
 
+The pinned recovery source has no bounded, maintained LAMMPS example tree. The
+historical PyFlamestk and PyPosPack example corpora and separately owned
+`ksdft2effmass` smoke evidence are outside this transfer; this scaffold does not
+claim a synthetic replacement example.
+
 ## Modules
 
 - [`models`](models/index.md) defines protected template and command observations.

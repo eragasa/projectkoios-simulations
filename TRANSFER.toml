@@ -64,6 +64,7 @@ source_commit = "2b996036f84b3cb72a0fc7cc9e7f71095d94ce53"
 source_tree = "e0cb377ba799a5a87c3ad9f16958c1ee166a3ed8"
 namespace_from = "projectkoios.frankensteins.integrations.lammps"
 namespace_to = "projectkoios.integrations.lammps"
+example_limitation = "The pinned recovery source has no owned examples/projectkoios/frankensteins/integrations/lammps tree. Historical PyFlamestk, PyPosPack, and separately owned ksdft2effmass example evidence is excluded; no synthetic example is claimed by this transfer."
 summary = "Removed the incubation namespace segment and replaced removed shared dependencies with narrow local contracts; no execution capability was added."
 
 [[extractions.subtrees]]
