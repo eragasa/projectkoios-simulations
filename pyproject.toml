@@ -36,7 +36,14 @@ package-dir = {"" = "src/python"}
 
 [tool.setuptools.packages.find]
 where = ["src/python"]
-include = ["projectkoios.simulations*", "projectkoios.integrations*"]
+include = [
+    "projectkoios.simulations",
+    "projectkoios.simulations.*",
+    "projectkoios.integrations",
+    "projectkoios.integrations.*",
+    "projectkoios.adapters",
+    "projectkoios.adapters.*",
+]
 namespaces = true
 
 [tool.setuptools.package-data]

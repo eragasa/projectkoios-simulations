@@ -50,26 +50,20 @@ class PseudopotentialRepository:
             raise TypeError(
                 "repository entries must contain PseudopotentialRepositoryEntry values"
             )
-        identities = tuple(
-            (
-                entry.pseudopotential_file.symbol,
-                entry.pseudopotential_file.filename,
-                entry.pseudopotential_file.sha256,
-                entry.pseudopotential_file.byte_size,
-            )
-            for entry in self.entries
+        artifact_identities = tuple(
+            _artifact_identity(entry.pseudopotential_file) for entry in self.entries
         )
-        if len(identities) != len(set(identities)):
-            raise ValueError("repository pseudopotential identities must be unique")
+        if len(artifact_identities) != len(set(artifact_identities)):
+            raise ValueError(
+                "repository artifact identities must be unique across metadata"
+            )
 
     def resolve(self, required: PseudopotentialFile) -> Path:
         """Return the verified local path for one exact required identity."""
         if not isinstance(required, PseudopotentialFile):
             raise TypeError("required must inherit from PseudopotentialFile")
         matches = tuple(
-            entry
-            for entry in self.entries
-            if _identity(entry.pseudopotential_file) == _identity(required)
+            entry for entry in self.entries if entry.pseudopotential_file == required
         )
         if not matches:
             raise PseudopotentialNotFoundError(
@@ -97,7 +91,9 @@ class PseudopotentialRepository:
         return path
 
 
-def _identity(pseudopotential_file: PseudopotentialFile) -> tuple[str, str, str, int]:
+def _artifact_identity(
+    pseudopotential_file: PseudopotentialFile,
+) -> tuple[str, str, str, int]:
     return (
         pseudopotential_file.symbol,
         pseudopotential_file.filename,

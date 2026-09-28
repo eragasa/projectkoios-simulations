@@ -3,15 +3,17 @@
 `projectkoios-simulations` owns calculator-neutral simulation identities,
 execution records, density-functional-theory and pseudopotential contracts, and
 plane-wave SCF, NSCF, and structural-relaxation contracts under
-`projectkoios.simulations`. Outward provider integrations owned by this
-distribution live under `projectkoios.integrations`.
+`projectkoios.simulations`. Outward provider integrations and adapters owned by
+this distribution live under `projectkoios.integrations` and
+`projectkoios.adapters`. Those namespaces may depend on
+`projectkoios.simulations`; the neutral namespace must not import them.
 
 The VASP integration provides native INCAR, KPOINTS, POSCAR, and OUTCAR
 representations plus projections to calculator-neutral simulation contracts. It
 does not select pseudopotentials, authorize calculator execution, claim that
 projected inputs are runnable, or establish numerical or scientific validation.
 Workflow orchestration, convergence campaigns, recipes, and scientific
-acceptance policy do not belong here.
+acceptance policy do not belong under `projectkoios.simulations`.
 
 The LAMMPS package is a provenance-bound reconstruction scaffold for inspecting
 retained templates and data text and for rendering bounded data artifacts. It

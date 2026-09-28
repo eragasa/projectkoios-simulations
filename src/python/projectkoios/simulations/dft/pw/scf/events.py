@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from projectkoios.simulations.dft.pw.scf.base import (
     PwDftScfEvent,
     PwDftScfObservation,
+    _validate_identifier,
+    _validate_nonempty_text,
 )
 
 
@@ -17,12 +19,19 @@ class PwDftScfTaskRegistered(PwDftScfEvent):
     evaluation_id: str
     task_id: str
 
+    def __post_init__(self) -> None:
+        _validate_identifier(self.evaluation_id, "evaluation_id")
+        _validate_nonempty_text(self.task_id, "task_id")
+
 
 @dataclass(frozen=True, slots=True)
 class PwDftScfTaskSubmitted(PwDftScfEvent):
     """Report acceptance of one SCF task by an external executor."""
 
     task_id: str
+
+    def __post_init__(self) -> None:
+        _validate_nonempty_text(self.task_id, "task_id")
 
 
 @dataclass(frozen=True, slots=True)
@@ -32,6 +41,10 @@ class PwDftScfTaskCompleted(PwDftScfEvent):
     task_id: str
     output_artifact_id: str
 
+    def __post_init__(self) -> None:
+        _validate_nonempty_text(self.task_id, "task_id")
+        _validate_nonempty_text(self.output_artifact_id, "output_artifact_id")
+
 
 @dataclass(frozen=True, slots=True)
 class PwDftScfOutputAnalyzed(PwDftScfEvent):
@@ -39,6 +52,11 @@ class PwDftScfOutputAnalyzed(PwDftScfEvent):
 
     task_id: str
     observation: PwDftScfObservation
+
+    def __post_init__(self) -> None:
+        _validate_nonempty_text(self.task_id, "task_id")
+        if type(self.observation) is not PwDftScfObservation:
+            raise TypeError("observation must be a PwDftScfObservation")
 
 
 @dataclass(frozen=True, slots=True)
@@ -48,3 +66,8 @@ class PwDftScfTaskFailed(PwDftScfEvent):
     task_id: str
     code: str
     message: str
+
+    def __post_init__(self) -> None:
+        _validate_nonempty_text(self.task_id, "task_id")
+        _validate_identifier(self.code, "failure code")
+        _validate_nonempty_text(self.message, "failure message")

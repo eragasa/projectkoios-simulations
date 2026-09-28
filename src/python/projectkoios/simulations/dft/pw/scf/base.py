@@ -8,6 +8,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
+from projectkoios.simulations.dft.pw.settings import CalculationType
 from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
 
 _IDENTIFIER = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
@@ -75,6 +76,8 @@ class PwDftScfRequest(PwDftScfObject):
         _validate_identifier(self.evaluation_id, "evaluation_id")
         if type(self.simulation) is not PwDftSimulation:
             raise TypeError("simulation must be a PwDftSimulation")
+        if self.simulation.settings.calculation_type is not CalculationType.scf:
+            raise ValueError("simulation calculation type must be scf")
         if type(self.sampling) is not PwDftScfSampling:
             raise TypeError("sampling must be a PwDftScfSampling")
 
@@ -189,6 +192,12 @@ class PwDftScfResult(PwDftScfObject):
     task_id: str
     observation: PwDftScfObservation
 
+    def __post_init__(self) -> None:
+        _validate_identifier(self.evaluation_id, "evaluation_id")
+        _validate_nonempty_text(self.task_id, "task_id")
+        if type(self.observation) is not PwDftScfObservation:
+            raise TypeError("observation must be a PwDftScfObservation")
+
 
 @dataclass(frozen=True, slots=True)
 class PwDftScfWorkflowStart(PwDftScfObject):
@@ -206,6 +215,10 @@ class PwDftScfWorkflowSucceeded(PwDftScfWorkflowOutcome):
 
     result: PwDftScfResult
 
+    def __post_init__(self) -> None:
+        if type(self.result) is not PwDftScfResult:
+            raise TypeError("result must be a PwDftScfResult")
+
 
 @dataclass(frozen=True, slots=True)
 class PwDftScfWorkflowFailed(PwDftScfWorkflowOutcome):
@@ -218,10 +231,14 @@ class PwDftScfWorkflowFailed(PwDftScfWorkflowOutcome):
     def __post_init__(self) -> None:
         _validate_identifier(self.evaluation_id, "evaluation_id")
         _validate_identifier(self.code, "failure code")
-        if not self.message or self.message != self.message.strip():
-            raise ValueError("failure message must be nonempty and stripped")
+        _validate_nonempty_text(self.message, "failure message")
 
 
 def _validate_identifier(value: str, label: str) -> None:
     if type(value) is not str or not _IDENTIFIER.fullmatch(value):
         raise ValueError(f"{label} must be a lowercase slug")
+
+
+def _validate_nonempty_text(value: str, label: str) -> None:
+    if type(value) is not str or not value or value != value.strip():
+        raise ValueError(f"{label} must be nonempty and stripped")
