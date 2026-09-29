@@ -1,0 +1,76 @@
+# Materialize this template only after selecting a matching SCF saved state.
+schema_version = 1
+calculation_id = "si-primitive-wannier-nscf"
+phase = "nscf"
+integration_id = "quantum-espresso"
+
+[source_input]
+path = "input/pw.in"
+byte_size = 3932
+sha256 = "6bfe71900d579edc2fddae0b2a9da65dc7bc6f28ff77eef819569ed174fccd42"
+
+[structure]
+path = "../../../relaxation/Si/primitive/Si.primitive.json"
+structure_id = "Si.primitive"
+byte_size = 672
+sha256 = "9a18584b2be8ce70f45903f0fb8b00a1d4022c405b3c291aacbc4c26480c9988"
+
+[calculator]
+program = "pw.x"
+program_version = "7.5"
+path = "/replace/with/path/to/pw.x"
+byte_size = 9673048
+sha256 = "87aa72158e2c103c63fce1deca977dc42ff4ba344519a9662aadb96d33eab910"
+
+[parent_scf]
+output_directory = "/replace/with/path/to/reference-scf-output"
+saved_state_root = "/replace/with/path/to/reference-scf-output"
+manifest_path = "/replace/with/path/to/reference-scf-output/scf-saved-state-manifest.json"
+manifest_byte_size = 1
+manifest_sha256 = "0000000000000000000000000000000000000000000000000000000000000000"
+calculation = "scf"
+prefix = "si"
+
+[pseudopotential]
+symbol = "Si"
+filename = "Si.pbe-n-van.UPF"
+path = "/replace/with/path/to/Si.pbe-n-van.UPF"
+byte_size = 577736
+sha256 = "ecbf38a11397247e67bc4204e01f655459d6cb7c286e581ab125db8708dcb8fa"
+mass_amu = 28.0
+
+[sampling]
+kpoint_grid = [4, 4, 4]
+kpoint_offset = [0, 0, 0]
+band_count = 12
+wavefunction_cutoff_ry = 25.0
+electronic_tolerance_ry = 1.0e-12
+occupations = "fixed"
+
+[qe]
+prefix = "si"
+pseudo_dir = "./"
+outdir = "./tmp/"
+input_filename = "pw.in"
+verbosity = "high"
+iprint = 2
+diagonalization = "cg"
+diago_full_acc = true
+disable_symmetry = true
+disable_time_reversal = true
+coordinate_precision = 8
+kpoint_precision = 12
+
+[output]
+directory = "/replace/with/path/to/new-nscf-output"
+
+[reference_nscf]
+output_directory = "/replace/with/path/to/reference-nscf-output"
+
+[qualification]
+statements = [
+  "The source input is retained byte-for-byte from Wannier90 3.1.0 example11.",
+  "The maintained projection uses an explicit cell and full unreduced k-point grid.",
+  "No convergence, numerical-verification, or scientific-validation claim is made.",
+  "Configuration content does not grant calculator-execution authority.",
+]

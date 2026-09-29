@@ -14,8 +14,15 @@ from projectkoios.integrations.quantumespresso.pw.inputfile.base import (
 from projectkoios.integrations.quantumespresso.pw.inputfile.model import (
     PwInputWriter,
 )
-from projectkoios.integrations.quantumespresso.pw.nscf.configuration import (  # noqa: E501
+from projectkoios.integrations.quantumespresso.pw.nscf.cards import (
+    QeNscfControlBlock,
     QeNscfOccupations,
+    _build_nscf_atomic_species_card,
+    _build_nscf_electrons_card,
+    _build_nscf_kpoints_card,
+    _build_nscf_system_card,
+)
+from projectkoios.integrations.quantumespresso.pw.nscf.configuration import (  # noqa: E501
     QeNscfProjectionConfiguration,
 )
 from projectkoios.simulations.dft.pw.settings import CalculationType
@@ -46,6 +53,11 @@ class QeNscfRenderedInput:
 class QeNscfInputProjection:
     """Retain rendered NSCF input and its unresolved native dependencies."""
 
+    control_block: QeNscfControlBlock
+    system_card: QeSystemCard
+    electrons_card: QeElectronsCard
+    atomic_species_card: QeAtomicSpeciesCard
+    kpoints_card: QeKpointsCard
     rendered_input: QeNscfRenderedInput
     required_pseudopotential_filenames: tuple[str, ...]
     parent_saved_state_manifest_sha256: str
@@ -54,8 +66,16 @@ class QeNscfInputProjection:
     qualification: str
 
     def __post_init__(self) -> None:
-        if type(self.rendered_input) is not QeNscfRenderedInput:
-            raise TypeError("rendered_input must be a QeNscfRenderedInput")
+        for label, value, expected_type in (
+            ("control_block", self.control_block, QeNscfControlBlock),
+            ("system_card", self.system_card, QeSystemCard),
+            ("electrons_card", self.electrons_card, QeElectronsCard),
+            ("atomic_species_card", self.atomic_species_card, QeAtomicSpeciesCard),
+            ("kpoints_card", self.kpoints_card, QeKpointsCard),
+            ("rendered_input", self.rendered_input, QeNscfRenderedInput),
+        ):
+            if type(value) is not expected_type:
+                raise TypeError(f"{label} must be a {expected_type.__name__}")
         if (
             type(self.required_pseudopotential_filenames) is not tuple
             or not self.required_pseudopotential_filenames
@@ -97,44 +117,43 @@ class QeNscfInputProjector:
         atoms = simulation.unit_cell.atomic_basis.atoms
         if {atom.symbol for atom in atoms} != {item.symbol for item in config.species}:
             raise ValueError("QE species must exactly match the unit cell")
+        control_block = QeNscfControlBlock(
+            calculation_type=CalculationType.nscf,
+            prefix=config.prefix,
+            pseudo_dir=config.pseudo_dir,
+            outdir=config.outdir,
+            verbosity=config.verbosity,
+            iprint=config.iprint,
+        )
+        system_card = _build_nscf_system_card(
+            atom_count=len(atoms),
+            species_count=len(config.species),
+            band_count=config.band_count,
+            wavefunction_cutoff_ry=config.wavefunction_cutoff_ry,
+            charge_density_cutoff_ry=config.charge_density_cutoff_ry,
+            occupations=config.occupations,
+            disable_symmetry=config.disable_symmetry,
+            disable_time_reversal=config.disable_time_reversal,
+        )
+        electrons_card = _build_nscf_electrons_card(
+            tolerance_ry=config.electronic_tolerance_ry,
+            diagonalization=config.diagonalization,
+            full_diagonalization_accuracy=config.full_diagonalization_accuracy,
+        )
+        atomic_species_card = _build_nscf_atomic_species_card(config.species)
+        kpoints_card = _build_nscf_kpoints_card(
+            tuple((item.coordinates, item.weight) for item in config.kpoints),
+            precision=config.kpoint_precision,
+        )
         input_file = QePwInputFileAssembler().assemble(
             simulation=simulation,
             groups=tuple(
                 component.to_input_group()
                 for component in (
-                    QeSystemCard(
-                        lines=(
-                            "ibrav = 0",
-                            f"nat = {len(atoms)}",
-                            f"ntyp = {len(config.species)}",
-                            f"nbnd = {config.band_count}",
-                            f"ecutwfc = {config.wavefunction_cutoff_ry:.10f}",
-                            f"ecutrho = {config.charge_density_cutoff_ry:.10f}",
-                            f"occupations = '{config.occupations.value}'",
-                            "nosym = .true.",
-                            "noinv = .true.",
-                        )
-                    ),
-                    QeElectronsCard(
-                        lines=(f"conv_thr = {config.electronic_tolerance_ry:.10e}",)
-                    ),
-                    QeAtomicSpeciesCard(
-                        lines=tuple(
-                            f"{item.symbol} {item.mass_amu:.10g} "
-                            f"{item.pseudopotential_filename}"
-                            for item in config.species
-                        )
-                    ),
-                    QeKpointsCard(
-                        option="crystal",
-                        lines=(
-                            str(len(config.kpoints)),
-                            *tuple(
-                                self._render_kpoint(item.coordinates, item.weight)
-                                for item in config.kpoints
-                            ),
-                        ),
-                    ),
+                    system_card,
+                    electrons_card,
+                    atomic_species_card,
+                    kpoints_card,
                 )
             ),
             prefix=config.prefix,
@@ -143,6 +162,7 @@ class QeNscfInputProjector:
             cell_parameters_unit="angstrom",
             atomic_positions_unit="crystal",
             coordinate_precision=config.coordinate_precision,
+            control_block=control_block,
             card_order=(
                 "ATOMIC_SPECIES",
                 "CELL_PARAMETERS",
@@ -151,6 +171,11 @@ class QeNscfInputProjector:
             ),
         )
         return QeNscfInputProjection(
+            control_block=control_block,
+            system_card=system_card,
+            electrons_card=electrons_card,
+            atomic_species_card=atomic_species_card,
+            kpoints_card=kpoints_card,
             rendered_input=QeNscfRenderedInput(
                 filename=config.input_filename,
                 text=PwInputWriter().render(input_file),
@@ -169,11 +194,3 @@ class QeNscfInputProjector:
                 "an identity-bound parent saved-state manifest."
             ),
         )
-
-    def _render_kpoint(
-        self,
-        coordinates: tuple[float, float, float],
-        weight: float,
-    ) -> str:
-        precision = self.configuration.kpoint_precision
-        return " ".join(f"{value:.{precision}f}" for value in (*coordinates, weight))

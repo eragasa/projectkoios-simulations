@@ -19,9 +19,13 @@ These checks do not execute Wannier90 or validate a gauge physically.
 
 import numpy as np
 import pytest
-from physkit.units.quantities import ComplexMatrixQuantity, MatrixQuantity, Unitless
 
 from projectkoios.integrations.wannier90 import Wannier90UnitaryMatrixData
+from projectkoios.physkit.units.quantities import (
+    ComplexMatrixQuantity,
+    MatrixQuantity,
+    Unitless,
+)
 
 pytestmark = pytest.mark.software_verification
 SUT = Wannier90UnitaryMatrixData

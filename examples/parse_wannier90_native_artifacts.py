@@ -17,12 +17,11 @@ import argparse
 import json
 from pathlib import Path
 
-from physkit.units.quantities import PhysicalUnit
-
 from projectkoios.integrations.wannier90 import (
     Wannier90NativeArtifact,
     Wannier90NativeArtifactSetParser,
 )
+from projectkoios.physkit.units.quantities import PhysicalUnit
 
 
 def parse_retained_artifacts(directory: Path, seed_name: str) -> dict[str, object]:

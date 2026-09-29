@@ -1,0 +1,16 @@
+SYSTEM = Silicon band path; canonical Si.primitive basis
+ISTART = 0
+ICHARG = 11
+ENCUT = 400
+ALGO = Normal
+NELM = 60
+EDIFF = 1e-7
+ISMEAR = 0
+SIGMA = 0.05
+ISPIN = 1
+LREAL = .FALSE.
+IBRION = -1
+NSW = 0
+NBANDS = 12
+LWAVE = .FALSE.
+LCHARG = .FALSE.

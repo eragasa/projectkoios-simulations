@@ -5,10 +5,14 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from projectkoios.integrations.quantumespresso.saved_state import (
+    QeSavedStateCalculation,
+    QeSavedStateManifestBuilder,
     QeSavedStateManifestJsonCodec,
     QeSavedStateManifestVerifier,
+    QeSavedStatePseudopotential,
 )
 
 
@@ -31,6 +35,50 @@ class QeSavedStateManifestVerifierTest(unittest.TestCase):
                 ),
             )
             self.assertEqual(manifest.producer_version, "7.5")
+
+    def test_builder_rejects_unsafe_prefix_before_filesystem_inventory(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            temporary_root = Path(directory)
+            source_root = temporary_root / "source"
+            source_root.mkdir()
+            outside = temporary_root / "outside.save"
+            outside.mkdir()
+            for filename in (
+                "data-file-schema.xml",
+                "charge-density.dat",
+                "wfc1.dat",
+                "Si.UPF",
+            ):
+                (outside / filename).write_bytes(b"evidence")
+            pseudopotential = QeSavedStatePseudopotential(
+                symbol="Si",
+                filename="Si.UPF",
+                sha256=hashlib.sha256(b"evidence").hexdigest(),
+                byte_size=len(b"evidence"),
+            )
+
+            with (
+                patch(
+                    "projectkoios.integrations.quantumespresso.saved_state._sha256_file"
+                ) as sha256_file,
+                self.assertRaisesRegex(
+                    ValueError,
+                    "safe native name",
+                ),
+            ):
+                QeSavedStateManifestBuilder().build(
+                    source_root=source_root,
+                    prefix="../outside",
+                    calculation=QeSavedStateCalculation.scf,
+                    producer_version="7.5",
+                    executable_sha256="a" * 64,
+                    input_sha256="b" * 64,
+                    structure_id="Si.primitive",
+                    structure_sha256="c" * 64,
+                    pseudopotentials=(pseudopotential,),
+                )
+
+            sha256_file.assert_not_called()
 
     def test_rejects_unexpected_manifest_key(self) -> None:
         document = json.loads(_manifest_payload(_artifacts()))

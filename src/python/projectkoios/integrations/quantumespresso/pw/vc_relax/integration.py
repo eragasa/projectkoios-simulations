@@ -4,6 +4,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
+from projectkoios.integrations.quantumespresso.pw.relaxation.projection import (  # noqa: E501
+    QeRelaxationInputProjection,
+)
 from projectkoios.integrations.quantumespresso.pw.vc_relax.configuration import (  # noqa: E501
     QeVcRelaxProjectionConfiguration,
 )
@@ -20,7 +23,6 @@ from projectkoios.simulations.dft.pw.relaxation.capabilities import (
     PwDftRelaxationBackendDescription,
 )
 from projectkoios.simulations.dft.pw.relaxation.integration import (
-    PwDftRelaxationInputProjection,
     PwDftRelaxationIntegration,
 )
 
@@ -50,8 +52,6 @@ class QePwVcRelaxIntegration(PwDftRelaxationIntegration):
             supported_scopes=(PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL,),
         )
 
-    def project(
-        self, request: PwDftRelaxationRequest
-    ) -> PwDftRelaxationInputProjection:
+    def project(self, request: PwDftRelaxationRequest) -> QeRelaxationInputProjection:
         """Return deterministic variable-cell QE input."""
         return QeVcRelaxInputProjector(self.configuration).project(request)

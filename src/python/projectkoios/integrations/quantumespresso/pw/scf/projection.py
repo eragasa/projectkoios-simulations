@@ -4,8 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit, ScalarQuantity
-
 from projectkoios.integrations.quantumespresso.pw.inputfile.base import (
     QeAtomicSpeciesCard,
     QeElectronsCard,
@@ -18,6 +16,11 @@ from projectkoios.integrations.quantumespresso.pw.inputfile.model import (
 )
 from projectkoios.integrations.quantumespresso.pw.scf import (
     configuration as qe_configuration,
+)
+from projectkoios.physkit.units import (
+    MODEL_SYSTEM_UNIT_CONVERTER,
+    PhysicalUnit,
+    ScalarQuantity,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
 from projectkoios.simulations.dft.pw.scf.base import (

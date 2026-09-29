@@ -1,4 +1,4 @@
-"""Extract native spectral data from parsed Quantum ESPRESSO NSCF evidence."""
+"""Extract a unified data facade from Quantum ESPRESSO NSCF evidence."""
 
 from __future__ import annotations
 
@@ -7,10 +7,19 @@ import re
 from dataclasses import dataclass
 from typing import Protocol, cast
 
-from projectkoios.integrations.quantumespresso.pw.data_extraction.base import (  # noqa: E501
+from projectkoios.integrations.quantumespresso.pw.data_extraction.base import (
     QePwCapturedStreamData,
     QePwCapturedStreamDataExtractor,
+    QePwDataSources,
+    QePwNativeArtifact,
 )
+from projectkoios.integrations.quantumespresso.pw.data_extraction.qexsd import (
+    QeQexsdData,
+)
+from projectkoios.integrations.quantumespresso.pw.relaxation.structure import (
+    QeQexsdFinalStructure,
+)
+from projectkoios.simulations.execution import CalculatorExecutionRecord
 
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 _REQUIRED_FIELDS = (
@@ -56,10 +65,9 @@ class _QexsdNscfDocument(Protocol):
 
 
 @dataclass(frozen=True, slots=True)
-class QeNscfData:
-    """Retain source-ordered NSCF data without native-unit normalization."""
+class QeNscfSpectralData:
+    """Retain source-ordered native QEXSD spectral observations."""
 
-    streams: QePwCapturedStreamData
     source_path: str
     source_sha256: str
     source_byte_count: int
@@ -78,8 +86,6 @@ class QeNscfData:
     exit_status: int
 
     def __post_init__(self) -> None:
-        if type(self.streams) is not QePwCapturedStreamData:
-            raise TypeError("streams must be QePwCapturedStreamData")
         for label, value in (
             ("source_path", self.source_path),
             ("qexsd_version", self.qexsd_version),
@@ -148,8 +154,173 @@ class QeNscfData:
 
 
 @dataclass(frozen=True, slots=True)
+class QeNscfConsistency:
+    """Report mechanical NSCF agreement without scientific acceptance policy."""
+
+    terminal_status_matches: bool
+    stdout_kpoint_count_matches: bool | None
+    declared_band_count_matches: bool
+    declared_kpoint_count_matches: bool
+
+    def __post_init__(self) -> None:
+        for label, value in (
+            ("terminal_status_matches", self.terminal_status_matches),
+            ("stdout_kpoint_count_matches", self.stdout_kpoint_count_matches),
+            ("declared_band_count_matches", self.declared_band_count_matches),
+            ("declared_kpoint_count_matches", self.declared_kpoint_count_matches),
+        ):
+            if value is not None and type(value) is not bool:
+                raise TypeError(f"{label} must be a boolean or None")
+        if not self.declared_band_count_matches:
+            raise ValueError("declared band count must match extracted QEXSD data")
+        if not self.declared_kpoint_count_matches:
+            raise ValueError("declared k-point count must match extracted QEXSD data")
+
+
+@dataclass(frozen=True, slots=True)
+class QeNscfData:
+    """Facade all retained native and interpreted QE NSCF data."""
+
+    sources: QePwDataSources
+    spectral: QeNscfSpectralData
+    consistency: QeNscfConsistency
+
+    def __post_init__(self) -> None:
+        if type(self.sources) is not QePwDataSources:
+            raise TypeError("sources must be QePwDataSources")
+        if type(self.sources.qexsd) is not QeQexsdData:
+            raise TypeError("NSCF sources require QeQexsdData")
+        if type(self.spectral) is not QeNscfSpectralData:
+            raise TypeError("spectral must be QeNscfSpectralData")
+        if type(self.consistency) is not QeNscfConsistency:
+            raise TypeError("consistency must be QeNscfConsistency")
+        if self.qexsd.document is None:
+            raise ValueError("qexsd must retain its parsed document")
+        if self.spectral.source_path != self.qexsd.final_structure.source_path:
+            raise ValueError("spectral data and QEXSD structure paths disagree")
+        if self.spectral.source_sha256 != self.qexsd.final_structure.source_sha256:
+            raise ValueError("spectral data and QEXSD structure identities disagree")
+        if self.spectral.exit_status != self.qexsd.final_structure.exit_status:
+            raise ValueError("spectral data and QEXSD exit status disagree")
+        expected = QeNscfConsistency(
+            terminal_status_matches=(
+                self.streams.stdout.job_completed == (self.spectral.exit_status == 0)
+            ),
+            stdout_kpoint_count_matches=(
+                self.streams.stdout.k_point_count == self.spectral.sampled_k_point_count
+                if self.streams.stdout.k_point_count is not None
+                else None
+            ),
+            declared_band_count_matches=True,
+            declared_kpoint_count_matches=True,
+        )
+        if self.consistency != expected:
+            raise ValueError("consistency does not describe the retained sources")
+        if self.sources.execution is not None and (
+            type(self.sources.execution) is not CalculatorExecutionRecord
+        ):
+            raise TypeError("NSCF execution must be CalculatorExecutionRecord or None")
+
+    @property
+    def streams(self) -> QePwCapturedStreamData:
+        return self.sources.streams
+
+    @property
+    def qexsd(self) -> QeQexsdData:
+        qexsd = self.sources.qexsd
+        assert type(qexsd) is QeQexsdData
+        return qexsd
+
+    @property
+    def execution(self) -> CalculatorExecutionRecord | None:
+        execution = self.sources.execution
+        assert execution is None or type(execution) is CalculatorExecutionRecord
+        return execution
+
+    @property
+    def stdout_artifact(self) -> QePwNativeArtifact:
+        return self.streams.stdout_artifact
+
+    @property
+    def stderr_artifact(self) -> QePwNativeArtifact:
+        return self.streams.stderr_artifact
+
+    @property
+    def final_structure(self) -> QeQexsdFinalStructure:
+        return self.qexsd.final_structure
+
+    @property
+    def document(self) -> object:
+        return self.qexsd.document
+
+    @property
+    def source_path(self) -> str:
+        return self.spectral.source_path
+
+    @property
+    def source_sha256(self) -> str:
+        return self.spectral.source_sha256
+
+    @property
+    def source_byte_count(self) -> int:
+        return self.spectral.source_byte_count
+
+    @property
+    def qexsd_version(self) -> str:
+        return self.spectral.qexsd_version
+
+    @property
+    def producing_application(self) -> str:
+        return self.spectral.producing_application
+
+    @property
+    def producing_application_version(self) -> str | None:
+        return self.spectral.producing_application_version
+
+    @property
+    def declared_unit_system_label(self) -> str:
+        return self.spectral.declared_unit_system_label
+
+    @property
+    def k_points(self) -> tuple[_Vector3, ...]:
+        return self.spectral.k_points
+
+    @property
+    def k_point_weights(self) -> tuple[float, ...]:
+        return self.spectral.k_point_weights
+
+    @property
+    def sampled_k_point_count(self) -> int:
+        return self.spectral.sampled_k_point_count
+
+    @property
+    def k_point_source_label(self) -> str:
+        return self.spectral.k_point_source_label
+
+    @property
+    def eigenvalues(self) -> _Spectrum:
+        return self.spectral.eigenvalues
+
+    @property
+    def occupations(self) -> _Spectrum | None:
+        return self.spectral.occupations
+
+    @property
+    def eigenvalue_source_label(self) -> str:
+        return self.spectral.eigenvalue_source_label
+
+    @property
+    def band_count(self) -> int:
+        return self.spectral.band_count
+
+    @property
+    def exit_status(self) -> int:
+        return self.spectral.exit_status
+
+
+@dataclass(frozen=True, slots=True)
 class QeNscfDataExtractor:
-    """Own NSCF extraction from captured streams and maintained-parser QEXSD."""
+    """Extract captured streams and QEXSD into one NSCF data facade."""
 
     def extract(
         self,
@@ -159,10 +330,11 @@ class QeNscfDataExtractor:
         qexsd_document: object,
         expected_band_count: int,
         expected_kpoint_count: int,
+        execution: CalculatorExecutionRecord | None = None,
         stdout_relative_path: str = "pw.out",
         stderr_relative_path: str = "pw.err",
     ) -> QeNscfData:
-        """Extract raw native arrays and fail closed on declared shape mismatch."""
+        """Extract native arrays and fail closed on declared shape mismatch."""
         if type(expected_band_count) is not int or expected_band_count <= 0:
             raise ValueError("expected_band_count must be positive")
         if type(expected_kpoint_count) is not int or expected_kpoint_count <= 0:
@@ -186,8 +358,7 @@ class QeNscfDataExtractor:
             streams.stdout.k_point_count != expected_kpoint_count
         ):
             raise ValueError("stdout k-point count disagrees with the NSCF declaration")
-        return QeNscfData(
-            streams=streams,
+        spectral = QeNscfSpectralData(
             source_path=document.source_path,
             source_sha256=document.source_sha256,
             source_byte_count=document.source_byte_count,
@@ -204,4 +375,28 @@ class QeNscfDataExtractor:
             eigenvalue_source_label=document.eigenvalue_source_label,
             band_count=document.band_count,
             exit_status=document.exit_status,
+        )
+        qexsd = QeQexsdData.from_document(qexsd_document)
+        consistency = QeNscfConsistency(
+            terminal_status_matches=(
+                streams.stdout.job_completed == (document.exit_status == 0)
+            ),
+            stdout_kpoint_count_matches=(
+                streams.stdout.k_point_count == document.sampled_k_point_count
+                if streams.stdout.k_point_count is not None
+                else None
+            ),
+            declared_band_count_matches=(document.band_count == expected_band_count),
+            declared_kpoint_count_matches=(
+                document.sampled_k_point_count == expected_kpoint_count
+            ),
+        )
+        return QeNscfData(
+            sources=QePwDataSources(
+                streams=streams,
+                qexsd=qexsd,
+                execution=execution,
+            ),
+            spectral=spectral,
+            consistency=consistency,
         )

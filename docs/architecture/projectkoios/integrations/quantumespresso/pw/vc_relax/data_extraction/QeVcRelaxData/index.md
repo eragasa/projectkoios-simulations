@@ -1,4 +1,5 @@
 # `QeVcRelaxData`
 
-Fields: extracted native `streams` and optional `final_structure` from parsed
-QEXSD evidence.
+Compatibility alias of the unified
+[`QeRelaxData`](../../../relaxation/data/index.md) facade. It is not a nominal
+mode-specific subclass.

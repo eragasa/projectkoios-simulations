@@ -61,14 +61,18 @@ def test_relative_provider_imports_resolve_outside_the_neutral_namespace() -> No
     assert _resolve_import_from(path, node) == "projectkoios.integrations"
 
 
-def test_neutral_simulations_do_not_import_outward_namespaces() -> None:
+def test_neutral_simulations_import_only_neutral_or_inward_namespaces() -> None:
     invalid: list[tuple[Path, str]] = []
+    allowed_roots = (
+        "projectkoios.physkit",
+        "projectkoios.simulations",
+    )
 
     for path in SOURCE_ROOT.rglob("*.py"):
         for imported_name in _projectkoios_imports(path):
-            if not (
-                imported_name == "projectkoios.simulations"
-                or imported_name.startswith("projectkoios.simulations.")
+            if not any(
+                imported_name == root or imported_name.startswith(f"{root}.")
+                for root in allowed_roots
             ):
                 invalid.append((path.relative_to(SOURCE_ROOT), imported_name))
 

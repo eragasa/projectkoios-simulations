@@ -8,9 +8,15 @@ from dataclasses import dataclass
 from typing import Protocol, cast
 
 import numpy as np
-from physkit.periodic.lattice import DirectLattice3D
-from physkit.periodic.unit_cell import Atom, AtomicBasis, UnitCell
-from physkit.units import PhysicalUnit, ScalarQuantity, Unitless, VectorQuantity
+
+from projectkoios.physkit.periodic.lattice import DirectLattice3D
+from projectkoios.physkit.periodic.unit_cell import Atom, AtomicBasis, UnitCell
+from projectkoios.physkit.units import (
+    PhysicalUnit,
+    ScalarQuantity,
+    Unitless,
+    VectorQuantity,
+)
 
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 _REQUIRED_DOCUMENT_FIELDS = (

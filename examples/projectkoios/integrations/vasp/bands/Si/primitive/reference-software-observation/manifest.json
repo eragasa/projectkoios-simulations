@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "authorized_software_integration_observation",
+  "status": "current_canonical_unit_cell_basis",
+  "calculator": {
+    "name": "VASP",
+    "version": "5.3.5",
+    "executable_sha256": "ebe4117fef93d0752d2fc2c4ae0159d4a8cbd24aec58fc7305f58871cbab2b86"
+  },
+  "authorization": {
+    "observed_for_recorded_execution": true,
+    "reusable_execution_authority": false
+  },
+  "structure": {
+    "structure_id": "Si.primitive",
+    "repository_path": "examples/projectkoios/simulations/dft/pw/Si/primitive/Si.primitive.json",
+    "sha256": "9a18584b2be8ce70f45903f0fb8b00a1d4022c405b3c291aacbc4c26480c9988",
+    "lattice_vector_order": ["a1", "a2", "a3"]
+  },
+  "path": {
+    "path_id": "Si.primitive.fcc.L-Gamma-X-U_K-Gamma",
+    "coordinate_system": "reciprocal-fractional",
+    "branches": [
+      ["L", "Gamma", "X", "U"],
+      ["K", "Gamma"]
+    ],
+    "points_per_segment": 20
+  },
+  "executions": [
+    {
+      "phase": "scf",
+      "status": "succeeded",
+      "returncode": 0,
+      "started_at": "2026-09-29T03:34:06.053678Z",
+      "ended_at": "2026-09-29T03:34:07.162177Z"
+    },
+    {
+      "phase": "bands",
+      "status": "succeeded",
+      "returncode": 0,
+      "started_at": "2026-09-29T03:34:37.882282Z",
+      "ended_at": "2026-09-29T03:34:40.207253Z"
+    }
+  ],
+  "retained_inputs": [
+    {
+      "path": "input/INCAR",
+      "byte_count": 244,
+      "sha256": "4626e7d5be4edabc794f6fa9bbd285fdf79c46dba17759c550665a806a67b3fa"
+    },
+    {
+      "path": "input/KPOINTS",
+      "byte_count": 346,
+      "sha256": "3481ba9d2b67c33b19d430b4a102c440e324c82032114a2c203e08f8b2f67d00"
+    },
+    {
+      "path": "input/POSCAR",
+      "byte_count": 354,
+      "sha256": "c52d93d101c076fb94ae73687203359b8373a088bff24a3501d15aaeb847f0e6"
+    }
+  ],
+  "external_artifact_identities": [
+    {
+      "role": "licensed_potcar",
+      "path_at_execution": "POTCAR",
+      "byte_count": 195673,
+      "sha256": "79d9987ad8750f624c4d6acb2a16d13abf6a777132adc04dc6c8399be72b42bb"
+    },
+    {
+      "role": "parent_scf_outcar",
+      "path_at_execution": "/tmp/projectkoios-vasp-scf-canonical-probe/OUTCAR",
+      "byte_count": 66304,
+      "sha256": "8dec6913b975176a6c9b040c346f4f1244c42e45d469b4637d5f8abecaeab200"
+    },
+    {
+      "role": "parent_charge_density",
+      "path_at_execution": "CHGCAR",
+      "byte_count": 1166151,
+      "sha256": "8f92d40193e436d1c6d1e819c1a282cf3e65128069327b754af8d512b070424e"
+    },
+    {
+      "role": "outcar",
+      "path_at_execution": "OUTCAR",
+      "byte_count": 92810,
+      "sha256": "658c09e07987f52e41913d845a38b9cc38f8e71dd8d668df673d68cc03d54b77"
+    },
+    {
+      "role": "vasprun_xml",
+      "path_at_execution": "vasprun.xml",
+      "byte_count": 80671,
+      "sha256": "904a30c52eaa39646d5f2bf4176c7c765896707cfdca934d5725f3d65281ecd1"
+    },
+    {
+      "role": "stdout",
+      "path_at_execution": "vasp.out",
+      "byte_count": 1210,
+      "sha256": "189020f555de6cba85552bf74e4e966e6a843cf34baf17e642a04933ed99e07f"
+    },
+    {
+      "role": "stderr",
+      "path_at_execution": "vasp.err",
+      "byte_count": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "mechanical_observations": {
+    "vasprun_sample_count": 80,
+    "vasprun_band_count": 12,
+    "spin_channel_count": 1,
+    "configured_unit_cell_matches": true,
+    "path_coordinates_match": true,
+    "program_version_matches": true,
+    "atom_count_matches": true,
+    "kpoint_count_matches": true,
+    "maintained_spectral_source": "vasprun.xml"
+  },
+  "presentation_artifact_identities": [
+    {
+      "format": "svg",
+      "sha256": "233eea85450f1925bbb8007f963ed7b57d39ee4affd4d7e4d7351aee4c58e1e7"
+    },
+    {
+      "format": "png",
+      "sha256": "10e6a7f93ee0ff7827150fcf7cf206e8fb570ea714ceef6c09897692f1c2cf59"
+    }
+  ],
+  "claims": {
+    "software_integration_observed": true,
+    "canonical_Si_primitive_projection_established": true,
+    "convergence_established": false,
+    "scientific_validation_established": false,
+    "agreement_with_experiment_established": false
+  }
+}

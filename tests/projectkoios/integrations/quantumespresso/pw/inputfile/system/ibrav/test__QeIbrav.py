@@ -3,7 +3,6 @@ from __future__ import annotations
 import unittest
 
 import numpy as np
-from physkit.periodic import DirectLattice3D
 
 from projectkoios.integrations.quantumespresso.pw.inputfile.system.ibrav import (  # noqa: E501
     QeBravaisLattice,
@@ -13,6 +12,7 @@ from projectkoios.integrations.quantumespresso.pw.inputfile.system.ibrav import 
     QeIbrav,
     QeLatticeParameters,
 )
+from projectkoios.physkit.periodic import DirectLattice3D
 
 
 class QeIbravTest(unittest.TestCase):

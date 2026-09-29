@@ -64,7 +64,7 @@ source_commit = "3eb562f2d6167ec20d6f2c892c517509a7abf283"
 source_tree = "e5daec9f5a16e03f998afb9158a101246acd40d1"
 namespace_from = "projectkoios.frankensteins.integrations.vasp"
 namespace_to = "projectkoios.integrations.vasp"
-dependency_adaptation = "Replaced the commit-bound PhysKit direct URL with the released physkit>=0.1.0 requirement."
+dependency_adaptation = "Initially replaced the commit-bound PhysKit direct URL with physkit>=0.1.0; the maintained target now requires projectkoios-physkit>=0.1.0 and imports projectkoios.physkit."
 neutral_contract_adaptation = "Added explicit, default-false authorization to CalculatorExecutionRequest and enforced it before CalculatorExecutor creates files or starts a process."
 example_adaptation = "Retained only provider-native static inputs and raw failure evidence. Removed seven application-layer campaign and convergence paths and routed them generically to the projectkoios.applications composition owner in projectkoios-applications; pw_dft_scf remains one composable capability rather than a standalone application."
 summary = "Removed the incubation namespace segment, adapted repository-root test discovery, and retained fail-closed execution and scientific-claim boundaries."
@@ -160,11 +160,24 @@ source_commit = "3eb562f2d6167ec20d6f2c892c517509a7abf283"
 source_tree = "e5daec9f5a16e03f998afb9158a101246acd40d1"
 namespace_from = "projectkoios.frankensteins.integrations.quantumespresso"
 namespace_to = "projectkoios.integrations.quantumespresso"
-dependency_adaptation = "Replaced the commit-bound PhysKit direct URL with the released physkit>=0.1.0 requirement."
+dependency_adaptation = "Initially replaced the commit-bound PhysKit direct URL with physkit>=0.1.0; the maintained target now requires projectkoios-physkit>=0.1.0 and imports projectkoios.physkit."
 neutral_contract_adaptation = "Added explicit, default-false authorization to CalculatorExecutionRequest and enforced it before CalculatorExecutor creates files or starts a process."
 test_adaptation = "Removed the VASP half of one cross-provider registry test so this independently reviewable Quantum ESPRESSO migration does not depend on a separate provider migration; Quantum ESPRESSO stable-ID resolution remains covered. Added data-only verification of every retained convergence-evidence identity."
 example_adaptation = "Retained provider-native static fixtures and raw provider evidence. Removed ten application-layer runner, replay, campaign, convergence-policy, and workflow paths and routed them generically to the projectkoios.applications composition owner in projectkoios-applications; pw_dft_scf remains one composable capability rather than a standalone application. Reworded two static relaxation-fixture qualification strings and their manifest copy to deny current acceptance-policy ownership."
 summary = "Removed the incubation namespace segment, adapted repository-root test discovery, and retained fail-closed execution and scientific-claim boundaries."
+maintained_example_additions = [
+  "pw/nscf/Si/primitive/README.md",
+  "pw/nscf/Si/primitive/calculation.template.toml",
+  "pw/nscf/Si/primitive/input/pw.in",
+  "pw/nscf/Si/primitive/source.toml",
+  "pw2wannier90/Si/wannier90-3.1.0-example11/README.md",
+  "pw2wannier90/Si/wannier90-3.1.0-example11/input/silicon.nscf",
+  "pw2wannier90/Si/wannier90-3.1.0-example11/input/silicon.pw2wan",
+  "pw2wannier90/Si/wannier90-3.1.0-example11/input/silicon.scf",
+  "pw2wannier90/Si/wannier90-3.1.0-example11/input/silicon.win",
+  "pw2wannier90/Si/wannier90-3.1.0-example11/source.toml",
+]
+maintained_extension_note = "These ten paths were added after the historical extraction and are excluded from its exact 162-file target count. Their separate upstream-example provenance is declared below."
 
 [[extractions.subtrees]]
 role = "implementation"
@@ -339,7 +352,7 @@ initial_target_commit = "7031f0fbc93f8a7b9247be6184469fb55151a364"
 initial_target_tree = "9ed74ae15d36b7c4ac0e80830519386b229ea998"
 target_commit = "9b50f320d1e8998ecb087c769edc6100edb13d19"
 target_tree = "d5078887ec526edae2c6d91845dc1df9ac570d8f"
-target_identity_note = "Stable reviewed correction snapshot; later transfer-metadata corrections do not alter the mapped parser source objects."
+target_identity_note = "Stable reviewed correction snapshot. Later maintained dependency-namespace migrations may alter current target files without rewriting these historical source and target object identities."
 
 [[extractions.subtrees]]
 role = "implementation"
@@ -358,17 +371,22 @@ source_path = "python/src/ksdft2effmass/operators/quantities.py"
 source_blob = "d98be473e19e17a59563fc7c3e00cca02fd822d3"
 source_package_tree = "adfbe02b04b5b2b066213ac9266a704bed16d517"
 classification = "generic physical-unit and immutable numerical-quantity infrastructure"
-destination_owner = "physkit.units.quantities"
-resolution = "Reused the current compatible PhysKit distribution; not copied into this distribution."
-repository = "https://github.com/eragasa/physkit"
+destination_owner = "projectkoios.physkit.units.quantities"
+destination_owner_at_extraction = "physkit.units.quantities"
+resolution = "Reused the current compatible projectkoios-physkit distribution; not copied into this distribution."
+repository = "https://github.com/eragasa/projectkoios-physkit"
+repository_at_extraction = "https://github.com/eragasa/physkit"
 commit = "97032f16c9125aa124750508f8513cca9f6dab02"
 tree = "3a323d2436d4b5e86fe312e810e03c5d21ce37b3"
 subtree = "3314b0954e1d8e281e43f8f286e3e7c25361503d"
 blob = "686d075852ed01aab0a8d74fdec1be5a440c075d"
 license = "MIT"
+license_scope = "extraction-reviewed PhysKit snapshot"
+successor_license = "Apache-2.0"
 license_file = "licenses/PHYSKIT-MIT.txt"
 license_sha256 = "0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410"
-distribution = "physkit>=0.1.0"
+distribution = "projectkoios-physkit>=0.1.0"
+distribution_at_extraction = "physkit>=0.1.0"
 semantic_note = "Used quantity classes have the donor behavior plus nominal PhysKit base classes; numeric storage, units, validation, and immutability are unchanged."
 
 [[extractions.consumer_closure]]
@@ -413,7 +431,7 @@ source_blob = "74f1c111162467bb83e323cf11eebf779951f32c"
 target = "src/python/projectkoios/integrations/wannier90/hamiltonian_blocks.py"
 target_blob = "3aebcc4fb2c6851f5c39678c925dddbebd133dd1"
 adaptation_classes = ["dependency_redirection", "bounded_parsing", "numeric_validation", "inventory_validation"]
-adaptation = "Quantity imports redirected to the compatible PhysKit distribution; bounded dimensions and records, finite Fortran-real parsing, native index validation, and trailing-record rejection added."
+adaptation = "Quantity imports redirected to the compatible projectkoios-physkit distribution; bounded dimensions and records, finite Fortran-real parsing, native index validation, and trailing-record rejection added."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/interface_data.py"
@@ -421,7 +439,7 @@ source_blob = "f047240f54d90f8c1eb4257a8a06ddb81d93ebdb"
 target = "src/python/projectkoios/integrations/wannier90/interface_data.py"
 target_blob = "e1aaed53c92b9b3b0adbad26400f0f2b166d5e35"
 adaptation_classes = ["dependency_redirection", "bounded_parsing", "numeric_validation", "inventory_validation", "native_order_validation"]
-adaptation = "Quantity imports redirected to the compatible PhysKit distribution; bounded dimensions and records, finite Fortran-real parsing, and native order, index, inventory, and trailing-record validation added."
+adaptation = "Quantity imports redirected to the compatible projectkoios-physkit distribution; bounded dimensions and records, finite Fortran-real parsing, and native order, index, inventory, and trailing-record validation added."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/localization.py"
@@ -429,7 +447,7 @@ source_blob = "c8ad5ab129a2e027066a3583d17fc1ec590b188d"
 target = "src/python/projectkoios/integrations/wannier90/localization.py"
 target_blob = "c209e5db4f014e566def77b11a84d4ae6627f626"
 adaptation_classes = ["dependency_redirection", "bounded_parsing", "numeric_validation", "unit_validation", "inventory_validation"]
-adaptation = "Quantity imports redirected to the compatible PhysKit distribution; bounded and finite numeric parsing plus source-unit, standard-Omega, iteration-order, and iteration/final WF-inventory validation added."
+adaptation = "Quantity imports redirected to the compatible projectkoios-physkit distribution; bounded and finite numeric parsing plus source-unit, standard-Omega, iteration-order, and iteration/final WF-inventory validation added."
 
 [[extractions.file_mappings]]
 source = "python/src/ksdft2effmass/integration/wannier90/neighbor_lists.py"
@@ -445,12 +463,64 @@ source_blob = "6b9eef22b55794cda33c328ecb50adaa4a5f8a06"
 target = "src/python/projectkoios/integrations/wannier90/unitary_matrices.py"
 target_blob = "b45437482359eb12cffb026794fadda9d5d61a45"
 adaptation_classes = ["dependency_redirection", "bounded_parsing", "numeric_validation", "native_semantics_validation", "native_order_validation"]
-adaptation = "Quantity imports redirected to the compatible PhysKit distribution; square _u.mat semantics, bounded dimensions and records, finite numeric parsing, native order, and trailing-record validation added."
+adaptation = "Quantity imports redirected to the compatible projectkoios-physkit distribution; square _u.mat semantics, bounded dimensions and records, finite numeric parsing, native order, and trailing-record validation added."
 
 [[origins]]
 component = "physkit"
 repository = "https://github.com/eragasa/physkit"
+successor_component = "projectkoios-physkit"
+successor_repository = "https://github.com/eragasa/projectkoios-physkit"
 commit = "97032f16c9125aa124750508f8513cca9f6dab02"
 tree = "3a323d2436d4b5e86fe312e810e03c5d21ce37b3"
+license = "MIT"
+license_scope = "extraction-reviewed PhysKit snapshot"
+successor_license = "Apache-2.0"
 license_file = "licenses/PHYSKIT-MIT.txt"
 license_sha256 = "0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410"
+
+[[example_sources]]
+component = "quantumespresso-pw2wannier90-silicon-example"
+content_classification = "non-code simulation inputs"
+copy_mode = "byte-for-byte"
+source_project = "Wannier90"
+source_repository = "https://github.com/wannier-developers/wannier90"
+source_release = "3.1.0"
+source_archive = "wannier90-3.1.0.tar.gz"
+source_archive_sha256 = "40651a9832eb93dec20a8360dd535262c261c34e13c41b6755fa6915c936b254"
+source_path = "wannier90-3.1.0/examples/example11"
+source_directory_manifest_sha256 = "29a2acef7afedb57b5fad1f84bd6cbe372741788a16e01a99cf9166207038ad2"
+target = "examples/projectkoios/integrations/quantumespresso/pw2wannier90/Si/wannier90-3.1.0-example11"
+execution_performed = false
+scientific_validation_claimed = false
+pseudopotential_included = false
+inventory_repository = "https://github.com/eragasa/ksdft2effmass"
+inventory_commit = "7bd913151f7e61ed2bdba593df920be36573b502"
+inventory_path = "docs/computational/wannier90.tutorials.v3_1_0.md"
+inventory_blob = "857ac78dbb8177a746cb899b09e385c6b7582054"
+task_path = "tasks/simulation/wannier90.tutorials.v3_1_0.example11.json"
+task_blob = "f9a79f67e4340fd42b1764667494ddc1ae50eee0"
+
+[[example_sources.files]]
+source = "wannier90-3.1.0/examples/example11/silicon.scf"
+target = "input/silicon.scf"
+sha256 = "370b53e0cf4eb9c99ba0f766bf277a604a5b558485fb407188709491d22231dc"
+byte_size = 611
+
+[[example_sources.files]]
+source = "wannier90-3.1.0/examples/example11/silicon.nscf"
+target = "input/silicon.nscf"
+additional_targets = ["examples/projectkoios/integrations/quantumespresso/pw/nscf/Si/primitive/input/pw.in"]
+sha256 = "6bfe71900d579edc2fddae0b2a9da65dc7bc6f28ff77eef819569ed174fccd42"
+byte_size = 3932
+
+[[example_sources.files]]
+source = "wannier90-3.1.0/examples/example11/silicon.win"
+target = "input/silicon.win"
+sha256 = "d01fd36ea0dedc6f3463d06b703556771b8f665261d8366ed0f460df6c27e890"
+byte_size = 3761
+
+[[example_sources.files]]
+source = "wannier90-3.1.0/examples/example11/silicon.pw2wan"
+target = "input/silicon.pw2wan"
+sha256 = "ee38dd37e405914e638fe42aa6ca13357fcf33a2d9ca22973f9cc25a2e294941"
+byte_size = 148

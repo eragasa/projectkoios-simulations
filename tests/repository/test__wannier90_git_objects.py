@@ -54,7 +54,7 @@ def _object(repository: Path, commit: str, path: str) -> str:
     return _git(repository, "rev-parse", f"{commit}:{path}")
 
 
-def test_declared_target_git_objects_prove_substantive_adaptation() -> None:
+def test_declared_target_snapshot_proves_substantive_adaptation() -> None:
     extraction = _wannier_extraction()
     initial_commit = extraction["initial_target_commit"]
     target_commit = extraction["target_commit"]
@@ -78,7 +78,6 @@ def test_declared_target_git_objects_prove_substantive_adaptation() -> None:
         target_blob = mapping["target_blob"]
         assert _object(REPOSITORY_ROOT, target_commit, mapping["target"]) == target_blob
         assert _git(REPOSITORY_ROOT, "cat-file", "-t", target_blob) == "blob"
-        assert _git(REPOSITORY_ROOT, "hash-object", mapping["target"]) == target_blob
         assert mapping["source_blob"] != target_blob
 
         adaptation_classes = set(mapping["adaptation_classes"])

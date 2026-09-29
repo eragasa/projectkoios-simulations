@@ -5,10 +5,18 @@ from dataclasses import replace
 
 from projectkoios.integrations.quantumespresso.pw.inputfile.base import (
     QeAtomicSpecies,
+    QeAtomicSpeciesCard,
+    QeElectronsCard,
+    QeKpointsCard,
+    QeSystemCard,
+)
+from projectkoios.integrations.quantumespresso.pw.nscf.cards import (
+    QeNscfDiagonalization,
+    QeNscfOccupations,
+    QeNscfVerbosity,
 )
 from projectkoios.integrations.quantumespresso.pw.nscf.configuration import (  # noqa: E501
     QeNscfKPoint,
-    QeNscfOccupations,
     QeNscfProjectionConfiguration,
 )
 from projectkoios.integrations.quantumespresso.pw.nscf.projection import (  # noqa: E501
@@ -28,6 +36,10 @@ class QeNscfInputProjectorTest(unittest.TestCase):
     def test_projects_explicit_kpoint_order_and_saved_state_identity(self) -> None:
         projection = QeNscfInputProjector(_configuration()).project(_simulation())
 
+        self.assertEqual(type(projection.system_card), QeSystemCard)
+        self.assertEqual(type(projection.electrons_card), QeElectronsCard)
+        self.assertEqual(type(projection.atomic_species_card), QeAtomicSpeciesCard)
+        self.assertEqual(type(projection.kpoints_card), QeKpointsCard)
         self.assertEqual(projection.band_count, 8)
         self.assertEqual(projection.kpoint_count, 2)
         self.assertEqual(projection.parent_saved_state_manifest_sha256, "a" * 64)
@@ -39,6 +51,10 @@ class QeNscfInputProjectorTest(unittest.TestCase):
         self.assertIn("calculation = 'nscf'", text)
         self.assertIn("nbnd = 8", text)
         self.assertIn("occupations = 'fixed'", text)
+        self.assertIn("verbosity = 'high'", text)
+        self.assertIn("iprint = 2", text)
+        self.assertIn("diagonalization = 'cg'", text)
+        self.assertIn("diago_full_acc = .true.", text)
         self.assertIn("nosym = .true.", text)
         self.assertIn("noinv = .true.", text)
         self.assertIn(
@@ -91,6 +107,10 @@ def _configuration() -> QeNscfProjectionConfiguration:
         charge_density_cutoff_ry=320.0,
         electronic_tolerance_ry=1.0e-8,
         occupations=QeNscfOccupations.fixed,
+        verbosity=QeNscfVerbosity.high,
+        iprint=2,
+        diagonalization=QeNscfDiagonalization.conjugate_gradient,
+        full_diagonalization_accuracy=True,
         prefix="system",
         pseudo_dir="./",
         outdir="./tmp/",

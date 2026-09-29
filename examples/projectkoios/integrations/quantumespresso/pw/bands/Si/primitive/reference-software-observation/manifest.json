@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "authorized_software_integration_observation",
+  "status": "current_canonical_unit_cell_basis",
+  "calculator": {
+    "name": "Quantum ESPRESSO pw.x",
+    "version": "7.5",
+    "executable_sha256": "87aa72158e2c103c63fce1deca977dc42ff4ba344519a9662aadb96d33eab910"
+  },
+  "authorization": {
+    "observed_for_recorded_execution": true,
+    "reusable_execution_authority": false
+  },
+  "structure": {
+    "structure_id": "Si.primitive",
+    "repository_path": "examples/projectkoios/simulations/dft/pw/Si/primitive/Si.primitive.json",
+    "sha256": "9a18584b2be8ce70f45903f0fb8b00a1d4022c405b3c291aacbc4c26480c9988",
+    "lattice_vector_order": ["a1", "a2", "a3"]
+  },
+  "path": {
+    "path_id": "Si.primitive.fcc.L-Gamma-X-U_K-Gamma",
+    "coordinate_system": "reciprocal-fractional",
+    "branches": [
+      ["L", "Gamma", "X", "U"],
+      ["K", "Gamma"]
+    ],
+    "points_per_segment": 20
+  },
+  "executions": [
+    {
+      "phase": "scf",
+      "status": "succeeded",
+      "returncode": 0,
+      "started_at": "2026-09-29T03:35:11.755280Z",
+      "ended_at": "2026-09-29T03:35:12.770497Z"
+    },
+    {
+      "phase": "bands",
+      "status": "succeeded",
+      "returncode": 0,
+      "started_at": "2026-09-29T03:35:12.770750Z",
+      "ended_at": "2026-09-29T03:35:17.546089Z"
+    }
+  ],
+  "retained_inputs": [
+    {
+      "path": "input/si.scf.in",
+      "byte_count": 471,
+      "sha256": "9369ebe8025ba0d13e784f5d5ea460cf58bdef677a702d66cb69076d5acec76a"
+    },
+    {
+      "path": "input/si.bands.in",
+      "byte_count": 730,
+      "sha256": "f6a5a58ff7f3ca9063b9f74d6cafaa8cb5cae53c2b90fd165714c6d01d089fba"
+    }
+  ],
+  "external_artifact_identities": [
+    {
+      "role": "pseudopotential",
+      "path_at_execution": "pseudo/Si.pbe-n-van.UPF",
+      "byte_count": 577736,
+      "sha256": "ecbf38a11397247e67bc4204e01f655459d6cb7c286e581ab125db8708dcb8fa"
+    },
+    {
+      "role": "scf_stdout",
+      "path_at_execution": "si.scf.out",
+      "byte_count": 44421,
+      "sha256": "7ca82fd0353fdd365760ec82a444aa11992a2b2b08fe18f2c9325a51ee1c4d41"
+    },
+    {
+      "role": "bands_stdout",
+      "path_at_execution": "si.bands.out",
+      "byte_count": 43535,
+      "sha256": "03734115273b79e7e64db82eff0534177481f393c8cf2a18b8f82d6d8c5e8a32"
+    },
+    {
+      "role": "bands_qexsd",
+      "path_at_execution": "tmp/si.save/data-file-schema.xml",
+      "byte_count": 130252,
+      "sha256": "ebc1cd55aebdf6d5527c386ae8a1bddcc7e3ce404886e5f948745425a8659794"
+    },
+    {
+      "role": "saved_charge_density",
+      "path_at_execution": "tmp/si.save/charge-density.dat",
+      "byte_count": 128160,
+      "sha256": "bf4f52221cb0fd2891a94961cf2143871930cee357dee8d060eb3edaa0f917f4"
+    }
+  ],
+  "mechanical_observations": {
+    "scf_job_done": true,
+    "bands_job_done": true,
+    "qexsd_exit_status": 0,
+    "configured_unit_cell_matches": true,
+    "qexsd_sample_count": 82,
+    "qexsd_band_count": 12,
+    "qexsd_maximum_projected_kpoint_deviation": 1.7772750293256442e-16,
+    "maintained_spectral_source": "QEXSD data-file-schema.xml",
+    "gnu_plot_data_consumed": false
+  },
+  "presentation_artifact_identities": [
+    {
+      "format": "svg",
+      "sha256": "e84d55e32fe2e4a482ffb8ea1d9ce973c00a6fe4fc2a9d7c2f9a52c0c56bffa2"
+    },
+    {
+      "format": "png",
+      "sha256": "c2495caab8cdc0c2cb2d3ce14c4cc5955aad83a8a0b5efae8632983208924c6b"
+    }
+  ],
+  "claims": {
+    "software_integration_observed": true,
+    "canonical_Si_primitive_projection_established": true,
+    "convergence_established": false,
+    "scientific_validation_established": false,
+    "agreement_with_experiment_established": false
+  }
+}

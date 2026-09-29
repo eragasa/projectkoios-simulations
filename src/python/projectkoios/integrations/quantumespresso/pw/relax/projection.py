@@ -8,14 +8,12 @@ from projectkoios.integrations.quantumespresso.pw.relax.configuration import (  
     QeRelaxProjectionConfiguration,
 )
 from projectkoios.integrations.quantumespresso.pw.relaxation.projection import (  # noqa: E501
+    QeRelaxationInputProjection,
     project_relaxation_input,
 )
 from projectkoios.simulations.dft.pw.relaxation.base import (
     PwDftRelaxationRequest,
     PwDftRelaxationScope,
-)
-from projectkoios.simulations.dft.pw.relaxation.integration import (
-    PwDftRelaxationInputProjection,
 )
 
 
@@ -29,9 +27,7 @@ class QeRelaxInputProjector:
         if type(self.configuration) is not QeRelaxProjectionConfiguration:
             raise TypeError("configuration must be a QeRelaxProjectionConfiguration")
 
-    def project(
-        self, request: PwDftRelaxationRequest
-    ) -> PwDftRelaxationInputProjection:
+    def project(self, request: PwDftRelaxationRequest) -> QeRelaxationInputProjection:
         """Return deterministic QE ``relax`` input."""
         if type(request) is not PwDftRelaxationRequest:
             raise TypeError("request must be a PwDftRelaxationRequest")
@@ -41,5 +37,5 @@ class QeRelaxInputProjector:
             request,
             self.configuration,
             calculation="relax",
-            cell_component=None,
+            lattice_vector_options=None,
         )

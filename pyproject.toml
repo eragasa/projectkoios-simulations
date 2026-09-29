@@ -15,7 +15,7 @@ authors = [
 ]
 dependencies = [
     "numpy>=2.3,<3",
-    "physkit>=0.1.0",
+    "projectkoios-physkit>=0.1.0",
 ]
 
 [project.urls]

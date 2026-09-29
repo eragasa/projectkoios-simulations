@@ -5,22 +5,18 @@ from __future__ import annotations
 import math
 import re
 from dataclasses import dataclass
-from enum import StrEnum
 
 from projectkoios.integrations.quantumespresso.pw.inputfile.base import (
     QeAtomicSpecies,
 )
+from projectkoios.integrations.quantumespresso.pw.nscf.cards import (
+    QeNscfDiagonalization,
+    QeNscfOccupations,
+    QeNscfVerbosity,
+)
 
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
 _IDENTIFIER = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
-
-
-class QeNscfOccupations(StrEnum):
-    """Represent documented QE NSCF occupation modes."""
-
-    fixed = "fixed"
-    smearing = "smearing"
-    tetrahedra = "tetrahedra"
 
 
 @dataclass(frozen=True, slots=True)
@@ -52,9 +48,13 @@ class QeNscfProjectionConfiguration:
     kpoints: tuple[QeNscfKPoint, ...]
     band_count: int
     wavefunction_cutoff_ry: float
-    charge_density_cutoff_ry: float
+    charge_density_cutoff_ry: float | None
     electronic_tolerance_ry: float
     occupations: QeNscfOccupations
+    verbosity: QeNscfVerbosity
+    iprint: int
+    diagonalization: QeNscfDiagonalization
+    full_diagonalization_accuracy: bool
     prefix: str
     pseudo_dir: str
     outdir: str
@@ -91,7 +91,6 @@ class QeNscfProjectionConfiguration:
             raise ValueError("band_count must be a positive integer")
         for label, numeric_value in (
             ("wavefunction_cutoff_ry", self.wavefunction_cutoff_ry),
-            ("charge_density_cutoff_ry", self.charge_density_cutoff_ry),
             ("electronic_tolerance_ry", self.electronic_tolerance_ry),
         ):
             if (
@@ -100,12 +99,24 @@ class QeNscfProjectionConfiguration:
                 or numeric_value <= 0.0
             ):
                 raise ValueError(f"{label} must be positive and finite")
-        if self.charge_density_cutoff_ry < self.wavefunction_cutoff_ry:
+        if self.charge_density_cutoff_ry is not None and (
+            type(self.charge_density_cutoff_ry) is not float
+            or not math.isfinite(self.charge_density_cutoff_ry)
+            or self.charge_density_cutoff_ry < self.wavefunction_cutoff_ry
+        ):
             raise ValueError(
-                "charge-density cutoff must not be below wavefunction cutoff"
+                "charge-density cutoff must be finite and not below ecutwfc"
             )
         if type(self.occupations) is not QeNscfOccupations:
             raise TypeError("occupations must be a QeNscfOccupations")
+        if type(self.verbosity) is not QeNscfVerbosity:
+            raise TypeError("verbosity must be a QeNscfVerbosity")
+        if type(self.iprint) is not int or self.iprint < 0:
+            raise ValueError("iprint must be nonnegative")
+        if type(self.diagonalization) is not QeNscfDiagonalization:
+            raise TypeError("diagonalization must be a QeNscfDiagonalization")
+        if type(self.full_diagonalization_accuracy) is not bool:
+            raise TypeError("full_diagonalization_accuracy must be a boolean")
         for label, text_value in (
             ("prefix", self.prefix),
             ("pseudo_dir", self.pseudo_dir),

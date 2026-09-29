@@ -1,4 +1,4 @@
 # `QeRelaxData`
 
-Fields: extracted native `streams` and optional `final_structure` from parsed
-QEXSD evidence.
+See the unified [`QeRelaxData`](../../../relaxation/data/index.md) facade. Both
+fixed-cell and variable-cell extractors return this immutable record.

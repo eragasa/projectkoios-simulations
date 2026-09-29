@@ -3,17 +3,22 @@ from __future__ import annotations
 import unittest
 
 import numpy as np
-from physkit.periodic import DirectLattice3D
-from physkit.periodic.unit_cell import (
-    Atom,
-    AtomicBasis,
-    UnitCell,
-)
-from physkit.units import PhysicalUnit, ScalarQuantity, Unitless, VectorQuantity
 
 from projectkoios.integrations.vasp.calculation import (
     VaspCalculationProjection,
     VaspCalculationProjector,
+)
+from projectkoios.physkit.periodic import DirectLattice3D
+from projectkoios.physkit.periodic.unit_cell import (
+    Atom,
+    AtomicBasis,
+    UnitCell,
+)
+from projectkoios.physkit.units import (
+    PhysicalUnit,
+    ScalarQuantity,
+    Unitless,
+    VectorQuantity,
 )
 from projectkoios.simulations.dft.pw.settings import (
     AlignmentKind,

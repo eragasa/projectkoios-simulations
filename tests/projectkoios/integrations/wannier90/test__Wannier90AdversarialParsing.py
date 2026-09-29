@@ -5,7 +5,6 @@ from __future__ import annotations
 from dataclasses import replace
 
 import pytest
-from physkit.units.quantities import PhysicalUnit
 
 from projectkoios.integrations.wannier90 import (
     Wannier90EigenvalueParser,
@@ -19,6 +18,7 @@ from projectkoios.integrations.wannier90 import (
     Wannier90ProjectionParser,
     Wannier90UnitaryMatrixParser,
 )
+from projectkoios.physkit.units.quantities import PhysicalUnit
 
 pytestmark = pytest.mark.software_verification
 ENERGY = PhysicalUnit("electron_volt")

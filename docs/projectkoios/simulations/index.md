@@ -16,6 +16,6 @@ this package.
 
 The maintained subtree imports no other `projectkoios.frankensteins` package.
 Its simulation records and typed abstract ports depend only on Python's standard
-library and PhysKit. Extraction therefore removes only the `frankensteins`
-namespace segment and does not require application, adapter, or calculator
-implementation code.
+library and the inward `projectkoios.physkit` foundation. Extraction therefore
+removes only the `frankensteins` namespace segment and does not require
+application, adapter, or calculator implementation code.

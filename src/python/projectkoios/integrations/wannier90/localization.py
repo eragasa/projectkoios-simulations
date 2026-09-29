@@ -9,7 +9,8 @@ from typing import cast
 
 import numpy as np
 import numpy.typing as npt
-from physkit.units.quantities import (
+
+from projectkoios.physkit.units.quantities import (
     MatrixQuantity,
     ModelSystemUnit,
     PhysicalUnit,

@@ -6,8 +6,8 @@ import math
 from dataclasses import dataclass
 from enum import IntEnum, StrEnum
 
-from physkit.periodic import DirectLattice3D
-from physkit.periodic.lattice.bravais3d import (
+from projectkoios.physkit.periodic import DirectLattice3D
+from projectkoios.physkit.periodic.lattice.bravais3d import (
     BravaisLatticeKind,
 )
 

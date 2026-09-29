@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "authorized_software_integration_observation",
+  "status": "superseded_noncanonical_unit_cell_basis",
+  "calculator": {
+    "name": "Quantum ESPRESSO pw.x",
+    "version": "7.5",
+    "executable_sha256": "87aa72158e2c103c63fce1deca977dc42ff4ba344519a9662aadb96d33eab910"
+  },
+  "authorization": {
+    "observed_for_recorded_execution": true,
+    "reusable_execution_authority": false
+  },
+  "path": {
+    "convention": "VASP Wiki fcc Si example",
+    "branches": [
+      ["L", "Gamma", "X", "U"],
+      ["K", "Gamma"]
+    ],
+    "coordinate_system": "fractional reciprocal coordinates of the recorded primitive cell",
+    "points_per_segment": 20
+  },
+  "retained_inputs": [
+    {
+      "path": "input/si.scf.in",
+      "byte_count": 471,
+      "sha256": "0ab4aa5db447e002dc1260d41430a0d55ef929c2703cadcae329fde3c11ce648"
+    },
+    {
+      "path": "input/si.bands.in",
+      "byte_count": 698,
+      "sha256": "dd88c40c00c21a1f1838eaad8d4e0b16a4815e4aade5574870a861649af2c7aa"
+    }
+  ],
+  "external_artifact_identities": [
+    {
+      "role": "pseudopotential",
+      "path_at_execution": "pseudo/Si.pbe-n-van.UPF",
+      "byte_count": 577736,
+      "sha256": "ecbf38a11397247e67bc4204e01f655459d6cb7c286e581ab125db8708dcb8fa"
+    },
+    {
+      "role": "scf_stdout",
+      "path_at_execution": "si.scf.out",
+      "byte_count": 44390,
+      "sha256": "cfc52d30572d1d6baba8779134339e99b065cf86e1589c6239454d19c3452d5a"
+    },
+    {
+      "role": "bands_stdout",
+      "path_at_execution": "si.bands.out",
+      "byte_count": 43506,
+      "sha256": "e29f24d870abb5d57645b38ee2ef0d22a9e6c64b3a2f1bea20928792e6309aa5"
+    },
+    {
+      "role": "bands_qexsd",
+      "path_at_execution": "tmp/si.save/data-file-schema.xml",
+      "byte_count": 130208,
+      "sha256": "78ce3601a37d789c24c1548c27ac51ecd930ea95489fe6e49d31e26db0a85b83"
+    },
+    {
+      "role": "saved_charge_density",
+      "path_at_execution": "tmp/si.save/charge-density.dat",
+      "byte_count": 128160,
+      "sha256": "27523bdecbad70d246ffa06a5049eda0aaa08979718eb26034fa77e1d453b3a9"
+    }
+  ],
+  "mechanical_observations": {
+    "scf_job_done": true,
+    "bands_job_done": true,
+    "qexsd_exit_status": 0,
+    "qexsd_sample_count": 82,
+    "qexsd_band_count": 12,
+    "qexsd_maximum_projected_kpoint_deviation": 1.7772750293256442e-16,
+    "maintained_spectral_source": "QEXSD data-file-schema.xml",
+    "gnu_plot_data_consumed": false
+  },
+  "presentation_artifact_identities": [
+    {
+      "format": "svg",
+      "sha256": "cb3924789653e48177351b9be6ae7d5c35fa569ff4d897529d9d87a15a1d42a8"
+    },
+    {
+      "format": "png",
+      "sha256": "94ec350b13c8276c41e2b7ff05f46f019535288631ff14bb8986f8ee3672a09a"
+    }
+  ],
+  "claims": {
+    "software_integration_observed": true,
+    "canonical_Si_primitive_projection_established": false,
+    "convergence_established": false,
+    "scientific_validation_established": false,
+    "agreement_with_experiment_established": false
+  }
+}

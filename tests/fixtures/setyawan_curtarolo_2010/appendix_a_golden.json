@@ -1,0 +1,3798 @@
+{
+  "schema_version": 2,
+  "scientific_source": {
+    "citation": "W. Setyawan and S. Curtarolo, Computational Materials Science 49 (2010) 299-312, doi:10.1016/j.commatsci.2010.05.010",
+    "doi": "10.1016/j.commatsci.2010.05.010",
+    "location": "Appendix A, Tables 2-21",
+    "attribution": "The standard-cell definitions, special-point formulas, and path topologies represented by this golden fixture are Setyawan-Curtarolo 2010 convention data."
+  },
+  "projectkoios_contribution": "JSON organization, selected numerical specimens, formula evaluation, test harness, validation architecture, and provider projections are Project Koios work; no AFLOW source code is included.",
+  "nonclaims": [
+    "This regression fixture does not establish scientific validation.",
+    "This regression fixture does not infer a Bravais lattice from atomic coordinates."
+  ],
+  "appendix_a_cases": [
+    {
+      "appendix_a_case": "CUB",
+      "appendix_a_table": 2,
+      "metrics": {
+        "a_angstrom": 3.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 3.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          3.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          3.0
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "R",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "X",
+          "M",
+          "Γ",
+          "R",
+          "X"
+        ],
+        [
+          "M",
+          "R"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "FCC",
+      "appendix_a_table": 3,
+      "metrics": {
+        "a_angstrom": 5.43,
+        "b_angstrom": 5.43,
+        "c_angstrom": 5.43,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          5.43,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          5.43,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          5.43
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          0.0,
+          2.715,
+          2.715
+        ],
+        [
+          2.715,
+          0.0,
+          2.715
+        ],
+        [
+          2.715,
+          2.715,
+          0.0
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "K",
+          "coordinates": [
+            0.375,
+            0.375,
+            0.75
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "U",
+          "coordinates": [
+            0.625,
+            0.25,
+            0.625
+          ]
+        },
+        {
+          "label": "W",
+          "coordinates": [
+            0.5,
+            0.25,
+            0.75
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "X",
+          "W",
+          "K",
+          "Γ",
+          "L",
+          "U",
+          "W",
+          "L",
+          "K"
+        ],
+        [
+          "U",
+          "X"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "BCC",
+      "appendix_a_table": 4,
+      "metrics": {
+        "a_angstrom": 3.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 3.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          3.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          -1.5,
+          1.5,
+          1.5
+        ],
+        [
+          1.5,
+          -1.5,
+          1.5
+        ],
+        [
+          1.5,
+          1.5,
+          -1.5
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "H",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "P",
+          "coordinates": [
+            0.25,
+            0.25,
+            0.25
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "H",
+          "N",
+          "Γ",
+          "P",
+          "H"
+        ],
+        [
+          "P",
+          "N"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "TET",
+      "appendix_a_table": 5,
+      "metrics": {
+        "a_angstrom": 3.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 4.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          4.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          4.0
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "A",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "R",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "X",
+          "M",
+          "Γ",
+          "Z",
+          "R",
+          "A",
+          "Z"
+        ],
+        [
+          "X",
+          "R"
+        ],
+        [
+          "M",
+          "A"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "BCT1",
+      "appendix_a_table": 6,
+      "metrics": {
+        "a_angstrom": 4.0,
+        "b_angstrom": 4.0,
+        "c_angstrom": 3.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          4.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          4.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          3.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          -2.0,
+          2.0,
+          1.5
+        ],
+        [
+          2.0,
+          -2.0,
+          1.5
+        ],
+        [
+          2.0,
+          2.0,
+          -1.5
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            -0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "P",
+          "coordinates": [
+            0.25,
+            0.25,
+            0.25
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.390625,
+            0.390625,
+            -0.390625
+          ]
+        },
+        {
+          "label": "Z₁",
+          "coordinates": [
+            -0.390625,
+            0.609375,
+            0.390625
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "X",
+          "M",
+          "Γ",
+          "Z",
+          "P",
+          "N",
+          "Z₁",
+          "M"
+        ],
+        [
+          "X",
+          "P"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "BCT2",
+      "appendix_a_table": 7,
+      "metrics": {
+        "a_angstrom": 3.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 4.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          4.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          -1.5,
+          1.5,
+          2.0
+        ],
+        [
+          1.5,
+          -1.5,
+          2.0
+        ],
+        [
+          1.5,
+          1.5,
+          -2.0
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "P",
+          "coordinates": [
+            0.25,
+            0.25,
+            0.25
+          ]
+        },
+        {
+          "label": "Σ",
+          "coordinates": [
+            -0.390625,
+            0.390625,
+            0.390625
+          ]
+        },
+        {
+          "label": "Σ₁",
+          "coordinates": [
+            0.390625,
+            0.609375,
+            -0.390625
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            -0.28125,
+            0.28125,
+            0.5
+          ]
+        },
+        {
+          "label": "Y₁",
+          "coordinates": [
+            0.5,
+            0.5,
+            -0.28125
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.5,
+            0.5,
+            -0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "X",
+          "Y",
+          "Σ",
+          "Γ",
+          "Z",
+          "Σ₁",
+          "N",
+          "P",
+          "Y₁",
+          "Z"
+        ],
+        [
+          "X",
+          "P"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "ORC",
+      "appendix_a_table": 8,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 4.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          4.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          4.0
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "R",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "S",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "T",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "U",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "X",
+          "S",
+          "Y",
+          "Γ",
+          "Z",
+          "U",
+          "R",
+          "T",
+          "Z"
+        ],
+        [
+          "Y",
+          "T"
+        ],
+        [
+          "U",
+          "X"
+        ],
+        [
+          "S",
+          "R"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "ORCF1",
+      "appendix_a_table": 9,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 4.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          4.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          0.0,
+          1.5,
+          2.0
+        ],
+        [
+          1.0,
+          0.0,
+          2.0
+        ],
+        [
+          1.0,
+          1.5,
+          0.0
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "A",
+          "coordinates": [
+            0.5,
+            0.7986111111111112,
+            0.2986111111111111
+          ]
+        },
+        {
+          "label": "A₁",
+          "coordinates": [
+            0.5,
+            0.2013888888888889,
+            0.7013888888888888
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "T",
+          "coordinates": [
+            1.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.0,
+            0.4236111111111111,
+            0.4236111111111111
+          ]
+        },
+        {
+          "label": "X₁",
+          "coordinates": [
+            1.0,
+            0.5763888888888888,
+            0.5763888888888888
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "Y",
+          "T",
+          "Z",
+          "Γ",
+          "X",
+          "A₁",
+          "Y"
+        ],
+        [
+          "T",
+          "X₁"
+        ],
+        [
+          "X",
+          "A",
+          "Z"
+        ],
+        [
+          "L",
+          "Γ"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "ORCF2",
+      "appendix_a_table": 10,
+      "metrics": {
+        "a_angstrom": 2.5,
+        "b_angstrom": 3.0,
+        "c_angstrom": 4.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.5,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          4.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          0.0,
+          1.5,
+          2.0
+        ],
+        [
+          1.25,
+          0.0,
+          2.0
+        ],
+        [
+          1.25,
+          1.5,
+          0.0
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "C",
+          "coordinates": [
+            0.5,
+            0.1740451388888889,
+            0.6740451388888888
+          ]
+        },
+        {
+          "label": "C₁",
+          "coordinates": [
+            0.5,
+            0.8259548611111112,
+            0.3259548611111111
+          ]
+        },
+        {
+          "label": "D",
+          "coordinates": [
+            0.030625000000000013,
+            0.5,
+            0.530625
+          ]
+        },
+        {
+          "label": "D₁",
+          "coordinates": [
+            0.969375,
+            0.5,
+            0.469375
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "H",
+          "coordinates": [
+            0.9455555555555556,
+            0.4455555555555556,
+            0.5
+          ]
+        },
+        {
+          "label": "H₁",
+          "coordinates": [
+            0.054444444444444406,
+            0.5544444444444444,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "Y",
+          "C",
+          "D",
+          "X",
+          "Γ",
+          "Z",
+          "D₁",
+          "H",
+          "C"
+        ],
+        [
+          "C₁",
+          "Z"
+        ],
+        [
+          "X",
+          "H₁"
+        ],
+        [
+          "H",
+          "Y"
+        ],
+        [
+          "L",
+          "Γ"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "ORCF3",
+      "appendix_a_table": 9,
+      "metrics": {
+        "a_angstrom": 3.1234752377721215,
+        "b_angstrom": 4.0,
+        "c_angstrom": 5.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          3.1234752377721215,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          4.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          5.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          0.0,
+          2.0,
+          2.5
+        ],
+        [
+          1.5617376188860608,
+          0.0,
+          2.5
+        ],
+        [
+          1.5617376188860608,
+          2.0,
+          0.0
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "A",
+          "coordinates": [
+            0.5,
+            0.8048780487804879,
+            0.3048780487804878
+          ]
+        },
+        {
+          "label": "A₁",
+          "coordinates": [
+            0.5,
+            0.1951219512195122,
+            0.6951219512195121
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "T",
+          "coordinates": [
+            1.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "X₁",
+          "coordinates": [
+            1.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "Y",
+          "T",
+          "Z",
+          "Γ",
+          "X",
+          "A₁",
+          "Y"
+        ],
+        [
+          "X",
+          "A",
+          "Z"
+        ],
+        [
+          "L",
+          "Γ"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "ORCI",
+      "appendix_a_table": 11,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 4.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          4.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          -1.0,
+          1.5,
+          2.0
+        ],
+        [
+          1.0,
+          -1.5,
+          2.0
+        ],
+        [
+          1.0,
+          1.5,
+          -2.0
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            -0.203125,
+            0.203125,
+            0.421875
+          ]
+        },
+        {
+          "label": "L₁",
+          "coordinates": [
+            0.203125,
+            -0.203125,
+            0.578125
+          ]
+        },
+        {
+          "label": "L₂",
+          "coordinates": [
+            0.421875,
+            0.578125,
+            -0.203125
+          ]
+        },
+        {
+          "label": "R",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "S",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "T",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "W",
+          "coordinates": [
+            0.25,
+            0.25,
+            0.25
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            -0.3125,
+            0.3125,
+            0.3125
+          ]
+        },
+        {
+          "label": "X₁",
+          "coordinates": [
+            0.3125,
+            0.6875,
+            -0.3125
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.390625,
+            -0.390625,
+            0.390625
+          ]
+        },
+        {
+          "label": "Y₁",
+          "coordinates": [
+            0.609375,
+            0.390625,
+            -0.390625
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.5,
+            0.5,
+            -0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "X",
+          "L",
+          "T",
+          "W",
+          "R",
+          "X₁",
+          "Z",
+          "Γ",
+          "Y",
+          "S",
+          "W"
+        ],
+        [
+          "L₁",
+          "Y"
+        ],
+        [
+          "Y₁",
+          "Z"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "ORCC",
+      "appendix_a_table": 12,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 4.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          4.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          1.0,
+          -1.5,
+          0.0
+        ],
+        [
+          1.0,
+          1.5,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          4.0
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "A",
+          "coordinates": [
+            0.3611111111111111,
+            0.3611111111111111,
+            0.5
+          ]
+        },
+        {
+          "label": "A₁",
+          "coordinates": [
+            -0.3611111111111111,
+            0.6388888888888888,
+            0.5
+          ]
+        },
+        {
+          "label": "R",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "S",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "T",
+          "coordinates": [
+            -0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.3611111111111111,
+            0.3611111111111111,
+            0.0
+          ]
+        },
+        {
+          "label": "X₁",
+          "coordinates": [
+            -0.3611111111111111,
+            0.6388888888888888,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            -0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "X",
+          "S",
+          "R",
+          "A",
+          "Z",
+          "Γ",
+          "Y",
+          "X₁",
+          "A₁",
+          "T",
+          "Y"
+        ],
+        [
+          "Z",
+          "T"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "HEX",
+      "appendix_a_table": 13,
+      "metrics": {
+        "a_angstrom": 3.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 5.0,
+        "alpha_degrees": 90.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 120.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          1.5,
+          -2.598076211353316,
+          0.0
+        ],
+        [
+          1.5,
+          2.598076211353316,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          5.0
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          1.5,
+          -2.598076211353316,
+          0.0
+        ],
+        [
+          1.5,
+          2.598076211353316,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          5.0
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "A",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "H",
+          "coordinates": [
+            0.3333333333333333,
+            0.3333333333333333,
+            0.5
+          ]
+        },
+        {
+          "label": "K",
+          "coordinates": [
+            0.3333333333333333,
+            0.3333333333333333,
+            0.0
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "M",
+          "K",
+          "Γ",
+          "A",
+          "L",
+          "H",
+          "A"
+        ],
+        [
+          "L",
+          "M"
+        ],
+        [
+          "K",
+          "H"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "RHL1",
+      "appendix_a_table": 14,
+      "metrics": {
+        "a_angstrom": 3.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 3.0,
+        "alpha_degrees": 75.0,
+        "beta_degrees": 75.0,
+        "gamma_degrees": 75.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.3800600208737057,
+          -1.826284287026162,
+          0.0
+        ],
+        [
+          2.3800600208737057,
+          1.826284287026162,
+          0.0
+        ],
+        [
+          0.9787027997166176,
+          0.0,
+          2.8358668568582086
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          2.3800600208737057,
+          -1.826284287026162,
+          0.0
+        ],
+        [
+          2.3800600208737057,
+          1.826284287026162,
+          0.0
+        ],
+        [
+          0.9787027997166176,
+          0.0,
+          2.8358668568582086
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "B",
+          "coordinates": [
+            0.6705406887010544,
+            0.5,
+            0.32945931129894557
+          ]
+        },
+        {
+          "label": "B₁",
+          "coordinates": [
+            0.5,
+            0.32945931129894557,
+            -0.32945931129894557
+          ]
+        },
+        {
+          "label": "F",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "L₁",
+          "coordinates": [
+            0.0,
+            0.0,
+            -0.5
+          ]
+        },
+        {
+          "label": "P",
+          "coordinates": [
+            0.6705406887010544,
+            0.4147296556494728,
+            0.4147296556494728
+          ]
+        },
+        {
+          "label": "P₁",
+          "coordinates": [
+            0.5852703443505272,
+            0.5852703443505272,
+            0.32945931129894557
+          ]
+        },
+        {
+          "label": "P₂",
+          "coordinates": [
+            0.4147296556494728,
+            0.4147296556494728,
+            -0.32945931129894557
+          ]
+        },
+        {
+          "label": "Q",
+          "coordinates": [
+            0.5852703443505272,
+            0.4147296556494728,
+            0.0
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.4147296556494728,
+            0.0,
+            -0.4147296556494728
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "L",
+          "B₁"
+        ],
+        [
+          "B",
+          "Z",
+          "Γ",
+          "X"
+        ],
+        [
+          "Q",
+          "F",
+          "P₁",
+          "Z"
+        ],
+        [
+          "L",
+          "P"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "RHL2",
+      "appendix_a_table": 15,
+      "metrics": {
+        "a_angstrom": 3.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 3.0,
+        "alpha_degrees": 105.0,
+        "beta_degrees": 105.0,
+        "gamma_degrees": 105.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          1.826284287026162,
+          -2.3800600208737057,
+          0.0
+        ],
+        [
+          1.826284287026162,
+          2.3800600208737057,
+          0.0
+        ],
+        [
+          -1.2754703210614213,
+          0.0,
+          2.7153591769950944
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          1.826284287026162,
+          -2.3800600208737057,
+          0.0
+        ],
+        [
+          1.826284287026162,
+          2.3800600208737057,
+          0.0
+        ],
+        [
+          -1.2754703210614213,
+          0.0,
+          2.7153591769950944
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "F",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "P",
+          "coordinates": [
+            0.3971976766202159,
+            -0.6028023233797841,
+            0.3971976766202159
+          ]
+        },
+        {
+          "label": "P₁",
+          "coordinates": [
+            0.6028023233797841,
+            -0.3971976766202159,
+            -0.3971976766202159
+          ]
+        },
+        {
+          "label": "Q",
+          "coordinates": [
+            0.29439535324043176,
+            0.29439535324043176,
+            0.29439535324043176
+          ]
+        },
+        {
+          "label": "Q₁",
+          "coordinates": [
+            0.7056046467595682,
+            -0.29439535324043176,
+            -0.29439535324043176
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "P",
+          "Z",
+          "Q",
+          "Γ",
+          "F",
+          "P₁",
+          "Q₁",
+          "L",
+          "Z"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "MCL",
+      "appendix_a_table": 16,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 5.0,
+        "alpha_degrees": 70.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.7101007166283442,
+          4.698463103929542
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.7101007166283442,
+          4.698463103929542
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "A",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "C",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "D",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "D₁",
+          "coordinates": [
+            0.5,
+            0.0,
+            -0.5
+          ]
+        },
+        {
+          "label": "E",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "H",
+          "coordinates": [
+            0.0,
+            0.4500384557712142,
+            0.7565370285748889
+          ]
+        },
+        {
+          "label": "H₁",
+          "coordinates": [
+            0.0,
+            0.5499615442287857,
+            0.24346297142511109
+          ]
+        },
+        {
+          "label": "H₂",
+          "coordinates": [
+            0.0,
+            0.4500384557712142,
+            -0.24346297142511109
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.5,
+            0.4500384557712142,
+            0.7565370285748889
+          ]
+        },
+        {
+          "label": "M₁",
+          "coordinates": [
+            0.5,
+            0.5499615442287857,
+            0.24346297142511109
+          ]
+        },
+        {
+          "label": "M₂",
+          "coordinates": [
+            0.5,
+            0.4500384557712142,
+            -0.24346297142511109
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "Y₁",
+          "coordinates": [
+            0.0,
+            0.0,
+            -0.5
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "Y",
+          "H",
+          "C",
+          "E",
+          "M₁",
+          "A",
+          "X",
+          "H₁"
+        ],
+        [
+          "M",
+          "D",
+          "Z"
+        ],
+        [
+          "Y",
+          "D"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "MCLC1",
+      "appendix_a_table": 17,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 5.0,
+        "alpha_degrees": 70.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.7101007166283442,
+          4.698463103929542
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          1.0,
+          1.5,
+          0.0
+        ],
+        [
+          -1.0,
+          1.5,
+          0.0
+        ],
+        [
+          0.0,
+          1.7101007166283442,
+          4.698463103929542
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "N₁",
+          "coordinates": [
+            0.0,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "F",
+          "coordinates": [
+            0.4918621892564442,
+            0.4918621892564442,
+            -0.07931122286567516
+          ]
+        },
+        {
+          "label": "F₁",
+          "coordinates": [
+            0.5081378107435558,
+            0.5081378107435558,
+            1.0793112228656752
+          ]
+        },
+        {
+          "label": "F₂",
+          "coordinates": [
+            -0.5081378107435558,
+            -0.5081378107435558,
+            -0.07931122286567516
+          ]
+        },
+        {
+          "label": "F₃",
+          "coordinates": [
+            0.4918621892564442,
+            -0.5081378107435558,
+            -0.07931122286567516
+          ]
+        },
+        {
+          "label": "I",
+          "coordinates": [
+            0.6499914542730635,
+            0.3500085457269365,
+            0.5
+          ]
+        },
+        {
+          "label": "I₁",
+          "coordinates": [
+            0.3500085457269365,
+            -0.3500085457269365,
+            0.5
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.37583048127019936,
+            -0.37583048127019936,
+            0.0
+          ]
+        },
+        {
+          "label": "X₁",
+          "coordinates": [
+            0.6241695187298006,
+            0.37583048127019936,
+            0.0
+          ]
+        },
+        {
+          "label": "X₂",
+          "coordinates": [
+            -0.37583048127019936,
+            -0.6241695187298006,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Y₁",
+          "coordinates": [
+            -0.5,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "Y",
+          "F",
+          "L",
+          "I"
+        ],
+        [
+          "I₁",
+          "Z",
+          "F₁"
+        ],
+        [
+          "Y",
+          "X₁"
+        ],
+        [
+          "X",
+          "Γ",
+          "N"
+        ],
+        [
+          "M",
+          "Γ"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "MCLC2",
+      "appendix_a_table": 17,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 2.1283555449518246,
+        "c_angstrom": 5.0,
+        "alpha_degrees": 70.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          2.1283555449518246,
+          0.0
+        ],
+        [
+          0.0,
+          1.7101007166283442,
+          4.698463103929542
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          1.0,
+          1.0641777724759123,
+          0.0
+        ],
+        [
+          -1.0,
+          1.0641777724759123,
+          0.0
+        ],
+        [
+          0.0,
+          1.7101007166283442,
+          4.698463103929542
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "N₁",
+          "coordinates": [
+            0.0,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "F",
+          "coordinates": [
+            0.4749815290552719,
+            0.4749815290552719,
+            -0.3436884199496091
+          ]
+        },
+        {
+          "label": "F₁",
+          "coordinates": [
+            0.5250184709447281,
+            0.5250184709447281,
+            1.343688419949609
+          ]
+        },
+        {
+          "label": "F₂",
+          "coordinates": [
+            -0.5250184709447281,
+            -0.5250184709447281,
+            -0.3436884199496091
+          ]
+        },
+        {
+          "label": "F₃",
+          "coordinates": [
+            0.4749815290552719,
+            -0.5250184709447281,
+            -0.3436884199496091
+          ]
+        },
+        {
+          "label": "I",
+          "coordinates": [
+            0.5363970234266202,
+            0.4636029765733798,
+            0.5
+          ]
+        },
+        {
+          "label": "I₁",
+          "coordinates": [
+            0.4636029765733798,
+            -0.4636029765733798,
+            0.5
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "X₁",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "X₂",
+          "coordinates": [
+            -0.5,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Y₁",
+          "coordinates": [
+            -0.5,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "Y",
+          "F",
+          "L",
+          "I"
+        ],
+        [
+          "I₁",
+          "Z",
+          "F₁"
+        ],
+        [
+          "N",
+          "Γ",
+          "M"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "MCLC3",
+      "appendix_a_table": 18,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 2.0,
+        "c_angstrom": 6.0,
+        "alpha_degrees": 60.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          2.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.000000000000001,
+          5.196152422706632
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -1.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.000000000000001,
+          5.196152422706632
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "H",
+          "coordinates": [
+            0.5277777777777778,
+            0.5277777777777778,
+            2.083333333333334
+          ]
+        },
+        {
+          "label": "H₁",
+          "coordinates": [
+            0.4722222222222222,
+            -0.5277777777777778,
+            -1.083333333333334
+          ]
+        },
+        {
+          "label": "H₂",
+          "coordinates": [
+            -0.5277777777777778,
+            -0.5277777777777778,
+            -1.083333333333334
+          ]
+        },
+        {
+          "label": "I",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "N₁",
+          "coordinates": [
+            0.0,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.7500000000000002
+          ]
+        },
+        {
+          "label": "Y₁",
+          "coordinates": [
+            0.5,
+            -0.5,
+            -0.7500000000000002
+          ]
+        },
+        {
+          "label": "Y₂",
+          "coordinates": [
+            -0.5,
+            -0.5,
+            -0.7500000000000002
+          ]
+        },
+        {
+          "label": "Y₃",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.7500000000000002
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "F",
+          "coordinates": [
+            0.4722222222222223,
+            0.4722222222222223,
+            0.4166666666666665
+          ]
+        },
+        {
+          "label": "F₁",
+          "coordinates": [
+            0.5277777777777777,
+            -0.4722222222222223,
+            0.5833333333333335
+          ]
+        },
+        {
+          "label": "F₂",
+          "coordinates": [
+            0.4722222222222223,
+            -0.5277777777777777,
+            0.4166666666666665
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "Y",
+          "F",
+          "H",
+          "Z",
+          "I",
+          "F₁"
+        ],
+        [
+          "H₁",
+          "Y₁",
+          "X",
+          "Γ",
+          "N"
+        ],
+        [
+          "M",
+          "Γ"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "MCLC4",
+      "appendix_a_table": 18,
+      "metrics": {
+        "a_angstrom": 3.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 6.0,
+        "alpha_degrees": 60.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          3.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.0,
+          0.0
+        ],
+        [
+          0.0,
+          3.000000000000001,
+          5.196152422706632
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          1.5,
+          1.5,
+          0.0
+        ],
+        [
+          -1.5,
+          1.5,
+          0.0
+        ],
+        [
+          0.0,
+          3.000000000000001,
+          5.196152422706632
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "H",
+          "coordinates": [
+            0.5,
+            0.5,
+            1.5000000000000002
+          ]
+        },
+        {
+          "label": "H₁",
+          "coordinates": [
+            0.5,
+            -0.5,
+            -0.5000000000000002
+          ]
+        },
+        {
+          "label": "H₂",
+          "coordinates": [
+            -0.5,
+            -0.5,
+            -0.5000000000000002
+          ]
+        },
+        {
+          "label": "I",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "N₁",
+          "coordinates": [
+            0.0,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5000000000000001
+          ]
+        },
+        {
+          "label": "Y₁",
+          "coordinates": [
+            0.5,
+            -0.5,
+            -0.5000000000000001
+          ]
+        },
+        {
+          "label": "Y₂",
+          "coordinates": [
+            -0.5,
+            -0.5,
+            -0.5000000000000001
+          ]
+        },
+        {
+          "label": "Y₃",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.5000000000000001
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "F",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "F₁",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "F₂",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "Y",
+          "F",
+          "H",
+          "Z",
+          "I"
+        ],
+        [
+          "H₁",
+          "Y₁",
+          "X",
+          "Γ",
+          "N"
+        ],
+        [
+          "M",
+          "Γ"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "MCLC5",
+      "appendix_a_table": 19,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 2.0,
+        "c_angstrom": 5.0,
+        "alpha_degrees": 70.0,
+        "beta_degrees": 90.0,
+        "gamma_degrees": 90.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          2.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.7101007166283442,
+          4.698463103929542
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          1.0,
+          1.0,
+          0.0
+        ],
+        [
+          -1.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.7101007166283442,
+          4.698463103929542
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "H",
+          "coordinates": [
+            0.4943856795430543,
+            0.4943856795430543,
+            1.3454493048773681
+          ]
+        },
+        {
+          "label": "H₁",
+          "coordinates": [
+            0.5056143204569457,
+            -0.4943856795430543,
+            -0.34544930487736814
+          ]
+        },
+        {
+          "label": "H₂",
+          "coordinates": [
+            -0.4943856795430543,
+            -0.4943856795430543,
+            -0.34544930487736814
+          ]
+        },
+        {
+          "label": "I",
+          "coordinates": [
+            0.5056143204569457,
+            0.49438567954305435,
+            0.5
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "N₁",
+          "coordinates": [
+            0.0,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.495199473281598,
+            0.495199473281598,
+            0.3573461734452652
+          ]
+        },
+        {
+          "label": "Y₁",
+          "coordinates": [
+            0.5048005267184019,
+            -0.495199473281598,
+            -0.3573461734452652
+          ]
+        },
+        {
+          "label": "Y₂",
+          "coordinates": [
+            -0.495199473281598,
+            -0.495199473281598,
+            -0.3573461734452652
+          ]
+        },
+        {
+          "label": "Y₃",
+          "coordinates": [
+            0.495199473281598,
+            -0.5048005267184019,
+            0.3573461734452652
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "F",
+          "coordinates": [
+            0.49601326702014176,
+            0.49601326702014176,
+            0.3692430420131623
+          ]
+        },
+        {
+          "label": "F₁",
+          "coordinates": [
+            0.5039867329798582,
+            0.5039867329798582,
+            0.6307569579868377
+          ]
+        },
+        {
+          "label": "F₂",
+          "coordinates": [
+            0.49601326702014176,
+            -0.5039867329798582,
+            0.3692430420131623
+          ]
+        },
+        {
+          "label": "I₁",
+          "coordinates": [
+            0.49438567954305435,
+            -0.49438567954305435,
+            0.5
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "Γ",
+          "Y",
+          "F",
+          "L",
+          "I"
+        ],
+        [
+          "I₁",
+          "Z",
+          "H",
+          "F₁"
+        ],
+        [
+          "H₁",
+          "Y₁",
+          "X",
+          "Γ",
+          "N"
+        ],
+        [
+          "M",
+          "Γ"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "TRI1a",
+      "appendix_a_table": 20,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 4.0,
+        "alpha_degrees": 70.0,
+        "beta_degrees": 70.0,
+        "gamma_degrees": 70.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0260604299770064,
+          2.819077862357725,
+          0.0
+        ],
+        [
+          1.3680805733026753,
+          0.9579403303047946,
+          3.634653472963738
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          1.0260604299770064,
+          2.819077862357725,
+          0.0
+        ],
+        [
+          1.3680805733026753,
+          0.9579403303047946,
+          3.634653472963738
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "R",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "X",
+          "Γ",
+          "Y"
+        ],
+        [
+          "L",
+          "Γ",
+          "Z"
+        ],
+        [
+          "N",
+          "Γ",
+          "M"
+        ],
+        [
+          "R",
+          "Γ"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "TRI1b",
+      "appendix_a_table": 21,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 4.0,
+        "alpha_degrees": 110.0,
+        "beta_degrees": 110.0,
+        "gamma_degrees": 110.0
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          -1.0260604299770062,
+          2.8190778623577253,
+          0.0
+        ],
+        [
+          -1.3680805733026749,
+          -1.9538215438248243,
+          3.2110647641923706
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          -1.0260604299770062,
+          2.8190778623577253,
+          0.0
+        ],
+        [
+          -1.3680805733026749,
+          -1.9538215438248243,
+          3.2110647641923706
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            -0.5,
+            -0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "R",
+          "coordinates": [
+            0.0,
+            -0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.0,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            -0.5,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "X",
+          "Γ",
+          "Y"
+        ],
+        [
+          "L",
+          "Γ",
+          "Z"
+        ],
+        [
+          "N",
+          "Γ",
+          "M"
+        ],
+        [
+          "R",
+          "Γ"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "TRI2a",
+      "appendix_a_table": 20,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 4.0,
+        "alpha_degrees": 70.0,
+        "beta_degrees": 70.0,
+        "gamma_degrees": 83.28228653581958
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.3509333353215332,
+          2.9794035970576567,
+          0.0
+        ],
+        [
+          1.3680805733026753,
+          1.2163966791573253,
+          3.5565059628639535
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.3509333353215332,
+          2.9794035970576567,
+          0.0
+        ],
+        [
+          1.3680805733026753,
+          1.2163966791573253,
+          3.5565059628639535
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "R",
+          "coordinates": [
+            0.5,
+            0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.0,
+            0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "X",
+          "Γ",
+          "Y"
+        ],
+        [
+          "L",
+          "Γ",
+          "Z"
+        ],
+        [
+          "N",
+          "Γ",
+          "M"
+        ],
+        [
+          "R",
+          "Γ"
+        ]
+      ]
+    },
+    {
+      "appendix_a_case": "TRI2b",
+      "appendix_a_table": 21,
+      "metrics": {
+        "a_angstrom": 2.0,
+        "b_angstrom": 3.0,
+        "c_angstrom": 4.0,
+        "alpha_degrees": 110.0,
+        "beta_degrees": 110.0,
+        "gamma_degrees": 83.28228653581958
+      },
+      "standard_conventional_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.3509333353215332,
+          2.9794035970576567,
+          0.0
+        ],
+        [
+          -1.3680805733026749,
+          -1.2163966791573249,
+          3.556505962863954
+        ]
+      ],
+      "standard_primitive_lattice_vectors_angstrom": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.3509333353215332,
+          2.9794035970576567,
+          0.0
+        ],
+        [
+          -1.3680805733026749,
+          -1.2163966791573249,
+          3.556505962863954
+        ]
+      ],
+      "standard_special_points": [
+        {
+          "label": "Γ",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "L",
+          "coordinates": [
+            0.5,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "M",
+          "coordinates": [
+            0.0,
+            0.0,
+            0.5
+          ]
+        },
+        {
+          "label": "N",
+          "coordinates": [
+            -0.5,
+            -0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "R",
+          "coordinates": [
+            0.0,
+            -0.5,
+            0.5
+          ]
+        },
+        {
+          "label": "X",
+          "coordinates": [
+            0.0,
+            -0.5,
+            0.0
+          ]
+        },
+        {
+          "label": "Y",
+          "coordinates": [
+            0.5,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "label": "Z",
+          "coordinates": [
+            -0.5,
+            0.0,
+            0.5
+          ]
+        }
+      ],
+      "branches": [
+        [
+          "X",
+          "Γ",
+          "Y"
+        ],
+        [
+          "L",
+          "Γ",
+          "Z"
+        ],
+        [
+          "N",
+          "Γ",
+          "M"
+        ],
+        [
+          "R",
+          "Γ"
+        ]
+      ]
+    }
+  ]
+}

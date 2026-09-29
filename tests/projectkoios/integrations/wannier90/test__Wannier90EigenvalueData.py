@@ -19,9 +19,9 @@ These checks do not execute Wannier90 or establish numerical or scientific valid
 
 import numpy as np
 import pytest
-from physkit.units.quantities import MatrixQuantity, PhysicalUnit
 
 from projectkoios.integrations.wannier90 import Wannier90EigenvalueData
+from projectkoios.physkit.units.quantities import MatrixQuantity, PhysicalUnit
 
 pytestmark = pytest.mark.software_verification
 SUT = Wannier90EigenvalueData

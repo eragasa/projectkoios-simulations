@@ -20,8 +20,8 @@ interpolation, convergence-policy, or scientific-acceptance behavior.
 
 ```text
 projectkoios.integrations.wannier90
-    -> physkit.units.quantities
-    -> NumPy/Pint/SciPy (through PhysKit)
+    -> projectkoios.physkit.units.quantities
+    -> NumPy/Pint/SciPy (through projectkoios-physkit)
 
 projectkoios.simulations -X-> projectkoios.integrations
 ```

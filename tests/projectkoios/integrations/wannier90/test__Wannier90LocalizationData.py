@@ -19,14 +19,14 @@ These checks do not execute localization or establish numerical or scientific va
 
 import numpy as np
 import pytest
-from physkit.units.quantities import (
+
+from projectkoios.integrations.wannier90 import Wannier90LocalizationData
+from projectkoios.physkit.units.quantities import (
     MatrixQuantity,
     PhysicalUnit,
     ScalarQuantity,
     VectorQuantity,
 )
-
-from projectkoios.integrations.wannier90 import Wannier90LocalizationData
 
 pytestmark = pytest.mark.software_verification
 SUT = Wannier90LocalizationData

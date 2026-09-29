@@ -9,6 +9,10 @@ import pytest
 from projectkoios.integrations.quantumespresso.pw.relaxation.loading import (  # noqa: E501
     QeRelaxationCalculationTomlLoader,
 )
+from projectkoios.integrations.quantumespresso.pw.relaxation.options import (
+    QeIonicRelaxationOptions,
+    QeLatticeVectorRelaxationOptions,
+)
 from tests.support.repository_root import REPOSITORY_ROOT
 
 pytestmark = pytest.mark.integration
@@ -43,6 +47,19 @@ class QeRelaxationCalculationTomlLoaderTest(unittest.TestCase):
                 self.assertEqual(configuration.phase, phase)
                 self.assertEqual(configuration.calculation_id, calculation_id)
                 self.assertEqual(configuration.integration_id, "quantum-espresso")
+                self.assertEqual(
+                    type(configuration.ionic_relaxation),
+                    QeIonicRelaxationOptions,
+                )
+                expected_lattice_type = (
+                    None if phase == "relax" else QeLatticeVectorRelaxationOptions
+                )
+                self.assertEqual(
+                    None
+                    if configuration.lattice_vector_relaxation is None
+                    else type(configuration.lattice_vector_relaxation),
+                    expected_lattice_type,
+                )
 
     def test_rejects_unknown_schema_keys(self) -> None:
         content = (
@@ -79,15 +96,14 @@ class QeRelaxationCalculationTomlLoaderTest(unittest.TestCase):
             ):
                 QeRelaxationCalculationTomlLoader().load(path)
 
-    def test_rejects_pressure_controls_for_fixed_cell_relaxation(self) -> None:
+    def test_rejects_lattice_options_for_fixed_cell_relaxation(self) -> None:
         content = (
-            (_EXAMPLE_ROOT / "relax/calculation.toml")
-            .read_text(encoding="utf-8")
-            .replace(
-                "force_tolerance_ry_per_bohr = 1.9446903798e-4",
-                "force_tolerance_ry_per_bohr = 1.9446903798e-4\n"
-                "target_pressure_kbar = 0.0",
-            )
+            (_EXAMPLE_ROOT / "relax/calculation.toml").read_text(encoding="utf-8")
+            + "\n[lattice_vector_relaxation]\n"
+            + 'dynamics = "bfgs"\n'
+            + 'degrees_of_freedom = "all"\n'
+            + "target_pressure_kbar = 0.0\n"
+            + "pressure_tolerance_kbar = 0.5\n"
         )
         with tempfile.TemporaryDirectory() as temporary_directory:
             path = Path(temporary_directory) / "calculation.toml"
@@ -95,7 +111,7 @@ class QeRelaxationCalculationTomlLoaderTest(unittest.TestCase):
 
             with self.assertRaisesRegex(
                 ValueError,
-                "relax must not declare cell controls",
+                "configuration schema mismatch",
             ):
                 QeRelaxationCalculationTomlLoader().load(path)
 

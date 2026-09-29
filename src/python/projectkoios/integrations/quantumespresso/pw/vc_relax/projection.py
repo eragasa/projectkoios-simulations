@@ -4,9 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from projectkoios.integrations.quantumespresso.pw.inputfile.base import (
-    QeCellCard,
-)
 from projectkoios.integrations.quantumespresso.pw.inputfile.cell import (
     QeCellDegreesOfFreedom,
     QeCellDynamics,
@@ -14,7 +11,11 @@ from projectkoios.integrations.quantumespresso.pw.inputfile.cell import (
 from projectkoios.integrations.quantumespresso.pw.inputfile.ions import (
     QeIonDynamics,
 )
+from projectkoios.integrations.quantumespresso.pw.relaxation.options import (
+    QeLatticeVectorRelaxationOptions,
+)
 from projectkoios.integrations.quantumespresso.pw.relaxation.projection import (  # noqa: E501
+    QeRelaxationInputProjection,
     project_relaxation_input,
 )
 from projectkoios.integrations.quantumespresso.pw.vc_relax.configuration import (  # noqa: E501
@@ -23,9 +24,6 @@ from projectkoios.integrations.quantumespresso.pw.vc_relax.configuration import 
 from projectkoios.simulations.dft.pw.relaxation.base import (
     PwDftRelaxationRequest,
     PwDftRelaxationScope,
-)
-from projectkoios.simulations.dft.pw.relaxation.integration import (
-    PwDftRelaxationInputProjection,
 )
 
 
@@ -39,9 +37,7 @@ class QeVcRelaxInputProjector:
         if type(self.configuration) is not QeVcRelaxProjectionConfiguration:
             raise TypeError("configuration must be a QeVcRelaxProjectionConfiguration")
 
-    def project(
-        self, request: PwDftRelaxationRequest
-    ) -> PwDftRelaxationInputProjection:
+    def project(self, request: PwDftRelaxationRequest) -> QeRelaxationInputProjection:
         """Return deterministic QE ``vc-relax`` input."""
         if type(request) is not PwDftRelaxationRequest:
             raise TypeError("request must be a PwDftRelaxationRequest")
@@ -59,13 +55,11 @@ class QeVcRelaxInputProjector:
             request,
             configuration,
             calculation="vc-relax",
-            cell_component=QeCellCard(
-                lines=(
-                    f"cell_dynamics = '{configuration.cell_dynamics.value}'",
-                    f"press = {convergence.target_pressure_kbar:.10f}",
-                    f"press_conv_thr = {convergence.pressure_tolerance_kbar:.10f}",
-                    f"cell_dofree = '{configuration.cell_degrees_of_freedom.value}'",
-                )
+            lattice_vector_options=QeLatticeVectorRelaxationOptions(
+                dynamics=configuration.cell_dynamics,
+                degrees_of_freedom=configuration.cell_degrees_of_freedom,
+                target_pressure_kbar=convergence.target_pressure_kbar,
+                pressure_tolerance_kbar=convergence.pressure_tolerance_kbar,
             ),
         )
 

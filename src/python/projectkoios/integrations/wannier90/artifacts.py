@@ -5,7 +5,11 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 
-from physkit.units.quantities import ModelSystemUnit, PhysicalUnit, Unitless
+from projectkoios.physkit.units.quantities import (
+    ModelSystemUnit,
+    PhysicalUnit,
+    Unitless,
+)
 
 from ._parsing import BoundedParser
 from .hamiltonian_blocks import (

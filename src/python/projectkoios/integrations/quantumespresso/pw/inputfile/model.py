@@ -5,8 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
-from physkit.periodic.unit_cell import UnitCell
-
+from projectkoios.physkit.periodic.unit_cell import UnitCell
 from projectkoios.simulations.dft.pw.settings import CalculationType
 
 _MAX_INPUT_BYTES = 10_000_000
@@ -73,6 +72,14 @@ class ControlBlock:
                     f"{label} must be nonempty, stripped, single-line, and unquoted"
                 )
 
+    def to_input_group(self) -> PwInputGroup:
+        """Project this control declaration into the lexical input model."""
+        return PwInputGroup(
+            kind="namelist",
+            tag="&CONTROL",
+            lines=_render_control_lines(self),
+        )
+
 
 @dataclass(frozen=True, slots=True)
 class PwInputGroup:
@@ -128,8 +135,8 @@ class QePwInputFile:
     groups: tuple[PwInputGroup, ...]
 
     def __post_init__(self) -> None:
-        if type(self.control_block) is not ControlBlock:
-            raise TypeError("control_block must be a ControlBlock")
+        if not isinstance(self.control_block, ControlBlock):
+            raise TypeError("control_block must inherit from ControlBlock")
         if not isinstance(self.unit_cell, UnitCell):
             raise TypeError("unit_cell must be a UnitCell")
         if type(self.groups) is not tuple:
@@ -228,11 +235,7 @@ class PwInputWriter:
             groups = input_file.groups
         elif type(input_file) is QePwInputFile:
             groups = (
-                PwInputGroup(
-                    kind="namelist",
-                    tag="&CONTROL",
-                    lines=_render_control_lines(input_file.control_block),
-                ),
+                input_file.control_block.to_input_group(),
                 *input_file.groups,
             )
         else:

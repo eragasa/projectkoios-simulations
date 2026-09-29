@@ -3,6 +3,9 @@ from __future__ import annotations
 import unittest
 from types import SimpleNamespace
 
+from projectkoios.integrations.quantumespresso.pw.data_extraction.base import (
+    QePwDataSources,
+)
 from projectkoios.integrations.quantumespresso.pw.nscf.data_extraction import (  # noqa: E501
     QeNscfDataExtractor,
 )
@@ -20,12 +23,19 @@ class QeNscfDataExtractorTest(unittest.TestCase):
             expected_kpoint_count=2,
         )
 
+        self.assertIsInstance(data.sources, QePwDataSources)
+        self.assertIs(data.document, document)
+        self.assertIs(data.final_structure, data.qexsd.final_structure)
         self.assertEqual(data.band_count, 2)
         self.assertEqual(data.k_points, document.k_points)
         self.assertEqual(data.eigenvalues, document.eigenvalues)
         self.assertEqual(data.occupations, document.occupations)
         self.assertEqual(data.eigenvalue_source_label, "band_structure/ks_energies")
         self.assertTrue(data.streams.stdout.job_completed)
+        self.assertTrue(data.consistency.terminal_status_matches)
+        self.assertTrue(data.consistency.stdout_kpoint_count_matches)
+        self.assertTrue(data.consistency.declared_band_count_matches)
+        self.assertTrue(data.consistency.declared_kpoint_count_matches)
 
     def test_rejects_declared_band_count_mismatch(self) -> None:
         with self.assertRaisesRegex(ValueError, "band count disagrees"):
@@ -57,6 +67,19 @@ def _document() -> SimpleNamespace:
         producing_application="Quantum ESPRESSO",
         producing_application_version="7.5",
         declared_unit_system_label="Hartree atomic units",
+        atomic_structure_alat=2.0,
+        direct_lattice_vectors=(
+            (2.0, 0.0, 0.0),
+            (0.0, 2.0, 0.0),
+            (0.0, 0.0, 2.0),
+        ),
+        direct_lattice_source_label="output/atomic_structure/cell/a1,a2,a3",
+        atoms=(
+            (1, "Si", (0.0, 0.0, 0.0)),
+            (2, "Si", (0.5, 0.5, 0.5)),
+        ),
+        declared_atom_count=2,
+        atomic_positions_source_label="output/atomic_structure/atomic_positions",
         k_points=((0.0, 0.0, 0.0), (0.5, 0.0, 0.0)),
         k_point_weights=(0.5, 0.5),
         sampled_k_point_count=2,

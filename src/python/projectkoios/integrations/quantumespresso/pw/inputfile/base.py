@@ -9,7 +9,6 @@ from typing import ClassVar, Literal
 
 import numpy as np
 from numpy.typing import NDArray
-from physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
 
 from projectkoios.integrations.quantumespresso.pw.inputfile.model import (
     PW_CARD_NAMES,
@@ -17,6 +16,7 @@ from projectkoios.integrations.quantumespresso.pw.inputfile.model import (
     PwInputGroup,
     QePwInputFile,
 )
+from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
 from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
 
 _ELEMENT_SYMBOL = re.compile(r"[A-Z][a-z]?")
@@ -303,6 +303,7 @@ class QePwInputFileAssembler:
         atomic_positions_unit: Literal["crystal"],
         coordinate_precision: int,
         card_order: tuple[str, ...],
+        control_block: ControlBlock | None = None,
     ) -> QePwInputFile:
         """Add canonical structure components to validated caller groups."""
         if type(simulation) is not PwDftSimulation:
@@ -347,13 +348,32 @@ class QePwInputFileAssembler:
                 ),
             )
         )
-        return QePwInputFile(
-            control_block=ControlBlock(
+        if control_block is None:
+            control_block = ControlBlock(
                 calculation_type=simulation.settings.calculation_type,
                 prefix=prefix,
                 pseudo_dir=pseudo_dir,
                 outdir=outdir,
-            ),
+            )
+        else:
+            if not isinstance(control_block, ControlBlock):
+                raise TypeError("control_block must inherit from ControlBlock")
+            if (
+                control_block.calculation_type
+                is not simulation.settings.calculation_type
+            ):
+                raise ValueError(
+                    "control_block calculation type disagrees with simulation"
+                )
+            for label, requested, declared in (
+                ("prefix", prefix, control_block.prefix),
+                ("pseudo_dir", pseudo_dir, control_block.pseudo_dir),
+                ("outdir", outdir, control_block.outdir),
+            ):
+                if requested is not None and requested != declared:
+                    raise ValueError(f"{label} disagrees with control_block")
+        return QePwInputFile(
+            control_block=control_block,
             unit_cell=simulation.unit_cell,
             groups=(*namelists, *ordered_cards),
         )

@@ -1,0 +1,28 @@
+schema_version = 1
+content_classification = "non-code simulation input"
+copy_mode = "byte-for-byte"
+execution_performed = false
+scientific_validation_claimed = false
+pseudopotential_included = false
+
+[upstream]
+project = "Wannier90"
+repository = "https://github.com/wannier-developers/wannier90"
+release = "3.1.0"
+source = "wannier90-3.1.0/examples/example11/silicon.nscf"
+archive_filename = "wannier90-3.1.0.tar.gz"
+archive_sha256 = "40651a9832eb93dec20a8360dd535262c261c34e13c41b6755fa6915c936b254"
+sha256 = "6bfe71900d579edc2fddae0b2a9da65dc7bc6f28ff77eef819569ed174fccd42"
+byte_size = 3932
+
+[context]
+repository = "https://github.com/eragasa/ksdft2effmass"
+commit = "7bd913151f7e61ed2bdba593df920be36573b502"
+inventory_path = "docs/computational/wannier90.tutorials.v3_1_0.md"
+inventory_blob = "857ac78dbb8177a746cb899b09e385c6b7582054"
+task_path = "tasks/simulation/wannier90.tutorials.v3_1_0.example11.json"
+task_blob = "f9a79f67e4340fd42b1764667494ddc1ae50eee0"
+
+[target]
+path = "input/pw.in"
+companion_source_set = "../../../../pw2wannier90/Si/wannier90-3.1.0-example11"

@@ -1,5 +1,5 @@
 # `QeVcRelaxDataExtractor`
 
-`extract(...)` owns variable-cell relaxation extraction. It reuses the common
-captured-stream extractor and optionally consumes a document produced by the
-maintained QEXSD parser to extract the final structure.
+`extract(...)` owns variable-cell relaxation extraction and returns the unified
+[`QeRelaxData`](../../../relaxation/data/index.md) facade with
+`calculation == "vc-relax"`.

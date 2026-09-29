@@ -35,10 +35,15 @@ wavefunction_cutoff_ry = 40.0
 charge_density_cutoff_ry = 320.0
 electronic_tolerance_ry = 1.0e-6
 
-[termination]
-maximum_ionic_steps = 100
+[ionic_relaxation]
+dynamics = "bfgs"
+maximum_steps = 100
 total_energy_tolerance_ry = 1.0e-4
 force_tolerance_ry_per_bohr = 1.9446903798e-4
+
+[lattice_vector_relaxation]
+dynamics = "bfgs"
+degrees_of_freedom = "all"
 target_pressure_kbar = 0.0
 pressure_tolerance_kbar = 0.5
 
@@ -48,11 +53,6 @@ pseudo_dir = "./"
 outdir = "./tmp/"
 input_filename = "pw.in"
 coordinate_precision = 8
-
-[native]
-ion_dynamics = "bfgs"
-cell_dynamics = "bfgs"
-cell_degrees_of_freedom = "all"
 
 [qualification]
 statements = [

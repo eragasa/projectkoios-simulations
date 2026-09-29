@@ -35,8 +35,9 @@ wavefunction_cutoff_ry = 40.0
 charge_density_cutoff_ry = 320.0
 electronic_tolerance_ry = 1.0e-6
 
-[termination]
-maximum_ionic_steps = 100
+[ionic_relaxation]
+dynamics = "bfgs"
+maximum_steps = 100
 total_energy_tolerance_ry = 1.0e-4
 force_tolerance_ry_per_bohr = 1.9446903798e-4
 
@@ -46,9 +47,6 @@ pseudo_dir = "./"
 outdir = "./tmp/"
 input_filename = "pw.in"
 coordinate_precision = 8
-
-[native]
-ion_dynamics = "bfgs"
 
 [qualification]
 statements = [

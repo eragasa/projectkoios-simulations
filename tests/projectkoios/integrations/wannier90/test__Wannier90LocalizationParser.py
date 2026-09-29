@@ -19,9 +19,9 @@ These checks do not authenticate retained bytes or validate localization scienti
 
 import numpy as np
 import pytest
-from physkit.units.quantities import PhysicalUnit
 
 from projectkoios.integrations.wannier90 import Wannier90LocalizationParser
+from projectkoios.physkit.units.quantities import PhysicalUnit
 
 pytestmark = pytest.mark.software_verification
 SUT = Wannier90LocalizationParser

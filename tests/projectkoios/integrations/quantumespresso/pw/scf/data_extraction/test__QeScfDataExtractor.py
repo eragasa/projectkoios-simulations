@@ -4,12 +4,20 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
-from physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit, ScalarQuantity
 
+from projectkoios.integrations.quantumespresso.pw.data_extraction.base import (
+    QePwDataSources,
+)
 from projectkoios.integrations.quantumespresso.pw.scf import (
     data_extraction as qe_data_extraction,
+)
+from projectkoios.physkit.units import (
+    MODEL_SYSTEM_UNIT_CONVERTER,
+    PhysicalUnit,
+    ScalarQuantity,
 )
 from projectkoios.simulations.dft.pw.scf.base import (
     PwDftScfDiagnosticSeverity,
@@ -29,9 +37,18 @@ class QeScfDataExtractorTest(unittest.TestCase):
             root = Path(temporary_directory)
             _write_successful_run(root)
 
-            observation = qe_data_extraction.QeScfDataExtractor(
-                artifact_root=root
-            ).extract("run/pw.out")
+            data = qe_data_extraction.QeScfDataExtractor(artifact_root=root).extract(
+                "run/pw.out"
+            )
+
+        self.assertIsInstance(data, qe_data_extraction.QeScfData)
+        self.assertIsInstance(data.sources, QePwDataSources)
+        self.assertIs(data.observation.native_artifact, data.native_artifact)
+        self.assertEqual(data.execution.status, "succeeded")
+        self.assertEqual(data.execution_artifact.relative_path, "run/execution.json")
+        self.assertIsNone(data.qexsd)
+        self.assertTrue(data.consistency.stdout_completion_matches_execution)
+        observation = data
 
         expected_energy = MODEL_SYSTEM_UNIT_CONVERTER.convert_scalar(
             ScalarQuantity(
@@ -88,6 +105,22 @@ class QeScfDataExtractorTest(unittest.TestCase):
             )
         )
 
+    def test_facades_optional_qexsd_without_changing_neutral_observation(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            _write_successful_run(root)
+            document = _qexsd_document()
+
+            data = qe_data_extraction.QeScfDataExtractor(artifact_root=root).extract(
+                "run/pw.out", qexsd_document=document
+            )
+
+        self.assertIs(data.qexsd.document, document)
+        self.assertIs(data.final_structure, data.qexsd.final_structure)
+        self.assertTrue(data.consistency.qexsd_terminal_status_matches)
+        self.assertTrue(data.consistency.qexsd_atom_count_matches)
+        self.assertEqual(data.observation.atom_count, qe_support.EXPECTED_ATOM_COUNT)
+
     def test_rejects_output_not_named_by_execution_evidence(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
@@ -122,6 +155,32 @@ class QeScfDataExtractorTest(unittest.TestCase):
                     artifact_root=root,
                     maximum_artifact_bytes=MAXIMUM_TEST_ARTIFACT_BYTES,
                 ).extract("run/pw.out")
+
+
+def _qexsd_document() -> SimpleNamespace:
+    return SimpleNamespace(
+        source_path="/retained/data-file-schema.xml",
+        source_sha256="a" * 64,
+        source_byte_count=123,
+        qexsd_version="25.05.21",
+        producing_application="Quantum ESPRESSO",
+        producing_application_version="7.5",
+        declared_unit_system_label="Hartree atomic units",
+        atomic_structure_alat=2.0,
+        direct_lattice_vectors=(
+            (2.0, 0.0, 0.0),
+            (0.0, 2.0, 0.0),
+            (0.0, 0.0, 2.0),
+        ),
+        direct_lattice_source_label="output/atomic_structure/cell/a1,a2,a3",
+        atoms=(
+            (1, "Si", (0.0, 0.0, 0.0)),
+            (2, "Si", (0.5, 0.5, 0.5)),
+        ),
+        declared_atom_count=2,
+        atomic_positions_source_label="output/atomic_structure/atomic_positions",
+        exit_status=0,
+    )
 
 
 def _write_successful_run(root: Path) -> Path:

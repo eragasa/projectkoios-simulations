@@ -21,6 +21,10 @@ from .calculation import (
     QeRelaxationPhase,
     StructureIdentity,
 )
+from .options import (
+    QeIonicRelaxationOptions,
+    QeLatticeVectorRelaxationOptions,
+)
 
 _MAXIMUM_CONFIGURATION_BYTES = 100_000
 
@@ -47,11 +51,13 @@ class QeRelaxationCalculationTomlLoader:
         calculator = _mapping(payload, "calculator")
         pseudopotential = _mapping(payload, "pseudopotential")
         sampling = _mapping(payload, "sampling")
-        termination = _mapping(payload, "termination")
+        ionic = _mapping(payload, "ionic_relaxation")
         qe = _mapping(payload, "qe")
-        native = _mapping(payload, "native")
         qualification = _mapping(payload, "qualification")
         phase = _phase(payload)
+        lattice = (
+            None if phase == "relax" else _mapping(payload, "lattice_vector_relaxation")
+        )
         return QeRelaxationCalculationConfiguration(
             calculation_id=_string(payload, "calculation_id"),
             phase=phase,
@@ -98,44 +104,44 @@ class QeRelaxationCalculationTomlLoader:
             wavefunction_cutoff_ry=_float(sampling, "wavefunction_cutoff_ry"),
             charge_density_cutoff_ry=_float(sampling, "charge_density_cutoff_ry"),
             electronic_tolerance_ry=_float(sampling, "electronic_tolerance_ry"),
-            maximum_ionic_steps=_integer(termination, "maximum_ionic_steps"),
-            total_energy_tolerance_ry=_float(
-                termination,
-                "total_energy_tolerance_ry",
+            ionic_relaxation=QeIonicRelaxationOptions(
+                dynamics=QeIonDynamics(_string(ionic, "dynamics")),
+                maximum_steps=_integer(ionic, "maximum_steps"),
+                total_energy_tolerance_ry=_float(
+                    ionic,
+                    "total_energy_tolerance_ry",
+                ),
+                force_tolerance_ry_per_bohr=_float(
+                    ionic,
+                    "force_tolerance_ry_per_bohr",
+                ),
             ),
-            force_tolerance_ry_per_bohr=_float(
-                termination,
-                "force_tolerance_ry_per_bohr",
-            ),
-            target_pressure_kbar=_optional_float(
-                termination,
-                "target_pressure_kbar",
-            ),
-            pressure_tolerance_kbar=_optional_float(
-                termination,
-                "pressure_tolerance_kbar",
+            lattice_vector_relaxation=(
+                None
+                if lattice is None
+                else QeLatticeVectorRelaxationOptions(
+                    dynamics=QeCellDynamics(_string(lattice, "dynamics")),
+                    degrees_of_freedom=QeCellDegreesOfFreedom(
+                        _string(lattice, "degrees_of_freedom")
+                    ),
+                    target_pressure_kbar=_float(lattice, "target_pressure_kbar"),
+                    pressure_tolerance_kbar=_float(
+                        lattice,
+                        "pressure_tolerance_kbar",
+                    ),
+                )
             ),
             prefix=_string(qe, "prefix"),
             pseudo_dir=_string(qe, "pseudo_dir"),
             outdir=_string(qe, "outdir"),
             input_filename=_string(qe, "input_filename"),
             coordinate_precision=_integer(qe, "coordinate_precision"),
-            ion_dynamics=QeIonDynamics(_string(native, "ion_dynamics")),
-            cell_dynamics=(
-                None
-                if phase == "relax"
-                else QeCellDynamics(_string(native, "cell_dynamics"))
-            ),
-            cell_degrees_of_freedom=(
-                None
-                if phase == "relax"
-                else QeCellDegreesOfFreedom(_string(native, "cell_degrees_of_freedom"))
-            ),
             qualification_statements=_string_tuple(qualification, "statements"),
         )
 
 
 def _validate_schema(payload: dict[str, object]) -> None:
+    phase = _phase(payload)
     _require_schema_keys(
         payload,
         "configuration",
@@ -149,11 +155,11 @@ def _validate_schema(payload: dict[str, object]) -> None:
             "calculator",
             "pseudopotential",
             "sampling",
-            "termination",
+            "ionic_relaxation",
             "qe",
-            "native",
             "qualification",
-        },
+        }
+        | ({"lattice_vector_relaxation"} if phase == "vc-relax" else set()),
     )
     _require_schema_keys(
         _mapping(payload, "structure"),
@@ -197,29 +203,31 @@ def _validate_schema(payload: dict[str, object]) -> None:
             "electronic_tolerance_ry",
         },
     )
-    phase = _phase(payload)
-    pressure_keys = {"target_pressure_kbar", "pressure_tolerance_kbar"}
     _require_schema_keys(
-        _mapping(payload, "termination"),
-        "termination",
+        _mapping(payload, "ionic_relaxation"),
+        "ionic_relaxation",
         {
-            "maximum_ionic_steps",
+            "dynamics",
+            "maximum_steps",
             "total_energy_tolerance_ry",
             "force_tolerance_ry_per_bohr",
-        }
-        | (pressure_keys if phase == "vc-relax" else set()),
-        pressure_keys if phase == "relax" else set(),
+        },
     )
+    if phase == "vc-relax":
+        _require_schema_keys(
+            _mapping(payload, "lattice_vector_relaxation"),
+            "lattice_vector_relaxation",
+            {
+                "dynamics",
+                "degrees_of_freedom",
+                "target_pressure_kbar",
+                "pressure_tolerance_kbar",
+            },
+        )
     _require_schema_keys(
         _mapping(payload, "qe"),
         "qe",
         {"prefix", "pseudo_dir", "outdir", "input_filename", "coordinate_precision"},
-    )
-    cell_keys = {"cell_dynamics", "cell_degrees_of_freedom"}
-    _require_schema_keys(
-        _mapping(payload, "native"),
-        "native",
-        {"ion_dynamics"} | (cell_keys if phase == "vc-relax" else set()),
     )
     _require_schema_keys(
         _mapping(payload, "qualification"),
@@ -286,12 +294,6 @@ def _float(mapping: dict[str, object], key: str) -> float:
     if isinstance(value, bool) or not isinstance(value, int | float):
         raise ValueError(f"{key} must be numeric")
     return float(value)
-
-
-def _optional_float(mapping: dict[str, object], key: str) -> float | None:
-    if key not in mapping:
-        return None
-    return _float(mapping, key)
 
 
 def _integer_triplet(mapping: dict[str, object], key: str) -> tuple[int, int, int]:

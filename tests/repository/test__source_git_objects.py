@@ -95,8 +95,17 @@ def test_declared_source_git_objects_and_example_counts() -> None:
                 inventory["retained_source_file_count"] + added_count
                 == inventory["target_file_count"]
             )
+            target_root = REPOSITORY_ROOT / inventory["target"]
+            target_paths = {
+                path.relative_to(target_root).as_posix()
+                for path in _target_files(target_root)
+            }
+            maintained_additions = set(
+                extraction.get("maintained_example_additions", ())
+            )
+            assert maintained_additions <= target_paths
             assert (
-                len(_target_files(REPOSITORY_ROOT / inventory["target"]))
+                len(target_paths - maintained_additions)
                 == inventory["target_file_count"]
             )
 

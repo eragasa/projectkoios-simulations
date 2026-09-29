@@ -8,12 +8,9 @@ from dataclasses import dataclass
 from pathlib import PurePosixPath
 from typing import Literal
 
-from projectkoios.integrations.quantumespresso.pw.inputfile.cell import (
-    QeCellDegreesOfFreedom,
-    QeCellDynamics,
-)
-from projectkoios.integrations.quantumespresso.pw.inputfile.ions import (
-    QeIonDynamics,
+from projectkoios.integrations.quantumespresso.pw.relaxation.options import (
+    QeIonicRelaxationOptions,
+    QeLatticeVectorRelaxationOptions,
 )
 
 type QeRelaxationPhase = Literal["relax", "vc-relax"]
@@ -77,19 +74,13 @@ class QeRelaxationCalculationConfiguration:
     wavefunction_cutoff_ry: float
     charge_density_cutoff_ry: float
     electronic_tolerance_ry: float
-    maximum_ionic_steps: int
-    total_energy_tolerance_ry: float
-    force_tolerance_ry_per_bohr: float
-    target_pressure_kbar: float | None
-    pressure_tolerance_kbar: float | None
+    ionic_relaxation: QeIonicRelaxationOptions
+    lattice_vector_relaxation: QeLatticeVectorRelaxationOptions | None
     prefix: str
     pseudo_dir: str
     outdir: str
     input_filename: str
     coordinate_precision: int
-    ion_dynamics: QeIonDynamics
-    cell_dynamics: QeCellDynamics | None
-    cell_degrees_of_freedom: QeCellDegreesOfFreedom | None
     qualification_statements: tuple[str, ...]
 
     def __post_init__(self) -> None:
@@ -137,8 +128,6 @@ class QeRelaxationCalculationConfiguration:
             ("wavefunction_cutoff_ry", self.wavefunction_cutoff_ry),
             ("charge_density_cutoff_ry", self.charge_density_cutoff_ry),
             ("electronic_tolerance_ry", self.electronic_tolerance_ry),
-            ("total_energy_tolerance_ry", self.total_energy_tolerance_ry),
-            ("force_tolerance_ry_per_bohr", self.force_tolerance_ry_per_bohr),
         ):
             _positive_float(numeric_value, label)
         if self.charge_density_cutoff_ry < self.wavefunction_cutoff_ry:
@@ -150,12 +139,8 @@ class QeRelaxationCalculationConfiguration:
             type(value) is not int or value not in {0, 1} for value in self.kpoint_shift
         ):
             raise ValueError("kpoint_shift must contain three zero-or-one integers")
-        if type(self.maximum_ionic_steps) is not int or self.maximum_ionic_steps <= 0:
-            raise ValueError("maximum_ionic_steps must be a positive integer")
-        if self.target_pressure_kbar is not None:
-            _finite_float(self.target_pressure_kbar, "target_pressure_kbar")
-        if self.pressure_tolerance_kbar is not None:
-            _positive_float(self.pressure_tolerance_kbar, "pressure_tolerance_kbar")
+        if type(self.ionic_relaxation) is not QeIonicRelaxationOptions:
+            raise TypeError("ionic_relaxation must be a QeIonicRelaxationOptions")
         if not _IDENTIFIER.fullmatch(self.prefix):
             raise ValueError("prefix must be a lowercase slug")
         if self.pseudo_dir != "./":
@@ -165,40 +150,13 @@ class QeRelaxationCalculationConfiguration:
         _validate_basename(self.input_filename, "input_filename")
         if type(self.coordinate_precision) is not int or self.coordinate_precision <= 0:
             raise ValueError("coordinate_precision must be a positive integer")
-        if type(self.ion_dynamics) is not QeIonDynamics:
-            raise TypeError("ion_dynamics must be a QeIonDynamics")
-        if (
-            self.cell_dynamics is not None
-            and type(self.cell_dynamics) is not QeCellDynamics
-        ):
-            raise TypeError("cell_dynamics must be a QeCellDynamics or None")
-        if self.cell_degrees_of_freedom is not None and (
-            type(self.cell_degrees_of_freedom) is not QeCellDegreesOfFreedom
-        ):
-            raise TypeError(
-                "cell_degrees_of_freedom must be a QeCellDegreesOfFreedom or None"
-            )
         if self.phase == "relax":
-            if any(
-                value is not None
-                for value in (
-                    self.target_pressure_kbar,
-                    self.pressure_tolerance_kbar,
-                    self.cell_dynamics,
-                    self.cell_degrees_of_freedom,
-                )
-            ):
-                raise ValueError("relax must not declare cell controls")
-        elif any(
-            value is None
-            for value in (
-                self.target_pressure_kbar,
-                self.pressure_tolerance_kbar,
-                self.cell_dynamics,
-                self.cell_degrees_of_freedom,
-            )
+            if self.lattice_vector_relaxation is not None:
+                raise ValueError("relax must not declare lattice-vector relaxation")
+        elif (
+            type(self.lattice_vector_relaxation) is not QeLatticeVectorRelaxationOptions
         ):
-            raise ValueError("vc-relax requires pressure and cell controls")
+            raise TypeError("vc-relax requires QeLatticeVectorRelaxationOptions")
         if not self.qualification_statements or any(
             type(statement) is not str
             or not statement
@@ -240,11 +198,6 @@ def _validate_sha1(value: str, label: str) -> None:
 def _positive_float(value: float, label: str) -> None:
     if type(value) is not float or not math.isfinite(value) or value <= 0.0:
         raise ValueError(f"{label} must be positive and finite")
-
-
-def _finite_float(value: float, label: str) -> None:
-    if type(value) is not float or not math.isfinite(value):
-        raise ValueError(f"{label} must be finite")
 
 
 def _validate_positive_triplet(value: tuple[int, int, int], label: str) -> None:

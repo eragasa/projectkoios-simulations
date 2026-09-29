@@ -19,9 +19,9 @@ These checks do not execute Wannier90 or validate a physical subspace.
 
 import numpy as np
 import pytest
-from physkit.units.quantities import ComplexMatrixQuantity, Unitless
 
 from projectkoios.integrations.wannier90 import Wannier90NeighborOverlapData
+from projectkoios.physkit.units.quantities import ComplexMatrixQuantity, Unitless
 
 pytestmark = pytest.mark.software_verification
 SUT = Wannier90NeighborOverlapData

@@ -18,6 +18,14 @@ Dissertations & Theses Global, Publication No. 22615421.
 No DOI is assigned to this dissertation; the ProQuest publication number and
 University of Florida repository record are its identifiers here.
 
+The calculator-neutral standard-cell and electronic-band-path catalog implements
+Appendix A of:
+
+[3] W. Setyawan and S. Curtarolo, “High-throughput electronic band structure
+calculations: Challenges and tools,” *Computational Materials Science*, vol. 49,
+no. 2, pp. 299--312, 2010.
+DOI: [10.1016/j.commatsci.2010.05.010](https://doi.org/10.1016/j.commatsci.2010.05.010).
+
 The citations establish research provenance. They are not software licenses and
 do not by themselves establish behavioral conformance or scientific
 validation.

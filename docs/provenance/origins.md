@@ -47,12 +47,17 @@ identity are recorded in [`../../TRANSFER.toml`](../../TRANSFER.toml).
 The donor imported generic unit-bearing array contracts from its broad
 `ksdft2effmass.operators` facade. Static closure analysis identified
 `operators/quantities.py` as the only semantic dependency. Those generic
-contracts are already owned by the compatible PhysKit distribution. Commit
-`97032f16c9125aa124750508f8513cca9f6dab02` identifies the implementation
-reviewed during extraction, not an installation pin. Imports therefore target
-`physkit.units.quantities`, and no operator, Hamiltonian, workflow, calculator,
-execution, or campaign package was copied. PhysKit's MIT text is retained in
-[`../../licenses/PHYSKIT-MIT.txt`](../../licenses/PHYSKIT-MIT.txt).
+contracts are already owned by the compatible `projectkoios-physkit`
+distribution. At extraction that repository and distribution were named
+`physkit`; both the historical and successor identities are retained in
+`TRANSFER.toml`. Commit `97032f16c9125aa124750508f8513cca9f6dab02`
+identifies the implementation reviewed during extraction, not an installation
+pin. Maintained imports target `projectkoios.physkit.units.quantities`, and no
+operator, Hamiltonian, workflow, calculator, execution, or campaign package was
+copied. The extraction-reviewed PhysKit snapshot's MIT text is retained in
+[`../../licenses/PHYSKIT-MIT.txt`](../../licenses/PHYSKIT-MIT.txt); the
+maintained projectkoios-physkit successor is separately distributed under
+Apache-2.0.
 
 The extracted parsers only adapt caller-supplied bytes and correlate logical
 names, byte counts, and SHA-256 identities. They do not run Wannier90, perform

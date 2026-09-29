@@ -6,7 +6,8 @@ from dataclasses import dataclass
 
 import numpy as np
 import numpy.typing as npt
-from physkit.units.quantities import ComplexMatrixQuantity, ModelSystemUnit
+
+from projectkoios.physkit.units.quantities import ComplexMatrixQuantity, ModelSystemUnit
 
 from ._parsing import (
     BoundedParser,

@@ -1,24 +1,15 @@
 # `QeNscfData`
 
-Fields:
+Unified immutable NSCF facade containing a composed `QePwDataSources` record
+with:
 
-- `streams`
-- `source_path`
-- `source_sha256`
-- `source_byte_count`
-- `qexsd_version`
-- `producing_application`
-- `producing_application_version`
-- `declared_unit_system_label`
-- source-ordered `k_points`
-- `k_point_weights`
-- `sampled_k_point_count`
-- `k_point_source_label`
-- `eigenvalues`
-- optional `occupations`
-- `eigenvalue_source_label`
-- `band_count`
-- `exit_status`
+- parsed stdout and stderr with exact artifact identities;
+- the supplied parsed QEXSD document and interpreted final structure;
+- `QeNscfSpectralData` with source-ordered k-points, weights, eigenvalues, and
+  optional occupations;
+- mechanical terminal and declared-shape consistency observations; and
+- an optional typed calculator execution record.
 
-Values and source labels remain native; extraction does not silently normalize
+Compatibility properties expose the previously flattened spectral and QEXSD
+identity fields. Values remain native: extraction does not silently normalize
 units, coordinates, weights, energy references, or spin semantics.

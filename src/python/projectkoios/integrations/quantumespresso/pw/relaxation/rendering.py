@@ -4,9 +4,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from physkit.periodic.unit_cell import UnitCell
-from physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
-
 from projectkoios.integrations.quantumespresso.pw.inputfile.base import (
     QeAtomicSpecies,
 )
@@ -22,6 +19,8 @@ from projectkoios.integrations.quantumespresso.pw.vc_relax.configuration import 
 from projectkoios.integrations.quantumespresso.pw.vc_relax.projection import (  # noqa: E501
     QeVcRelaxInputProjector,
 )
+from projectkoios.physkit.periodic.unit_cell import UnitCell
+from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
 from projectkoios.simulations.dft.pw.relaxation.base import (
     PwDftRelaxationConvergencePolicy,
     PwDftRelaxationRequest,
@@ -62,6 +61,8 @@ class QeRelaxationCalculationRenderer:
             "relax": CalculationType.relax,
             "vc-relax": CalculationType.vc_relax,
         }[phase]
+        ionic_options = configuration.ionic_relaxation
+        lattice_options = configuration.lattice_vector_relaxation
         request = PwDftRelaxationRequest(
             evaluation_id=f"{configuration.calculation_id}-{phase}",
             simulation=PwDftSimulation(
@@ -79,19 +80,27 @@ class QeRelaxationCalculationRenderer:
                 ),
             ),
             convergence=PwDftRelaxationConvergencePolicy(
-                maximum_ionic_steps=configuration.maximum_ionic_steps,
+                maximum_ionic_steps=ionic_options.maximum_steps,
                 total_energy_tolerance_ev=_convert(
-                    configuration.total_energy_tolerance_ry,
+                    ionic_options.total_energy_tolerance_ry,
                     "Ry",
                     "eV",
                 ),
                 force_tolerance_ev_per_angstrom=_convert(
-                    configuration.force_tolerance_ry_per_bohr,
+                    ionic_options.force_tolerance_ry_per_bohr,
                     "Ry/bohr",
                     "eV/angstrom",
                 ),
-                target_pressure_kbar=configuration.target_pressure_kbar,
-                pressure_tolerance_kbar=configuration.pressure_tolerance_kbar,
+                target_pressure_kbar=(
+                    None
+                    if lattice_options is None
+                    else lattice_options.target_pressure_kbar
+                ),
+                pressure_tolerance_kbar=(
+                    None
+                    if lattice_options is None
+                    else lattice_options.pressure_tolerance_kbar
+                ),
             ),
         )
         species = (
@@ -109,7 +118,7 @@ class QeRelaxationCalculationRenderer:
             projection = QeRelaxInputProjector(
                 QeRelaxProjectionConfiguration(
                     species=species,
-                    ion_dynamics=configuration.ion_dynamics,
+                    ion_dynamics=ionic_options.dynamics,
                     charge_density_cutoff_ratio=ratio,
                     electronic_tolerance_ry=configuration.electronic_tolerance_ry,
                     prefix=configuration.prefix,
@@ -120,12 +129,11 @@ class QeRelaxationCalculationRenderer:
                 )
             ).project(request)
         else:
-            assert configuration.cell_dynamics is not None
-            assert configuration.cell_degrees_of_freedom is not None
+            assert lattice_options is not None
             projection = QeVcRelaxInputProjector(
                 QeVcRelaxProjectionConfiguration(
                     species=species,
-                    ion_dynamics=configuration.ion_dynamics,
+                    ion_dynamics=ionic_options.dynamics,
                     charge_density_cutoff_ratio=ratio,
                     electronic_tolerance_ry=configuration.electronic_tolerance_ry,
                     prefix=configuration.prefix,
@@ -133,8 +141,8 @@ class QeRelaxationCalculationRenderer:
                     outdir=configuration.outdir,
                     input_filename=configuration.input_filename,
                     coordinate_precision=configuration.coordinate_precision,
-                    cell_dynamics=configuration.cell_dynamics,
-                    cell_degrees_of_freedom=configuration.cell_degrees_of_freedom,
+                    cell_dynamics=lattice_options.dynamics,
+                    cell_degrees_of_freedom=lattice_options.degrees_of_freedom,
                 )
             ).project(request)
         return projection.rendered_inputs[0].text

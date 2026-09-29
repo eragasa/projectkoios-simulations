@@ -31,6 +31,7 @@ class QeSavedStateArtifactRole(StrEnum):
     wavefunction = "wavefunction"
     pseudopotential = "pseudopotential"
     augmentation = "augmentation"
+    native = "native"
 
 
 @dataclass(frozen=True, slots=True)
@@ -160,7 +161,46 @@ class QeSavedStateManifest:
 
 @dataclass(frozen=True, slots=True)
 class QeSavedStateManifestJsonCodec:
-    """Load a closed version-one saved-state manifest from exact JSON bytes."""
+    """Load and dump closed version-one saved-state manifests."""
+
+    def dumps(self, manifest: QeSavedStateManifest) -> bytes:
+        """Serialize one manifest deterministically without filesystem effects."""
+        if type(manifest) is not QeSavedStateManifest:
+            raise TypeError("manifest must be a QeSavedStateManifest")
+        document = {
+            "artifacts": [
+                {
+                    "byte_size": item.byte_size,
+                    "relative_path": item.relative_path,
+                    "role": item.role.value,
+                    "sha256": item.sha256,
+                }
+                for item in manifest.artifacts
+            ],
+            "calculation": manifest.calculation.value,
+            "input_sha256": manifest.input_sha256,
+            "prefix": manifest.prefix,
+            "producer": {
+                "executable_sha256": manifest.executable_sha256,
+                "program": manifest.producer_program,
+                "version": manifest.producer_version,
+            },
+            "pseudopotentials": [
+                {
+                    "byte_size": item.byte_size,
+                    "filename": item.filename,
+                    "sha256": item.sha256,
+                    "symbol": item.symbol,
+                }
+                for item in manifest.pseudopotentials
+            ],
+            "schema_version": manifest.schema_version,
+            "structure": {
+                "sha256": manifest.structure_sha256,
+                "structure_id": manifest.structure_id,
+            },
+        }
+        return (json.dumps(document, indent=2, sort_keys=True) + "\n").encode("utf-8")
 
     def loads(self, payload: bytes) -> QeSavedStateManifest:
         """Parse one manifest without filesystem or calculator effects."""
@@ -296,6 +336,105 @@ class QeSavedStateManifestVerifier:
             _verify_artifact_file(path, artifact)
             verified.append(path)
         return tuple(verified)
+
+
+@dataclass(frozen=True, slots=True)
+class QeSavedStateManifestBuilder:
+    """Inventory one bounded native save tree into an immutable manifest."""
+
+    max_artifact_count: int = 4096
+    max_total_byte_size: int = 64 * 1024 * 1024 * 1024
+
+    def __post_init__(self) -> None:
+        if type(self.max_artifact_count) is not int or self.max_artifact_count <= 0:
+            raise ValueError("max_artifact_count must be positive")
+        if type(self.max_total_byte_size) is not int or self.max_total_byte_size <= 0:
+            raise ValueError("max_total_byte_size must be positive")
+
+    def build(
+        self,
+        *,
+        source_root: Path,
+        prefix: str,
+        calculation: QeSavedStateCalculation,
+        producer_version: str,
+        executable_sha256: str,
+        input_sha256: str,
+        structure_id: str,
+        structure_sha256: str,
+        pseudopotentials: tuple[QeSavedStatePseudopotential, ...],
+    ) -> QeSavedStateManifest:
+        """Build an exact manifest without interpreting native scientific data."""
+        if not isinstance(source_root, Path):
+            raise TypeError("source_root must be a Path")
+        if source_root.is_symlink() or not source_root.is_dir():
+            raise ValueError("source_root must be a regular directory")
+        if type(prefix) is not str or _NAME.fullmatch(prefix) is None:
+            raise ValueError("prefix must be a safe native name")
+        resolved_source_root = source_root.resolve()
+        save_candidate = source_root / f"{prefix}.save"
+        if save_candidate.is_symlink() or not save_candidate.is_dir():
+            raise ValueError("prefix save tree must be a regular directory")
+        save_root = save_candidate.resolve()
+        if save_root.parent != resolved_source_root:
+            raise ValueError("prefix save tree must remain inside source_root")
+        descendants = tuple(save_root.rglob("*"))
+        if any(path.is_symlink() for path in descendants):
+            raise ValueError("saved-state tree must not contain symbolic links")
+        files = tuple(sorted(path for path in descendants if path.is_file()))
+        if not files or len(files) > self.max_artifact_count:
+            raise ValueError("saved-state artifact count is empty or exceeds the bound")
+        total_byte_size = sum(path.stat().st_size for path in files)
+        if total_byte_size > self.max_total_byte_size:
+            raise ValueError("saved-state total byte size exceeds the bound")
+        pseudo_by_name = {item.filename: item for item in pseudopotentials}
+        artifacts = tuple(
+            QeSavedStateArtifact(
+                role=_saved_state_role(path.name, pseudo_by_name),
+                relative_path=path.relative_to(resolved_source_root).as_posix(),
+                sha256=_sha256_file(path),
+                byte_size=path.stat().st_size,
+            )
+            for path in files
+        )
+        return QeSavedStateManifest(
+            schema_version=1,
+            prefix=prefix,
+            calculation=calculation,
+            producer_program="pw.x",
+            producer_version=producer_version,
+            executable_sha256=executable_sha256,
+            input_sha256=input_sha256,
+            structure_id=structure_id,
+            structure_sha256=structure_sha256,
+            pseudopotentials=pseudopotentials,
+            artifacts=artifacts,
+        )
+
+
+def _saved_state_role(
+    filename: str,
+    pseudopotentials: dict[str, QeSavedStatePseudopotential],
+) -> QeSavedStateArtifactRole:
+    if filename == "data-file-schema.xml":
+        return QeSavedStateArtifactRole.qexsd
+    if filename == "charge-density.dat":
+        return QeSavedStateArtifactRole.charge_density
+    if filename in pseudopotentials:
+        return QeSavedStateArtifactRole.pseudopotential
+    if filename.startswith("wfc"):
+        return QeSavedStateArtifactRole.wavefunction
+    if filename.startswith("augmentation"):
+        return QeSavedStateArtifactRole.augmentation
+    return QeSavedStateArtifactRole.native
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def _validate_relative_path(value: str) -> None:

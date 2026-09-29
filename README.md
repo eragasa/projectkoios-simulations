@@ -12,8 +12,11 @@ The VASP integration provides native INCAR, KPOINTS, POSCAR, and OUTCAR
 representations plus projections to calculator-neutral simulation contracts. It
 does not select pseudopotentials, authorize calculator execution, claim that
 projected inputs are runnable, or establish numerical or scientific validation.
-Workflow orchestration, convergence campaigns, recipes, and scientific
-acceptance policy do not belong under `projectkoios.simulations`.
+The neutral band contracts include the explicitly classified standard primitive
+cells, special reciprocal points, and path topologies of Setyawan and Curtarolo
+[3]. They do not infer space groups or authorize calculator execution. Workflow
+orchestration, convergence campaigns, recipes, and scientific acceptance policy
+do not belong under `projectkoios.simulations`.
 
 The LAMMPS package is a provenance-bound reconstruction scaffold for inspecting
 retained templates and data text and for rendering bounded data artifacts. It
@@ -23,11 +26,13 @@ Workflow orchestration, campaigns, recipes, and scientific acceptance policy do
 not belong here.
 
 The Quantum ESPRESSO integration provides native input, output, saved-state,
-SCF, NSCF, relaxation, and `pw2wannier90.x` contracts. Calculator execution is
-fail-closed and requires explicit authorization; process success does not imply
-numerical verification, convergence, or scientific validation. Workflow
-orchestration, campaigns, recipes, and scientific acceptance policy do not
-belong here.
+SCF, NSCF, relaxation, `pw2wannier90.x`, and initial `epw.x` contracts. The EPW
+adapter renders typed namelist assignments, stages exact declared parent
+artifacts, observes captured streams, and verifies declared outputs. Calculator
+execution is fail-closed and requires explicit authorization; process success
+does not imply parent-state compatibility, numerical verification, convergence,
+or scientific validation. Workflow orchestration, campaigns, recipes, and
+scientific acceptance policy do not belong here.
 
 `projectkoios.integrations.wannier90` authenticates and parses retained native
 Wannier90 text artifacts without filesystem access or calculator execution.
@@ -66,7 +71,13 @@ Dissertations & Theses Global, Publication No. 22615421.
 [ProQuest record](https://www.proquest.com/openview/2207f5cce947e0b1e24ca4de6edad24d/1?pq-origsite=gscholar&cbl=18750&diss=y).
 No DOI is assigned to this dissertation.
 
-These citations describe the research lineage. They do not replace software
+[3] W. Setyawan and S. Curtarolo, “High-throughput electronic band structure
+calculations: Challenges and tools,” *Computational Materials Science*, vol. 49,
+no. 2, pp. 299--312, 2010.
+[https://doi.org/10.1016/j.commatsci.2010.05.010](https://doi.org/10.1016/j.commatsci.2010.05.010).
+
+These citations describe research lineage and implemented scientific methods.
+They do not replace software
 license notices, establish scientific validation, or imply endorsement.
 
 ## Development

@@ -1,0 +1,49 @@
+{
+  "schema_version": 3,
+  "path_id": "Si.primitive.Setyawan-Curtarolo-2010.FCC",
+  "structure": {
+    "structure_id": "Si.primitive",
+    "repository_path": "Si.primitive.json",
+    "sha256": "9a18584b2be8ce70f45903f0fb8b00a1d4022c405b3c291aacbc4c26480c9988"
+  },
+  "coordinate_system": "reciprocal-fractional",
+  "convention": "Setyawan-Curtarolo 2010 FCC; basis-transformed; doi:10.1016/j.commatsci.2010.05.010",
+  "provenance": {
+    "convention_name": "Setyawan-Curtarolo",
+    "convention_revision": "2010 Appendix A",
+    "source_doi": "10.1016/j.commatsci.2010.05.010",
+    "bravais_lattice": "cF",
+    "appendix_a_case": "FCC",
+    "direct_basis_transform": [
+      [0, 0, 1],
+      [1, 0, 0],
+      [0, 1, 0]
+    ]
+  },
+  "branches": [
+    {
+      "vertices": [
+        {"label": "Γ", "coordinates": [0.0, 0.0, 0.0]},
+        {"label": "X", "coordinates": [0.5, 0.5, 0.0]},
+        {"label": "W", "coordinates": [0.75, 0.5, 0.25]},
+        {"label": "K", "coordinates": [0.75, 0.375, 0.375]},
+        {"label": "Γ", "coordinates": [0.0, 0.0, 0.0]},
+        {"label": "L", "coordinates": [0.5, 0.5, 0.5]},
+        {"label": "U", "coordinates": [0.625, 0.625, 0.25]},
+        {"label": "W", "coordinates": [0.75, 0.5, 0.25]},
+        {"label": "L", "coordinates": [0.5, 0.5, 0.5]},
+        {"label": "K", "coordinates": [0.75, 0.375, 0.375]}
+      ]
+    },
+    {
+      "vertices": [
+        {"label": "U", "coordinates": [0.625, 0.625, 0.25]},
+        {"label": "X", "coordinates": [0.5, 0.5, 0.0]}
+      ]
+    }
+  ],
+  "sampling": {
+    "specified_by_paper": false,
+    "provider_projection_required": true
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "path_id": "Si.primitive.fcc.L-Gamma-X-U_K-Gamma",
+  "structure": {
+    "structure_id": "Si.primitive",
+    "repository_path": "Si.primitive.json",
+    "sha256": "9a18584b2be8ce70f45903f0fb8b00a1d4022c405b3c291aacbc4c26480c9988"
+  },
+  "coordinate_system": "reciprocal-fractional",
+  "convention": "VASP Wiki fcc Si L-Gamma-X-U and K-Gamma path",
+  "source_url": "https://vasp.at/wiki/Fcc_Si_bandstructure",
+  "branches": [
+    {
+      "vertices": [
+        {
+          "label": "L",
+          "coordinates": [0.5, 0.5, 0.5]
+        },
+        {
+          "label": "Gamma",
+          "coordinates": [0.0, 0.0, 0.0]
+        },
+        {
+          "label": "X",
+          "coordinates": [0.0, 0.5, 0.5]
+        },
+        {
+          "label": "U",
+          "coordinates": [0.25, 0.625, 0.625]
+        }
+      ]
+    },
+    {
+      "vertices": [
+        {
+          "label": "K",
+          "coordinates": [0.375, 0.75, 0.375]
+        },
+        {
+          "label": "Gamma",
+          "coordinates": [0.0, 0.0, 0.0]
+        }
+      ]
+    }
+  ]
+}

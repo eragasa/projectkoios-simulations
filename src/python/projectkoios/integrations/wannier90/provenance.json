@@ -43,7 +43,7 @@
   ],
   "adaptations": [
     "namespace rewrite",
-    "quantity imports redirected to the compatible PhysKit distribution",
+    "quantity imports redirected to the compatible projectkoios-physkit distribution",
     "native-dimension, inventory, numeric, unit-label, and resource-bound corrections",
     "additional adversarial and wheel-provenance tests"
   ],
@@ -53,13 +53,18 @@
     {"path":"python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/test__Periodic1DWannier90WilsonVerifier.py","blob":"9abab30964b4985647b8f917e1da17648207d2f6","ownership":"Wilson verification; excluded"},
     {"path":"python/tests/software_verification/ksdft2effmass/campaigns/research_monograph/periodic_1d/resources/native-artifact-correlation-fixture.json","blob":"8b508c43979e6442980b80c9a7edf306b32e33f8","ownership":"campaign/Wilson fixture; excluded; parser-composition assertion ported independently"}
   ],
-  "physkit": {
-    "repository": "https://github.com/eragasa/physkit",
+  "projectkoios-physkit": {
+    "repository": "https://github.com/eragasa/projectkoios-physkit",
+    "repository_at_extraction": "https://github.com/eragasa/physkit",
     "commit": "97032f16c9125aa124750508f8513cca9f6dab02",
     "tree": "3a323d2436d4b5e86fe312e810e03c5d21ce37b3",
     "quantities_blob": "686d075852ed01aab0a8d74fdec1be5a440c075d",
-    "distribution": "physkit>=0.1.0",
-    "license": "MIT",
+    "distribution": "projectkoios-physkit>=0.1.0",
+    "distribution_at_extraction": "physkit>=0.1.0",
+    "namespace": "projectkoios.physkit",
+    "namespace_at_extraction": "physkit",
+    "license_at_extraction": "MIT",
+    "successor_license": "Apache-2.0",
     "license_sha256": "0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410"
   }
 }

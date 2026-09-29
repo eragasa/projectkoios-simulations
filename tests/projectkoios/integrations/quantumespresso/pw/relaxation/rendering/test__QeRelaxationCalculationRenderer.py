@@ -4,7 +4,6 @@ import hashlib
 import unittest
 
 import pytest
-from physkit.periodic.unit_cell import UnitCellJsonCodec
 
 from projectkoios.integrations.quantumespresso.pw.relaxation.loading import (  # noqa: E501
     QeRelaxationCalculationTomlLoader,
@@ -12,6 +11,7 @@ from projectkoios.integrations.quantumespresso.pw.relaxation.loading import (  #
 from projectkoios.integrations.quantumespresso.pw.relaxation.rendering import (  # noqa: E501
     QeRelaxationCalculationRenderer,
 )
+from projectkoios.physkit.periodic.unit_cell import UnitCellJsonCodec
 from tests.support.repository_root import REPOSITORY_ROOT
 
 pytestmark = pytest.mark.integration

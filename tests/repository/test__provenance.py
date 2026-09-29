@@ -225,7 +225,10 @@ def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     ]
     dependency = extraction["dependencies"][0]
     assert dependency["source_blob"] == "d98be473e19e17a59563fc7c3e00cca02fd822d3"
-    assert dependency["destination_owner"] == "physkit.units.quantities"
+    assert dependency["destination_owner"] == "projectkoios.physkit.units.quantities"
+    assert dependency["destination_owner_at_extraction"] == ("physkit.units.quantities")
+    assert dependency["distribution"] == "projectkoios-physkit>=0.1.0"
+    assert dependency["distribution_at_extraction"] == "physkit>=0.1.0"
     assert dependency["commit"] == "97032f16c9125aa124750508f8513cca9f6dab02"
     assert dependency["blob"] == "686d075852ed01aab0a8d74fdec1be5a440c075d"
     assert len(extraction["file_mappings"]) == 7
@@ -241,7 +244,7 @@ def test_physkit_runtime_dependency_has_a_compatible_lower_bound() -> None:
     with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as stream:
         project = tomllib.load(stream)["project"]
 
-    assert "physkit>=0.1.0" in project["dependencies"]
+    assert "projectkoios-physkit>=0.1.0" in project["dependencies"]
     assert not any("git+" in dependency for dependency in project["dependencies"])
     readme = (REPOSITORY_ROOT / "README.md").read_text()
     assert "projectkoios.integrations.wannier90/provenance.json" in readme
@@ -283,7 +286,13 @@ def test_wannier90_distribution_resource_binds_provenance() -> None:
         "9abab30964b4985647b8f917e1da17648207d2f6",
         "8b508c43979e6442980b80c9a7edf306b32e33f8",
     ]
-    assert provenance["physkit"]["distribution"] == "physkit>=0.1.0"
+    physkit = provenance["projectkoios-physkit"]
+    assert physkit["distribution"] == "projectkoios-physkit>=0.1.0"
+    assert physkit["distribution_at_extraction"] == "physkit>=0.1.0"
+    assert physkit["namespace"] == "projectkoios.physkit"
+    assert physkit["namespace_at_extraction"] == "physkit"
+    assert physkit["license_at_extraction"] == "MIT"
+    assert physkit["successor_license"] == "Apache-2.0"
 
 
 def test_wannier90_donor_license_is_the_distribution_license() -> None:

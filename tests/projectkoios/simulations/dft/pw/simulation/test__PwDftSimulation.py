@@ -3,14 +3,19 @@ from __future__ import annotations
 import unittest
 
 import numpy as np
-from physkit.periodic import DirectLattice3D
-from physkit.periodic.unit_cell import (
+
+from projectkoios.physkit.periodic import DirectLattice3D
+from projectkoios.physkit.periodic.unit_cell import (
     Atom,
     AtomicBasis,
     UnitCell,
 )
-from physkit.units import PhysicalUnit, ScalarQuantity, Unitless, VectorQuantity
-
+from projectkoios.physkit.units import (
+    PhysicalUnit,
+    ScalarQuantity,
+    Unitless,
+    VectorQuantity,
+)
 from projectkoios.simulations.dft.pw.settings import (
     CalculationType,
     PwDftSettings,
@@ -42,6 +47,18 @@ class PwDftSimulationTest(unittest.TestCase):
 
         self.assertIs(simulation.unit_cell, unit_cell)
         self.assertIs(simulation.settings, settings)
+        self.assertEqual(
+            simulation.lattice_vectors_angstrom,
+            (
+                (5.43, 0.0, 0.0),
+                (0.0, 5.43, 0.0),
+                (0.0, 0.0, 5.43),
+            ),
+        )
+        self.assertEqual(
+            simulation.fractional_sites,
+            (("Si", (0.0, 0.0, 0.0)),),
+        )
 
 
 if __name__ == "__main__":

@@ -56,6 +56,8 @@ class QePwDftScfIntegration(PwDftScfIntegration):
 
     def analyze(self, output_artifact_id: str) -> PwDftScfObservation:
         """Normalize one retained successful ``pw.x`` observation."""
-        return qe_data_extraction.QeScfDataExtractor(
-            artifact_root=self.artifact_root
-        ).extract(output_artifact_id)
+        return (
+            qe_data_extraction.QeScfDataExtractor(artifact_root=self.artifact_root)
+            .extract(output_artifact_id)
+            .observation
+        )

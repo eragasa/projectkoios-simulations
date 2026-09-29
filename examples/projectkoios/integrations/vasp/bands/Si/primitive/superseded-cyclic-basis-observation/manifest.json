@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "evidence_kind": "authorized_software_integration_observation",
+  "status": "superseded_noncanonical_unit_cell_basis",
+  "calculator": {
+    "name": "VASP",
+    "version": "5.3.5",
+    "executable_sha256": "ebe4117fef93d0752d2fc2c4ae0159d4a8cbd24aec58fc7305f58871cbab2b86"
+  },
+  "authorization": {
+    "observed_for_recorded_execution": true,
+    "reusable_execution_authority": false
+  },
+  "execution": {
+    "status": "succeeded",
+    "returncode": 0,
+    "started_at": "2026-09-28T19:13:39Z",
+    "ended_at": "2026-09-28T19:13:41Z"
+  },
+  "path": {
+    "convention": "VASP Wiki fcc Si example",
+    "branches": [
+      ["L", "Gamma", "X", "U"],
+      ["K", "Gamma"]
+    ],
+    "coordinate_system": "fractional reciprocal coordinates of the recorded primitive cell",
+    "points_per_segment": 20
+  },
+  "retained_inputs": [
+    {
+      "path": "input/INCAR",
+      "byte_count": 214,
+      "sha256": "23f3d44487bd777b23375b9acbb0c35d327b1f79f08d5402b7ac5054a9df98c4"
+    },
+    {
+      "path": "input/KPOINTS",
+      "byte_count": 304,
+      "sha256": "387bd1ef3f0880034d442bb1e9e655822ec52b9a58546b86113361c974d3a953"
+    },
+    {
+      "path": "input/POSCAR",
+      "byte_count": 344,
+      "sha256": "b85b9d5d449be5edf878deca83d1b3b1ff1d7fabf167a51d6b1157cb59c32087"
+    }
+  ],
+  "external_artifact_identities": [
+    {
+      "role": "licensed_potcar",
+      "path_at_execution": "POTCAR",
+      "byte_count": 195673,
+      "sha256": "79d9987ad8750f624c4d6acb2a16d13abf6a777132adc04dc6c8399be72b42bb"
+    },
+    {
+      "role": "parent_charge_density",
+      "path_at_execution": "CHGCAR",
+      "byte_count": 1166151,
+      "sha256": "0f7378d7e638aa8d2cbfe06e80a2818261f75d23afda2d9b3091f108c9f8e81a"
+    },
+    {
+      "role": "outcar",
+      "path_at_execution": "OUTCAR",
+      "byte_count": 92810,
+      "sha256": "ef3be1e0cd4d7306c7d66d143e3bb8454c5415eac9dd14bc69698f8694d71a05"
+    },
+    {
+      "role": "vasprun_xml",
+      "path_at_execution": "vasprun.xml",
+      "byte_count": 80671,
+      "sha256": "fbb56550e10e257911888ef17efcc1ab70e8d0a726bfc34e34293d38023c580e"
+    },
+    {
+      "role": "stdout",
+      "path_at_execution": "vasp.out",
+      "byte_count": 1210,
+      "sha256": "5b25b3051c4ea426e313713bde76e377852df58ff7d6d1d3dbc24a7653aaecc9"
+    },
+    {
+      "role": "stderr",
+      "path_at_execution": "vasp.err",
+      "byte_count": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "mechanical_observations": {
+    "vasprun_sample_count": 80,
+    "vasprun_band_count": 12,
+    "spin_channel_count": 1,
+    "path_coordinates_match": true,
+    "program_version_matches": true,
+    "atom_count_matches": true,
+    "kpoint_count_matches": true,
+    "maintained_spectral_source": "vasprun.xml"
+  },
+  "presentation_artifact_identities": [
+    {
+      "format": "svg",
+      "sha256": "77420b3ae6a4b5244a0c3126c1e36bba9a25fdbf9b5988dc53bd6ee61deab2f6"
+    },
+    {
+      "format": "png",
+      "sha256": "eb31d2edff466ce42a2b27d9c3c034726521f6d6ebf837db127972ff5c942839"
+    }
+  ],
+  "claims": {
+    "software_integration_observed": true,
+    "canonical_Si_primitive_projection_established": false,
+    "convergence_established": false,
+    "scientific_validation_established": false,
+    "agreement_with_experiment_established": false
+  }
+}

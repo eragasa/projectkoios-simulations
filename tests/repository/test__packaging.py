@@ -10,4 +10,4 @@ def test_provider_runtime_dependencies_are_declared() -> None:
     with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as stream:
         dependencies = set(tomllib.load(stream)["project"]["dependencies"])
 
-    assert dependencies == {"numpy>=2.3,<3", "physkit>=0.1.0"}
+    assert dependencies == {"numpy>=2.3,<3", "projectkoios-physkit>=0.1.0"}

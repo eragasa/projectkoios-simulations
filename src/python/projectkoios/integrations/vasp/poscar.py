@@ -10,8 +10,9 @@ from pathlib import Path
 
 import numpy as np
 from numpy.typing import NDArray
-from physkit.periodic.unit_cell import Atom, UnitCell
-from physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
+
+from projectkoios.physkit.periodic.unit_cell import Atom, UnitCell
+from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
 
 POSCAR_DOCUMENTATION_URL = "https://vasp.at/wiki/POSCAR"
 _ANGSTROM = PhysicalUnit("angstrom")

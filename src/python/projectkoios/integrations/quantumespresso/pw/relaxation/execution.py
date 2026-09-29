@@ -9,8 +9,7 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
-from physkit.periodic.unit_cell import UnitCellJsonCodec
-
+from projectkoios.physkit.periodic.unit_cell import UnitCellJsonCodec
 from projectkoios.simulations.execution import (
     CalculatorExecutionRequest,
     CalculatorExecutor,

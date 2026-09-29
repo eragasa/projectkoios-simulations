@@ -3,7 +3,15 @@ from __future__ import annotations
 import unittest
 
 from projectkoios.integrations.quantumespresso.pw.inputfile.base import (
+    QeAtomicPositionsCard,
     QeAtomicSpecies,
+    QeAtomicSpeciesCard,
+    QeCellParametersCard,
+    QeControlCard,
+    QeElectronsCard,
+    QeIonsCard,
+    QeKpointsCard,
+    QeSystemCard,
 )
 from projectkoios.integrations.quantumespresso.pw.inputfile.cell import (
     QeCellDegreesOfFreedom,
@@ -20,6 +28,12 @@ from projectkoios.integrations.quantumespresso.pw.relax.integration import (  # 
 )
 from projectkoios.integrations.quantumespresso.pw.relax.projection import (  # noqa: E501
     QeRelaxInputProjector,
+)
+from projectkoios.integrations.quantumespresso.pw.relaxation.options import (
+    QeIonicRelaxationOptions,
+)
+from projectkoios.integrations.quantumespresso.pw.relaxation.projection import (  # noqa: E501
+    QeRelaxationInputProjection,
 )
 from projectkoios.integrations.quantumespresso.pw.vc_relax.configuration import (  # noqa: E501
     QeVcRelaxProjectionConfiguration,
@@ -46,6 +60,20 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
             silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
         )
 
+        self.assertEqual(type(projection), QeRelaxationInputProjection)
+        self.assertEqual(type(projection.ionic_options), QeIonicRelaxationOptions)
+        self.assertIs(projection.ionic_options.dynamics, QeIonDynamics.BFGS)
+        self.assertEqual(projection.ionic_options.maximum_steps, 7)
+        self.assertIsNone(projection.lattice_vector_options)
+        self.assertEqual(type(projection.control_card), QeControlCard)
+        self.assertEqual(type(projection.system_card), QeSystemCard)
+        self.assertEqual(type(projection.electrons_card), QeElectronsCard)
+        self.assertEqual(type(projection.ions_card), QeIonsCard)
+        self.assertIsNone(projection.cell_card)
+        self.assertEqual(type(projection.atomic_species_card), QeAtomicSpeciesCard)
+        self.assertEqual(type(projection.kpoints_card), QeKpointsCard)
+        self.assertEqual(type(projection.cell_parameters_card), QeCellParametersCard)
+        self.assertEqual(type(projection.atomic_positions_card), QeAtomicPositionsCard)
         text = projection.rendered_inputs[0].text
         self.assertIn("&CONTROL", text)
         self.assertIn("calculation = 'relax'", text)
