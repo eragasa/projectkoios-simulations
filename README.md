@@ -40,6 +40,14 @@ The inward simulation namespace never imports this outward integration.
 Workflow orchestration, calculator execution, convergence campaigns, recipes,
 and scientific acceptance policy do not belong in the parser bundle.
 
+## Execution-independent provider example
+
+[`examples/authenticate_qe_wannier90_provider.py`](examples/authenticate_qe_wannier90_provider.py)
+shows the read-only QEXSD → manifest verification → authenticated native parsing →
+correlation sequence. The caller supplies an already parsed QEXSD record and
+explicit immutable artifact identities. The example does not discover or run a
+calculator, infer scientific metadata, or copy the authoritative production run.
+
 ## License and origin
 
 Maintained Project Koios code in this repository is licensed under the

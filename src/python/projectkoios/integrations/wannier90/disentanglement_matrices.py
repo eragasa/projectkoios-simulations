@@ -1,4 +1,4 @@
-"""Typed adaptation of native Wannier90 ``_u.mat`` matrix files."""
+"""Typed adaptation of native rectangular Wannier90 ``_u_dis.mat`` files."""
 
 from __future__ import annotations
 
@@ -24,11 +24,14 @@ from ._parsing import (
 
 
 @dataclass(frozen=True, slots=True, eq=False)
-class Wannier90UnitaryMatrixData:
-    """Retain ordered fractional k points and square Wannier gauge matrices."""
+class Wannier90DisentanglementMatrixData:
+    """Retain logical native matrices with shape ``(band, wannier)``."""
 
     fractional_kpoints: MatrixQuantity
     matrices: tuple[ComplexMatrixQuantity, ...]
+    band_count: int
+    wannier_count: int
+    storage_order: Wannier90MatrixStorageOrder
 
     def __post_init__(self) -> None:
         if type(self.fractional_kpoints) is not MatrixQuantity:
@@ -40,80 +43,79 @@ class Wannier90UnitaryMatrixData:
             or self.fractional_kpoints.magnitude.shape[1] != 3
         ):
             raise ValueError("fractional_kpoints must have shape (count, 3)")
-        if not isinstance(self.matrices, tuple) or not self.matrices:
+        for label, value in (
+            ("band_count", self.band_count),
+            ("wannier_count", self.wannier_count),
+        ):
+            if type(value) is not int or value <= 0:
+                raise ValueError(f"{label} must be positive")
+        if self.wannier_count > self.band_count:
+            raise ValueError("wannier_count must not exceed band_count")
+        if type(self.storage_order) is not Wannier90MatrixStorageOrder:
+            raise TypeError("storage_order must be a Wannier90MatrixStorageOrder")
+        if type(self.matrices) is not tuple or not self.matrices:
             raise TypeError("matrices must be a nonempty tuple")
         if len(self.matrices) != self.fractional_kpoints.magnitude.shape[0]:
             raise ValueError("matrix count must equal k-point count")
-        first = self.matrices[0]
-        if type(first) is not ComplexMatrixQuantity:
-            raise TypeError("every matrix must be ComplexMatrixQuantity")
-        dimension = first.magnitude.shape[0]
-        if dimension == 0 or first.magnitude.shape != (dimension, dimension):
-            raise ValueError("_u.mat gauge matrices must be nonempty and square")
+        expected_shape = (self.band_count, self.wannier_count)
         for matrix in self.matrices:
             if type(matrix) is not ComplexMatrixQuantity:
                 raise TypeError("every matrix must be ComplexMatrixQuantity")
             if not isinstance(matrix.unit, Unitless):
-                raise ValueError("native gauge matrices must be unitless")
-            if matrix.magnitude.shape != (dimension, dimension):
+                raise ValueError("native disentanglement matrices must be unitless")
+            if matrix.magnitude.shape != expected_shape:
                 raise ValueError(
-                    "all native gauge matrices must have equal square shape"
+                    "native disentanglement matrix must have (band, wannier) shape"
                 )
 
     @property
     def kpoint_count(self) -> int:
+        """Return the number of native k-point blocks."""
         return len(self.matrices)
 
-    @property
-    def wannier_count(self) -> int:
-        return int(self.matrices[0].magnitude.shape[0])
 
-    @property
-    def storage_order(self) -> Wannier90MatrixStorageOrder:
-        """Return the native first-index-fastest serialization convention."""
-        return Wannier90MatrixStorageOrder.first_index_fastest
+class Wannier90DisentanglementMatrixParser(BoundedParser):
+    """Parse bounded rectangular native ``_u_dis.mat`` payloads.
 
-
-class Wannier90UnitaryMatrixParser(BoundedParser):
-    """Parse bounded square native ``_u.mat`` payloads.
-
-    Rectangular ``_u_dis.mat`` data have different native semantics and are
-    deliberately unsupported rather than being interpreted as ``_u.mat``.
+    The native header is ``(kpoints, wannier, bands)`` while each matrix is
+    returned with logical orientation ``(bands, wannier)``. Fortran-native
+    records vary the band (first) index fastest.
     """
 
-    def execute(self, payload: bytes) -> Wannier90UnitaryMatrixData:
-        text = decode_text(payload, "u-matrix", self.limits)
+    def execute(self, payload: bytes) -> Wannier90DisentanglementMatrixData:
+        text = decode_text(payload, "u-dis-matrix", self.limits)
         lines = text.splitlines()
         if len(lines) < 2:
-            raise ValueError("u-matrix payload lacks its dimension header")
+            raise ValueError("u-dis-matrix payload lacks its dimension header")
         dimension_fields = lines[1].split()
         if len(dimension_fields) != 3:
-            raise ValueError("u-matrix dimension header must contain three integers")
+            raise ValueError(
+                "u-dis-matrix dimension header must contain three integers"
+            )
         try:
             raw_dimensions = tuple(int(field) for field in dimension_fields)
         except ValueError as error:
-            raise ValueError("u-matrix dimensions must be integers") from error
+            raise ValueError("u-dis-matrix dimensions must be integers") from error
         kpoint_count = positive_dimension(
             raw_dimensions[0], "kpoint_count", self.limits
         )
-        row_count = positive_dimension(raw_dimensions[1], "row_count", self.limits)
-        column_count = positive_dimension(
-            raw_dimensions[2], "column_count", self.limits
+        wannier_count = positive_dimension(
+            raw_dimensions[1], "wannier_count", self.limits
         )
-        if row_count != column_count:
-            raise ValueError(
-                "_u.mat dimensions must be square; rectangular "
-                "_u_dis.mat is unsupported"
-            )
+        band_count = positive_dimension(raw_dimensions[2], "band_count", self.limits)
+        if wannier_count > band_count:
+            raise ValueError("u_dis Wannier count must not exceed band count")
         matrix_entry_count = checked_product(
-            (kpoint_count, row_count, column_count), "u-matrix", self.limits
+            (kpoint_count, band_count, wannier_count),
+            "u-dis-matrix",
+            self.limits,
         )
         content = tuple(line for line in lines[2:] if line.strip())
         expected_line_count = kpoint_count + matrix_entry_count
         if len(content) < expected_line_count:
-            raise ValueError("u-matrix payload ends within a matrix")
+            raise ValueError("u-dis-matrix payload ends within a matrix")
         if len(content) > expected_line_count:
-            raise ValueError("u-matrix payload contains trailing records")
+            raise ValueError("u-dis-matrix payload contains trailing records")
         kpoint_values: list[tuple[float, float, float]] = []
         matrices: list[ComplexMatrixQuantity] = []
         line_index = 0
@@ -121,7 +123,9 @@ class Wannier90UnitaryMatrixParser(BoundedParser):
             coordinate_fields = content[line_index].split()
             line_index += 1
             if len(coordinate_fields) != 3:
-                raise ValueError("u-matrix k-point line must contain three coordinates")
+                raise ValueError(
+                    "u-dis-matrix k-point line must contain three coordinates"
+                )
             kpoint_values.append(
                 (
                     parse_fortran_real(coordinate_fields[0], "k-point coordinate"),
@@ -130,24 +134,35 @@ class Wannier90UnitaryMatrixParser(BoundedParser):
                 )
             )
             values: list[complex] = []
-            for _ in range(row_count * column_count):
+            for _ in range(band_count * wannier_count):
                 fields = content[line_index].split()
                 line_index += 1
                 if len(fields) != 2:
                     raise ValueError(
-                        "u-matrix entry must contain real and imaginary parts"
+                        "u-dis-matrix entry must contain real and imaginary parts"
                     )
                 values.append(
                     complex(
-                        parse_fortran_real(fields[0], "u-matrix real part"),
-                        parse_fortran_real(fields[1], "u-matrix imaginary part"),
+                        parse_fortran_real(fields[0], "u-dis-matrix real part"),
+                        parse_fortran_real(fields[1], "u-dis-matrix imaginary part"),
                     )
                 )
             matrix: npt.NDArray[np.complex128] = np.asarray(
                 values, dtype=np.complex128
-            ).reshape((row_count, column_count), order="F")
+            ).reshape((band_count, wannier_count), order="F")
             matrices.append(ComplexMatrixQuantity(matrix, Unitless()))
         kpoints: npt.NDArray[np.float64] = np.asarray(kpoint_values, dtype=np.float64)
-        return Wannier90UnitaryMatrixData(
-            MatrixQuantity(kpoints, Unitless()), tuple(matrices)
+        return Wannier90DisentanglementMatrixData(
+            fractional_kpoints=MatrixQuantity(kpoints, Unitless()),
+            matrices=tuple(matrices),
+            band_count=band_count,
+            wannier_count=wannier_count,
+            storage_order=Wannier90MatrixStorageOrder.first_index_fastest,
         )
+
+
+__all__ = [
+    "Wannier90DisentanglementMatrixData",
+    "Wannier90DisentanglementMatrixParser",
+    "Wannier90MatrixStorageOrder",
+]
