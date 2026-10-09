@@ -101,6 +101,8 @@ Required gates include:
 - production, tool, and example import-boundary checks;
 - old-path and compatibility-facade absence;
 - substantive architecture trios and valid local links;
+- an authoritative CPN reference naming every place and transition;
+- explicit operator-template and non-authority documentation for local paths;
 - full pytest, Ruff, formatting, configured strict mypy, and reproducible wheel
   construction; and
 - wheel/sdist inventories that distinguish wheel-carried CPN modules from

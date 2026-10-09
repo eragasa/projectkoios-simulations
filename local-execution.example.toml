@@ -1,7 +1,8 @@
 schema_version = 1
 
-# Machine-local deployment shared by repository tools and examples. These paths
-# do not select a pseudopotential or authorize calculator execution.
+# Operator-only deployment template. No production parser or tool loads this
+# file automatically. These paths neither select a pseudopotential nor authorize
+# calculator execution. See docs/local-execution.md.
 [executables]
 pw = "/absolute/path/to/quantum-espresso/bin/pw.x"
 pw2wannier90 = "/absolute/path/to/quantum-espresso/bin/pw2wannier90.x"

@@ -1,7 +1,50 @@
 # `projectkoios.simulations.dft.pseudopotential_repository`
 
-`PseudopotentialLibrary` discovers exact `PseudopotentialFile` requirements beneath one explicitly configured local root. It matches the required basename, byte size, and complete SHA-256 rather than selecting by element or whichever filename appears first. Duplicate materializations of the same exact bytes are resolved deterministically.
+This module separates two deployment concerns while retaining caller-owned
+scientific selection:
 
-`PseudopotentialRepository` resolves exact requirements from explicit `PseudopotentialRepositoryEntry` declarations. It rejects conflicting metadata declarations for the same artifact identity. Resolution matches the complete scientific metadata and file identity, then verifies expected size and SHA-256 before returning a path. `PseudopotentialNotFoundError` reports undeclared or unavailable artifacts; `PseudopotentialIntegrityError` reports changed or same-named nonmatching bytes.
+- [`PseudopotentialLibrary`](PseudopotentialLibrary/index.md) discovers the
+  deterministic location of caller-required exact bytes beneath one configured
+  root.
+- [`PseudopotentialRepository`](PseudopotentialRepository/index.md) resolves only
+  explicitly declared [`PseudopotentialRepositoryEntry`](PseudopotentialRepositoryEntry/index.md)
+  records and re-verifies bytes when consumed.
 
-Neither object downloads pseudopotentials, chooses a scientific family, substitutes a same-element artifact, or authorizes calculator execution.
+Both consume complete `PseudopotentialFile` requirements. Neither chooses by
+element or family, silently substitutes another artifact, downloads a file,
+selects a calculator, or authorizes execution.
+
+## Error taxonomy
+
+- [`PseudopotentialNotFoundError`](PseudopotentialNotFoundError/index.md) reports
+  an absent library basename, an undeclared repository requirement, or an
+  unavailable declared file.
+- [`PseudopotentialIntegrityError`](PseudopotentialIntegrityError/index.md)
+  reports same-named library candidates with nonmatching bytes or a declared
+  repository artifact whose current size or SHA-256 changed.
+- `TypeError` reports values of the wrong public contract type.
+- `ValueError` reports an invalid library root or conflicting/non-unique
+  repository declarations.
+
+Filesystem exceptions caused by concurrent removal, permission changes, or I/O
+failure are not converted into scientific or integrity decisions.
+
+## Deployment flow
+
+```text
+caller-selected PseudopotentialFile
+                 |
+                 v
+PseudopotentialLibrary(root).resolve(required)
+   exact basename + size + SHA-256
+                 |
+                 v
+PseudopotentialRepositoryEntry(required, path)
+                 |
+                 v
+PseudopotentialRepository.resolve(required)
+   re-check regular file + size + SHA-256
+```
+
+See [`docs/local-execution.md`](../../../../local-execution.md) for the status
+and non-authorizing role of the repository-local deployment template.

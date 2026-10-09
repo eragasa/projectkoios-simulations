@@ -69,16 +69,69 @@ class PseudopotentialLibraryTest(unittest.TestCase):
 
             self.assertEqual(repository.resolve(required), path)
 
-    def test_rejects_a_symlink_as_the_library_root(self) -> None:
+    def test_rejects_invalid_library_roots_in_validation_order(self) -> None:
+        with self.assertRaisesRegex(TypeError, "root must be a Path"):
+            PseudopotentialLibrary("/tmp")  # type: ignore[arg-type]
+        with self.assertRaisesRegex(ValueError, "root must be absolute"):
+            PseudopotentialLibrary(Path("relative"))
+
         with tempfile.TemporaryDirectory() as temporary_directory:
             parent = Path(temporary_directory)
+            missing = parent / "missing"
+            with self.assertRaisesRegex(ValueError, "nonsymlink directory"):
+                PseudopotentialLibrary(missing)
+
             target = parent / "target"
             target.mkdir()
             alias = parent / "alias"
             alias.symlink_to(target, target_is_directory=True)
-
             with self.assertRaisesRegex(ValueError, "nonsymlink directory"):
                 PseudopotentialLibrary(alias)
+
+    def test_rejects_a_symlink_candidate_even_when_its_target_matches(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            parent = Path(temporary_directory)
+            root = parent / "library"
+            root.mkdir()
+            content = b"verified pseudopotential"
+            target = parent / "outside.upf"
+            target.write_bytes(content)
+            (root / "Si.upf").symlink_to(target)
+
+            with self.assertRaisesRegex(
+                PseudopotentialIntegrityError,
+                "none matched",
+            ):
+                PseudopotentialLibrary(root).resolve(_file(content))
+
+    def test_rejects_invalid_requirements_and_accepts_an_empty_tuple(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            library = PseudopotentialLibrary(Path(temporary_directory))
+
+            with self.assertRaisesRegex(
+                TypeError,
+                "required must inherit from PseudopotentialFile",
+            ):
+                library.resolve(object())  # type: ignore[arg-type]
+            with self.assertRaisesRegex(TypeError, "required must be a tuple"):
+                library.build_repository([])  # type: ignore[arg-type]
+            with self.assertRaisesRegex(
+                TypeError,
+                "required must contain PseudopotentialFile values",
+            ):
+                library.build_repository((object(),))  # type: ignore[arg-type]
+
+            self.assertEqual(library.build_repository(()).entries, ())
+
+    def test_rejects_duplicate_resolved_requirements(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            content = b"verified pseudopotential"
+            (root / "Si.upf").write_bytes(content)
+            required = _file(content)
+
+            with self.assertRaisesRegex(ValueError, "unique across metadata"):
+                PseudopotentialLibrary(root).build_repository((required, required))
 
 
 def _file(content: bytes) -> PseudopotentialFile:

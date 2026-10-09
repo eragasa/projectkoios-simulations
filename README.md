@@ -54,10 +54,12 @@ in the parser bundle.
 
 ## Local calculator and pseudopotential deployment
 
-[`local-execution.example.toml`](local-execution.example.toml) defines the single
-repository-local shape for calculator executable paths and the external Quantum
-ESPRESSO pseudopotential-library root. Copy it to `local-execution.toml`, which is
-ignored by Git, and replace the example paths with machine-local absolute paths.
+[`local-execution.example.toml`](local-execution.example.toml) is the single
+operator-only template for calculator executable paths and the external Quantum
+ESPRESSO pseudopotential-library root. Copy it to `local-execution.toml`, which
+is ignored by Git, and replace the placeholders with machine-local absolute
+paths. No production parser or tool automatically consumes this file; see the
+[deployment-template contract](docs/local-execution.md).
 
 `PseudopotentialLibrary` resolves a complete `PseudopotentialFile` requirement
 beneath the configured root by exact basename, byte size, and SHA-256. It does

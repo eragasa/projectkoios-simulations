@@ -44,6 +44,8 @@ permission to rerun the originating calculation.
 ## Local deployment
 
 Machine-local executable paths and the pseudopotential-library root belong in the
-repository-level `local-execution.toml`, copied from
-[`../local-execution.example.toml`](../local-execution.example.toml). They do not
-belong inside an individual retained example directory.
+ignored repository-level `local-execution.toml`, copied from the
+[operator-only template](../local-execution.example.toml). No production parser
+or example loads that file automatically; callers pass paths explicitly. See the
+[deployment-template contract](../docs/local-execution.md). Local deployment
+paths do not belong inside an individual retained example directory.

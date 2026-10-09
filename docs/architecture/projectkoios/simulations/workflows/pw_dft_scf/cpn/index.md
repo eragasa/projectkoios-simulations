@@ -15,3 +15,8 @@ scheduler state, or reusable authority.
 SNAKES is optional. Importing the general simulation or workflow packages does
 not import this CPN package; callers install the `cpn` extra when selecting this
 local engine.
+
+See [`implementation.md`](implementation.md) for the normative twelve-place,
+eight-transition topology, event correlation, bounded firing, status projection,
+and authority contracts. See [`schematics.md`](schematics.md) for the compact
+flow view.
