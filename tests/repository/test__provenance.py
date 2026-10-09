@@ -28,7 +28,8 @@ def _tracked_provenance_metadata() -> tuple[Path, ...]:
     return tuple(
         REPOSITORY_ROOT / path
         for path in paths
-        if (
+        if (REPOSITORY_ROOT / path).exists()
+        and (
             path.parts[0] == "docs"
             or (len(path.parts) == 1 and path.suffix in {".md", ".toml"})
             or path.name == "NOTICE"
@@ -248,6 +249,82 @@ def test_simulation_workflow_migration_is_bound_to_exact_source_objects() -> Non
         == (extraction["replacement_overlay_manifest_sha256"])
     )
     assert len(overlay_manifest.read_text(encoding="utf-8").splitlines()) == 18
+
+
+def test_workflow_namespace_relocation_preserves_historical_transfer() -> None:
+    transfer = _transfer()
+    relocation = transfer["namespace_relocations"][0]
+
+    assert relocation["component"] == "projectkoios.simulations.workflows"
+    assert relocation["status"] == ("combined-namespace-and-workflow-runner-relocation")
+    assert relocation["source_commit"] == ("0ca21564730015dcf989200858b0a6de3f26a038")
+    assert relocation["source_tree"] == ("edabf0a6adfd6f8e050a06a48f94a6c34e543d6f")
+    assert relocation["source_namespace"] == ("projectkoios.simulation_workflows")
+    assert relocation["target_namespace"] == ("projectkoios.simulations.workflows")
+    assert relocation["source_implementation_tree"] == (
+        "23414407b631cc4d826570ada6adcbeee7efd24c"
+    )
+    assert relocation["source_test_tree"] == (
+        "637daa4f00c435b852f90546cb7db62047f65973"
+    )
+    assert relocation["source_documentation_tree"] == (
+        "7246eed30e10bc4a4a422e2233e596c6d6c56c1c"
+    )
+    assert relocation["source_typing_marker_blob"] == (
+        "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    )
+    assert (
+        relocation["target_typing_marker_blob"]
+        == (relocation["source_typing_marker_blob"])
+    )
+    assert relocation["target_typing_marker"] == (
+        "src/python/projectkoios/simulations/py.typed"
+    )
+    assert (
+        relocation["source_file_count"],
+        relocation["relocated_source_file_count"],
+        relocation["test_file_count"],
+        relocation["source_documentation_index_count"],
+    ) == (28, 27, 11, 54)
+    assert relocation["workflow_runner_source_commit"] == (
+        "416be52d539bfbffdbc8a27bd8e13de65404821b"
+    )
+    assert relocation["workflow_runner_source_tree"] == (
+        "de6257c720fa73caff21b393af4a3fb4858fd617"
+    )
+    assert (
+        relocation["workflow_runner_source_file_count"],
+        relocation["workflow_runner_test_file_count"],
+        relocation["workflow_runner_fixture_file_count"],
+        relocation["workflow_runner_probe_file_count"],
+        relocation["workflow_runner_total_path_count"],
+    ) == (50, 3, 1, 1, 55)
+    assert relocation["workflow_runner_replay_overlay_commit"] == (
+        "7b687fb23b9877b744bfba3455040db2cbf94292"
+    )
+    assert relocation["workflow_runner_replay_overlay_path_count"] == 1
+    assert relocation["workflow_runner_fixture_sha256"] == (
+        "bfc9f867474c86d20359a23563cf3d6277928bcf435a126357fd2bdc4732f57e"
+    )
+    assert relocation["workflow_runner_examples_remain_nonproduction"] is False
+    assert relocation["workflow_cpn_promoted_to_production"] is True
+    assert relocation["workflow_tools_remain_outside_package_discovery"] is True
+    assert relocation["compatibility_alias_created"] is False
+    assert relocation["stable_action_identity"] == (
+        "projectkoios.applications.pw-dft-scf.convergence-replay"
+    )
+    assert relocation["calculator_execution_performed"] is False
+    assert [item["role"] for item in relocation["paths"]] == [
+        "implementation",
+        "tests",
+        "architecture documentation",
+        "local CPN implementation",
+        "workflow tools",
+        "workflow declarations and demonstrations",
+        "workflow tool and example tests",
+        "workflow-runner fixture",
+        "exact provider graph probe",
+    ]
 
 
 def test_preserved_historical_license_files_have_declared_identities() -> None:

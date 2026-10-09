@@ -14,21 +14,18 @@ Protected-core modules must not import:
 Repository AST boundary tests must enforce these rules recursively rather than
 relying on naming conventions or review alone.
 
-## Forward namespace migration
+## Namespace relocation
 
-The namespace refinement must be a forward commit after
-`d4323213bffee3551b92f056b8b12f2a193ac15a`; published history must not be
-amended or rewritten. The implementation slice must:
-
-1. move `src/python/projectkoios/simulation_workflows` atomically to
-   `src/python/projectkoios/simulations/workflows`;
-2. move the corresponding test and mirrored architecture-documentation trees;
-3. rewrite imports and current-facing documentation without changing behavior;
-4. remove sibling-package discovery, typing, and mypy declarations made
-   redundant by the nested package;
-5. preserve all public symbols, signatures, defaults, errors, evidence
-   semantics, fixtures, and validation order; and
-6. prove that the old source and import paths are absent.
+The namespace refinement is a forward change after public main commit
+`0ca21564730015dcf989200858b0a6de3f26a038`; published history is not amended or
+rewritten. The implementation moves
+`src/python/projectkoios/simulation_workflows` atomically to
+`src/python/projectkoios/simulations/workflows`, together with corresponding
+tests and mirrored architecture descendants. It rewrites imports and
+current-facing documentation without changing behavior, removes redundant
+sibling-package discovery and typing declarations, preserves public symbols,
+signatures, defaults, errors, evidence semantics, fixtures, and validation
+order, and proves that old source and import paths are absent.
 
 No alias, facade, re-export, deprecation proxy, or compatibility shim is
 permitted. The replay action identity
@@ -44,15 +41,13 @@ docs/architecture/<package>/<subpackage>/.../<ClassName>/
 ```
 
 Every documented package, subpackage, and class node created or moved by the
-forward migration must contain substantive `index.md`, `schematics.md`, and
-`implementation.md` files. The migration must inventory every moved
-`pw_dft_*` package/subpackage/class node and fail if any target node lacks the
-trio. This architecture-first slice deliberately does not pre-create those
-nodes before their code moves.
+relocation contains substantive `index.md`, `schematics.md`, and
+`implementation.md` files. Repository checks inventory every moved `pw_dft_*`
+package/subpackage/class node and fail if any target node lacks the trio.
 
 ## Required proof
 
-The forward migration requires:
+The namespace relocation proof requires:
 
 - normalized old-versus-new source, test, and documentation equivalence after
   path and import rewriting;
@@ -61,14 +56,23 @@ The forward migration requires:
 - full pytest, Ruff, formatting, configured strict-mypy, and reproducible-wheel
   gates;
 - wheel smoke proving the new namespace imports and the old namespace does not;
-- absence of simultaneous old and new production trees; and
+- absence of simultaneous old and new production trees;
+- exact 55-row workflow/example source accounting with one replay overlay and
+  explicit final production, tool, example, test, or consolidation outcomes;
+- byte identity of the retained campaign-projection fixture;
+- historical provider-graph proof separately from current-head eight-campaign
+  rendering; and
 - no calculator execution.
 
 ## Sequencing
 
-After the namespace migration merges, migrate the deferred provider/example
-closure directly against `projectkoios.simulations.workflows`. Only after that
-separate slice merges may Applications source removal proceed. Restoration or
-adaptation of the silicon predecessor must target a named post-removal base.
-Historical transfer manifests remain historical facts; current-facing origins
-may record the later relocation without rewriting prior provenance.
+The namespace relocation and complete 55-path workflow/example source closure
+form one combined migration. The executable CPN is production code pending
+WORKFLOWS extraction; runners and shared loading are repository tools; campaign,
+comparison, structure, replay, and relaxation demonstrations are compact
+examples; fixture and probe paths remain test artifacts.
+Applications source removal may proceed only after this combined migration
+merges. Restoration or adaptation of the silicon predecessor must target a
+named post-removal base. Historical transfer manifests remain historical facts;
+current-facing origins record the completed relocation without rewriting prior
+provenance.

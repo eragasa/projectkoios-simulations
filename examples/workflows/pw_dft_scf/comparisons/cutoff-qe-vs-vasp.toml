@@ -1,0 +1,6 @@
+schema_version = 1
+kind = "wavefunction-cutoff"
+comparison_id = "silicon-encut-qe-vasp"
+input_alignment_id = "silicon-scf-input-alignment-v1"
+left_campaign = "../campaigns/qe-cutoff.toml"
+right_campaign = "../campaigns/vasp-cutoff.toml"

@@ -15,11 +15,11 @@ records, resources, settings, and simulation contracts. The workflow layer owns
 provider-independent comparison, convergence, assessment, recipe, replay,
 composition, and workflow-definition contracts.
 
-This is the approved target architecture for a forward namespace migration. At
-commit `d4323213bffee3551b92f056b8b12f2a193ac15a`, the workflow implementation
-still resides at `projectkoios.simulation_workflows`. A later reviewed change
-will move it atomically; this documentation does not create an alias or claim
-that the target import path is available yet.
+The workflow implementation now resides at
+`projectkoios.simulations.workflows`. It moved forward from the historical
+sibling `projectkoios.simulation_workflows` snapshot on public main commit
+`0ca21564730015dcf989200858b0a6de3f26a038`. The old production import path is
+absent; no alias or compatibility facade was introduced.
 
 ## Contents
 

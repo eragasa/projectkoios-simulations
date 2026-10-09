@@ -1,3 +1,0 @@
-# PwDftScfConvergenceBudgetExhausted
-
-Field: `assessment`.

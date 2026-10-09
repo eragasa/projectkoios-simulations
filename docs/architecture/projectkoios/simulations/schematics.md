@@ -40,14 +40,14 @@ or SDK contract remains a distinct compiler-integration decision.
 ## Namespace transition
 
 ```text
-current public source                         approved target
+historical source                              current owner
 
 projectkoios.simulation_workflows   ---->     projectkoios.simulations.workflows
 ```
 
-The transition is one atomic forward move. The old and new production trees
-must never coexist. No import alias, re-export, compatibility package, or
-namespace shim bridges them.
+The transition was one atomic forward move. The old and new production trees
+do not coexist. No import alias, re-export, compatibility package, or namespace
+shim bridges them.
 
 ## Authority flow
 

@@ -1,48 +1,92 @@
 # `projectkoios.simulations.workflows` schematics
 
-## Pure capability composition
+## Layer map
 
 ```text
-protected-core specification
-            |
-            v
-typed request -> owner action or actionizer -> typed result
-       ^                                          |
-       |                                          v
-provider-normalized evidence          execution-independent handoff
+protected projectkoios.simulations core
+  requests | results | settings | normalized observations | integrations IDs
+                              |
+                              v
+projectkoios.simulations.workflows
+  +-- pw_dft_scf
+  |    +-- configuration and recipes
+  |    +-- single-result comparison
+  |    +-- convergence assessment/comparison/control/replay
+  |    +-- engine-neutral topology and facade
+  |    `-- optional local SNAKES CPN
+  |
+  `-- pw_dft_relaxation
+       +-- campaign and projection composition
+       +-- external-authority-required handoff
+       `-- engine-neutral projection/handoff topology
 ```
 
-Each action performs one domain transformation. Owner source declarations may
-state scientific topology and guards. A generic Workflow compiler translates
-those declarations into canonical CPN places, transitions, and plans; the
-generic runtime owns transition occurrences and lifecycle state.
+The arrow points inward. Protected core modules never import the workflow
+composition layer.
 
-## Runtime separation
+## SCF composition flow
 
 ```text
-simulations.workflows source          generic Workflow compiler/runtime
-----------------------------          ---------------------------------
-scientific requests/results     --->  canonical CPN places/transitions/plans
-source topology and guards      --->  compiled workflow definitions
-comparison/convergence policy          occurrence identity and queueing
-pure replay actions                    leases, retries, and reconciliation
-execution handoff descriptions         cancellation and authority enforcement
+neutral SCF request
+       |
+       +--> single recipe ------------------------------+
+       +--> k-point/cutoff/grid recipe -> coordinates --+--> child SCF results
+                                                         |
+normalized observations -> assessment -> controller ----+
+                                                         |
+successful results ------> qualified comparison          |
+normalized replay evidence -> replay actionizer ---------+
+                                                         v
+                                             typed domain outcomes
 ```
 
-Compilation points from owner declarations toward generic Workflow. This exact
-namespace migration adds no Workflow dependency. A future compiler integration
-may use stable runtime-neutral source or SDK contracts, but there is no import
-edge from this layer to live service, kernel, scheduler, or runtime objects.
+Comparison never turns unlike calculator-native energy zeros into an
+unqualified equivalence claim. Replay consumes normalized evidence rather than
+provider artifacts.
 
-## Provider separation
+## Relaxation composition flow
 
 ```text
-provider execution -> provider parsing -> normalized evidence
-                                               |
-                                               v
-                                  simulations.workflows replay
+neutral relaxation request + selected integration ID
+                         |
+                         v
+               input projection wrapper
+                         |
+                         v
+ projected inputs + required external inputs + non-authorizing handoff
 ```
 
-Provider-native data does not cross directly into the workflow layer. Parsing,
-normalization, mechanical execution evidence, and scientific assessment remain
-separate operations with separate owners.
+The handoff states that separate explicit external authority is required. It
+cannot start a calculator.
+
+## Compiler/runtime separation
+
+```text
+simulation workflow owner                 generic Workflow owner
+-------------------------                 ----------------------
+requests, results, policies        --->   compiler input
+source topology and guards         --->   canonical CPN plan
+pure domain actions                       transition occurrences
+scientific controller decisions           queues, leases, retries
+non-authorizing handoffs                  cancellation and delivery
+                                           execution authority
+```
+
+There is no reverse import from this package to a generic Workflow service or
+durable runtime. The temporary local SNAKES CPN is a bounded in-process engine
+adapter, not a queue, scheduler, or authority service.
+
+## Tool and example boundary
+
+```text
+examples: declarations/data ---> repository tools ---> public integrations
+          demonstrations              |                       |
+                                      +-> local CPN            +-> projection/parsing
+                                      +-> planning/comparison/visualization
+
+repository tools --------X--------> calculator executable
+```
+
+The crossed edge is prohibited. Tools and examples remain outside wheel package
+discovery and cannot convert an ordinary test or smoke invocation into
+execution authority.

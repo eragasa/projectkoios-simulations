@@ -42,14 +42,36 @@ license.
 - License SHA-256:
   `0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410`
 
+## SNAKES / projectkoios-snakes
+
+- Maintained fork: <https://github.com/eragasa/projectkoios-snakes>
+- Reviewed fork commit: `72dbb1dbf0a91349faca21ceb660923cc442a8e9`
+- Reviewed fork Git tree: `1b38e523f6210aa0f37bce35a43a08b3bb909f81`
+- Upstream baseline: SNAKES `0.9.33`, commit
+  `2291c6e627c85fc2932a83cc2eb9b712495b5d7a`
+- Distribution and import names: `SNAKES` / `snakes`
+- License: GNU Lesser General Public License, version 3
+- Upstream copyright: Franck Pommereau and contributors
+- Reviewed license SHA-256:
+  `1e950a32358912876fcd3ea0bdd975c9ea8a7822eddc3cda662817c3abe99b1c`
+
+The maintained fork supplies Python 3.14 compatibility fixes and Project Koios
+CPN boundary tests while preserving the upstream import namespace and license.
+It is used only by the optional local CPN implementation pending WORKFLOWS
+extraction; no SNAKES source is vendored into this repository.
+
 ## Reusable simulation-workflow capabilities
 
-The migrated `projectkoios.simulation_workflows` modules contain no vendored
+The migrated `projectkoios.simulations.workflows` modules contain no vendored
 third-party source. They reuse calculator-neutral contracts already distributed
-under `projectkoios.simulations`. Provider-dependent examples and their optional
-NumPy, Plotly, SNAKES, Quantum ESPRESSO, and VASP closure were not included in
-this migration; their exact deferred inventory is recorded in
-`docs/provenance/deferred-provider-example-main-416be52.tsv`.
+under `projectkoios.simulations`. The optional local CPN uses the maintained
+SNAKES fork, while repository tools retain optional Plotly use and compose the
+public Quantum ESPRESSO and VASP integrations at their outward boundary. Their original exact
+inventory is recorded in
+`docs/provenance/deferred-provider-example-main-416be52.tsv`; the filename
+preserves the superseded initial classification. The completed destination
+mapping is recorded in
+`docs/provenance/workflow-runner-relocation-main-416be52.tsv`.
 
 The commit and tree above identify the MIT-licensed PhysKit source reviewed
 during extraction; they are provenance identities, not installation constraints.

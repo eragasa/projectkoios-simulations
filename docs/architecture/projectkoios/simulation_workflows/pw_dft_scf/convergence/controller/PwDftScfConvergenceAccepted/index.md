@@ -1,3 +1,0 @@
-# PwDftScfConvergenceAccepted
-
-Field: `assessment`.

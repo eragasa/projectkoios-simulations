@@ -10,10 +10,10 @@ composition, provider implementations, Applications, downstream consumers, or
 live Workflow runtime objects. Calculator-specific syntax and behavior remain
 under `projectkoios.integrations` and `projectkoios.adapters`.
 
-The approved layered-umbrella architecture adds an owner-specific
+The layered-umbrella architecture includes the owner-specific
 `projectkoios.simulations.workflows` composition layer without weakening those
-core rules. At commit `d4323213bffee3551b92f056b8b12f2a193ac15a`, the
-workflow implementation still uses the sibling
-`projectkoios.simulation_workflows` namespace; a later forward migration will
-move it cleanly without aliases or coexistence. See the authoritative contract
-for the import matrix, authority boundary, migration rules, and required proof.
+core rules. The implementation moved forward from the historical sibling
+`projectkoios.simulation_workflows` snapshot on public main commit
+`0ca21564730015dcf989200858b0a6de3f26a038`; the old production path is absent
+and no alias coexists. See the authoritative contract for the import matrix,
+authority boundary, relocation rules, and required proof.

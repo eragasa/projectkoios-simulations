@@ -2,11 +2,12 @@
 
 ## Maintained repository
 
-`projectkoios-simulations` is the maintained owner of the inward
-`projectkoios.simulations` namespace and the sibling
-`projectkoios.simulation_workflows` capability namespace. The repository applies
-Apache-2.0 to its maintained code under explicit operator and rightsholder
-authority.
+`projectkoios-simulations` is the maintained owner of the layered
+`projectkoios.simulations` namespace, including the owner-specific
+`projectkoios.simulations.workflows` capability layer. Outward providers remain
+under `projectkoios.integrations` and `projectkoios.adapters`. The repository
+applies Apache-2.0 to its maintained code under explicit operator and
+rightsholder authority.
 
 The initial implementation was extracted from
 `projectkoios-frankenstein` commit
@@ -16,30 +17,44 @@ documentation Git trees and the namespace-only adaptation are recorded in
 
 ## Reusable simulation-workflow capability migration
 
-The reusable SCF and relaxation workflow capabilities under
-`projectkoios.simulation_workflows` were migrated from
-`projectkoios-applications` commit
+The reusable SCF and relaxation workflow capabilities were originally migrated
+from `projectkoios-applications` into the historical sibling namespace
+`projectkoios.simulation_workflows` at commit
 `416be52d539bfbffdbc8a27bd8e13de65404821b` (root tree
 `de6257c720fa73caff21b393af4a3fb4858fd617`). The migration copied the
 capability implementation, direct tests, retained normalized replay fixture,
 and architecture documentation wholesale. Adaptations were limited to the
 namespace and import paths plus destination documentation and package metadata.
 Exact implementation, test, and documentation tree identities are recorded in
-[`../../TRANSFER.toml`](../../TRANSFER.toml).
+[`../../TRANSFER.toml`](../../TRANSFER.toml). That historical transfer record is
+preserved unchanged. A later clean forward relocation moved the capability from
+the sibling namespace snapshot on Simulations commit
+`0ca21564730015dcf989200858b0a6de3f26a038` into
+`projectkoios.simulations.workflows`. The relocation source trees, old and new
+paths, typing-marker disposition, stable action identity, and no-facade rule are
+recorded separately under `namespace_relocations` in `TRANSFER.toml`.
 
-The provider-dependent examples, their tests, the provider-fingerprint fixture,
-and its exact-provider probe remain authoritative in `projectkoios-applications`
-until a separate provider/example migration. Their 55 exact source paths, Git
-blob identities, SHA-256 digests, and byte counts are retained in
-[`deferred-provider-example-main-416be52.tsv`](deferred-provider-example-main-416be52.tsv).
+The workflow runners were initially recorded as a deferred provider/example
+closure. The operator subsequently clarified that every runner belongs to the
+workflow capability, so all 55 source paths are accounted for in the combined
+namespace migration. A later authorized cleanup promoted the executable SNAKES
+CPN into production, moved operational runners to `tools/`, flattened actual
+examples, and consolidated repetitive example documentation. Its historical Applications paths, Git blob identities,
+SHA-256 digests, and byte counts remain preserved in
+[`deferred-provider-example-main-416be52.tsv`](deferred-provider-example-main-416be52.tsv);
+that filename records the earlier classification rather than current status.
+The exact source disposition, effective replay overlay, final destination
+hashes where applicable, and consolidation outcomes are recorded in
+[`workflow-runner-relocation-main-416be52.tsv`](workflow-runner-relocation-main-416be52.tsv).
 The mutually exclusive replay replacement from child commit
 `7b687fb23b9877b744bfba3455040db2cbf94292` (root tree
 `0e7c07e76d932fb3f5efc173d0835a9f8e7ba8bc`) was applied afterward as a
-separate overlay. Fourteen capability paths replace the former replayer with a
-typed runtime-neutral Actionizer contract. The provider-example change remains
-deferred, while the two Applications-specific source-distribution inventory
-paths are represented by destination build-inventory and provenance checks
-rather than transplanted. The exact 17-path source delta is retained in
+separate overlay. Fourteen production capability paths replace the former
+replayer with a typed runtime-neutral Actionizer contract, and the one affected
+workflow-runner example consumes that replacement. The two
+Applications-specific source-distribution inventory paths are represented by
+destination build-inventory and provenance checks rather than transplanted.
+The exact 17-path source delta is retained in
 [`replay-7b687fb-delta-manifest.tsv`](replay-7b687fb-delta-manifest.tsv).
 The stable action identity remains
 `projectkoios.applications.pw-dft-scf.convergence-replay`; preserving that

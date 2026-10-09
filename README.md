@@ -1,16 +1,20 @@
 # Project Koios Simulations
 
 `projectkoios-simulations` owns the `projectkoios.simulations`
-simulation-domain umbrella. Existing non-workflow subtrees form its protected
-calculator-neutral core. Reusable SCF and relaxation composition is approved to
-move from the currently published sibling `projectkoios.simulation_workflows`
-namespace into the owner-specific `projectkoios.simulations.workflows` layer in
-a separate forward migration. Outward provider integrations and adapters remain
-under `projectkoios.integrations` and `projectkoios.adapters`. The protected
-core never imports workflows or providers; the workflow layer may import core
-contracts but never provider implementations or live workflow-runtime objects.
+simulation-domain umbrella. Its non-workflow subtrees form the protected
+calculator-neutral core. Reusable SCF and relaxation composition lives in the
+owner-specific `projectkoios.simulations.workflows` layer. Outward provider
+integrations and adapters remain under `projectkoios.integrations` and
+`projectkoios.adapters`. The protected core never imports workflows or
+providers; the workflow layer may import core contracts but never provider
+implementations. Its optional local SNAKES CPN is isolated pending extraction
+by WORKFLOWS and carries no calculator authority.
 The architecture contract is documented in
 [`docs/architecture/projectkoios/simulations/`](docs/architecture/projectkoios/simulations/index.md).
+Repository-local workflow tools live under `tools/pw_dft_scf`. Compact reviewed
+campaign, comparison, structure, replay, and relaxation demonstrations live
+under `examples/workflows`. Both remain calculator-free and outside wheel
+package discovery.
 
 The VASP integration provides native INCAR, KPOINTS, POSCAR, and OUTCAR
 representations plus projections to calculator-neutral simulation contracts. It
@@ -19,10 +23,9 @@ projected inputs are runnable, or establish numerical or scientific validation.
 The neutral band contracts include the explicitly classified standard primitive
 cells, special reciprocal points, and path topologies of Setyawan and Curtarolo
 [3]. They do not infer space groups or authorize calculator execution. Reusable
-convergence, comparison, recipe, replay, and workflow-definition contracts are
-the owner-specific composition layer: they currently live under
-`projectkoios.simulation_workflows` and will move cleanly to
-`projectkoios.simulations.workflows` without a compatibility facade.
+convergence, comparison, recipe, replay, and workflow-definition contracts live
+under `projectkoios.simulations.workflows` without a compatibility facade at
+the former sibling namespace.
 
 The LAMMPS package is a provenance-bound reconstruction scaffold for inspecting
 retained templates and data text and for rendering bounded data artifacts. It
@@ -104,7 +107,7 @@ python3.14 -m venv .venv
 .venv/bin/python -m pip install -e '.[development]'
 .venv/bin/python -m pytest -q
 .venv/bin/python -m ruff check .
-.venv/bin/python -m ruff format --check src/python tests
+.venv/bin/python -m ruff format --check src/python tools examples tests
 .venv/bin/python -m mypy
 .venv/bin/python -m build --wheel
 ```
