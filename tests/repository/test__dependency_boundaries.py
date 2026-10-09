@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import ast
+import sys
 from pathlib import Path
 
 PROJECTKOIOS_ROOT = (
     Path(__file__).resolve().parents[2] / "src" / "python" / "projectkoios"
 )
 SOURCE_ROOT = PROJECTKOIOS_ROOT / "simulations"
-SIMULATION_WORKFLOWS_ROOT = PROJECTKOIOS_ROOT / "simulation_workflows"
+SIMULATION_WORKFLOWS_ROOT = SOURCE_ROOT / "workflows"
 
 
 def _projectkoios_imports(path: Path) -> tuple[str, ...]:
@@ -50,6 +51,17 @@ def _resolve_import_from(path: Path, node: ast.ImportFrom) -> str:
     return ".".join(resolved_parts)
 
 
+def _absolute_imports(path: Path) -> tuple[str, ...]:
+    names: list[str] = []
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            names.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.level == 0:
+            names.append(node.module or "")
+    return tuple(names)
+
+
 def test_relative_provider_imports_resolve_outside_the_neutral_namespace() -> None:
     parsed = ast.parse("from .....integrations import quantum_espresso")
     node = parsed.body[0]
@@ -59,53 +71,62 @@ def test_relative_provider_imports_resolve_outside_the_neutral_namespace() -> No
     assert _resolve_import_from(path, node) == "projectkoios.integrations"
 
 
-def test_neutral_simulations_import_only_neutral_or_inward_namespaces() -> None:
+def test_protected_simulations_core_cannot_import_workflows_or_outward_code() -> None:
     invalid: list[tuple[Path, str]] = []
     allowed_roots = (
         "projectkoios.physkit",
         "projectkoios.simulations",
     )
+    workflow_namespace = "projectkoios.simulations.workflows"
 
     for path in SOURCE_ROOT.rglob("*.py"):
+        if SIMULATION_WORKFLOWS_ROOT in path.parents:
+            continue
         for imported_name in _projectkoios_imports(path):
-            if not any(
+            is_allowed = any(
                 imported_name == root or imported_name.startswith(f"{root}.")
                 for root in allowed_roots
-            ):
+            )
+            imports_workflows = imported_name == workflow_namespace or (
+                imported_name.startswith(f"{workflow_namespace}.")
+            )
+            if not is_allowed or imports_workflows:
                 invalid.append((path.relative_to(SOURCE_ROOT), imported_name))
 
     assert invalid == []
 
 
-def test_simulation_workflows_import_only_workflow_and_neutral_namespaces() -> None:
+def test_simulation_workflows_import_only_standard_library_and_core() -> None:
     invalid: list[tuple[Path, str]] = []
-    allowed_roots = (
+    allowed_project_roots = (
         "projectkoios.simulations",
-        "projectkoios.simulation_workflows",
+        "projectkoios.simulations.workflows",
     )
 
     for path in SIMULATION_WORKFLOWS_ROOT.rglob("*.py"):
-        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-        for node in ast.walk(tree):
-            imported_names: tuple[str, ...] = ()
-            if isinstance(node, ast.Import):
-                imported_names = tuple(alias.name for alias in node.names)
-            elif isinstance(node, ast.ImportFrom) and node.level == 0:
-                imported_names = (node.module or "",)
-            for imported_name in imported_names:
-                if imported_name != "projectkoios" and not imported_name.startswith(
-                    "projectkoios."
-                ):
-                    continue
+        for imported_name in _absolute_imports(path):
+            if not imported_name:
+                continue
+            if imported_name == "projectkoios" or imported_name.startswith(
+                "projectkoios."
+            ):
                 if not any(
                     imported_name == root or imported_name.startswith(f"{root}.")
-                    for root in allowed_roots
+                    for root in allowed_project_roots
                 ):
                     invalid.append(
-                        (
-                            path.relative_to(SIMULATION_WORKFLOWS_ROOT),
-                            imported_name,
-                        )
+                        (path.relative_to(SIMULATION_WORKFLOWS_ROOT), imported_name)
                     )
+                continue
+            import_root = imported_name.split(".", 1)[0]
+            is_local_cpn = (
+                SIMULATION_WORKFLOWS_ROOT / "pw_dft_scf" / "cpn"
+            ) in path.parents
+            if import_root == "snakes" and is_local_cpn:
+                continue
+            if import_root not in sys.stdlib_module_names:
+                invalid.append(
+                    (path.relative_to(SIMULATION_WORKFLOWS_ROOT), imported_name)
+                )
 
     assert invalid == []

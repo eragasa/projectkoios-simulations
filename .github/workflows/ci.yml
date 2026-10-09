@@ -46,7 +46,7 @@ jobs:
         run: python -m pytest -q
 
       - name: Check formatting
-        run: python -m ruff format --check src/python tests
+        run: python -m ruff format --check src/python tools examples tests
 
       - name: Run lint checks
         run: python -m ruff check .

@@ -1,0 +1,19 @@
+# Energy convergence assessment schematics
+
+## Contract flow
+
+`EnergyAxisConvergenceAssessmentRequest`, `EnergyAxisConvergenceAssessor`, `EnergyGridConvergenceAssessmentRequest`, and `EnergyGridConvergenceAssessor` provide pure calculator-neutral decisions.
+
+```text
+caller --> projectkoios.simulations.workflows.pw_dft_scf.convergence.assessment --> typed domain value or decision
+             |
+             +--> protected projectkoios.simulations core contracts
+```
+
+## Documented children
+
+`EnergyAxisConvergenceAssessmentRequest`, `EnergyAxisConvergenceAssessor`, `EnergyGridConvergenceAssessmentRequest`, `EnergyGridConvergenceAssessor`
+
+## Dependency and authority boundary
+
+`projectkoios.simulations.workflows.pw_dft_scf.convergence.assessment` points inward only to the protected simulation core or to other owner workflow modules. It does not select a calculator provider, import `projectkoios.integrations`, discover an executable, grant execution authority, or own generic Workflow compiler/runtime state. Domain topology or guards described here remain owner source declarations; canonical CPN places, transitions, and plans remain compiler-owned.

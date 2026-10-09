@@ -621,3 +621,88 @@ role = "retained normalized replay fixture"
 path = "tests/fixtures/pw_dft_scf/qe-retained-convergence-normalized.json"
 git_blob = "ada12ab4f88ac2ee2c40e08096fac4e1c48e0129"
 target = "tests/fixtures/pw_dft_scf/qe-retained-convergence-normalized.json"
+
+[[namespace_relocations]]
+component = "projectkoios.simulations.workflows"
+status = "combined-namespace-and-workflow-runner-relocation"
+source_commit = "0ca21564730015dcf989200858b0a6de3f26a038"
+source_tree = "edabf0a6adfd6f8e050a06a48f94a6c34e543d6f"
+source_namespace = "projectkoios.simulation_workflows"
+target_namespace = "projectkoios.simulations.workflows"
+source_implementation_tree = "23414407b631cc4d826570ada6adcbeee7efd24c"
+source_test_tree = "637daa4f00c435b852f90546cb7db62047f65973"
+source_documentation_tree = "7246eed30e10bc4a4a422e2233e596c6d6c56c1c"
+source_typing_marker_blob = "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+target_typing_marker = "src/python/projectkoios/simulations/py.typed"
+target_typing_marker_blob = "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+source_file_count = 28
+relocated_source_file_count = 27
+test_file_count = 11
+source_documentation_index_count = 54
+workflow_runner_source_repository = "https://github.com/eragasa/projectkoios-applications"
+workflow_runner_source_commit = "416be52d539bfbffdbc8a27bd8e13de65404821b"
+workflow_runner_source_tree = "de6257c720fa73caff21b393af4a3fb4858fd617"
+workflow_runner_source_file_count = 50
+workflow_runner_test_file_count = 3
+workflow_runner_fixture_file_count = 1
+workflow_runner_probe_file_count = 1
+workflow_runner_total_path_count = 55
+workflow_runner_historical_manifest = "docs/provenance/deferred-provider-example-main-416be52.tsv"
+workflow_runner_historical_manifest_sha256 = "a941ad9efec74067fcf36dc80e05cc11834dd5a59be75c16f38ad61ad375c87f"
+workflow_runner_relocation_manifest = "docs/provenance/workflow-runner-relocation-main-416be52.tsv"
+workflow_runner_relocation_manifest_sha256 = "f510e2c9e9175d30d633fb74db2f1d1dd33f1fc159d6baea6e38aefc8f8dcdb7"
+workflow_runner_replay_overlay_commit = "7b687fb23b9877b744bfba3455040db2cbf94292"
+workflow_runner_replay_overlay_path_count = 1
+workflow_runner_fixture_sha256 = "bfc9f867474c86d20359a23563cf3d6277928bcf435a126357fd2bdc4732f57e"
+workflow_runner_examples_remain_nonproduction = false
+workflow_cpn_promoted_to_production = true
+workflow_tools_remain_outside_package_discovery = true
+compatibility_alias_created = false
+stable_action_identity = "projectkoios.applications.pw-dft-scf.convergence-replay"
+calculator_execution_performed = false
+summary = "Relocated the reusable workflow capability into the layered simulations umbrella, promoted the executable local CPN pending WORKFLOWS extraction, moved operational runners into repository tools, flattened actual examples, and accounted for the complete 55-path source closure."
+
+[[namespace_relocations.paths]]
+role = "implementation"
+source = "src/python/projectkoios/simulation_workflows"
+target = "src/python/projectkoios/simulations/workflows"
+
+[[namespace_relocations.paths]]
+role = "tests"
+source = "tests/projectkoios/simulation_workflows"
+target = "tests/projectkoios/simulations/workflows"
+
+[[namespace_relocations.paths]]
+role = "architecture documentation"
+source = "docs/architecture/projectkoios/simulation_workflows"
+target = "docs/architecture/projectkoios/simulations/workflows"
+
+[[namespace_relocations.paths]]
+role = "local CPN implementation"
+source = "examples/projectkoios/applications/pw_dft_scf/workflow"
+target = "src/python/projectkoios/simulations/workflows/pw_dft_scf/cpn"
+
+[[namespace_relocations.paths]]
+role = "workflow tools"
+source = "examples/projectkoios/applications/pw_dft_scf/runner"
+target = "tools/pw_dft_scf"
+
+[[namespace_relocations.paths]]
+role = "workflow declarations and demonstrations"
+source = "examples/projectkoios/applications/pw_dft_*"
+target = "examples/workflows/pw_dft_*"
+
+[[namespace_relocations.paths]]
+role = "workflow tool and example tests"
+source = "tests/examples/projectkoios/applications/pw_dft_*"
+target = "tests/tools/pw_dft_scf and tests/examples"
+
+[[namespace_relocations.paths]]
+role = "workflow-runner fixture"
+source = "tests/fixtures/pw_dft_scf/campaign-projections.json"
+target = "tests/fixtures/pw_dft_scf/campaign-projections.json"
+
+[[namespace_relocations.paths]]
+role = "exact provider graph probe"
+source = "tests/support/exact_provider_graph_probe.py"
+target = "tests/support/exact_provider_graph_probe.py"

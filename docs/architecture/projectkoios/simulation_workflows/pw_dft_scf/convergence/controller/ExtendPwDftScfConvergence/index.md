@@ -1,3 +1,0 @@
-# ExtendPwDftScfConvergence
-
-Fields: `coordinates`, `reason`.
