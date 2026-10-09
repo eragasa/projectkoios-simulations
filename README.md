@@ -1,14 +1,16 @@
 # Project Koios Simulations
 
-`projectkoios-simulations` owns calculator-neutral simulation identities,
-execution records, density-functional-theory and pseudopotential contracts, and
-plane-wave SCF, NSCF, and structural-relaxation contracts under
-`projectkoios.simulations`. Reusable SCF and relaxation capability composition
-lives in the sibling `projectkoios.simulation_workflows` namespace. Outward
-provider integrations and adapters owned by this distribution live under
-`projectkoios.integrations` and `projectkoios.adapters`. The workflow and
-provider namespaces may depend on `projectkoios.simulations`; the neutral
-namespace must not import them.
+`projectkoios-simulations` owns the `projectkoios.simulations`
+simulation-domain umbrella. Existing non-workflow subtrees form its protected
+calculator-neutral core. Reusable SCF and relaxation composition is approved to
+move from the currently published sibling `projectkoios.simulation_workflows`
+namespace into the owner-specific `projectkoios.simulations.workflows` layer in
+a separate forward migration. Outward provider integrations and adapters remain
+under `projectkoios.integrations` and `projectkoios.adapters`. The protected
+core never imports workflows or providers; the workflow layer may import core
+contracts but never provider implementations or live workflow-runtime objects.
+The architecture contract is documented in
+[`docs/architecture/projectkoios/simulations/`](docs/architecture/projectkoios/simulations/index.md).
 
 The VASP integration provides native INCAR, KPOINTS, POSCAR, and OUTCAR
 representations plus projections to calculator-neutral simulation contracts. It
@@ -17,16 +19,17 @@ projected inputs are runnable, or establish numerical or scientific validation.
 The neutral band contracts include the explicitly classified standard primitive
 cells, special reciprocal points, and path topologies of Setyawan and Curtarolo
 [3]. They do not infer space groups or authorize calculator execution. Reusable
-convergence, comparison, recipe, replay, and workflow-definition contracts live
-under `projectkoios.simulation_workflows`; they do not belong under
-`projectkoios.simulations`.
+convergence, comparison, recipe, replay, and workflow-definition contracts are
+the owner-specific composition layer: they currently live under
+`projectkoios.simulation_workflows` and will move cleanly to
+`projectkoios.simulations.workflows` without a compatibility facade.
 
 The LAMMPS package is a provenance-bound reconstruction scaffold for inspecting
 retained templates and data text and for rendering bounded data artifacts. It
 does not run LAMMPS, parse calculator results, control convergence, or claim
 behavioral conformance, numerical verification, or scientific validation.
 Workflow orchestration, campaigns, recipes, and scientific acceptance policy do
-not belong here.
+not belong in the LAMMPS integration package.
 
 The Quantum ESPRESSO integration provides native input, output, saved-state,
 SCF, NSCF, relaxation, `pw2wannier90.x`, and initial `epw.x` contracts. The EPW
@@ -35,13 +38,15 @@ artifacts, observes captured streams, and verifies declared outputs. Calculator
 execution is fail-closed and requires explicit authorization; process success
 does not imply parent-state compatibility, numerical verification, convergence,
 or scientific validation. Workflow orchestration, campaigns, recipes, and
-scientific acceptance policy do not belong here.
+scientific acceptance policy do not belong in the Quantum ESPRESSO integration
+package.
 
 `projectkoios.integrations.wannier90` authenticates and parses retained native
 Wannier90 text artifacts without filesystem access or calculator execution.
-The inward simulation namespace never imports this outward integration.
-Workflow orchestration, calculator execution, convergence campaigns, recipes,
-and scientific acceptance policy do not belong in the parser bundle.
+The protected simulation core and owner-specific workflow layer never import
+this outward integration. Workflow orchestration, calculator execution,
+convergence campaigns, recipes, and scientific acceptance policy do not belong
+in the parser bundle.
 
 ## Execution-independent provider example
 
@@ -100,9 +105,6 @@ python3.14 -m venv .venv
 .venv/bin/python -m pytest -q
 .venv/bin/python -m ruff check .
 .venv/bin/python -m ruff format --check src/python tests
-MYPYPATH=src/python .venv/bin/python -m mypy --strict \
-  src/python/projectkoios/simulations \
-  src/python/projectkoios/simulation_workflows \
-  src/python/projectkoios/integrations
+.venv/bin/python -m mypy
 .venv/bin/python -m build --wheel
 ```
