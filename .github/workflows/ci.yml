@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository history
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.14"
+
+      - name: Install Python dependencies
+        env:
+          PIP_CONFIG_FILE: /dev/null
+          PIP_DISABLE_PIP_VERSION_CHECK: "1"
+        run: |
+          printf '%s\n' \
+            'projectkoios-physkit @ git+https://github.com/eragasa/projectkoios-physkit.git@83fefa15205b2975b0b23abfb10d73d692d924b4' \
+            > "$RUNNER_TEMP/constraints.txt"
+          python -m pip install \
+            --index-url https://pypi.org/simple \
+            --constraint "$RUNNER_TEMP/constraints.txt" \
+            ".[development]"
+
+      - name: Run tests
+        run: python -m pytest -q
+
+      - name: Check formatting
+        run: python -m ruff format --check src/python tests
+
+      - name: Run lint checks
+        run: python -m ruff check .
+
+      - name: Run strict type checks
+        run: python -m mypy
+
+      - name: Build reproducible wheel
+        run: |
+          export SOURCE_DATE_EPOCH="$(git show -s --format=%ct HEAD)"
+          rm -rf "$RUNNER_TEMP/wheel-a" "$RUNNER_TEMP/wheel-b"
+          python -m build --wheel --outdir "$RUNNER_TEMP/wheel-a"
+          python -m build --wheel --outdir "$RUNNER_TEMP/wheel-b"
+          shopt -s nullglob
+          wheel_a=("$RUNNER_TEMP/wheel-a"/*.whl)
+          wheel_b=("$RUNNER_TEMP/wheel-b"/*.whl)
+          test "${#wheel_a[@]}" -eq 1
+          test "${#wheel_b[@]}" -eq 1
+          digest_a="$(sha256sum "${wheel_a[0]}" | cut -d ' ' -f 1)"
+          digest_b="$(sha256sum "${wheel_b[0]}" | cut -d ' ' -f 1)"
+          printf 'wheel SHA-256: %s\n' "$digest_a"
+          test "$digest_a" = "$digest_b"
