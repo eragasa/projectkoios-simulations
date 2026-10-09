@@ -9,3 +9,9 @@ are provided in the licenses directory and THIRD_PARTY_NOTICES.md.
 The execution-independent Wannier90 native-artifact parsers were extracted from
 ksdft2effmass under Apache-2.0. Generic quantity contracts remain owned by and
 are imported from PhysKit under its retained MIT license.
+
+The reusable simulation-workflow capability code and documentation were
+migrated from Project Koios Applications under Apache-2.0 and explicit
+sole-rightsholder authorization. Their exact source identities, namespace
+adaptation, and deferred provider/example closure are recorded in TRANSFER.toml
+and docs/provenance/deferred-provider-example-main-416be52.tsv.

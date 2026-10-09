@@ -3,13 +3,11 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
-SOURCE_ROOT = (
-    Path(__file__).resolve().parents[2]
-    / "src"
-    / "python"
-    / "projectkoios"
-    / "simulations"
+PROJECTKOIOS_ROOT = (
+    Path(__file__).resolve().parents[2] / "src" / "python" / "projectkoios"
 )
+SOURCE_ROOT = PROJECTKOIOS_ROOT / "simulations"
+SIMULATION_WORKFLOWS_ROOT = PROJECTKOIOS_ROOT / "simulation_workflows"
 
 
 def _projectkoios_imports(path: Path) -> tuple[str, ...]:
@@ -75,5 +73,39 @@ def test_neutral_simulations_import_only_neutral_or_inward_namespaces() -> None:
                 for root in allowed_roots
             ):
                 invalid.append((path.relative_to(SOURCE_ROOT), imported_name))
+
+    assert invalid == []
+
+
+def test_simulation_workflows_import_only_workflow_and_neutral_namespaces() -> None:
+    invalid: list[tuple[Path, str]] = []
+    allowed_roots = (
+        "projectkoios.simulations",
+        "projectkoios.simulation_workflows",
+    )
+
+    for path in SIMULATION_WORKFLOWS_ROOT.rglob("*.py"):
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        for node in ast.walk(tree):
+            imported_names: tuple[str, ...] = ()
+            if isinstance(node, ast.Import):
+                imported_names = tuple(alias.name for alias in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.level == 0:
+                imported_names = (node.module or "",)
+            for imported_name in imported_names:
+                if imported_name != "projectkoios" and not imported_name.startswith(
+                    "projectkoios."
+                ):
+                    continue
+                if not any(
+                    imported_name == root or imported_name.startswith(f"{root}.")
+                    for root in allowed_roots
+                ):
+                    invalid.append(
+                        (
+                            path.relative_to(SIMULATION_WORKFLOWS_ROOT),
+                            imported_name,
+                        )
+                    )
 
     assert invalid == []

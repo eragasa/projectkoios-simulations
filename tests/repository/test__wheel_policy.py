@@ -11,6 +11,8 @@ PROJECTKOIOS_ROOT = PYTHON_ROOT / "projectkoios"
 EXPECTED_PACKAGE_INCLUDES = (
     "projectkoios.simulations",
     "projectkoios.simulations.*",
+    "projectkoios.simulation_workflows",
+    "projectkoios.simulation_workflows.*",
     "projectkoios.integrations",
     "projectkoios.integrations.*",
     "projectkoios.adapters",
@@ -18,11 +20,13 @@ EXPECTED_PACKAGE_INCLUDES = (
 )
 OWNED_NAMESPACE_PREFIXES = (
     "projectkoios.simulations",
+    "projectkoios.simulation_workflows",
     "projectkoios.integrations",
     "projectkoios.adapters",
 )
 EXPECTED_PACKAGE_DATA = {
     "projectkoios.simulations": ["py.typed"],
+    "projectkoios.simulation_workflows": ["py.typed"],
     "projectkoios.integrations": ["py.typed"],
     "projectkoios.integrations.wannier90": ["provenance.json"],
 }
@@ -33,7 +37,7 @@ def _pyproject() -> dict[str, Any]:
         return tomllib.load(stream)
 
 
-def test_wheel_discovery_declares_neutral_and_outward_namespaces() -> None:
+def test_wheel_discovery_declares_owned_namespace_directions() -> None:
     configuration = _pyproject()["tool"]["setuptools"]
 
     assert configuration["packages"]["find"] == {
@@ -62,3 +66,47 @@ def test_current_wheel_packages_are_limited_to_owned_namespace_directions() -> N
         )
         for package_name in package_names
     )
+
+
+def test_replay_overlay_has_one_exclusive_package_shape() -> None:
+    workflow_root = PROJECTKOIOS_ROOT / "simulation_workflows" / "pw_dft_scf"
+    replay_root = workflow_root / "convergence" / "replay"
+    expected_modules = {
+        "__init__.py",
+        "action.py",
+        "error.py",
+        "evidence.py",
+        "identity.py",
+        "request.py",
+        "result.py",
+    }
+
+    assert {path.name for path in replay_root.glob("*.py")} == expected_modules
+    assert not (workflow_root / "replay.py").exists()
+    assert not (
+        REPOSITORY_ROOT / "tests/projectkoios/simulation_workflows/pw_dft_scf/replay/"
+        "test__PwDftScfConvergenceReplayer.py"
+    ).exists()
+    assert (
+        REPOSITORY_ROOT / "tests/projectkoios/simulation_workflows/pw_dft_scf/replay/"
+        "test__PwDftScfConvergenceReplayActionizer.py"
+    ).is_file()
+    assert not (
+        REPOSITORY_ROOT
+        / "docs/architecture/projectkoios/simulation_workflows/pw_dft_scf/"
+        "replay/index.md"
+    ).exists()
+    assert (
+        REPOSITORY_ROOT
+        / "docs/architecture/projectkoios/simulation_workflows/pw_dft_scf/"
+        "convergence/replay/index.md"
+    ).is_file()
+
+    source_text = "\n".join(
+        path.read_text(encoding="utf-8") for path in workflow_root.rglob("*.py")
+    )
+    assert "PwDftScfConvergenceReplayer" not in source_text
+    assert "projectkoios.simulation_workflows.pw-dft-scf.convergence-replay" not in (
+        source_text
+    )
+    assert "projectkoios.applications.pw-dft-scf.convergence-replay" in source_text

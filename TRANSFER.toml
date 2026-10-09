@@ -524,3 +524,100 @@ source = "wannier90-3.1.0/examples/example11/silicon.pw2wan"
 target = "input/silicon.pw2wan"
 sha256 = "ee38dd37e405914e638fe42aa6ca13357fcf33a2d9ca22973f9cc25a2e294941"
 byte_size = 148
+
+[[extractions]]
+component = "projectkoios.simulation_workflows"
+status = "main-capability-migration-with-replay-overlay"
+source_repository = "https://github.com/eragasa/projectkoios-applications"
+source_commit = "416be52d539bfbffdbc8a27bd8e13de65404821b"
+source_tree = "de6257c720fa73caff21b393af4a3fb4858fd617"
+source_transfer_manifest_path = "TRANSFER.toml"
+source_transfer_manifest_blob = "193d76ce48bb42f82c0aaa79ea4744bf7858d5bc"
+namespace_from = "projectkoios.applications"
+namespace_to = "projectkoios.simulation_workflows"
+copy_rule = "Byte-for-byte except namespace/import paths and destination documentation and package metadata."
+source_file_count = 21
+post_overlay_source_file_count = 27
+typing_marker_count = 1
+test_module_count = 10
+test_support_file_count = 1
+test_resource_file_count = 1
+documentation_file_count = 54
+deferred_provider_example_file_count = 55
+deferred_provider_example_manifest = "docs/provenance/deferred-provider-example-main-416be52.tsv"
+deferred_provider_example_manifest_sha256 = "a941ad9efec74067fcf36dc80e05cc11834dd5a59be75c16f38ad61ad375c87f"
+replacement_overlay_commit = "7b687fb23b9877b744bfba3455040db2cbf94292"
+replacement_overlay_parent = "416be52d539bfbffdbc8a27bd8e13de65404821b"
+replacement_overlay_tree = "0e7c07e76d932fb3f5efc173d0835a9f8e7ba8bc"
+replacement_overlay_delta_path_count = 17
+replacement_overlay_capability_path_count = 14
+replacement_overlay_deferred_provider_example_path_count = 1
+replacement_overlay_source_build_inventory_path_count = 2
+replacement_overlay_manifest = "docs/provenance/replay-7b687fb-delta-manifest.tsv"
+replacement_overlay_manifest_sha256 = "6728fcba4f20c39642f3958a08ac5c2da9aaa7a253785fcfba8c545ca8078804"
+replacement_overlay_stable_action_identity = "projectkoios.applications.pw-dft-scf.convergence-replay"
+replacement_overlay_applied = true
+calculator_execution_performed = false
+behavioral_conformance_claimed_from_provenance = false
+scientific_validation_claimed = false
+summary = "Migrated reusable SCF and relaxation workflow capabilities wholesale into a sibling namespace, then applied the mutually exclusive runtime-neutral replay replacement while preserving its stable action identity; the provider/example closure remains deferred."
+
+[[extractions.subtrees]]
+role = "SCF implementation"
+path = "src/python/projectkoios/applications/pw_dft_scf"
+git_tree = "600435334b685ebb59c1e2a576c8562a3645c650"
+target = "src/python/projectkoios/simulation_workflows/pw_dft_scf"
+
+[[extractions.subtrees]]
+role = "relaxation implementation"
+path = "src/python/projectkoios/applications/pw_dft_relaxation"
+git_tree = "49864081f1bb3b830e8871953ffc0b5d4c81bf36"
+target = "src/python/projectkoios/simulation_workflows/pw_dft_relaxation"
+
+[[extractions.subtrees]]
+role = "SCF tests"
+path = "tests/projectkoios/applications/pw_dft_scf"
+git_tree = "fd2015353c5e4d5bfad7acca6d1fc5055372c777"
+target = "tests/projectkoios/simulation_workflows/pw_dft_scf"
+
+[[extractions.subtrees]]
+role = "relaxation tests"
+path = "tests/projectkoios/applications/pw_dft_relaxation"
+git_tree = "379a3d9484b93fef09ebfdd1e7bf9f2e900d136a"
+target = "tests/projectkoios/simulation_workflows/pw_dft_relaxation"
+
+[[extractions.subtrees]]
+role = "SCF documentation"
+path = "docs/architecture/projectkoios/applications/pw_dft_scf"
+git_tree = "dcc982dd429d69a1207976ba1213bb81f9ef9a01"
+target = "docs/architecture/projectkoios/simulation_workflows/pw_dft_scf"
+
+[[extractions.subtrees]]
+role = "relaxation documentation"
+path = "docs/architecture/projectkoios/applications/pw_dft_relaxation"
+git_tree = "06719ae631cf860ddf322985ca5e3e01d7c4ba78"
+target = "docs/architecture/projectkoios/simulation_workflows/pw_dft_relaxation"
+
+[[extractions.files]]
+role = "optional dependency guard"
+path = "src/python/projectkoios/applications/_optional_dependencies.py"
+git_blob = "78d4df81be60d6ba3b8fa17f383181bc07728a3b"
+target = "src/python/projectkoios/simulation_workflows/_optional_dependencies.py"
+
+[[extractions.files]]
+role = "typing marker"
+path = "src/python/projectkoios/applications/py.typed"
+git_blob = "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+target = "src/python/projectkoios/simulation_workflows/py.typed"
+
+[[extractions.files]]
+role = "test support"
+path = "tests/projectkoios/applications/support.py"
+git_blob = "41d8a974b415eaf1f1dab5a1a2cad14bc011e2ea"
+target = "tests/projectkoios/simulation_workflows/support.py"
+
+[[extractions.files]]
+role = "retained normalized replay fixture"
+path = "tests/fixtures/pw_dft_scf/qe-retained-convergence-normalized.json"
+git_blob = "ada12ab4f88ac2ee2c40e08096fac4e1c48e0129"
+target = "tests/fixtures/pw_dft_scf/qe-retained-convergence-normalized.json"

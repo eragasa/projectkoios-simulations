@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "projectkoios-simulations"
 version = "0.1.0.dev0"
-description = "Calculator-neutral simulation contracts for Project Koios"
+description = "Simulation contracts and reusable simulation workflows for Project Koios"
 readme = "README.md"
 requires-python = ">=3.14"
 license = "Apache-2.0"
@@ -39,6 +39,8 @@ where = ["src/python"]
 include = [
     "projectkoios.simulations",
     "projectkoios.simulations.*",
+    "projectkoios.simulation_workflows",
+    "projectkoios.simulation_workflows.*",
     "projectkoios.integrations",
     "projectkoios.integrations.*",
     "projectkoios.adapters",
@@ -48,6 +50,7 @@ namespaces = true
 
 [tool.setuptools.package-data]
 "projectkoios.simulations" = ["py.typed"]
+"projectkoios.simulation_workflows" = ["py.typed"]
 "projectkoios.integrations" = ["py.typed"]
 "projectkoios.integrations.wannier90" = ["provenance.json"]
 
@@ -55,7 +58,9 @@ namespaces = true
 testpaths = ["tests"]
 addopts = "--strict-markers"
 markers = [
+    "adversarial: malformed, unauthorized, or boundary-hostile cases",
     "integration: interaction between multiple components, files, or retained artifacts",
+    "property: deterministic bounded property cases",
     "software_verification: bounded software-contract evidence without scientific validation",
     "smoke: quick check that a non-calculator entry point performs its basic operation",
     "validation: opt-in numerical, statistical, or scientific validation",
@@ -77,6 +82,7 @@ strict = true
 explicit_package_bases = true
 files = [
     "src/python/projectkoios/simulations",
+    "src/python/projectkoios/simulation_workflows",
     "src/python/projectkoios/integrations",
 ]
 mypy_path = "src/python"

@@ -3,10 +3,12 @@
 `projectkoios-simulations` owns calculator-neutral simulation identities,
 execution records, density-functional-theory and pseudopotential contracts, and
 plane-wave SCF, NSCF, and structural-relaxation contracts under
-`projectkoios.simulations`. Outward provider integrations and adapters owned by
-this distribution live under `projectkoios.integrations` and
-`projectkoios.adapters`. Those namespaces may depend on
-`projectkoios.simulations`; the neutral namespace must not import them.
+`projectkoios.simulations`. Reusable SCF and relaxation capability composition
+lives in the sibling `projectkoios.simulation_workflows` namespace. Outward
+provider integrations and adapters owned by this distribution live under
+`projectkoios.integrations` and `projectkoios.adapters`. The workflow and
+provider namespaces may depend on `projectkoios.simulations`; the neutral
+namespace must not import them.
 
 The VASP integration provides native INCAR, KPOINTS, POSCAR, and OUTCAR
 representations plus projections to calculator-neutral simulation contracts. It
@@ -14,9 +16,10 @@ does not select pseudopotentials, authorize calculator execution, claim that
 projected inputs are runnable, or establish numerical or scientific validation.
 The neutral band contracts include the explicitly classified standard primitive
 cells, special reciprocal points, and path topologies of Setyawan and Curtarolo
-[3]. They do not infer space groups or authorize calculator execution. Workflow
-orchestration, convergence campaigns, recipes, and scientific acceptance policy
-do not belong under `projectkoios.simulations`.
+[3]. They do not infer space groups or authorize calculator execution. Reusable
+convergence, comparison, recipe, replay, and workflow-definition contracts live
+under `projectkoios.simulation_workflows`; they do not belong under
+`projectkoios.simulations`.
 
 The LAMMPS package is a provenance-bound reconstruction scaffold for inspecting
 retained templates and data text and for rendering bounded data artifacts. It
@@ -58,8 +61,9 @@ The original software lineage comes from the historical
 [PyPosPack](https://github.com/eragasa/pypospack) projects. Their notices and
 license texts remain available in [`licenses/`](licenses/) and
 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The extractions from
-`projectkoios-frankenstein` and the provenance-bound Wannier90 parser donor are
-bound to exact commits and Git trees in [`TRANSFER.toml`](TRANSFER.toml).
+`projectkoios-frankenstein`, the provenance-bound Wannier90 parser donor, and
+the reusable workflow migration from `projectkoios-applications` are bound to
+exact commits and Git trees in [`TRANSFER.toml`](TRANSFER.toml).
 Installed Wannier parser provenance is available as the machine-readable
 package resource `projectkoios.integrations.wannier90/provenance.json`.
 
@@ -97,6 +101,8 @@ python3.14 -m venv .venv
 .venv/bin/python -m ruff check .
 .venv/bin/python -m ruff format --check src/python tests
 MYPYPATH=src/python .venv/bin/python -m mypy --strict \
-  src/python/projectkoios/simulations src/python/projectkoios/integrations
+  src/python/projectkoios/simulations \
+  src/python/projectkoios/simulation_workflows \
+  src/python/projectkoios/integrations
 .venv/bin/python -m build --wheel
 ```
