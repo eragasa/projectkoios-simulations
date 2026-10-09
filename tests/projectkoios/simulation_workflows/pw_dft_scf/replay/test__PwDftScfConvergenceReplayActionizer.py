@@ -11,10 +11,21 @@ from projectkoios.simulation_workflows.pw_dft_scf.convergence.base import (
 from projectkoios.simulation_workflows.pw_dft_scf.convergence.policy import (
     PwDftScfConvergencePolicy,
 )
-from projectkoios.simulation_workflows.pw_dft_scf.replay import (
-    PwDftScfConvergenceReplayer,
+from projectkoios.simulation_workflows.pw_dft_scf.convergence.replay.action import (
+    PwDftScfConvergenceReplayActionizer,
+)
+from projectkoios.simulation_workflows.pw_dft_scf.convergence.replay.error import (
     PwDftScfConvergenceReplayError,
+)
+from projectkoios.simulation_workflows.pw_dft_scf.convergence.replay.evidence import (
     PwDftScfConvergenceReplayEvidence,
+)
+from projectkoios.simulation_workflows.pw_dft_scf.convergence.replay.identity import (
+    PW_DFT_SCF_CONVERGENCE_REPLAY_ACTION_ID,
+    PW_DFT_SCF_CONVERGENCE_REPLAY_ACTION_VERSION,
+)
+from projectkoios.simulation_workflows.pw_dft_scf.convergence.replay.request import (
+    PwDftScfConvergenceReplayRequest,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
 
@@ -37,11 +48,43 @@ _EXTENSION_COORDINATES = tuple(
 )
 
 
-class PwDftScfConvergenceReplayerTest(unittest.TestCase):
+class PwDftScfConvergenceReplayActionizerTest(unittest.TestCase):
+    def test_typed_action_has_exact_identity(self) -> None:
+        evidence = _evidence()
+        request = PwDftScfConvergenceReplayRequest(evidence=evidence)
+
+        action_result = PwDftScfConvergenceReplayActionizer().action(request=request)
+
+        self.assertEqual(
+            request.action_identity,
+            PW_DFT_SCF_CONVERGENCE_REPLAY_ACTION_ID,
+        )
+        self.assertEqual(
+            request.action_version,
+            PW_DFT_SCF_CONVERGENCE_REPLAY_ACTION_VERSION,
+        )
+        self.assertEqual(action_result.action_identity, request.action_identity)
+        self.assertEqual(action_result.action_version, request.action_version)
+
+    @pytest.mark.adversarial
+    def test_actionizer_rejects_an_untyped_evidence_argument(self) -> None:
+        with self.assertRaisesRegex(
+            TypeError,
+            "request must be PwDftScfConvergenceReplayRequest",
+        ):
+            PwDftScfConvergenceReplayActionizer().action(
+                request=_evidence(),  # type: ignore[arg-type]
+            )
+
     @pytest.mark.property
     def test_replays_extension_then_acceptance_deterministically(self) -> None:
-        forward = PwDftScfConvergenceReplayer().replay(_evidence())
-        reversed_order = PwDftScfConvergenceReplayer().replay(_evidence(reverse=True))
+        actionizer = PwDftScfConvergenceReplayActionizer()
+        forward = actionizer.action(
+            request=PwDftScfConvergenceReplayRequest(evidence=_evidence())
+        )
+        reversed_order = actionizer.action(
+            request=PwDftScfConvergenceReplayRequest(evidence=_evidence(reverse=True))
+        )
 
         self.assertEqual(forward.observation_count, 25)
         self.assertEqual(
@@ -67,7 +110,9 @@ class PwDftScfConvergenceReplayerTest(unittest.TestCase):
             PwDftScfConvergenceReplayError,
             "do not match",
         ):
-            PwDftScfConvergenceReplayer().replay(incomplete)
+            PwDftScfConvergenceReplayActionizer().action(
+                request=PwDftScfConvergenceReplayRequest(evidence=incomplete)
+            )
 
     @pytest.mark.adversarial
     def test_rejects_overlapping_initial_and_extension_coordinates(self) -> None:

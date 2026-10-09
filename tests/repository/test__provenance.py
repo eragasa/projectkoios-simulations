@@ -209,14 +209,31 @@ def test_simulation_workflow_migration_is_bound_to_exact_source_objects() -> Non
     ]
     assert (
         extraction["source_file_count"],
+        extraction["post_overlay_source_file_count"],
         extraction["typing_marker_count"],
         extraction["test_module_count"],
         extraction["test_support_file_count"],
         extraction["test_resource_file_count"],
         extraction["documentation_file_count"],
         extraction["deferred_provider_example_file_count"],
-    ) == (21, 1, 10, 1, 1, 54, 55)
-    assert extraction["replacement_overlay_applied"] is False
+    ) == (21, 27, 1, 10, 1, 1, 54, 55)
+    assert extraction["replacement_overlay_applied"] is True
+    assert extraction["replacement_overlay_commit"] == (
+        "7b687fb23b9877b744bfba3455040db2cbf94292"
+    )
+    assert extraction["replacement_overlay_parent"] == extraction["source_commit"]
+    assert extraction["replacement_overlay_tree"] == (
+        "0e7c07e76d932fb3f5efc173d0835a9f8e7ba8bc"
+    )
+    assert (
+        extraction["replacement_overlay_delta_path_count"],
+        extraction["replacement_overlay_capability_path_count"],
+        extraction["replacement_overlay_deferred_provider_example_path_count"],
+        extraction["replacement_overlay_source_build_inventory_path_count"],
+    ) == (17, 14, 1, 2)
+    assert extraction["replacement_overlay_stable_action_identity"] == (
+        "projectkoios.applications.pw-dft-scf.convergence-replay"
+    )
 
     manifest = REPOSITORY_ROOT / extraction["deferred_provider_example_manifest"]
     assert (
@@ -224,6 +241,13 @@ def test_simulation_workflow_migration_is_bound_to_exact_source_objects() -> Non
         == (extraction["deferred_provider_example_manifest_sha256"])
     )
     assert len(manifest.read_text(encoding="utf-8").splitlines()) == 56
+
+    overlay_manifest = REPOSITORY_ROOT / extraction["replacement_overlay_manifest"]
+    assert (
+        hashlib.sha256(overlay_manifest.read_bytes()).hexdigest()
+        == (extraction["replacement_overlay_manifest_sha256"])
+    )
+    assert len(overlay_manifest.read_text(encoding="utf-8").splitlines()) == 18
 
 
 def test_preserved_historical_license_files_have_declared_identities() -> None:

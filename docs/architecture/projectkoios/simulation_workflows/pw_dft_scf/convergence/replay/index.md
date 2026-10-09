@@ -1,7 +1,7 @@
 # PW-DFT SCF convergence replay
 
-`PwDftScfConvergenceReplayer` owns deterministic application-policy replay over
-`PwDftScfConvergenceReplayEvidence`. The evidence contract carries normalized
+`PwDftScfConvergenceReplayActionizer` owns deterministic application-policy
+replay over `PwDftScfConvergenceReplayEvidence`. The evidence contract carries normalized
 energy observations, provider identity, source-evidence reference, and the
 bounded application policy. Native parser behavior and raw artifacts remain in
 the provider owner.

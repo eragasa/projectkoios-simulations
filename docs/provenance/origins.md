@@ -32,9 +32,18 @@ and its exact-provider probe remain authoritative in `projectkoios-applications`
 until a separate provider/example migration. Their 55 exact source paths, Git
 blob identities, SHA-256 digests, and byte counts are retained in
 [`deferred-provider-example-main-416be52.tsv`](deferred-provider-example-main-416be52.tsv).
-The mutually exclusive replay replacement at commit
-`7b687fb23b9877b744bfba3455040db2cbf94292` was not applied in this main
-migration.
+The mutually exclusive replay replacement from child commit
+`7b687fb23b9877b744bfba3455040db2cbf94292` (root tree
+`0e7c07e76d932fb3f5efc173d0835a9f8e7ba8bc`) was applied afterward as a
+separate overlay. Fourteen capability paths replace the former replayer with a
+typed runtime-neutral Actionizer contract. The provider-example change remains
+deferred, while the two Applications-specific source-distribution inventory
+paths are represented by destination build-inventory and provenance checks
+rather than transplanted. The exact 17-path source delta is retained in
+[`replay-7b687fb-delta-manifest.tsv`](replay-7b687fb-delta-manifest.tsv).
+The stable action identity remains
+`projectkoios.applications.pw-dft-scf.convergence-replay`; preserving that
+literal avoids changing the identity of the migrated operation.
 
 No calculator was executed during migration. Source provenance establishes
 transfer identity only; it does not establish behavioral conformance, numerical

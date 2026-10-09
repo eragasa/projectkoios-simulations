@@ -527,7 +527,7 @@ byte_size = 148
 
 [[extractions]]
 component = "projectkoios.simulation_workflows"
-status = "main-capability-migration"
+status = "main-capability-migration-with-replay-overlay"
 source_repository = "https://github.com/eragasa/projectkoios-applications"
 source_commit = "416be52d539bfbffdbc8a27bd8e13de65404821b"
 source_tree = "de6257c720fa73caff21b393af4a3fb4858fd617"
@@ -537,6 +537,7 @@ namespace_from = "projectkoios.applications"
 namespace_to = "projectkoios.simulation_workflows"
 copy_rule = "Byte-for-byte except namespace/import paths and destination documentation and package metadata."
 source_file_count = 21
+post_overlay_source_file_count = 27
 typing_marker_count = 1
 test_module_count = 10
 test_support_file_count = 1
@@ -546,11 +547,20 @@ deferred_provider_example_file_count = 55
 deferred_provider_example_manifest = "docs/provenance/deferred-provider-example-main-416be52.tsv"
 deferred_provider_example_manifest_sha256 = "a941ad9efec74067fcf36dc80e05cc11834dd5a59be75c16f38ad61ad375c87f"
 replacement_overlay_commit = "7b687fb23b9877b744bfba3455040db2cbf94292"
-replacement_overlay_applied = false
+replacement_overlay_parent = "416be52d539bfbffdbc8a27bd8e13de65404821b"
+replacement_overlay_tree = "0e7c07e76d932fb3f5efc173d0835a9f8e7ba8bc"
+replacement_overlay_delta_path_count = 17
+replacement_overlay_capability_path_count = 14
+replacement_overlay_deferred_provider_example_path_count = 1
+replacement_overlay_source_build_inventory_path_count = 2
+replacement_overlay_manifest = "docs/provenance/replay-7b687fb-delta-manifest.tsv"
+replacement_overlay_manifest_sha256 = "6728fcba4f20c39642f3958a08ac5c2da9aaa7a253785fcfba8c545ca8078804"
+replacement_overlay_stable_action_identity = "projectkoios.applications.pw-dft-scf.convergence-replay"
+replacement_overlay_applied = true
 calculator_execution_performed = false
 behavioral_conformance_claimed_from_provenance = false
 scientific_validation_claimed = false
-summary = "Migrated reusable SCF and relaxation workflow capabilities wholesale into a sibling namespace while preserving neutral simulation and outward provider boundaries; the provider/example closure remains deferred."
+summary = "Migrated reusable SCF and relaxation workflow capabilities wholesale into a sibling namespace, then applied the mutually exclusive runtime-neutral replay replacement while preserving its stable action identity; the provider/example closure remains deferred."
 
 [[extractions.subtrees]]
 role = "SCF implementation"

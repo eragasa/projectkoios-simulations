@@ -14,9 +14,14 @@ from projectkoios.simulation_workflows.pw_dft_scf.convergence.base import (
 from projectkoios.simulation_workflows.pw_dft_scf.convergence.policy import (
     PwDftScfConvergencePolicy,
 )
-from projectkoios.simulation_workflows.pw_dft_scf.replay import (
-    PwDftScfConvergenceReplayer,
+from projectkoios.simulation_workflows.pw_dft_scf.convergence.replay.action import (
+    PwDftScfConvergenceReplayActionizer,
+)
+from projectkoios.simulation_workflows.pw_dft_scf.convergence.replay.evidence import (
     PwDftScfConvergenceReplayEvidence,
+)
+from projectkoios.simulation_workflows.pw_dft_scf.convergence.replay.request import (
+    PwDftScfConvergenceReplayRequest,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
 
@@ -55,7 +60,9 @@ class RetainedQeEvidenceReplayTest(unittest.TestCase):
             ),
         )
 
-        result = PwDftScfConvergenceReplayer().replay(evidence)
+        result = PwDftScfConvergenceReplayActionizer().action(
+            request=PwDftScfConvergenceReplayRequest(evidence=evidence)
+        )
 
         self.assertEqual(result.observation_count, 36)
         self.assertEqual(len(result.initial_extension.coordinates), 6)
