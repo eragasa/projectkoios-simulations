@@ -1,6 +1,8 @@
 # Workflow definition
 
-`PwDftScfWorkflowDefinition` names the fixed lifecycle. `pw_dft_scf_workflow_definition` constructs it.
+`PwDftScfWorkflowDefinition` inventories the fixed lifecycle names.
+`pw_dft_scf_workflow_definition()` constructs that detached inventory; the
+complete executable topology remains authoritative in `pw_dft_scf.cpn.net`.
 
 ## Ownership boundary
 

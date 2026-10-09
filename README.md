@@ -7,8 +7,9 @@ owner-specific `projectkoios.simulations.workflows` layer. Outward provider
 integrations and adapters remain under `projectkoios.integrations` and
 `projectkoios.adapters`. The protected core never imports workflows or
 providers; the workflow layer may import core contracts but never provider
-implementations. Its optional local SNAKES CPN is isolated pending extraction
-by WORKFLOWS and carries no calculator authority.
+implementations. Its optional local SNAKES `PetriNet` is the authoritative SCF
+executable topology pending extraction by WORKFLOWS and carries no calculator
+authority.
 The architecture contract is documented in
 [`docs/architecture/projectkoios/simulations/`](docs/architecture/projectkoios/simulations/index.md).
 Repository-local workflow tools live under `tools/pw_dft_scf`. Compact reviewed
@@ -23,9 +24,9 @@ projected inputs are runnable, or establish numerical or scientific validation.
 The neutral band contracts include the explicitly classified standard primitive
 cells, special reciprocal points, and path topologies of Setyawan and Curtarolo
 [3]. They do not infer space groups or authorize calculator execution. Reusable
-convergence, comparison, recipe, replay, and workflow-definition contracts live
-under `projectkoios.simulations.workflows` without a compatibility facade at
-the former sibling namespace.
+convergence, comparison, recipe, replay, workflow inventories, and the local
+SCF Petri net live under `projectkoios.simulations.workflows` without a
+compatibility facade at the former sibling namespace.
 
 The LAMMPS package is a provenance-bound reconstruction scaffold for inspecting
 retained templates and data text and for rendering bounded data artifacts. It

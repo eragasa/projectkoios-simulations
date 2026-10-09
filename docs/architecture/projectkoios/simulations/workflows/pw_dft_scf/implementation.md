@@ -13,10 +13,10 @@
 - `convergence/comparison.py` — like-for-like convergence-test comparison.
 - `convergence/replay/` — typed replay identity, request, evidence, actionizer,
   result, and error contracts.
-- `workflow/base.py`, `definition.py`, and `facade.py` — status, topology source,
-  and engine-hiding interface.
-- `cpn/net.py`, `runtime.py`, and `workflow.py` — optional local SNAKES net,
-  bounded firing wrapper, and facade implementation.
+- `workflow/base.py`, `definition.py`, and `facade.py` — status, Petri-net name
+  inventory, and engine-hiding interface.
+- `cpn/net.py`, `runtime.py`, and `workflow.py` — authoritative local SNAKES
+  topology, bounded firing wrapper, and facade implementation.
 
 ## Contract preservation
 
@@ -51,7 +51,8 @@ Direct tests cover:
 - controller extension, acceptance, and budget exhaustion;
 - convergence-test comparison;
 - replay identity, evidence, action, results, errors, and retained QE evidence;
-- topology source declarations; and
+- workflow-shape name inventories;
+- conformance between the SCF inventory and authoritative Petri-net names; and
 - the local CPN workflow and eight-campaign rendering in their production/tool
   test suites.
 

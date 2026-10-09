@@ -47,6 +47,20 @@ because it identifies a domain operation rather than a Python module.
 No historical import alias, re-export, deprecation proxy, facade, or namespace
 shim is permitted.
 
+## Petri-net authority
+
+`pw_dft_scf/cpn/net.py` is the byte-identical Applications `PetriNet` source and
+is authoritative for the executable SCF topology. Its `Place`, `Transition`,
+`add_input`, and `add_output` calls define typed places, transitions, arcs,
+guards, and token expressions. `PwDftScfWorkflowDefinition` intentionally
+contains only the corresponding name inventory so a second partial topology
+cannot silently compete with the net.
+
+A conformance test requires the inventory's net name, place names, and
+transition names to equal the SNAKES net. WORKFLOWS extraction may replace this
+arrangement only through a separately reviewed runtime-neutral binding and
+canonical-plan contract.
+
 ## Tools, examples, and optional engines
 
 Reusable local CPN code resides in the wheel-carried `pw_dft_scf.cpn` subtree.

@@ -1,6 +1,7 @@
 # Plane-wave DFT SCF workflow
 
-Fixed lifecycle definition and engine-hiding façade with explicit start and terminal places.
+Petri-net name inventory and engine-hiding façade with explicit start and
+terminal places. The executable topology remains in `pw_dft_scf.cpn.net`.
 
 ## Ownership boundary
 

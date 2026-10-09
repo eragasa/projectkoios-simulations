@@ -1,8 +1,8 @@
-# Relaxation workflow/CPN definition implementation
+# Relaxation workflow-shape definition implementation
 
 ## Source mapping
 
-This node mirrors `src/python/projectkoios/simulations/workflows/pw_dft_relaxation/workflow/__init__.py` and its sibling modules.
+This node mirrors `src/python/projectkoios/simulations/workflows/pw_dft_relaxation/workflow/__init__.py` and its sibling modules. The definition is a name inventory, not an executable Petri net.
 
 ## Relocation contract
 

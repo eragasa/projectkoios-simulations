@@ -48,19 +48,23 @@ The replay contract is
 `projectkoios.applications.pw-dft-scf.convergence-replay`, version `1.0.0`.
 There is no parallel replayer facade or untyped entry point.
 
-## Workflow source
+## Workflow inventory and facade
 
-`PwDftScfWorkflowDefinition` names the required places and transitions for one
-SCF lifecycle. `PwDftScfWorkflowFacade` exposes typed pending actions, accepted
-events, status, and terminal outcome while hiding the selected engine. These
-are domain source contracts: a generic Workflow compiler and runtime retain
-ownership of canonical CPN plans and lifecycle state.
+`PwDftScfWorkflowDefinition` inventories the public place and transition names
+of one SCF lifecycle. It intentionally does not duplicate arcs, guards, or token
+expressions. `PwDftScfWorkflowFacade` exposes typed pending actions, accepted
+events, status, and terminal outcome while hiding the selected engine.
 
-## Local CPN, tools, and examples
+## Authoritative local Petri net
 
-The optional `cpn` subtree contains the local SNAKES facade implementation
-transferred from Applications pending later WORKFLOWS extraction. It consumes
-only neutral SCF domain values and never executes a calculator.
+`pw_dft_scf.cpn.net.build_dft_pw_scf_net()` is the complete executable topology
+transferred byte-for-byte from Applications. Its SNAKES `PetriNet` defines the
+typed places, transitions, input/output arcs, guards, and token expressions. A
+conformance test binds its name sets to `PwDftScfWorkflowDefinition`.
+
+The optional `cpn` subtree remains authoritative until WORKFLOWS extracts the
+engine adapter and defines its canonical runtime-neutral plan contract. It
+consumes only neutral SCF domain values and never executes a calculator.
 
 Repository tools under `tools/pw_dft_scf` may call public QE/VASP projection or
 parsing APIs. The compact example tree contains only reviewed declarations,

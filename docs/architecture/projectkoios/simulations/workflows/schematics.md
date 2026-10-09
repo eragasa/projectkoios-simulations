@@ -12,13 +12,13 @@ projectkoios.simulations.workflows
   |    +-- configuration and recipes
   |    +-- single-result comparison
   |    +-- convergence assessment/comparison/control/replay
-  |    +-- engine-neutral topology and facade
-  |    `-- optional local SNAKES CPN
+  |    +-- engine-neutral Petri-net name inventory and facade
+  |    `-- authoritative optional local SNAKES PetriNet
   |
   `-- pw_dft_relaxation
        +-- campaign and projection composition
        +-- external-authority-required handoff
-       `-- engine-neutral projection/handoff topology
+       `-- projection/handoff workflow-shape name inventory
 ```
 
 The arrow points inward. Protected core modules never import the workflow
@@ -59,22 +59,24 @@ neutral relaxation request + selected integration ID
 The handoff states that separate explicit external authority is required. It
 cannot start a calculator.
 
-## Compiler/runtime separation
+## Current Petri-net ownership and future extraction
 
 ```text
-simulation workflow owner                 generic Workflow owner
--------------------------                 ----------------------
-requests, results, policies        --->   compiler input
-source topology and guards         --->   canonical CPN plan
-pure domain actions                       transition occurrences
-scientific controller decisions           queues, leases, retries
-non-authorizing handoffs                  cancellation and delivery
-                                           execution authority
+projectkoios.simulations.workflows today       WORKFLOWS after extraction
+----------------------------------------       --------------------------
+typed domain requests/actions/results   --->   runtime-neutral bindings
+SCF SNAKES PetriNet topology            --->   extracted/compiled CPN plan
+  places + transitions                         transition occurrences
+  arcs + guards + token expressions            queues, leases, retries
+bounded in-process firing                       cancellation and delivery
+non-authorizing handoffs                        execution authority
 ```
 
-There is no reverse import from this package to a generic Workflow service or
-durable runtime. The temporary local SNAKES CPN is a bounded in-process engine
-adapter, not a queue, scheduler, or authority service.
+The SCF `PetriNet` is authoritative today. `PwDftScfWorkflowDefinition` is a
+conformance inventory of its names, not a second topology representation. There
+is no reverse import from this package to a generic Workflow service or durable
+runtime. The temporary SNAKES CPN is a bounded in-process engine adapter, not a
+queue, scheduler, or authority service.
 
 ## Tool and example boundary
 

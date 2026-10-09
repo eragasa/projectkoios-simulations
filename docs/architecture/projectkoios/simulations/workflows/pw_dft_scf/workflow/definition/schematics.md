@@ -2,12 +2,13 @@
 
 ## Contract flow
 
-`PwDftScfWorkflowDefinition` names the fixed lifecycle. `pw_dft_scf_workflow_definition` constructs it.
+`PwDftScfWorkflowDefinition` inventories the fixed lifecycle names.
+`pw_dft_scf_workflow_definition()` constructs it.
 
 ```text
-caller --> projectkoios.simulations.workflows.pw_dft_scf.workflow.definition --> typed domain value or decision
-             |
-             +--> protected projectkoios.simulations core contracts
+authoritative PetriNet --name conformance--> workflow definition inventory
+                                                      |
+caller ------------------------------------------------+
 ```
 
 ## Documented children
@@ -16,4 +17,8 @@ caller --> projectkoios.simulations.workflows.pw_dft_scf.workflow.definition -->
 
 ## Dependency and authority boundary
 
-`projectkoios.simulations.workflows.pw_dft_scf.workflow.definition` points inward only to the protected simulation core or to other owner workflow modules. It does not select a calculator provider, import `projectkoios.integrations`, discover an executable, grant execution authority, or own generic Workflow compiler/runtime state. Domain topology or guards described here remain owner source declarations; canonical CPN places, transitions, and plans remain compiler-owned.
+`projectkoios.simulations.workflows.pw_dft_scf.workflow.definition` does not
+select a calculator provider, import `projectkoios.integrations`, discover an
+executable, grant execution authority, or own generic Workflow lifecycle state.
+It is not a second topology: arcs, guards, and token expressions remain owned by
+the migrated SNAKES `PetriNet` pending WORKFLOWS extraction.
