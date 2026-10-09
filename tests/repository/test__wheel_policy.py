@@ -11,6 +11,8 @@ PROJECTKOIOS_ROOT = PYTHON_ROOT / "projectkoios"
 EXPECTED_PACKAGE_INCLUDES = (
     "projectkoios.simulations",
     "projectkoios.simulations.*",
+    "projectkoios.simulation_workflows",
+    "projectkoios.simulation_workflows.*",
     "projectkoios.integrations",
     "projectkoios.integrations.*",
     "projectkoios.adapters",
@@ -18,11 +20,13 @@ EXPECTED_PACKAGE_INCLUDES = (
 )
 OWNED_NAMESPACE_PREFIXES = (
     "projectkoios.simulations",
+    "projectkoios.simulation_workflows",
     "projectkoios.integrations",
     "projectkoios.adapters",
 )
 EXPECTED_PACKAGE_DATA = {
     "projectkoios.simulations": ["py.typed"],
+    "projectkoios.simulation_workflows": ["py.typed"],
     "projectkoios.integrations": ["py.typed"],
     "projectkoios.integrations.wannier90": ["provenance.json"],
 }
@@ -33,7 +37,7 @@ def _pyproject() -> dict[str, Any]:
         return tomllib.load(stream)
 
 
-def test_wheel_discovery_declares_neutral_and_outward_namespaces() -> None:
+def test_wheel_discovery_declares_owned_namespace_directions() -> None:
     configuration = _pyproject()["tool"]["setuptools"]
 
     assert configuration["packages"]["find"] == {

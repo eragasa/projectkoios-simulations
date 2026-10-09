@@ -42,6 +42,15 @@ license.
 - License SHA-256:
   `0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410`
 
+## Reusable simulation-workflow capabilities
+
+The migrated `projectkoios.simulation_workflows` modules contain no vendored
+third-party source. They reuse calculator-neutral contracts already distributed
+under `projectkoios.simulations`. Provider-dependent examples and their optional
+NumPy, Plotly, SNAKES, Quantum ESPRESSO, and VASP closure were not included in
+this migration; their exact deferred inventory is recorded in
+`docs/provenance/deferred-provider-example-main-416be52.tsv`.
+
 The commit and tree above identify the MIT-licensed PhysKit source reviewed
 during extraction; they are provenance identities, not installation constraints.
 The separately distributed Apache-2.0 projectkoios-physkit successor supplies

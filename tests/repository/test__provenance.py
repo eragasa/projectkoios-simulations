@@ -180,6 +180,52 @@ def test_lammps_extraction_is_bound_to_exact_recovery_trees() -> None:
     ]
 
 
+def test_simulation_workflow_migration_is_bound_to_exact_source_objects() -> None:
+    transfer = _transfer()
+    extraction = next(
+        item
+        for item in transfer["extractions"]
+        if item["component"] == "projectkoios.simulation_workflows"
+    )
+
+    assert extraction["source_commit"] == ("416be52d539bfbffdbc8a27bd8e13de65404821b")
+    assert extraction["source_tree"] == "de6257c720fa73caff21b393af4a3fb4858fd617"
+    assert extraction["source_transfer_manifest_blob"] == (
+        "193d76ce48bb42f82c0aaa79ea4744bf7858d5bc"
+    )
+    assert [item["git_tree"] for item in extraction["subtrees"]] == [
+        "600435334b685ebb59c1e2a576c8562a3645c650",
+        "49864081f1bb3b830e8871953ffc0b5d4c81bf36",
+        "fd2015353c5e4d5bfad7acca6d1fc5055372c777",
+        "379a3d9484b93fef09ebfdd1e7bf9f2e900d136a",
+        "dcc982dd429d69a1207976ba1213bb81f9ef9a01",
+        "06719ae631cf860ddf322985ca5e3e01d7c4ba78",
+    ]
+    assert [item["git_blob"] for item in extraction["files"]] == [
+        "78d4df81be60d6ba3b8fa17f383181bc07728a3b",
+        "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
+        "41d8a974b415eaf1f1dab5a1a2cad14bc011e2ea",
+        "ada12ab4f88ac2ee2c40e08096fac4e1c48e0129",
+    ]
+    assert (
+        extraction["source_file_count"],
+        extraction["typing_marker_count"],
+        extraction["test_module_count"],
+        extraction["test_support_file_count"],
+        extraction["test_resource_file_count"],
+        extraction["documentation_file_count"],
+        extraction["deferred_provider_example_file_count"],
+    ) == (21, 1, 10, 1, 1, 54, 55)
+    assert extraction["replacement_overlay_applied"] is False
+
+    manifest = REPOSITORY_ROOT / extraction["deferred_provider_example_manifest"]
+    assert (
+        hashlib.sha256(manifest.read_bytes()).hexdigest()
+        == (extraction["deferred_provider_example_manifest_sha256"])
+    )
+    assert len(manifest.read_text(encoding="utf-8").splitlines()) == 56
+
+
 def test_preserved_historical_license_files_have_declared_identities() -> None:
     transfer = _transfer()
 

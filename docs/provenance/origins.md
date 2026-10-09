@@ -2,15 +2,43 @@
 
 ## Maintained repository
 
-`projectkoios-simulations` is the maintained owner of the
-`projectkoios.simulations` namespace. The repository applies Apache-2.0 to its
-maintained code under explicit operator and rightsholder authority.
+`projectkoios-simulations` is the maintained owner of the inward
+`projectkoios.simulations` namespace and the sibling
+`projectkoios.simulation_workflows` capability namespace. The repository applies
+Apache-2.0 to its maintained code under explicit operator and rightsholder
+authority.
 
 The initial implementation was extracted from
 `projectkoios-frankenstein` commit
 `3eb562f2d6167ec20d6f2c892c517509a7abf283`. Exact source, test, and
 documentation Git trees and the namespace-only adaptation are recorded in
 [`../../TRANSFER.toml`](../../TRANSFER.toml).
+
+## Reusable simulation-workflow capability migration
+
+The reusable SCF and relaxation workflow capabilities under
+`projectkoios.simulation_workflows` were migrated from
+`projectkoios-applications` commit
+`416be52d539bfbffdbc8a27bd8e13de65404821b` (root tree
+`de6257c720fa73caff21b393af4a3fb4858fd617`). The migration copied the
+capability implementation, direct tests, retained normalized replay fixture,
+and architecture documentation wholesale. Adaptations were limited to the
+namespace and import paths plus destination documentation and package metadata.
+Exact implementation, test, and documentation tree identities are recorded in
+[`../../TRANSFER.toml`](../../TRANSFER.toml).
+
+The provider-dependent examples, their tests, the provider-fingerprint fixture,
+and its exact-provider probe remain authoritative in `projectkoios-applications`
+until a separate provider/example migration. Their 55 exact source paths, Git
+blob identities, SHA-256 digests, and byte counts are retained in
+[`deferred-provider-example-main-416be52.tsv`](deferred-provider-example-main-416be52.tsv).
+The mutually exclusive replay replacement at commit
+`7b687fb23b9877b744bfba3455040db2cbf94292` was not applied in this main
+migration.
+
+No calculator was executed during migration. Source provenance establishes
+transfer identity only; it does not establish behavioral conformance, numerical
+verification, scientific validation, or acceptance.
 
 ## Historical software lineage
 
