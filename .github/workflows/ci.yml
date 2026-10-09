@@ -52,12 +52,7 @@ jobs:
         run: python -m ruff check .
 
       - name: Run strict type checks
-        run: |
-          targets=(src/python/projectkoios/simulations)
-          if [[ -d src/python/projectkoios/simulation_workflows ]]; then
-            targets+=(src/python/projectkoios/simulation_workflows)
-          fi
-          MYPYPATH=src/python python -m mypy --strict "${targets[@]}"
+        run: python -m mypy
 
       - name: Build reproducible wheel
         run: |
