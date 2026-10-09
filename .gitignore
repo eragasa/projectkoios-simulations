@@ -8,3 +8,6 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+
+# Machine-local calculator and pseudopotential-library deployment
+/local-execution.toml

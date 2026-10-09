@@ -52,6 +52,19 @@ this outward integration. Workflow orchestration, calculator execution,
 convergence campaigns, recipes, and scientific acceptance policy do not belong
 in the parser bundle.
 
+## Local calculator and pseudopotential deployment
+
+[`local-execution.example.toml`](local-execution.example.toml) defines the single
+repository-local shape for calculator executable paths and the external Quantum
+ESPRESSO pseudopotential-library root. Copy it to `local-execution.toml`, which is
+ignored by Git, and replace the example paths with machine-local absolute paths.
+
+`PseudopotentialLibrary` resolves a complete `PseudopotentialFile` requirement
+beneath the configured root by exact basename, byte size, and SHA-256. It does
+not select a pseudopotential by element or silently substitute another
+same-named file. Scientific selection remains explicit in the simulation
+configuration, while deployment paths remain machine-local.
+
 ## Execution-independent provider example
 
 [`examples/authenticate_qe_wannier90_provider.py`](examples/authenticate_qe_wannier90_provider.py)

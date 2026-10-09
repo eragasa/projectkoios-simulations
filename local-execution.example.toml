@@ -1,0 +1,11 @@
+schema_version = 1
+
+# Machine-local deployment shared by repository tools and examples. These paths
+# do not select a pseudopotential or authorize calculator execution.
+[executables]
+pw = "/absolute/path/to/quantum-espresso/bin/pw.x"
+pw2wannier90 = "/absolute/path/to/quantum-espresso/bin/pw2wannier90.x"
+wannier90 = "/absolute/path/to/wannier90.x"
+
+[pseudopotentials]
+directory = "/absolute/path/to/quantum-espresso-pseudopotentials"
