@@ -7,8 +7,9 @@ owner-specific `projectkoios.simulations.workflows` layer. Outward provider
 integrations and adapters remain under `projectkoios.integrations` and
 `projectkoios.adapters`. The protected core never imports workflows or
 providers; the workflow layer may import core contracts but never provider
-implementations. Its optional local SNAKES CPN is isolated pending extraction
-by WORKFLOWS and carries no calculator authority.
+implementations. Its optional local SNAKES `PetriNet` is the authoritative SCF
+executable topology pending extraction by WORKFLOWS and carries no calculator
+authority.
 The architecture contract is documented in
 [`docs/architecture/projectkoios/simulations/`](docs/architecture/projectkoios/simulations/index.md).
 Repository-local workflow tools live under `tools/pw_dft_scf`. Compact reviewed
@@ -23,9 +24,9 @@ projected inputs are runnable, or establish numerical or scientific validation.
 The neutral band contracts include the explicitly classified standard primitive
 cells, special reciprocal points, and path topologies of Setyawan and Curtarolo
 [3]. They do not infer space groups or authorize calculator execution. Reusable
-convergence, comparison, recipe, replay, and workflow-definition contracts live
-under `projectkoios.simulations.workflows` without a compatibility facade at
-the former sibling namespace.
+convergence, comparison, recipe, replay, workflow inventories, and the local
+SCF Petri net live under `projectkoios.simulations.workflows` without a
+compatibility facade at the former sibling namespace.
 
 The LAMMPS package is a provenance-bound reconstruction scaffold for inspecting
 retained templates and data text and for rendering bounded data artifacts. It
@@ -50,6 +51,21 @@ The protected simulation core and owner-specific workflow layer never import
 this outward integration. Workflow orchestration, calculator execution,
 convergence campaigns, recipes, and scientific acceptance policy do not belong
 in the parser bundle.
+
+## Local calculator and pseudopotential deployment
+
+[`local-execution.example.toml`](local-execution.example.toml) is the single
+operator-only template for calculator executable paths and the external Quantum
+ESPRESSO pseudopotential-library root. Copy it to `local-execution.toml`, which
+is ignored by Git, and replace the placeholders with machine-local absolute
+paths. No production parser or tool automatically consumes this file; see the
+[deployment-template contract](docs/local-execution.md).
+
+`PseudopotentialLibrary` resolves a complete `PseudopotentialFile` requirement
+beneath the configured root by exact basename, byte size, and SHA-256. It does
+not select a pseudopotential by element or silently substitute another
+same-named file. Scientific selection remains explicit in the simulation
+configuration, while deployment paths remain machine-local.
 
 ## Execution-independent provider example
 

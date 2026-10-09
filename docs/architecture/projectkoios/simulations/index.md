@@ -54,11 +54,14 @@ Neither protected core records nor workflow contracts carry reusable calculator
 execution authority, executable discovery, scheduler lifecycle ownership,
 leases, retries, cancellation, or provider implementation objects. Calculator
 execution remains fail-closed and requires explicit external authorization.
-Domain topology and guards are stated in owner source declarations. Generic
-Workflow compilation owns canonical CPN places, transitions, and plans. Generic
-Workflow runtime owns lifecycle mechanisms and state. None of those ownership
-assignments grants an owner package a direct import of live Workflow service,
-kernel, scheduler, worker, persistence, or runtime objects.
+The migrated SCF SNAKES `PetriNet` currently owns its executable places,
+transitions, arcs, guards, and token expressions. Its separate definition is a
+name inventory only. Relaxation has a workflow-shape name inventory but no
+executable Petri net. Future generic Workflow compilation may own extracted
+canonical plans; generic Workflow runtime will own lifecycle mechanisms and
+state. None of those ownership assignments grants an owner package a direct
+import of live Workflow service, kernel, scheduler, worker, persistence, or
+runtime objects.
 
 See [`schematics.md`](schematics.md) for dependency and authority diagrams and
 [`implementation.md`](implementation.md) for enforceable migration and testing

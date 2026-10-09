@@ -18,7 +18,7 @@ campaign ID + integration ID + neutral relaxation request
          separate-explicit-external-authority-required
 ```
 
-## Owner topology
+## Intended workflow shape
 
 ```text
 campaign -> projection_action -> input_projected
@@ -30,9 +30,9 @@ campaign -> projection_action -> input_projected
                            terminal_outcome
 ```
 
-The topology is an owner source declaration. A generic Workflow compiler owns
-canonical CPN places and transitions; a generic runtime owns occurrence and
-lifecycle state.
+This diagram is a name-level workflow-shape declaration, not an executable
+Petri net: it does not encode arcs, guards, or token expressions. Any future
+canonical CPN requires a separately reviewed WORKFLOWS contract and runtime.
 
 ## Authority boundary
 

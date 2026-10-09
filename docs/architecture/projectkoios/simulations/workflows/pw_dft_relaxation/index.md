@@ -21,12 +21,13 @@ stops at a deterministic, non-authorizing execution handoff.
 The handoff contains no executable path, reusable authorization, queue state,
 process identity, or method that starts a calculator.
 
-## Workflow source
+## Workflow shape
 
-`PwDftRelaxationWorkflowDefinition` declares the owner topology for campaign,
+`PwDftRelaxationWorkflowDefinition` inventories intended names for campaign,
 projection action, projected input, external-authority requirement, and terminal
 outcome. `PwDftRelaxationWorkflowStatus` supplies the coarse application-facing
-status projection. Neither type implements a CPN kernel or generic runtime.
+status projection. These types do not define arcs, guards, a CPN kernel, or a
+generic runtime; no executable relaxation Petri net is claimed here.
 
 ## Example composition
 

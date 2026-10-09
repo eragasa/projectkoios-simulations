@@ -5,8 +5,8 @@
 - `composition.py` contains campaign, handoff, composition-result, and composer
   records.
 - `workflow/base.py` contains `PwDftRelaxationWorkflowStatus`.
-- `workflow/definition.py` contains the immutable topology declaration and
-  `pw_dft_relaxation_workflow_definition()` constructor.
+- `workflow/definition.py` contains the immutable workflow-shape name inventory
+  and `pw_dft_relaxation_workflow_definition()` constructor.
 
 ## Validation behavior
 
@@ -34,8 +34,8 @@ outward example boundary. That dependency direction must not be reversed.
 ## Verification
 
 Production tests cover campaign validation, projection composition, filename
-and external-input preservation, fixed authority semantics, and topology source
-places/transitions. The migrated QE example test uses a projection integration
+and external-input preservation, fixed authority semantics, and intended
+workflow-shape names. The migrated QE example test uses a projection integration
 with no calculator execution and verifies the rendered relaxation declaration
 and non-authorizing handoff.
 

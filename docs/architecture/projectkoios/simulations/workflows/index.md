@@ -5,7 +5,7 @@
 `projectkoios.simulations.workflows` is the owner-specific composition layer
 inside the `projectkoios.simulations` umbrella. It turns calculator-neutral
 simulation intent, results, and normalized evidence into reusable scientific
-operations and domain workflow source declarations.
+operations, workflow-shape inventories, and the migrated local SCF Petri net.
 
 The production layer is calculator-neutral and provider-independent. It may
 produce an execution handoff or consume provider-normalized observations, but
@@ -25,10 +25,11 @@ path, reusable authority, or live Workflow runtime state.
 - convergence-test comparison;
 - assess/extend/accept/budget-exhausted controller decisions;
 - typed convergence replay with the stable operation identity
-  `projectkoios.applications.pw-dft-scf.convergence-replay`; and
-- an engine-neutral single-SCF topology declaration and facade; and
-- an optional local SNAKES colored-Petri-net implementation pending later
-  extraction by WORKFLOWS.
+  `projectkoios.applications.pw-dft-scf.convergence-replay`;
+- an engine-neutral single-SCF name inventory and facade; and
+- the complete optional local SNAKES `PetriNet`, currently authoritative for
+  places, transitions, arcs, guards, and token expressions pending extraction
+  by WORKFLOWS.
 
 ### Plane-wave DFT relaxation
 
@@ -37,7 +38,8 @@ path, reusable authority, or live Workflow runtime state.
 - a campaign that binds neutral relaxation intent to a selected integration;
 - deterministic input-projection composition;
 - a non-authorizing external-execution handoff; and
-- an engine-neutral projection/handoff topology declaration.
+- an engine-neutral projection/handoff workflow-shape declaration. There is no
+  executable relaxation Petri net in this package.
 
 ## Tools and examples
 
@@ -53,17 +55,18 @@ infrastructure. Neither tools nor examples execute calculators.
 ## Distinction from generic Workflow
 
 “Workflows” here means simulation-domain composition. This package owns typed
-requests, actions or actionizers, results, policies, handoffs, and domain source
-topology. A generic Workflow compiler owns translation into canonical CPN
-places, transitions, and plans. A generic runtime owns occurrence identity,
-queues, idempotency, leases, retries, cancellation, reconciliation, delivery,
-and execution authority.
+requests, actions or actionizers, results, policies, handoffs, and workflow
+shape. For SCF, `pw_dft_scf.cpn.net.build_dft_pw_scf_net()` is the current
+executable topology source. The separate `PwDftScfWorkflowDefinition` records
+its public names for inspection; it does not reproduce the net's arcs, guards,
+or token expressions and is not advertised as sufficient compiler input.
 
-The package imports no Workflow service, scheduler, worker, persistence, or
-durable runtime implementation. Its optional `cpn` subtree temporarily carries
-the Applications-owned local SNAKES adapter as a complete extraction unit for
-WORKFLOWS. That adapter exposes no generic lifecycle service or calculator
-authority.
+A future generic Workflow compiler will own extraction or translation into its
+canonical CPN plans. Its runtime will own occurrence identity, queues,
+idempotency, leases, retries, cancellation, reconciliation, delivery, and
+execution authority. Until that extraction, the optional `cpn` subtree carries
+the complete Applications-owned SNAKES adapter. It exposes no Workflow service,
+scheduler, worker, persistence mechanism, or calculator authority.
 
 ## Namespace and provenance
 

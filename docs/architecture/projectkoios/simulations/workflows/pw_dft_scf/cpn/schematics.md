@@ -7,7 +7,7 @@ PwDftScfWorkflowFacade
 LocalPwDftScfWorkflow
           |
           v
-build_dft_pw_scf_net -> snakes.nets.PetriNet
+build_dft_pw_scf_net -> authoritative snakes.nets.PetriNet
           |
           v
  LocalSnakesRun: typed token insertion, detached snapshots, bounded firing
@@ -19,5 +19,7 @@ start -> register -> submit -> wait -> complete -> analyze -> success/reject
                                               `-> analysis failure
 ```
 
-External handlers supply typed events. The net never discovers or invokes a
-calculator and never treats a test or smoke invocation as execution authority.
+The `PetriNet` above—not the detached name inventory—owns the executable arcs,
+guards, and token expressions. External handlers supply typed events. The net
+never discovers or invokes a calculator and never treats a test or smoke
+invocation as execution authority.

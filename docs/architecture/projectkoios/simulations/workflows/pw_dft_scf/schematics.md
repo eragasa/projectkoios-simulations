@@ -60,7 +60,7 @@ provider-normalized evidence
 Replay performs no provider parsing, filesystem mutation, or calculator
 execution.
 
-## Single-SCF lifecycle source
+## Authoritative single-SCF Petri net
 
 ```text
 start -> registration action -> registered -> submission action -> submitted
@@ -77,9 +77,11 @@ start -> registration action -> registered -> submission action -> submitted
                                             terminal outcome
 ```
 
-The owner declaration names this topology and its domain guards. The optional
-local SNAKES net realizes it in process; canonical distributed CPN plans and
-transition-occurrence lifecycle remain future WORKFLOWS concerns.
+The migrated local SNAKES `PetriNet` defines this topology, including every
+arc, guard, and token expression. The engine-neutral definition inventories
+names only; it does not compete with or replace the net. Extraction into a
+canonical distributed plan and transition-occurrence lifecycle remains a future
+WORKFLOWS concern.
 
 ## Dependency direction
 

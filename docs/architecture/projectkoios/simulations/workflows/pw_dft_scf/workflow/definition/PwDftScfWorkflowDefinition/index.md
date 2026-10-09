@@ -1,6 +1,8 @@
 # PwDftScfWorkflowDefinition
 
-Fields: `name`, `places`, `transitions`.
+Fields: `name`, `places`, `transitions`. These fields inventory the authoritative
+SNAKES Petri net; they do not define or replace its arcs, guards, or token
+expressions.
 
 ## Ownership boundary
 
