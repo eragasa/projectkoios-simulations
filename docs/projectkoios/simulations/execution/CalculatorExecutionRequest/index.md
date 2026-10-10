@@ -8,4 +8,5 @@ directly to `subprocess.Popen` without a shell. The working directory must alrea
 exist and must not be a symlink. Output names are distinct basenames within that
 directory. `timeout_seconds`, when present, must be a positive finite float.
 Every required input basename must resolve to an existing regular nonsymlink
-file before process launch.
+file before process launch. The MVP execution backend requires POSIX
+process-group isolation and fails preflight on unsupported platforms.

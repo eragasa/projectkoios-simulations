@@ -308,8 +308,8 @@ class QeNscfCalculationRunner:
             shutil.copyfile(source, destination)
         QeSavedStateManifestVerifier().verify(parent_manifest, staged_root)
 
-        record = CalculatorExecutor().execute(
-            CalculatorExecutionRequest(
+        record = CalculatorExecutor().action(
+            request=CalculatorExecutionRequest(
                 command=(
                     str(executable),
                     "-in",

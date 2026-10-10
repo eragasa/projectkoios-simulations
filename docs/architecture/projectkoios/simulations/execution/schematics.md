@@ -6,7 +6,7 @@
 flowchart TD
     authority[Explicit execution authorization]
     request[One CalculatorExecutionRequest]
-    executor[CalculatorExecutor.execute]
+    executor[CalculatorExecutor.action]
     process[One calculator subprocess]
     stdoutTee[Byte-preserving stdout tee]
     stderrTee[Independent stderr drain and tee]
@@ -72,21 +72,27 @@ the request currently passed to it.
 ```mermaid
 flowchart LR
     process[Calculator process]
+    drain[Authoritative pipe drain]
     writer[Byte-preserving retained-artifact writer]
     evidence[Native evidence artifact]
+    tee[Parent binary-stream write and flush]
     seam[Output-emission seam]
     console[MVP<br/>parent stdout and stderr]
     control[Future runtime control<br/>progress, remote stream, cancellation]
 
-    process --> writer --> evidence
-    writer --> seam
+    process --> drain
+    drain --> writer --> evidence
+    drain --> tee --> seam
     seam --> console
     seam -. future replacement .-> control
     control --x evidence
 ```
 
-Replacing the operational sink must not replace, filter, reinterpret, or grant
-authority to the evidence path.
+A raised live-write error may truncate operational emission without changing
+already retained bytes. A parent write that never returns applies ordinary Unix
+tee backpressure and is outside the supported MVP sink contract. Replacing the
+operational sink must preserve the chosen delivery policy and must not replace,
+filter, reinterpret, or grant authority to the evidence path.
 
 ## Forbidden ownership
 

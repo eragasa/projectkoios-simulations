@@ -26,6 +26,10 @@ The MVP provides live output observability:
   bytes are retained in the declared stdout artifact;
 - calculator stderr is independently drained, emitted to the parent process's
   stderr, and retained as a separate artifact;
+- after retaining each chunk, the executor writes the same bytes to the parent
+  binary stream with ordinary Unix tee backpressure; supported parent writes
+  must return, while cancellable arbitrary blocked sinks are deferred to a
+  future control implementation that may relax the one-process contract;
 - partial native output remains retained after nonzero exit or timeout;
 - retained-stream I/O failures produce an explicit `failed-output` execution
   record after draining the process, while live-console emission failures leave
@@ -34,7 +38,11 @@ The MVP provides live output observability:
   authorization.
 
 The retained artifacts are authoritative evidence. Console output is
-operational observability only.
+operational observability only. The MVP requires POSIX process-group isolation:
+each attempt starts a new session, and timeout terminates the complete group with
+a bounded terminate-then-kill sequence followed by bounded verification that the
+direct child and complete group are gone. Termination failure has its own
+terminal status. Unsupported platforms fail preflight.
 
 ## Concurrency boundary
 
