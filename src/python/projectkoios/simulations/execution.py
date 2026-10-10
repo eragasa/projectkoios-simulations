@@ -3,13 +3,20 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import subprocess
+import sys
 import tempfile
+import threading
+from collections.abc import Callable
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
-from typing import Never
+from typing import BinaryIO, Never, cast
+
+_STREAM_CHUNK_SIZE = 64 * 1024
+_STREAM_JOIN_TIMEOUT_SECONDS = 5.0
 
 
 class ExecutionStatus(StrEnum):
@@ -19,6 +26,7 @@ class ExecutionStatus(StrEnum):
     failed = "failed"
     failed_preflight = "failed-preflight"
     failed_to_start = "failed-to-start"
+    failed_output = "failed-output"
     timed_out = "timed-out"
 
 
@@ -82,8 +90,8 @@ class CalculatorExecutionRequest:
         if self.timeout_seconds is not None:
             if type(self.timeout_seconds) is not float:
                 raise TypeError("timeout_seconds must be a float or None")
-            if self.timeout_seconds <= 0.0:
-                raise ValueError("timeout_seconds must be positive")
+            if not math.isfinite(self.timeout_seconds) or self.timeout_seconds <= 0.0:
+                raise ValueError("timeout_seconds must be positive and finite")
         if type(self.execution_authorized) is not bool:
             raise TypeError("execution_authorized must be a bool")
 
@@ -124,7 +132,7 @@ class CalculatorExecutionRecord:
 
 
 class CalculatorExecutionError(RuntimeError):
-    """Report a recorded calculator start, timeout, or exit failure."""
+    """Report a recorded preflight, process, or retained-output failure."""
 
     record: CalculatorExecutionRecord
     record_path: Path
@@ -137,12 +145,31 @@ class CalculatorExecutionError(RuntimeError):
         )
 
 
+class CalculatorOutputEmissionError(RuntimeError):
+    """Report failed live emission after retaining the calculator output."""
+
+    record: CalculatorExecutionRecord
+    record_path: Path
+
+    def __init__(
+        self,
+        record: CalculatorExecutionRecord,
+        record_path: Path,
+        message: str,
+    ) -> None:
+        self.record = record
+        self.record_path = record_path
+        super().__init__(
+            f"calculator output emission failed: {message}; record: {record_path}"
+        )
+
+
 @dataclass(frozen=True, slots=True)
 class CalculatorExecutor:
     """Run one no-shell command and persist its terminal record before returning."""
 
     def execute(self, request: CalculatorExecutionRequest) -> CalculatorExecutionRecord:
-        """Execute, record terminal state, and raise after recording any failure."""
+        """Execute one process, tee native streams, and record terminal state."""
         if type(request) is not CalculatorExecutionRequest:
             raise TypeError("request must be a CalculatorExecutionRequest")
         if not request.execution_authorized:
@@ -161,27 +188,46 @@ class CalculatorExecutor:
                 )
                 self.record_preflight_failure(request, error)
 
+        timeout_error: subprocess.TimeoutExpired | None = None
+        stream_failures: list[_StreamPumpFailure] = []
+        returncode: int | None = None
         try:
             with stdout_path.open("wb") as stdout, stderr_path.open("wb") as stderr:
-                completed = subprocess.run(
+                process = subprocess.Popen(
                     request.command,
                     cwd=request.working_directory,
                     stdin=subprocess.DEVNULL,
-                    stdout=stdout,
-                    stderr=stderr,
-                    timeout=request.timeout_seconds,
-                    check=False,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
                     shell=False,
+                    bufsize=0,
                 )
-        except subprocess.TimeoutExpired as error:
-            record = _error_record(
-                request,
-                ExecutionStatus.timed_out,
-                type(error).__name__,
-                str(error),
-            )
-            _write_record(record_path, record)
-            raise CalculatorExecutionError(record, record_path) from error
+                assert process.stdout is not None
+                assert process.stderr is not None
+                pumps = (
+                    _start_stream_pump(
+                        name="stdout",
+                        source=cast(BinaryIO, process.stdout),
+                        destination=stdout,
+                        emit=_emit_output,
+                        failures=stream_failures,
+                    ),
+                    _start_stream_pump(
+                        name="stderr",
+                        source=cast(BinaryIO, process.stderr),
+                        destination=stderr,
+                        emit=_emit_output,
+                        failures=stream_failures,
+                    ),
+                )
+                try:
+                    returncode = process.wait(timeout=request.timeout_seconds)
+                except subprocess.TimeoutExpired as error:
+                    timeout_error = error
+                    process.kill()
+                    returncode = process.wait()
+                finally:
+                    _finish_stream_pumps(pumps)
         except OSError as error:
             record = _error_record(
                 request,
@@ -192,16 +238,40 @@ class CalculatorExecutor:
             _write_record(record_path, record)
             raise CalculatorExecutionError(record, record_path) from error
 
+        if timeout_error is not None:
+            record = _error_record(
+                request,
+                ExecutionStatus.timed_out,
+                type(timeout_error).__name__,
+                _combine_error_message(str(timeout_error), stream_failures),
+            )
+            _write_record(record_path, record)
+            raise CalculatorExecutionError(record, record_path) from timeout_error
+
+        capture_failures = [
+            failure for failure in stream_failures if failure.stage != "emission"
+        ]
+        if capture_failures:
+            failure = capture_failures[0]
+            record = _error_record(
+                request,
+                ExecutionStatus.failed_output,
+                type(failure.error).__name__,
+                _stream_failure_message(stream_failures),
+                returncode=returncode,
+            )
+            _write_record(record_path, record)
+            raise CalculatorExecutionError(record, record_path) from failure.error
+
+        assert returncode is not None
         status = (
-            ExecutionStatus.succeeded
-            if completed.returncode == 0
-            else ExecutionStatus.failed
+            ExecutionStatus.succeeded if returncode == 0 else ExecutionStatus.failed
         )
         record = CalculatorExecutionRecord(
             command=request.command,
             working_directory=str(request.working_directory.resolve()),
             status=status,
-            returncode=completed.returncode,
+            returncode=returncode,
             stdout_filename=request.stdout_filename,
             stderr_filename=request.stderr_filename,
             required_input_filenames=request.required_input_filenames,
@@ -209,6 +279,13 @@ class CalculatorExecutor:
         _write_record(record_path, record)
         if status is not ExecutionStatus.succeeded:
             raise CalculatorExecutionError(record, record_path)
+        if stream_failures:
+            failure = stream_failures[0]
+            raise CalculatorOutputEmissionError(
+                record,
+                record_path,
+                _stream_failure_message(stream_failures),
+            ) from failure.error
         return record
 
     def record_preflight_failure(
@@ -234,17 +311,158 @@ class CalculatorExecutor:
         raise CalculatorExecutionError(record, record_path) from error
 
 
+@dataclass(frozen=True, slots=True)
+class _StreamPumpFailure:
+    """Retain one stream capture or live-emission failure for terminal recording."""
+
+    stream_name: str
+    stage: str
+    error: Exception
+
+
+@dataclass(frozen=True, slots=True)
+class _StreamPump:
+    """Retain one source pipe and its active bounded drain thread."""
+
+    stream_name: str
+    source: BinaryIO
+    thread: threading.Thread
+    failures: list[_StreamPumpFailure]
+
+
+def _start_stream_pump(
+    *,
+    name: str,
+    source: BinaryIO,
+    destination: BinaryIO,
+    emit: Callable[[str, bytes], None],
+    failures: list[_StreamPumpFailure],
+) -> _StreamPump:
+    thread = threading.Thread(
+        name=f"calculator-{name}-pump",
+        target=_pump_stream,
+        kwargs={
+            "name": name,
+            "source": source,
+            "destination": destination,
+            "emit": emit,
+            "failures": failures,
+        },
+        daemon=True,
+    )
+    thread.start()
+    return _StreamPump(
+        stream_name=name,
+        source=source,
+        thread=thread,
+        failures=failures,
+    )
+
+
+def _pump_stream(
+    *,
+    name: str,
+    source: BinaryIO,
+    destination: BinaryIO,
+    emit: Callable[[str, bytes], None],
+    failures: list[_StreamPumpFailure],
+) -> None:
+    capture_enabled = True
+    emission_enabled = True
+    while True:
+        try:
+            chunk = source.read(_STREAM_CHUNK_SIZE)
+        except Exception as error:
+            failures.append(_StreamPumpFailure(name, "read", error))
+            return
+        if not chunk:
+            return
+        if capture_enabled:
+            try:
+                _write_and_flush(destination, chunk)
+            except Exception as error:
+                failures.append(_StreamPumpFailure(name, "capture", error))
+                capture_enabled = False
+        if emission_enabled:
+            try:
+                emit(name, chunk)
+            except Exception as error:
+                failures.append(_StreamPumpFailure(name, "emission", error))
+                emission_enabled = False
+
+
+def _finish_stream_pumps(pumps: tuple[_StreamPump, ...]) -> None:
+    for pump in pumps:
+        pump.thread.join(timeout=_STREAM_JOIN_TIMEOUT_SECONDS)
+    for pump in pumps:
+        if pump.thread.is_alive():
+            pump.source.close()
+            pump.thread.join(timeout=_STREAM_JOIN_TIMEOUT_SECONDS)
+        else:
+            pump.source.close()
+        if pump.thread.is_alive():
+            pump.failures.append(
+                _StreamPumpFailure(
+                    pump.stream_name,
+                    "join",
+                    TimeoutError("stream pump did not terminate"),
+                )
+            )
+
+
+def _emit_output(stream_name: str, chunk: bytes) -> None:
+    stream: object
+    if stream_name == "stdout":
+        stream = sys.stdout
+    elif stream_name == "stderr":
+        stream = sys.stderr
+    else:
+        raise ValueError(f"unsupported output stream: {stream_name}")
+    candidate = getattr(stream, "buffer", None)
+    if candidate is None:
+        raise RuntimeError(f"parent {stream_name} does not expose a binary buffer")
+    _write_and_flush(cast(BinaryIO, candidate), chunk)
+
+
+def _write_and_flush(destination: BinaryIO, chunk: bytes) -> None:
+    offset = 0
+    while offset < len(chunk):
+        written = destination.write(chunk[offset:])
+        if written is None or written <= 0:
+            raise OSError("output stream did not accept bytes")
+        offset += written
+    destination.flush()
+
+
+def _stream_failure_message(failures: list[_StreamPumpFailure]) -> str:
+    return "; ".join(
+        f"{failure.stream_name} {failure.stage} failed: {failure.error}"
+        for failure in failures
+    )
+
+
+def _combine_error_message(
+    primary: str,
+    failures: list[_StreamPumpFailure],
+) -> str:
+    if not failures:
+        return primary
+    return f"{primary}; {_stream_failure_message(failures)}"
+
+
 def _error_record(
     request: CalculatorExecutionRequest,
     status: ExecutionStatus,
     error_type: str,
     error_message: str,
+    *,
+    returncode: int | None = None,
 ) -> CalculatorExecutionRecord:
     return CalculatorExecutionRecord(
         command=request.command,
         working_directory=str(request.working_directory.resolve()),
         status=status,
-        returncode=None,
+        returncode=returncode,
         stdout_filename=request.stdout_filename,
         stderr_filename=request.stderr_filename,
         required_input_filenames=request.required_input_filenames,

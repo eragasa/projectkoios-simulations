@@ -14,23 +14,24 @@ convergence, select a defect basin, or grant execution authority. Those
 responsibilities belong to an external Workflow runtime and scientific workflow
 composition.
 
-## Current and MVP behavior
+## Implemented MVP behavior
 
-The current executor is already synchronous and single-request: it launches one
-no-shell process and writes stdout, stderr, and `execution.json` into the
-request's working directory. It currently directs calculator stdout only to the
-retained file.
+The executor is synchronous and single-request. It launches one no-shell
+process, concurrently drains its native streams, and writes stdout, stderr, and
+`execution.json` into the request's working directory.
 
-The required MVP adds live output observability:
+The MVP provides live output observability:
 
 - calculator stdout is emitted to the parent process's stdout while the same
   bytes are retained in the declared stdout artifact;
-- partial stdout remains retained after nonzero exit, launch failure after
-  output begins, cancellation, or timeout;
-- stderr remains a separate retained artifact and should be mirrored to the
-  parent process's stderr when the execution implementation supports it; and
-- stream emission never changes scientific identity, evidence identity, terminal
-  status, or authorization.
+- calculator stderr is independently drained, emitted to the parent process's
+  stderr, and retained as a separate artifact;
+- partial native output remains retained after nonzero exit or timeout;
+- retained-stream I/O failures produce an explicit `failed-output` execution
+  record after draining the process, while live-console emission failures leave
+  the accurate process status intact and raise a separate operational error; and
+- stream emission never changes scientific or artifact identity, acceptance, or
+  authorization.
 
 The retained artifacts are authoritative evidence. Console output is
 operational observability only.
@@ -50,9 +51,10 @@ in its Workflow runtime.
 
 ## Future control boundary
 
-MVP stdout emission must pass through one narrow internal output-emission seam,
-not through provider-specific `print()` calls. The MVP implementation writes raw
-chunks to `sys.stdout.buffer`. A future controller may replace that sink with
+MVP output emission passes through one narrow private stream-aware emission
+function, not through provider-specific `print()` calls. The implementation
+writes raw chunks to the corresponding parent binary buffer. A future controller
+may replace that sink with
 progress events, remote streaming, cancellation input, or another control
 channel without changing calculator input records or retained native artifacts.
 

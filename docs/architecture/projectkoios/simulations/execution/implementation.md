@@ -21,7 +21,7 @@ background process registry belongs in this class.
 
 ## MVP output tee
 
-The stdout path is a byte-preserving tee:
+The implemented stdout path is a byte-preserving tee:
 
 ```text
 calculator stdout bytes
@@ -30,16 +30,18 @@ calculator stdout bytes
         `--> parent process stdout
 ```
 
-The implementation must not decode and re-encode calculator output before
-writing the retained artifact. It emits raw chunks to a binary sink and flushes
-the live sink sufficiently for an operator to observe progress. If the parent
-stdout cannot accept bytes, the execution fails through an explicit runtime
-error path rather than silently changing the retained bytes.
+The implementation does not decode and re-encode calculator output before
+writing the retained artifact. It uses bounded raw-byte chunks, flushes each
+artifact chunk, and flushes the live sink so an operator can observe progress.
+If a parent console stream cannot accept bytes, draining and native-artifact
+retention continue. The executor writes the accurate process-terminal record and
+then raises `CalculatorOutputEmissionError`; console availability therefore does
+not reclassify the calculator process attempt. A retained-stream failure instead
+produces `failed-output` because authoritative native evidence is incomplete.
 
-Stderr uses its own retained file and must be drained independently so a verbose
-calculator cannot block on a full pipe. Mirroring stderr to the parent stderr is
-recommended for the MVP but does not permit combining stdout and stderr in the
-retained evidence.
+Stderr uses its own retained file and drain thread so a verbose calculator cannot
+block on a full pipe. Its raw chunks are mirrored to parent stderr without
+combining stdout and stderr in retained evidence.
 
 Output already received remains on disk after timeout or process failure. The
 execution record is written only after stream-draining and process termination
@@ -47,10 +49,10 @@ have reached a bounded terminal state.
 
 ## Output-emission seam
 
-The first MVP may keep the emission seam private. It should nevertheless have
-one nominal responsibility: accept an ordered byte chunk for one stream and
-emit it outside the retained-artifact writer. Provider integrations do not call
-the seam directly.
+The MVP keeps the emission seam private. Each emitter has one nominal
+responsibility: accept an ordered byte chunk for one stream and emit it outside
+the retained-artifact writer. Provider integrations do not call the seam
+directly.
 
 A later control implementation may replace console emission with a runtime-owned
 sink that produces progress messages or accepts cancellation. That replacement
