@@ -25,9 +25,12 @@ Before rendering, the projector constructs `ResolvedPwDftSimulation` so
 composition-dependent charge, spin, and pseudopotential invariants are checked
 against the verified structure. It translates fixed and Gaussian occupations,
 unpolarized and collinear spin, constrained total magnetization, and
-species-representable scalar initial moments. It rejects unsupported occupation,
-symmetry, spin, site-distinct-within-species moment, pseudopotential-format, and
-filename mappings rather than selecting approximate QE defaults.
+species-representable scalar initial moments. Disabled spatial and time-reversal
+k-point reductions map independently to QE `nosym` and `noinv`; enabled values
+use QE's documented false defaults and are recorded as defaults in the prepared
+input mapping. The projector rejects unsupported occupation, spin,
+site-distinct-within-species moment, pseudopotential-format, and filename
+mappings rather than selecting approximate QE behavior.
 
 The electronic threshold check converts the neutral eV value into Ry and
 compares it with the configured native threshold using

@@ -46,6 +46,38 @@ class QeScfInputProjectorTest(unittest.TestCase):
         self.assertIn("ATOMIC_POSITIONS (crystal)", text)
         self.assertIn("ecutwfc = 29.3994577405,", text)
 
+    def test_translates_disabled_spatial_and_time_reversal_symmetry(self) -> None:
+        request = silicon_scf_request()
+        request = replace(
+            request,
+            specification=replace(
+                request.specification,
+                kpoint_sampling=replace(
+                    request.specification.kpoint_sampling,
+                    use_spatial_symmetry=False,
+                    use_time_reversal=False,
+                ),
+            ),
+        )
+
+        projection = qe_projection.QeScfInputProjector(
+            configuration=_configuration()
+        ).project(request, silicon_structure_resolution())
+        text = projection.artifacts[0].content.decode("ascii")
+
+        self.assertIn("nosym = .true.,", text)
+        self.assertIn("noinv = .true.,", text)
+        sampling_mapping = next(
+            item
+            for item in projection.mappings
+            if item.neutral_field == "kpoint_sampling"
+        )
+        self.assertEqual(
+            sampling_mapping.native_fields,
+            ("K_POINTS.automatic", "SYSTEM.nosym", "SYSTEM.noinv"),
+        )
+        self.assertEqual(sampling_mapping.native_values[1:], (".true.", ".true."))
+
     def test_translates_charge_and_constrained_collinear_spin(self) -> None:
         request = silicon_scf_request()
         request = replace(

@@ -173,15 +173,11 @@ class QeScfInputProjector:
                 "QE SCF translation supports fixed or Gaussian occupations"
             )
 
-        # Native symmetry defaults are accepted only when the neutral
-        # specification explicitly requests both reductions.
-        if not (
-            specification.kpoint_sampling.use_spatial_symmetry
-            and specification.kpoint_sampling.use_time_reversal
-        ):
-            raise NotImplementedError(
-                "QE SCF symmetry-reduction translation is not implemented"
-            )
+        symmetry_lines: tuple[str, ...] = ()
+        if not specification.kpoint_sampling.use_spatial_symmetry:
+            symmetry_lines += ("nosym = .true.,",)
+        if not specification.kpoint_sampling.use_time_reversal:
+            symmetry_lines += ("noinv = .true.,",)
         neutral_tolerance_ry = self._ev_to_ry(
             specification.electronic_convergence.energy_tolerance_ev
         )
@@ -212,6 +208,7 @@ class QeScfInputProjector:
                             f"ntyp = {len(config.species)},",
                             f"ecutwfc = {cutoff_ry:.10f},",
                             f"ecutrho = {charge_density_cutoff_ry:.10f},",
+                            *symmetry_lines,
                             *occupation_lines,
                             *electronic_lines,
                         )
@@ -409,18 +406,42 @@ class QeScfInputProjector:
                 CalculatorInputMapping(
                     neutral_field="kpoint_sampling",
                     neutral_value=json.dumps(
-                        {"mesh": mesh, "shift": shift},
+                        {
+                            "mesh": mesh,
+                            "shift": shift,
+                            "use_spatial_symmetry": (
+                                specification.kpoint_sampling.use_spatial_symmetry
+                            ),
+                            "use_time_reversal": (
+                                specification.kpoint_sampling.use_time_reversal
+                            ),
+                        },
                         separators=(",", ":"),
                         sort_keys=True,
                     ),
-                    native_fields=("K_POINTS.automatic",),
+                    native_fields=(
+                        "K_POINTS.automatic",
+                        "SYSTEM.nosym",
+                        "SYSTEM.noinv",
+                    ),
                     native_values=(
                         f"{mesh[0]} {mesh[1]} {mesh[2]} "
                         f"{shift[0]} {shift[1]} {shift[2]}",
+                        (
+                            ".false.-default"
+                            if specification.kpoint_sampling.use_spatial_symmetry
+                            else ".true."
+                        ),
+                        (
+                            ".false.-default"
+                            if specification.kpoint_sampling.use_time_reversal
+                            else ".true."
+                        ),
                     ),
                     effect="encoding",
                     qualification=(
-                        "QE native symmetry defaults are explicitly qualified."
+                        "QE nosym and noinv encode disabled symmetry reductions; "
+                        "omitted false values use documented native defaults."
                     ),
                 ),
                 CalculatorInputMapping(

@@ -157,17 +157,10 @@ def project_relaxation_input(
             "implemented"
         )
     # Maintained QE relaxation rendering currently exposes only fixed
-    # occupations and native symmetry defaults; unsupported intent fails closed.
+    # occupations; unsupported intent fails closed.
     if specification.occupation.method is not DftOccupationMethod.FIXED:
         raise NotImplementedError(
             "QE relaxation smearing translation is not implemented"
-        )
-    if not (
-        specification.kpoint_sampling.use_spatial_symmetry
-        and specification.kpoint_sampling.use_time_reversal
-    ):
-        raise NotImplementedError(
-            "QE relaxation symmetry-reduction translation is not implemented"
         )
     neutral_electronic_tolerance_ry = (
         specification.electronic_convergence.energy_tolerance_ev
@@ -214,6 +207,8 @@ def project_relaxation_input(
         spin_channel_electron_difference=(
             simulation.spin.spin_channel_electron_difference
         ),
+        use_spatial_symmetry=specification.kpoint_sampling.use_spatial_symmetry,
+        use_time_reversal=specification.kpoint_sampling.use_time_reversal,
     )
     electrons_card = _build_relaxation_electrons_card(
         configuration.electronic_tolerance_ry
@@ -326,6 +321,8 @@ def _build_relaxation_system_card(
     spin_mode: DftSpinMode,
     constrain_spin_channel_difference: bool,
     spin_channel_electron_difference: int,
+    use_spatial_symmetry: bool,
+    use_time_reversal: bool,
 ) -> QeSystemCard:
     electronic_lines: tuple[str, ...] = ()
     if charge_state != 0:
@@ -336,6 +333,11 @@ def _build_relaxation_system_card(
             electronic_lines += (
                 f"tot_magnetization = {spin_channel_electron_difference}",
             )
+    symmetry_lines: tuple[str, ...] = ()
+    if not use_spatial_symmetry:
+        symmetry_lines += ("nosym = .true.",)
+    if not use_time_reversal:
+        symmetry_lines += ("noinv = .true.",)
     return QeSystemCard(
         lines=(
             "ibrav = 0",
@@ -343,6 +345,7 @@ def _build_relaxation_system_card(
             f"ntyp = {species_count}",
             f"ecutwfc = {wavefunction_cutoff_ry:.10f}",
             f"ecutrho = {wavefunction_cutoff_ry * charge_density_cutoff_ratio:.10f}",
+            *symmetry_lines,
             *electronic_lines,
         )
     )

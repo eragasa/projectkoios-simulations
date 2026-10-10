@@ -89,6 +89,30 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
         self.assertIn("K_POINTS automatic\n 4 4 4 0 0 0", text)
         self.assertEqual(projection.required_external_inputs, ("Si.test.UPF",))
 
+    def test_translates_disabled_spatial_and_time_reversal_symmetry(self) -> None:
+        request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
+        request = replace(
+            request,
+            specification=replace(
+                request.specification,
+                kpoint_sampling=replace(
+                    request.specification.kpoint_sampling,
+                    use_spatial_symmetry=False,
+                    use_time_reversal=False,
+                ),
+            ),
+        )
+
+        text = (
+            QeRelaxInputProjector(_configuration())
+            .project(request, silicon_structure_resolution())
+            .rendered_inputs[0]
+            .text
+        )
+
+        self.assertIn("nosym = .true.", text)
+        self.assertIn("noinv = .true.", text)
+
     def test_translates_charge_and_constrained_collinear_spin(self) -> None:
         request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
         request = replace(

@@ -18,10 +18,12 @@ validated at the resolved boundary.
 ## Validation and rendering
 
 Translation rejects mismatched species, non-UPF pseudopotentials, mismatched
-pseudopotential filenames, unsupported spin and site moments, non-fixed
-occupation, and unsupported symmetry intent. It then converts the neutral
-scientific electronic threshold from eV to Ry and requires agreement with
-`electronic_tolerance_ry` within `electronic_atol_ry`.
+pseudopotential filenames, unsupported spin and site moments, and non-fixed
+occupation. Disabled spatial and time-reversal reductions map independently to
+QE `nosym` and `noinv`; enabled values retain QE's documented false defaults.
+Translation then converts the neutral scientific electronic threshold from eV
+to Ry and requires agreement with `electronic_tolerance_ry` within
+`electronic_atol_ry`.
 
 After qualification, only `electronic_tolerance_ry` is written to the
 `&ELECTRONS` card as `conv_thr`. `electronic_atol_ry` remains provider mapping
