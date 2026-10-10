@@ -25,6 +25,12 @@ Production workflow modules may import only:
 - the `snakes` namespace, only from `pw_dft_scf.cpn` and only when the optional
   `cpn` extra is installed.
 
+A workflow calculation requirement always denotes one simulation occurrence.
+Provider-bound execution invokes the protected single-simulation executor once
+for that occurrence. Campaign fan-out, dependency ordering, and deployment
+concurrency one are external Workflow runtime concerns; production workflow
+composition must not add a batch executor.
+
 Production modules must not import:
 
 - `projectkoios.integrations` or `projectkoios.adapters`;
@@ -87,6 +93,10 @@ Historical source paths and hashes remain in
 records the superseded initial classification. The 55-row disposition map in
 `docs/provenance/workflow-runner-relocation-main-416be52.tsv` records each final
 production, tool, example, test, or documentation-consolidation outcome.
+
+The planned Si:P/Si:B chain, implemented prerequisites, and remaining task
+inventory are maintained under
+[`pw_dft_defect_formation`](pw_dft_defect_formation/implementation.md).
 
 ## Verification
 

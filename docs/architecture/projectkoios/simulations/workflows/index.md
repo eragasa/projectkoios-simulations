@@ -43,14 +43,21 @@ path, reusable authority, or live Workflow runtime state.
   is no
   executable relaxation Petri net in this package.
 
-### Planned defect-formation composition
+### Planned chained defect-formation composition
 
-[`pw_dft_defect_formation`](pw_dft_defect_formation/index.md) documents a target
-composition for exact structure and simulation records, existing relaxation
-and SCF capabilities, local elemental chemical potentials, neutral Si:P and
-Si:B formation energies, and matched 64-, 216-, and 512-atom size-convergence
-assessment. The production package and executable topology do not yet exist.
-The documentation does not displace the current SCF Petri-net authority.
+[`pw_dft_defect_formation`](pw_dft_defect_formation/index.md) inventories the
+chained reference-convergence, host-relaxation, supercell-construction,
+defect-start, staged-relaxation, final-SCF, basin-selection, formation-energy,
+and size-convergence workflows required for neutral Si:P and Si:B. The
+production package and executable topology do not yet exist. The documentation
+does not displace the current SCF Petri-net authority.
+
+Every child calculation is one simulation occurrence. The generic executor
+handles one authorized occurrence synchronously and provides MVP live stdout
+while retaining exact native output; see
+[`simulations.execution`](../execution/index.md). Campaign sequencing and a
+deployment-wide concurrency limit of one belong to the external Workflow
+runtime rather than to a batch executor.
 
 ## Tools and examples
 

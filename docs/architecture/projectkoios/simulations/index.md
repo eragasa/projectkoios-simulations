@@ -25,35 +25,35 @@ absent; no alias or compatibility facade was introduced.
 
 - [`structure`](structure/index.md) defines exact manifest-backed structures,
   derived supercells, and generic ideal defect deltas.
-- [`library`](library/index.md) specifies the planned exact manifest-backed
-  catalog of immutable SCF and relaxation specifications.
+- [`library`](library/index.md) specifies exact authenticated manifest-backed
+  resolution of immutable SCF and relaxation specifications.
 - [`calculator_input`](calculator_input/index.md) specifies exact rendered
   calculator inputs and external-file requirements without carrying execution
   authority.
-- [`evidence`](evidence/index.md) specifies the planned immutable correlation of
-  exact specifications, rendered calculator input files, artifacts, and
-  normalized observations.
-- [`defects`](defects/index.md) specifies planned method-neutral chemical
+- [`execution`](execution/index.md) defines one explicitly authorized,
+  synchronous calculator attempt and the boundary between retained native
+  artifacts, MVP console emission, and future runtime control.
+- [`evidence`](evidence/index.md) specifies immutable correlation of exact
+  specifications, rendered calculator input files, artifacts, and normalized
+  observations.
+- [`defects`](defects/index.md) specifies method-neutral chemical
   potentials, formation and relaxation energies, and mechanical size-convergence
   derivations.
-- [`dft/defects`](dft/defects/index.md) specifies the planned plane-wave DFT
+- [`dft/defects`](dft/defects/index.md) specifies the plane-wave DFT
   binding for electron count, charge, spin, model compatibility, and qualified
   final-SCF evidence. It supplies inputs to `simulations.defects`; it does not
   own the equations.
-- [`dft/pw/relaxation`](dft/pw/relaxation/index.md) documents the existing
-  neutral request contract and planned provider-independent relaxation
-  observation and result.
+- [`dft/pw/relaxation`](dft/pw/relaxation/index.md) documents neutral requests,
+  normalized observations and results, and evidence-qualified relaxed-structure
+  publication.
 - [`workflows`](workflows/index.md) defines owner-specific, runtime-neutral
   workflow composition.
-- Existing `dft`, `calculator`, `execution`, and other non-workflow subtrees
-  remain members of the protected core.
+- Existing `dft`, `calculator`, and other non-workflow subtrees remain members
+  of the protected core.
 
-The library, evidence, and DFT-defect nodes are documentation-first target
-architectures. Their production packages do not yet exist; the documents mark
-that status explicitly and do not establish importable APIs.
-- Calculator-specific syntax, parsing, artifact handling, and execution remain
-  outside the umbrella under `projectkoios.integrations` or
-  `projectkoios.adapters`.
+Calculator-specific syntax, parsing, and provider artifact handling remain
+outside the umbrella under `projectkoios.integrations` or
+`projectkoios.adapters`.
 
 ## Import matrix
 
@@ -77,7 +77,10 @@ source or SDK contracts remains a separate compiler-integration decision.
 Neither protected core records nor workflow contracts carry reusable calculator
 execution authority, executable discovery, scheduler lifecycle ownership,
 leases, retries, cancellation, or provider implementation objects. Calculator
-execution remains fail-closed and requires explicit external authorization.
+execution remains fail-closed, requires explicit external authorization, and
+runs one synchronous simulation per executor invocation. Campaign-wide
+concurrency belongs to the external Workflow runtime.
+
 The migrated SCF SNAKES `PetriNet` currently owns its executable places,
 transitions, arcs, guards, and token expressions. Its separate definition is a
 name inventory only. Relaxation has a workflow-shape name inventory but no

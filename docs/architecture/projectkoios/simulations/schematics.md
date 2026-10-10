@@ -2,93 +2,110 @@
 
 ## Dependency direction
 
-```text
-                downstream application/domain composition
-                         /              |               \
-                        v               v                v
-          simulations.workflows   integrations/adapters   protected core
-                    |                     |
-                    +----------+----------+
-                               v
-                  protected simulations core
+```mermaid
+flowchart TD
+    downstream[Downstream application or domain composition]
+    workflows[simulations.workflows]
+    integrations[integrations and adapters]
+    core[Protected simulations core]
+    declarations[Owner source declarations]
+    compiler[External compiler binding]
+    generic[Generic Workflow]
 
-owner source declarations -> external compiler binding -> generic Workflow
+    downstream --> workflows --> core
+    downstream --> integrations --> core
+    downstream --> core
+    declarations --> compiler --> generic
 ```
 
 Allowed production dependencies point inward toward the protected core.
 Downstream composition may use public workflow and integration contracts, but
 production workflow modules do not import provider implementations and
-production integration modules do not own workflow policy. The compiler edge is
-an external binding direction, not permission for an owner package to import
-live Workflow service, kernel, scheduler, or runtime objects.
+production integration modules do not own workflow policy.
 
-Forbidden reverse edges are:
+## Forbidden reverse dependencies
 
-```text
-protected core -X-> simulations.workflows
-protected core -X-> integrations/adapters
-simulations.workflows -X-> integrations/adapters
-simulations.workflows -X-> application/domain consumers
-simulations.workflows -X-> live Workflow runtime objects
-downstream Applications/domain consumers -X-> live Workflow runtime objects
+```mermaid
+flowchart LR
+    core[Protected core]
+    workflows[simulations.workflows]
+    integrations[Integrations and adapters]
+    applications[Downstream applications]
+    runtime[Live Workflow runtime]
+
+    core --x workflows
+    core --x integrations
+    workflows --x integrations
+    workflows --x applications
+    workflows --x runtime
+    applications --x runtime
 ```
 
-A future live-runtime integration must cross a separately reviewed external
-binding or process boundary. A future stable, runtime-neutral Workflow source
-or SDK contract remains a distinct compiler-integration decision.
+A live-runtime integration crosses a separately reviewed binding or process
+boundary. A stable runtime-neutral source or SDK contract remains a distinct
+compiler-integration decision.
 
 ## Namespace transition
 
-```text
-historical source                              current owner
+```mermaid
+flowchart LR
+    historical[projectkoios.simulation_workflows<br/>historical source]
+    current[projectkoios.simulations.workflows<br/>current owner]
 
-projectkoios.simulation_workflows   ---->     projectkoios.simulations.workflows
+    historical -->|atomic forward move| current
 ```
 
-The transition was one atomic forward move. The old and new production trees
-do not coexist. No import alias, re-export, compatibility package, or namespace
-shim bridges them.
+The old and new production trees do not coexist. No import alias, re-export,
+compatibility package, or namespace shim bridges them.
 
-## Target specification and evidence flow
+## Specification and evidence flow
 
-```text
-exact StructureRecord
-        |
-        v
-exact SimulationRecord
-        |
-        v
-CalculatorInputRecord created by outward input translation
-        |
-        v
-external authorized execution
-        |
-        v
-SimulationEvidenceRecord
-        |
-        +--> simulations.dft.defects compatibility binding
-        |                    |
-        |                    v
-        |          simulations.defects arithmetic
-        |
-        `--> explicit relaxed-structure publication
+```mermaid
+flowchart TD
+    structure[Exact StructureRecord]
+    simulation[Exact SimulationRecord]
+    input[CalculatorInputRecord<br/>created by outward translation]
+    authority[Separate explicit execution authority]
+    execution[One authorized calculator execution]
+    evidence[SimulationEvidenceRecord]
+    compatibility[simulations.dft.defects compatibility]
+    arithmetic[simulations.defects arithmetic]
+    publication[Explicit relaxed-structure publication]
+
+    structure --> simulation --> input --> authority --> execution --> evidence
+    evidence --> compatibility --> arithmetic
+    evidence --> publication
 ```
 
-Generic defect equations do not depend on the DFT binding. The DFT binding
-supplies one method-qualified energy-evidence path.
+Generic defect equations do not depend on the DFT binding. The binding supplies
+one method-qualified evidence path.
 
-## Authority flow
+## Authority and single-execution flow
 
-```text
-scientific specification
-        |
-        v
-pure workflow request -> pure action/composition -> result or execution handoff
-                                                     |
-                                                     v
-                             external runtime/provider authority decision
+```mermaid
+sequenceDiagram
+    participant C as Scientific composition
+    participant W as External Workflow runtime
+    participant E as CalculatorExecutor
+    participant P as Calculator process
+    participant A as Retained artifacts
+
+    C->>W: pure child requirement or handoff
+    W->>W: require explicit execution authority
+    W->>E: one CalculatorExecutionRequest
+    E->>P: start one synchronous subprocess
+    loop native output
+        P-->>E: output bytes
+        E-->>W: live operational output
+        E->>A: retain identical native bytes
+    end
+    P-->>E: terminal status
+    E->>A: write execution.json
+    E-->>W: terminal execution record
+    W-->>C: normalized immutable evidence
 ```
 
 A handoff describes required work; it does not authorize or start a calculator.
-Provider-normalized evidence may enter a pure replay action, but provider-native
-parsing and execution remain outside the workflow layer.
+An external runtime configured with concurrency one waits for the terminal
+record before admitting another occurrence. Live console output is operational
+observability, not evidence, acceptance, or authority.

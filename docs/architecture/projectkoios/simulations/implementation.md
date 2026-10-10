@@ -14,24 +14,36 @@ Protected-core modules must not import:
 Repository AST boundary tests must enforce these rules recursively rather than
 relying on naming conventions or review alone.
 
-## Planned defect-study dependency order
+## Single-simulation execution rule
 
-The documentation-first defect architecture must be implemented inward to
-outward:
+`CalculatorExecutor` accepts one authorized request, starts at most one
+calculator subprocess, and returns only after recording its terminal state. The
+MVP must tee native stdout to the parent process while retaining identical bytes
+as evidence. It must not grow a plural request, campaign loop, retry loop, or
+scheduler. External Workflow configuration owns cross-occurrence concurrency.
+See [`execution`](execution/implementation.md).
 
-1. extend PhysKit and `simulations.structure.library` for exact base `UnitCell`
-   records and provenance variants;
-2. add `simulations.calculator_input` exact prepared-input records;
-3. add neutral relaxation observations/results and outward provider adapters;
-4. add exact simulation specifications, codecs, and `SimulationLibrary`;
-5. add immutable simulation evidence;
-6. add method-neutral `simulations.defects` energy records and arithmetic;
-7. add `simulations.dft.defects` qualification and DFT binding;
-8. complete QE/VASP charge, spin, input-record, and output-normalization support;
-9. retain Materials Project retrieval snapshots and publish selected reference
-   structures; and
-10. add workflow composition and study declarations.
+## Defect-study dependency order
 
+The protected prerequisites now include exact PhysKit unit-cell and stress
+records, authenticated structure and simulation libraries, calculator-input and
+evidence records, neutral relaxation observations/results, QE projection and
+normalization, method-neutral defect arithmetic, DFT qualification, retained
+Materials Project selections, and exact starting reference specifications.
+
+Remaining work proceeds inward to outward:
+
+1. complete single-simulation stdout emission and production evidence assembly;
+2. generalize numerical convergence observations and compose child SCF
+   occurrences into reference campaigns;
+3. complete the relaxation lifecycle and elemental-reference chain;
+4. publish the locally relaxed Si host and regenerate production supercells and
+   symmetry-broken starts;
+5. compose staged defect relaxations, final SCFs, and basin selection; and
+6. compose matched formation-energy and size-stability decisions.
+
+The complete inventory lives in
+[`workflows/pw_dft_defect_formation/implementation.md`](workflows/pw_dft_defect_formation/implementation.md).
 Each atomic API migration removes its superseded shape rather than retaining
 parallel compatibility facades. The sequence grants no calculator authority.
 
