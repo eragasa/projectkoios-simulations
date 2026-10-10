@@ -4,7 +4,10 @@ import unittest
 from dataclasses import replace
 
 from projectkoios.simulations.dft.pw.relaxation.base import (
+    PwDftCellRelaxationMode,
     PwDftRelaxationConvergencePolicy,
+    PwDftRelaxationDegreesOfFreedom,
+    PwDftRelaxationInitialization,
     PwDftRelaxationScope,
 )
 from projectkoios.simulations.dft.pw.settings import (
@@ -18,6 +21,30 @@ from tests.projectkoios.simulations.dft.pw.relaxation.support import (
 
 
 class PwDftRelaxationRequestTest(unittest.TestCase):
+    def test_represents_version_one_relaxation_controls(self) -> None:
+        degrees_of_freedom = PwDftRelaxationDegreesOfFreedom(
+            relax_atomic_positions=True,
+            cell_mode=PwDftCellRelaxationMode.SELECTED_COMPONENTS,
+            selected_strain_components=(True, True, True, False, False, False),
+        )
+
+        self.assertEqual(
+            PwDftRelaxationInitialization.FROM_EXACT_STARTING_STRUCTURE.value,
+            "from-exact-starting-structure",
+        )
+        self.assertEqual(
+            degrees_of_freedom.selected_strain_components,
+            (True, True, True, False, False, False),
+        )
+
+    def test_rejects_empty_selected_cell_components(self) -> None:
+        with self.assertRaisesRegex(ValueError, "nonempty six-boolean"):
+            PwDftRelaxationDegreesOfFreedom(
+                relax_atomic_positions=True,
+                cell_mode=PwDftCellRelaxationMode.SELECTED_COMPONENTS,
+                selected_strain_components=(False, False, False, False, False, False),
+            )
+
     def test_accepts_explicit_fixed_and_variable_cell_policies(self) -> None:
         fixed = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
         variable = silicon_relaxation_request(

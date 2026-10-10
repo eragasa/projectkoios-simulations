@@ -10,7 +10,7 @@ from tools.pw_dft_scf.configuration import (
     WorkflowRunnerConfigurationLoader,
 )
 from tools.pw_dft_scf.structure_repository import (
-    MinimalStructureRepository,
+    WorkflowStructureLibraryLoader,
 )
 
 
@@ -36,17 +36,17 @@ class WorkflowRunnerEnvironment:
             root,
             cls._string(payload, "catalog"),
         )
-        structure_root = cls._resolve_directory(
+        structure_catalog_path = cls._resolve_file(
             root,
-            cls._string(payload, "structure_repository"),
+            cls._string(payload, "structure_catalog"),
         )
         return cls(
             configuration_path=configuration_path.resolve(),
             loader=WorkflowRunnerConfigurationLoader(
                 catalog_path=catalog_path,
-                structure_repository=MinimalStructureRepository(
-                    root=structure_root,
-                ),
+                structure_library=WorkflowStructureLibraryLoader(
+                    manifest_path=structure_catalog_path
+                ).load(),
             ),
         )
 
@@ -58,16 +58,6 @@ class WorkflowRunnerEnvironment:
             raise ValueError("runner file path escapes the repository root")
         if not path.is_file() or path.is_symlink():
             raise ValueError("runner file path must identify a regular file")
-        return path
-
-    @staticmethod
-    def _resolve_directory(root: Path, value: str) -> Path:
-        """Resolve one nonsymlink directory beneath the repository root."""
-        path = (root / value).resolve()
-        if not path.is_relative_to(root.parent.parent.parent):
-            raise ValueError("runner directory path escapes the repository root")
-        if not path.is_dir() or path.is_symlink():
-            raise ValueError("runner directory path must identify a directory")
         return path
 
     @staticmethod

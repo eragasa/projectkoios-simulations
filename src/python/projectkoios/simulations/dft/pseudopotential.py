@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from enum import StrEnum
 
 _ELEMENT_SYMBOL = re.compile(r"[A-Z][a-z]?")
 _SHA256 = re.compile(r"[0-9a-f]{64}")
@@ -37,11 +38,20 @@ class Pseudopotential:
             raise ValueError("valence_electrons must be positive")
 
 
+class PseudopotentialArtifactFormat(StrEnum):
+    """Identify the neutral on-disk pseudopotential artifact format."""
+
+    UPF = "upf"
+    VASP_POTCAR = "vasp-potcar"
+
+
 @dataclass(frozen=True, slots=True)
 class PseudopotentialFile:
     """Bind one pseudopotential definition to exact external file identity."""
 
     pseudopotential: Pseudopotential
+    artifact_format: PseudopotentialArtifactFormat
+    artifact_format_version: str | None
     filename: str
     sha256: str
     byte_size: int
@@ -49,6 +59,21 @@ class PseudopotentialFile:
     def __post_init__(self) -> None:
         if not isinstance(self.pseudopotential, Pseudopotential):
             raise TypeError("pseudopotential must inherit from Pseudopotential")
+        if type(self.artifact_format) is not PseudopotentialArtifactFormat:
+            raise TypeError("artifact_format must be a PseudopotentialArtifactFormat")
+        if self.artifact_format_version is not None and (
+            type(self.artifact_format_version) is not str
+            or not self.artifact_format_version
+            or self.artifact_format_version != self.artifact_format_version.strip()
+        ):
+            raise ValueError(
+                "artifact_format_version must be nonempty and stripped when set"
+            )
+        if (
+            self.artifact_format is PseudopotentialArtifactFormat.UPF
+            and self.artifact_format_version is None
+        ):
+            raise ValueError("UPF artifacts require an explicit format version")
         if (
             type(self.filename) is not str
             or not self.filename

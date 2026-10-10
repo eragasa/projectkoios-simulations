@@ -14,6 +14,27 @@ Protected-core modules must not import:
 Repository AST boundary tests must enforce these rules recursively rather than
 relying on naming conventions or review alone.
 
+## Planned defect-study dependency order
+
+The documentation-first defect architecture must be implemented inward to
+outward:
+
+1. extend PhysKit and `simulations.structure.library` for exact base `UnitCell`
+   records and provenance variants;
+2. add `simulations.calculator_input` exact prepared-input records;
+3. add neutral relaxation observations/results and outward provider adapters;
+4. add exact simulation specifications, codecs, and `SimulationLibrary`;
+5. add immutable simulation evidence;
+6. add method-neutral `simulations.defects` energy records and arithmetic;
+7. add `simulations.dft.defects` qualification and DFT binding;
+8. complete QE/VASP charge, spin, input-record, and output-normalization support;
+9. retain Materials Project retrieval snapshots and publish selected reference
+   structures; and
+10. add workflow composition and study declarations.
+
+Each atomic API migration removes its superseded shape rather than retaining
+parallel compatibility facades. The sequence grants no calculator authority.
+
 ## Namespace relocation
 
 The namespace refinement is a forward change after public main commit
@@ -41,9 +62,16 @@ docs/architecture/<package>/<subpackage>/.../<ClassName>/
 ```
 
 Every documented package, subpackage, and class node created or moved by the
-relocation contains substantive `index.md`, `schematics.md`, and
-`implementation.md` files. Repository checks inventory every moved `pw_dft_*`
+relocation contains the substantive required trio `index.md`, `schematics.md`,
+and `implementation.md`. Repository checks inventory every moved `pw_dft_*`
 package/subpackage/class node and fail if any target node lacks the trio.
+
+Nodes that make physical-science claims add `scientific.md` when those claims
+need definitions, scope qualifications, or literature citations. Nodes that own
+numerical comparison, convergence, tolerances, or acceptance add `numeric.md`.
+These files supplement rather than replace the required trio. Citations use
+stable DOI or authoritative project links where literature support is needed;
+provenance and citations do not by themselves establish scientific validation.
 
 ## Required proof
 

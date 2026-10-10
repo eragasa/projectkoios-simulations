@@ -23,6 +23,10 @@ from projectkoios.physkit.units import (
     ScalarQuantity,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
+from projectkoios.simulations.dft.electronic import DftSpinMode
+from projectkoios.simulations.dft.pseudopotential import (
+    PseudopotentialArtifactFormat,
+)
 from projectkoios.simulations.dft.pw.scf.base import (
     PwDftScfRequest,
 )
@@ -59,6 +63,47 @@ class QeScfInputProjector:
             raise ValueError(
                 "QE species configuration must exactly match the unit cell"
             )
+        if request.simulation.pseudopotentials:
+            if any(
+                item.artifact_format is not PseudopotentialArtifactFormat.UPF
+                for item in request.simulation.pseudopotentials
+            ):
+                raise ValueError("QE translation requires UPF pseudopotentials")
+            configured_filenames = {
+                item.symbol: item.pseudopotential_filename for item in config.species
+            }
+            bound_filenames = {
+                item.symbol: item.filename
+                for item in request.simulation.pseudopotentials
+            }
+            if configured_filenames != bound_filenames:
+                raise ValueError(
+                    "QE configuration must match exact bound pseudopotential filenames"
+                )
+        if request.simulation.spin.mode not in {
+            DftSpinMode.UNPOLARIZED,
+            DftSpinMode.COLLINEAR,
+        }:
+            raise NotImplementedError(
+                "QE SCF translation supports only unpolarized and collinear spin"
+            )
+        if request.simulation.spin.initial_site_magnetic_moments_mu_b:
+            raise NotImplementedError(
+                "QE SCF translation of site-resolved initial moments is not implemented"
+            )
+        electronic_lines: tuple[str, ...] = ()
+        if request.simulation.charge.charge_state != 0:
+            electronic_lines += (
+                f"tot_charge = {request.simulation.charge.charge_state},",
+            )
+        if request.simulation.spin.mode is DftSpinMode.COLLINEAR:
+            electronic_lines += ("nspin = 2,",)
+            if request.simulation.spin.constrain_spin_channel_difference:
+                electronic_lines += (
+                    "tot_magnetization = "
+                    f"{request.simulation.spin.spin_channel_electron_difference},",
+                )
+
         cutoff_ry = self._ev_to_ry(request.sampling.wavefunction_cutoff_ev)
         charge_density_cutoff_ry = cutoff_ry * config.charge_density_cutoff_ratio
         mesh = request.sampling.kpoint_mesh
@@ -75,6 +120,7 @@ class QeScfInputProjector:
                             f"ntyp = {len(config.species)},",
                             f"ecutwfc = {cutoff_ry:.10f},",
                             f"ecutrho = {charge_density_cutoff_ry:.10f}",
+                            *electronic_lines,
                         )
                     ),
                     QeElectronsCard(

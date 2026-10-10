@@ -6,6 +6,37 @@ from dataclasses import dataclass
 from enum import StrEnum
 
 
+@dataclass(frozen=True, slots=True)
+class PwDftKPointSamplingPolicy:
+    """Declare exact regular-mesh and reduction intent."""
+
+    mesh: tuple[int, int, int]
+    shift: tuple[int, int, int]
+    use_spatial_symmetry: bool
+    use_time_reversal: bool
+
+    def __post_init__(self) -> None:
+        if (
+            type(self.mesh) is not tuple
+            or len(self.mesh) != 3
+            or any(type(value) is not int or value <= 0 for value in self.mesh)
+        ):
+            raise ValueError("mesh must contain three positive integers")
+        if (
+            type(self.shift) is not tuple
+            or len(self.shift) != 3
+            or any(
+                type(value) is not int or value not in {0, 1} for value in self.shift
+            )
+        ):
+            raise ValueError("shift must contain three zero-or-one integers")
+        if (
+            type(self.use_spatial_symmetry) is not bool
+            or type(self.use_time_reversal) is not bool
+        ):
+            raise TypeError("sampling-reduction selections must be booleans")
+
+
 class CalculationType(StrEnum):
     """Enumerate calculator-neutral plane-wave calculation modes."""
 

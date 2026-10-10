@@ -1,3 +1,3 @@
 schema_version = 1
 catalog = "catalog.toml"
-structure_repository = "../../../examples/workflows/pw_dft_scf/structures"
+structure_catalog = "../../../examples/workflows/pw_dft_scf/structures/catalog.toml"

@@ -33,6 +33,10 @@ from projectkoios.integrations.quantumespresso.pw.relaxation.options import (
 )
 from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
 from projectkoios.simulations.calculator import CalculatorIntegrationId
+from projectkoios.simulations.dft.electronic import DftSpinMode
+from projectkoios.simulations.dft.pseudopotential import (
+    PseudopotentialArtifactFormat,
+)
 from projectkoios.simulations.dft.pw.relaxation.base import (
     PwDftRelaxationRequest,
 )
@@ -118,6 +122,34 @@ def project_relaxation_input(
         item.symbol for item in configuration.species
     }:
         raise ValueError("QE species must exactly match the unit cell")
+    if request.simulation.pseudopotentials:
+        if any(
+            item.artifact_format is not PseudopotentialArtifactFormat.UPF
+            for item in request.simulation.pseudopotentials
+        ):
+            raise ValueError("QE translation requires UPF pseudopotentials")
+        configured_filenames = {
+            item.symbol: item.pseudopotential_filename for item in configuration.species
+        }
+        bound_filenames = {
+            item.symbol: item.filename for item in request.simulation.pseudopotentials
+        }
+        if configured_filenames != bound_filenames:
+            raise ValueError(
+                "QE configuration must match exact bound pseudopotential filenames"
+            )
+    if request.simulation.spin.mode not in {
+        DftSpinMode.UNPOLARIZED,
+        DftSpinMode.COLLINEAR,
+    }:
+        raise NotImplementedError(
+            "QE relaxation translation supports only unpolarized and collinear spin"
+        )
+    if request.simulation.spin.initial_site_magnetic_moments_mu_b:
+        raise NotImplementedError(
+            "QE relaxation translation of site-resolved initial moments is not "
+            "implemented"
+        )
     cutoff_ry = request.sampling.wavefunction_cutoff_ev * _conversion_factor("eV", "Ry")
     convergence = request.convergence
     energy_tolerance_ry = convergence.total_energy_tolerance_ev * _conversion_factor(
@@ -143,6 +175,14 @@ def project_relaxation_input(
         species_count=len(configuration.species),
         wavefunction_cutoff_ry=cutoff_ry,
         charge_density_cutoff_ratio=configuration.charge_density_cutoff_ratio,
+        charge_state=request.simulation.charge.charge_state,
+        spin_mode=request.simulation.spin.mode,
+        constrain_spin_channel_difference=(
+            request.simulation.spin.constrain_spin_channel_difference
+        ),
+        spin_channel_electron_difference=(
+            request.simulation.spin.spin_channel_electron_difference
+        ),
     )
     electrons_card = _build_relaxation_electrons_card(
         configuration.electronic_tolerance_ry
@@ -251,7 +291,20 @@ def _build_relaxation_system_card(
     species_count: int,
     wavefunction_cutoff_ry: float,
     charge_density_cutoff_ratio: float,
+    charge_state: int,
+    spin_mode: DftSpinMode,
+    constrain_spin_channel_difference: bool,
+    spin_channel_electron_difference: int,
 ) -> QeSystemCard:
+    electronic_lines: tuple[str, ...] = ()
+    if charge_state != 0:
+        electronic_lines += (f"tot_charge = {charge_state}",)
+    if spin_mode is DftSpinMode.COLLINEAR:
+        electronic_lines += ("nspin = 2",)
+        if constrain_spin_channel_difference:
+            electronic_lines += (
+                f"tot_magnetization = {spin_channel_electron_difference}",
+            )
     return QeSystemCard(
         lines=(
             "ibrav = 0",
@@ -259,6 +312,7 @@ def _build_relaxation_system_card(
             f"ntyp = {species_count}",
             f"ecutwfc = {wavefunction_cutoff_ry:.10f}",
             f"ecutrho = {wavefunction_cutoff_ry * charge_density_cutoff_ratio:.10f}",
+            *electronic_lines,
         )
     )
 

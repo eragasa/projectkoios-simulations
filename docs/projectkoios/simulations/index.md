@@ -8,7 +8,9 @@ The protected simulation core remains calculator-neutral: its identities,
 records, resources, settings, and typed ports do not import workflow
 composition, provider implementations, Applications, downstream consumers, or
 live Workflow runtime objects. Calculator-specific syntax and behavior remain
-under `projectkoios.integrations` and `projectkoios.adapters`.
+under `projectkoios.integrations` and `projectkoios.adapters`. The public
+[structure contracts](structure/index.md) cover exact manifest-backed records,
+derived supercells, and generic ideal defect deltas.
 
 The layered-umbrella architecture includes the owner-specific
 `projectkoios.simulations.workflows` composition layer without weakening those

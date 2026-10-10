@@ -60,5 +60,4 @@ maximum_electronic_steps = 60
 electronic_tolerance_ev = 1.0e-6
 smearing_method = 0
 smearing_width_ev = 0.05
-spin_polarization = 1
 real_space_projection = false

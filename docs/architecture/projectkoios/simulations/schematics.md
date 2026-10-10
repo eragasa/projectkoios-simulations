@@ -49,6 +49,34 @@ The transition was one atomic forward move. The old and new production trees
 do not coexist. No import alias, re-export, compatibility package, or namespace
 shim bridges them.
 
+## Target specification and evidence flow
+
+```text
+exact StructureRecord
+        |
+        v
+exact SimulationRecord
+        |
+        v
+CalculatorInputRecord created by outward input translation
+        |
+        v
+external authorized execution
+        |
+        v
+SimulationEvidenceRecord
+        |
+        +--> simulations.dft.defects compatibility binding
+        |                    |
+        |                    v
+        |          simulations.defects arithmetic
+        |
+        `--> explicit relaxed-structure publication
+```
+
+Generic defect equations do not depend on the DFT binding. The DFT binding
+supplies one method-qualified energy-evidence path.
+
 ## Authority flow
 
 ```text

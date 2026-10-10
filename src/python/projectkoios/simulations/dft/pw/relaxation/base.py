@@ -19,6 +19,56 @@ class PwDftRelaxationObject:
     __slots__ = ()
 
 
+class PwDftRelaxationInitialization(StrEnum):
+    """Select the exact source of the initial relaxation geometry."""
+
+    FROM_EXACT_STARTING_STRUCTURE = "from-exact-starting-structure"
+
+
+class PwDftCellRelaxationMode(StrEnum):
+    """Select active lattice degrees of freedom."""
+
+    FIXED = "fixed"
+    VOLUME_ONLY = "volume-only"
+    SHAPE_AT_FIXED_VOLUME = "shape-at-fixed-volume"
+    SELECTED_COMPONENTS = "selected-components"
+    UNRESTRICTED_VECTORS = "unrestricted-vectors"
+
+
+@dataclass(frozen=True, slots=True)
+class PwDftRelaxationDegreesOfFreedom(PwDftRelaxationObject):
+    """Declare ionic and lattice degrees of freedom without provider tags."""
+
+    relax_atomic_positions: bool
+    cell_mode: PwDftCellRelaxationMode
+    selected_strain_components: tuple[bool, bool, bool, bool, bool, bool] | None = None
+
+    def __post_init__(self) -> None:
+        if type(self.relax_atomic_positions) is not bool:
+            raise TypeError("relax_atomic_positions must be a bool")
+        if not self.relax_atomic_positions:
+            raise ValueError("version one requires active atomic positions")
+        if type(self.cell_mode) is not PwDftCellRelaxationMode:
+            raise TypeError("cell_mode must be a PwDftCellRelaxationMode")
+        if self.cell_mode is PwDftCellRelaxationMode.SELECTED_COMPONENTS:
+            if (
+                type(self.selected_strain_components) is not tuple
+                or len(self.selected_strain_components) != 6
+                or any(
+                    type(value) is not bool for value in self.selected_strain_components
+                )
+                or not any(self.selected_strain_components)
+            ):
+                raise ValueError(
+                    "selected-components mode requires a nonempty six-boolean "
+                    "strain mask"
+                )
+        elif self.selected_strain_components is not None:
+            raise ValueError(
+                "only selected-components mode carries a strain-component mask"
+            )
+
+
 class PwDftRelaxationScope(StrEnum):
     """Select the calculator-neutral geometry degrees of freedom."""
 

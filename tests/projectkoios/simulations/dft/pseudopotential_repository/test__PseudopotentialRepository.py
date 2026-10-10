@@ -8,6 +8,7 @@ from pathlib import Path
 
 from projectkoios.simulations.dft.pseudopotential import (
     Pseudopotential,
+    PseudopotentialArtifactFormat,
     PseudopotentialFile,
 )
 from projectkoios.simulations.dft.pseudopotential_repository import (
@@ -123,6 +124,8 @@ def _file(content: bytes) -> PseudopotentialFile:
             relativistic_treatment="scalar-relativistic",
             valence_electrons=4,
         ),
+        artifact_format=PseudopotentialArtifactFormat.UPF,
+        artifact_format_version="2.0.1",
         filename="Si.upf",
         sha256=hashlib.sha256(content).hexdigest(),
         byte_size=len(content),

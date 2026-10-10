@@ -151,6 +151,9 @@ class PwDftScfObservation(PwDftScfObject):
     program_version: str | None = None
     irreducible_kpoint_count: int | None = None
     wavefunction_cutoff_ev: float | None = None
+    total_magnetization_electrons: float | None = None
+    spin_up_electrons: float | None = None
+    spin_down_electrons: float | None = None
     diagnostics: tuple[PwDftScfDiagnostic, ...] = ()
 
     def __post_init__(self) -> None:
@@ -172,6 +175,39 @@ class PwDftScfObservation(PwDftScfObject):
             or self.wavefunction_cutoff_ev <= 0.0
         ):
             raise ValueError("observed wavefunction cutoff must be positive and finite")
+        for label, value in (
+            ("total_magnetization_electrons", self.total_magnetization_electrons),
+            ("spin_up_electrons", self.spin_up_electrons),
+            ("spin_down_electrons", self.spin_down_electrons),
+        ):
+            if value is not None and (
+                type(value) is not float or not math.isfinite(value)
+            ):
+                raise ValueError(f"{label} must be a finite float when represented")
+        if (self.spin_up_electrons is None) is not (self.spin_down_electrons is None):
+            raise ValueError(
+                "spin-channel electron populations must both be set or omitted"
+            )
+        if (
+            self.spin_up_electrons is not None
+            and self.spin_down_electrons is not None
+            and (self.spin_up_electrons < 0.0 or self.spin_down_electrons < 0.0)
+        ):
+            raise ValueError("spin-channel electron populations must be nonnegative")
+        if (
+            self.total_magnetization_electrons is not None
+            and self.spin_up_electrons is not None
+            and self.spin_down_electrons is not None
+            and not math.isclose(
+                self.total_magnetization_electrons,
+                self.spin_up_electrons - self.spin_down_electrons,
+                rel_tol=0.0,
+                abs_tol=1e-9,
+            )
+        ):
+            raise ValueError(
+                "total magnetization must equal spin-up minus spin-down electrons"
+            )
         if type(self.diagnostics) is not tuple or any(
             type(diagnostic) is not PwDftScfDiagnostic
             for diagnostic in self.diagnostics

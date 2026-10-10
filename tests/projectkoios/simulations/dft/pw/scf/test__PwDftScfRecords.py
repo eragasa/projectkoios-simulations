@@ -68,6 +68,35 @@ class PwDftScfRecordsTest(unittest.TestCase):
             ):
                 construct()
 
+    def test_retains_consistent_spin_observations(self) -> None:
+        observation = PwDftScfObservation(
+            total_energy_ev=-10.0,
+            atom_count=2,
+            electronic_iteration_count=4,
+            converged=True,
+            completed=True,
+            native_artifact=_observation().native_artifact,
+            total_magnetization_electrons=1.0,
+            spin_up_electrons=4.5,
+            spin_down_electrons=3.5,
+        )
+
+        self.assertEqual(observation.total_magnetization_electrons, 1.0)
+
+    def test_rejects_inconsistent_spin_observations(self) -> None:
+        with self.assertRaisesRegex(ValueError, "spin-up minus spin-down"):
+            PwDftScfObservation(
+                total_energy_ev=-10.0,
+                atom_count=2,
+                electronic_iteration_count=4,
+                converged=True,
+                completed=True,
+                native_artifact=_observation().native_artifact,
+                total_magnetization_electrons=0.0,
+                spin_up_electrons=4.5,
+                spin_down_electrons=3.5,
+            )
+
     def test_rejects_malformed_result_and_outcome_payloads(self) -> None:
         with self.assertRaisesRegex(ValueError, "evaluation_id"):
             PwDftScfResult(

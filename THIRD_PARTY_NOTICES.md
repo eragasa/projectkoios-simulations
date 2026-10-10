@@ -42,14 +42,39 @@ license.
 - License SHA-256:
   `0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410`
 
+## Pymatgen
+
+The optional Materials Project integration uses pymatgen for explicit elemental
+convex-hull construction and adaptation of externally sourced periodic
+structures. Mutable pymatgen objects are copied immediately into immutable
+Project Koios records and are not the project serialization contract.
+
+- Distribution and import name: `pymatgen`
+- Supported optional dependency range: `>=2026.5,<2027`
+- Upstream project: <https://github.com/materialsproject/pymatgen>
+- License: MIT
+
+## Materials Project API client
+
+The optional Materials Project integration supports explicit public structure
+and thermodynamic-entry retrieval through `mp_api.client.MPRester`. API
+credentials remain operator-owned runtime secrets and are never retained in
+project records.
+
+- Distribution name: `mp-api`
+- Import name: `mp_api`
+- Supported optional dependency range: `>=0.46,<0.47`
+- Upstream project: <https://github.com/materialsproject/api>
+- License expression: BSD-3-Clause-LBNL
+
 ## SNAKES / projectkoios-snakes
 
 - Maintained fork: <https://github.com/eragasa/projectkoios-snakes>
-- Reviewed fork commit: `72dbb1dbf0a91349faca21ceb660923cc442a8e9`
-- Reviewed fork Git tree: `1b38e523f6210aa0f37bce35a43a08b3bb909f81`
+- Reviewed fork commit: `c959528c3b35c12563b7ba291ca036e1ebb58f7e`
+- Reviewed fork Git tree: `e0b84910cfab879c5bcdaa0b19d26a7d12a14465`
 - Upstream baseline: SNAKES `0.9.33`, commit
   `2291c6e627c85fc2932a83cc2eb9b712495b5d7a`
-- Distribution and import names: `SNAKES` / `snakes`
+- Distribution and import names: `projectkoios-snakes` / `snakes`
 - License: GNU Lesser General Public License, version 3
 - Upstream copyright: Franck Pommereau and contributors
 - Reviewed license SHA-256:

@@ -23,6 +23,7 @@ from projectkoios.simulations.dft.pw.settings import (
     PwDftSettings,
 )
 from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from projectkoios.simulations.structure.library import StructureLibrary
 from projectkoios.simulations.workflows.pw_dft_scf.configuration import (
     PwDftScfCampaignConfiguration,
     PwDftScfRuntimeConfiguration,
@@ -37,7 +38,6 @@ from projectkoios.simulations.workflows.pw_dft_scf.recipe import (
     PwDftScfRecipe,
     PwDftScfSingleCalculationRecipe,
 )
-from tools.pw_dft_scf.structure_repository import MinimalStructureRepository
 
 
 def resolve_example_reference(
@@ -86,13 +86,13 @@ class WorkflowRunnerConfigurationLoader:
     """Resolve campaign profile IDs through reviewed local repositories."""
 
     catalog_path: Path
-    structure_repository: MinimalStructureRepository
+    structure_library: StructureLibrary
 
     def __post_init__(self) -> None:
         if not self.catalog_path.is_file() or self.catalog_path.is_symlink():
             raise ValueError("catalog_path must be a regular nonsymlink file")
-        if type(self.structure_repository) is not MinimalStructureRepository:
-            raise TypeError("structure_repository must be a MinimalStructureRepository")
+        if type(self.structure_library) is not StructureLibrary:
+            raise TypeError("structure_library must be a StructureLibrary")
 
     def load(self, campaign_path: Path) -> LoadedWorkflowRunnerConfiguration:
         """Resolve one compact campaign into typed scientific configuration."""
@@ -114,7 +114,7 @@ class WorkflowRunnerConfigurationLoader:
             sampling_profile_id,
         )
         simulation = PwDftSimulation(
-            unit_cell=self.structure_repository.resolve(structure_id),
+            unit_cell=self.structure_library.resolve_unique(structure_id).unit_cell,
             settings=PwDftSettings(calculation_type=CalculationType.scf),
         )
         base_request = PwDftScfRequest(
@@ -223,7 +223,6 @@ class WorkflowRunnerConfigurationLoader:
             ),
             smearing_method=self._integer(profile, "smearing_method"),
             smearing_width_ev=self._float(profile, "smearing_width_ev"),
-            spin_polarization=self._integer(profile, "spin_polarization"),
             real_space_projection=self._boolean(
                 profile,
                 "real_space_projection",

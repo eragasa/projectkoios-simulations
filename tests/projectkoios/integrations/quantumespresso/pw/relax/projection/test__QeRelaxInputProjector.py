@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import unittest
+from dataclasses import replace
 
 from projectkoios.integrations.quantumespresso.pw.inputfile.base import (
     QeAtomicPositionsCard,
@@ -42,6 +43,16 @@ from projectkoios.integrations.quantumespresso.pw.vc_relax.integration import ( 
     QePwVcRelaxIntegration,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
+from projectkoios.simulations.dft.electronic import (
+    DftChargeState,
+    DftSpinMode,
+    DftSpinTreatment,
+)
+from projectkoios.simulations.dft.pseudopotential import (
+    Pseudopotential,
+    PseudopotentialArtifactFormat,
+    PseudopotentialFile,
+)
 from projectkoios.simulations.dft.pw.relaxation.base import (
     PwDftRelaxationScope,
 )
@@ -84,6 +95,64 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
         self.assertIn("ATOMIC_POSITIONS (crystal)", text)
         self.assertIn("K_POINTS automatic\n 4 4 4 0 0 0", text)
         self.assertEqual(projection.required_external_inputs, ("Si.test.UPF",))
+
+    def test_translates_charge_and_constrained_collinear_spin(self) -> None:
+        request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
+        request = replace(
+            request,
+            simulation=replace(
+                request.simulation,
+                charge=DftChargeState(delta_n_electrons=1, charge_state=-1),
+                spin=DftSpinTreatment(
+                    mode=DftSpinMode.COLLINEAR,
+                    spin_channel_electron_difference=1,
+                    constrain_spin_channel_difference=True,
+                ),
+                pseudopotentials=(
+                    PseudopotentialFile(
+                        pseudopotential=Pseudopotential(
+                            symbol="Si",
+                            exchange_correlation="PBE",
+                            formalism="ultrasoft",
+                            relativistic_treatment="scalar-relativistic",
+                            valence_electrons=4,
+                        ),
+                        artifact_format=PseudopotentialArtifactFormat.UPF,
+                        artifact_format_version="2.0.1",
+                        filename="Si.test.UPF",
+                        sha256="1" * 64,
+                        byte_size=100,
+                    ),
+                ),
+            ),
+        )
+
+        text = (
+            QeRelaxInputProjector(_configuration())
+            .project(request)
+            .rendered_inputs[0]
+            .text
+        )
+
+        self.assertIn("tot_charge = -1", text)
+        self.assertIn("nspin = 2", text)
+        self.assertIn("tot_magnetization = 1", text)
+
+    def test_rejects_unsupported_spin_orbit_treatment(self) -> None:
+        request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
+        request = replace(
+            request,
+            simulation=replace(
+                request.simulation,
+                spin=DftSpinTreatment(
+                    mode=DftSpinMode.SPIN_ORBIT,
+                    spin_quantization_axis=(0.0, 0.0, 1.0),
+                ),
+            ),
+        )
+
+        with self.assertRaisesRegex(NotImplementedError, "only unpolarized"):
+            QeRelaxInputProjector(_configuration()).project(request)
 
     def test_generic_wrapper_selects_fixed_cell_integration(self) -> None:
         integration = QePwRelaxIntegration(_configuration())

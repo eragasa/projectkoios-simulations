@@ -69,8 +69,9 @@ def test_current_wheel_packages_are_limited_to_owned_namespace_directions() -> N
 def test_optional_cpn_and_visualization_dependencies_are_not_core_runtime() -> None:
     project = _pyproject()["project"]
     snakes = (
-        "SNAKES @ git+https://github.com/eragasa/projectkoios-snakes.git@"
-        "72dbb1dbf0a91349faca21ceb660923cc442a8e9"
+        "projectkoios-snakes @ "
+        "git+https://github.com/eragasa/projectkoios-snakes.git@"
+        "c959528c3b35c12563b7ba291ca036e1ebb58f7e"
     )
     plotly = "plotly>=6.5,<7"
 
@@ -169,7 +170,7 @@ def test_workflow_architecture_nodes_have_complete_substantive_trios() -> None:
     )
     nodes = tuple(path.parent for path in documentation_root.rglob("index.md"))
 
-    assert len(nodes) == 58
+    assert len(nodes) == 59
     for node in nodes:
         for filename in ("index.md", "schematics.md", "implementation.md"):
             document = node / filename

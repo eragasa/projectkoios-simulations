@@ -2,10 +2,11 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from projectkoios.simulations.dft.pseudopotential import (
     Pseudopotential,
+    PseudopotentialArtifactFormat,
     PseudopotentialFile,
 )
 
@@ -29,8 +30,24 @@ class QePseudopotentialFile(PseudopotentialFile):
     """Bind a Quantum ESPRESSO pseudopotential to exact UPF file identity."""
 
     pseudopotential: QePseudopotential
+    artifact_format: PseudopotentialArtifactFormat = field(
+        init=False,
+        default=PseudopotentialArtifactFormat.UPF,
+    )
+    artifact_format_version: str = field(init=False)
 
     def __post_init__(self) -> None:
+        object.__setattr__(
+            self,
+            "artifact_format_version",
+            self.pseudopotential.upf_version,
+        )
         PseudopotentialFile.__post_init__(self)
         if type(self.pseudopotential) is not QePseudopotential:
             raise TypeError("pseudopotential must be a QePseudopotential")
+        if self.artifact_format is not PseudopotentialArtifactFormat.UPF:
+            raise ValueError("QE pseudopotential files must use UPF format")
+        if self.artifact_format_version != self.pseudopotential.upf_version:
+            raise ValueError(
+                "UPF artifact format version must match pseudopotential metadata"
+            )

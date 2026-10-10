@@ -5,4 +5,5 @@ Calculator-neutral pseudopotential metadata and exact external-file identities.
 ## Public symbols
 
 - `Pseudopotential`
+- `PseudopotentialArtifactFormat`
 - `PseudopotentialFile`

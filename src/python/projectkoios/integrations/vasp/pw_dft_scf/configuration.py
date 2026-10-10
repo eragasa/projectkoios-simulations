@@ -17,7 +17,6 @@ class VaspScfProjectionConfiguration:
     electronic_tolerance_ev: float = 1.0e-6
     smearing_method: int = 0
     smearing_width_ev: float = 0.05
-    spin_polarization: int = 1
     real_space_projection: bool = False
 
     def __post_init__(self) -> None:
@@ -39,5 +38,3 @@ class VaspScfProjectionConfiguration:
             raise ValueError("electronic_tolerance_ev must be positive and finite")
         if not math.isfinite(self.smearing_width_ev) or self.smearing_width_ev < 0.0:
             raise ValueError("smearing_width_ev must be nonnegative and finite")
-        if self.spin_polarization not in {1, 2}:
-            raise ValueError("spin_polarization must be 1 or 2")

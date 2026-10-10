@@ -4,7 +4,7 @@
 `SuperCell(UnitCell)`. A `SuperCell` retains:
 
 - the exact source `UnitCell`;
-- the three positive diagonal replication counts;
+- three positive diagonal replication counts;
 - the source atom index and integer source-cell translation for every output
   site.
 
@@ -25,15 +25,18 @@ p_super = (p + t) / n.
 `SuperCellConstructionRequest` and returns a correlated
 `SuperCellConstructionResult`. Sites are ordered first by translations in
 lexicographic `(i, j, k)` order and then by source atomic-basis order.
-`UnitCellSiteOrigin` makes that ordering explicit rather than requiring callers
-to infer it.
+`UnitCellSiteOrigin` records that ordering explicitly.
 
-`SuperCellSubstitutor.action()` replaces exactly one site selected by its source
-atom index and translation. Its result remains a `SuperCell`, preserves the
-lattice, positions, replication declaration, and site provenance, and changes
-only the selected chemical symbol. The action does not select a dopant, charge
-state, spin state, relaxation policy, k-point mesh, or acceptable supercell
-size. Those are separate simulation or application decisions.
+The builder accepts only positive diagonal repetitions. A future general
+supercell contract should use an integer transformation matrix rather than
+silently overloading these three repetition counts.
+
+Defects do not mutate a `SuperCell` or preserve a claim that the result is
+pristine. Vacancies, interstitials, substitutions, and complexes are declared
+with [`UnitCellDefectDelta`](../defect/index.md), whose application returns a
+base `UnitCell`.
 
 For the eight-atom cubic conventional silicon cell, `(2, 2, 2)`, `(3, 3, 3)`,
-and `(4, 4, 4)` replications contain 64, 216, and 512 atoms respectively.
+and `(4, 4, 4)` replications contain 64, 216, and 512 atoms respectively. Cell
+construction does not choose a scientifically appropriate size and does not
+authorize calculator execution.
