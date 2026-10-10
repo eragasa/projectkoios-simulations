@@ -10,6 +10,16 @@ unit cell.
 `Si.PrimitiveUnitCell.json` and `Si.ConventionalUnitCell.json` preserve the
 reviewed Applications transfer identities recorded in the catalog.
 
+The catalog also publishes deterministically derived 64-, 216-, and 512-atom
+pristine supercells and ideal single-site Si:P and Si:B substitutions. They are
+2×2×2, 3×3×3, and 4×4×4 replications of the exact conventional cell. In every
+case source site zero at translation `(0, 0, 0)` is replaced, while site order
+and the fixed ideal lattice are retained exactly.
+
+These are structural records only. Charge state, spin treatment, relaxation,
+symmetry, strain, calculator inputs, and acceptance policy are deliberately not
+encoded in their bytes or stable structure IDs.
+
 ## Materials Project nickel record
 
 `Ni.mp-23.PrimitiveUnitCell.json` is the canonical PhysKit adaptation of the

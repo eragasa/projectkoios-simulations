@@ -79,3 +79,219 @@ revision = "c33e9b0beeb7c0c7b4e8ec9bd377916b8dc7dd56e5fc16ca338d591a96314631"
 record_path = "examples/workflows/pw_dft_scf/structures/provenance/P.mp-568348.GGA_GGA+U_R2SCAN.json"
 source_sha256 = "114cf32e6e10c83661c47619229f8d39b2e30a724ee73a42809d7ed0eed27dea"
 result_sha256 = "5b05d50d0072e62a19a776af0b2aa7315d216f2b39b200d4ff6c922cd0510b33"
+
+[[records]]
+structure_id = "Si.Supercell.Atoms64"
+representation = "unit-cell"
+schema_version = 1
+sha256 = "7f4164b7e04c10e17001afe7103fc5913a755b6921a82c956d86e31f58c6f1ca"
+byte_size = 7861
+relative_path = "Si.Supercell.Atoms64.json"
+
+[records.provenance]
+kind = "derived"
+operation_id = "projectkoios.structure.supercell"
+operation_version = "1"
+parameters_json = '''{"repetitions":[2,2,2]}
+'''
+parameters_sha256 = "7598e24463bd2b259ebb4151963a82f64a5e9c1e0e4e14c00dc33aa94887c5fb"
+result_sha256 = "7f4164b7e04c10e17001afe7103fc5913a755b6921a82c956d86e31f58c6f1ca"
+
+[[records.provenance.parents]]
+structure_id = "Si.ConventionalUnitCell"
+representation = "conventional"
+schema_version = 1
+byte_size = 1367
+sha256 = "e34066dbfcbdc187014256731774a4115674a1f1b6286da5729ad4298b0f4f5e"
+
+[[records]]
+structure_id = "Si.P.Substitutional.Atoms64.Ideal"
+representation = "unit-cell"
+schema_version = 1
+sha256 = "2c3892afda8a555c8a78a651e3de1eaed83283e9819e3b9256d82324adae1656"
+byte_size = 7873
+relative_path = "Si.P.Substitutional.Atoms64.Ideal.json"
+
+[records.provenance]
+kind = "derived"
+operation_id = "projectkoios.structure.substitution"
+operation_version = "1"
+parameters_json = '''{"addition":{"position_from_removed_site_index":0,"symbol":"P"},"removals":[0]}
+'''
+parameters_sha256 = "3c53f9c7908dec583801edae45d31137a2b3b4949ae51d9a0714c7a21f284e97"
+result_sha256 = "2c3892afda8a555c8a78a651e3de1eaed83283e9819e3b9256d82324adae1656"
+
+[[records.provenance.parents]]
+structure_id = "Si.Supercell.Atoms64"
+representation = "unit-cell"
+schema_version = 1
+byte_size = 7861
+sha256 = "7f4164b7e04c10e17001afe7103fc5913a755b6921a82c956d86e31f58c6f1ca"
+
+[[records]]
+structure_id = "Si.B.Substitutional.Atoms64.Ideal"
+representation = "unit-cell"
+schema_version = 1
+sha256 = "d093d9ef99c913dd245f45518e5bee5f62f99c5f716d8be4d3109a6c916a2f0e"
+byte_size = 7873
+relative_path = "Si.B.Substitutional.Atoms64.Ideal.json"
+
+[records.provenance]
+kind = "derived"
+operation_id = "projectkoios.structure.substitution"
+operation_version = "1"
+parameters_json = '''{"addition":{"position_from_removed_site_index":0,"symbol":"B"},"removals":[0]}
+'''
+parameters_sha256 = "4fa12254e10e0338aa1d8c066ade35b5ea19001eb37edf5129fb47e5f4db1987"
+result_sha256 = "d093d9ef99c913dd245f45518e5bee5f62f99c5f716d8be4d3109a6c916a2f0e"
+
+[[records.provenance.parents]]
+structure_id = "Si.Supercell.Atoms64"
+representation = "unit-cell"
+schema_version = 1
+byte_size = 7861
+sha256 = "7f4164b7e04c10e17001afe7103fc5913a755b6921a82c956d86e31f58c6f1ca"
+
+[[records]]
+structure_id = "Si.Supercell.Atoms216"
+representation = "unit-cell"
+schema_version = 1
+sha256 = "6f5e03b65d8fdde8642b7c9070a3b9e963f0ff9cd03e8be0a3e41e81305ae783"
+byte_size = 31342
+relative_path = "Si.Supercell.Atoms216.json"
+
+[records.provenance]
+kind = "derived"
+operation_id = "projectkoios.structure.supercell"
+operation_version = "1"
+parameters_json = '''{"repetitions":[3,3,3]}
+'''
+parameters_sha256 = "c05b06c3d436c795e7e9c54fabe1c6c1460b257ee08c48e8badab9cee2804e68"
+result_sha256 = "6f5e03b65d8fdde8642b7c9070a3b9e963f0ff9cd03e8be0a3e41e81305ae783"
+
+[[records.provenance.parents]]
+structure_id = "Si.ConventionalUnitCell"
+representation = "conventional"
+schema_version = 1
+byte_size = 1367
+sha256 = "e34066dbfcbdc187014256731774a4115674a1f1b6286da5729ad4298b0f4f5e"
+
+[[records]]
+structure_id = "Si.P.Substitutional.Atoms216.Ideal"
+representation = "unit-cell"
+schema_version = 1
+sha256 = "ebe070219cbd27d5dd3bea9fd7205f7cb9831446532bea2f009d10b60f38c966"
+byte_size = 31354
+relative_path = "Si.P.Substitutional.Atoms216.Ideal.json"
+
+[records.provenance]
+kind = "derived"
+operation_id = "projectkoios.structure.substitution"
+operation_version = "1"
+parameters_json = '''{"addition":{"position_from_removed_site_index":0,"symbol":"P"},"removals":[0]}
+'''
+parameters_sha256 = "3c53f9c7908dec583801edae45d31137a2b3b4949ae51d9a0714c7a21f284e97"
+result_sha256 = "ebe070219cbd27d5dd3bea9fd7205f7cb9831446532bea2f009d10b60f38c966"
+
+[[records.provenance.parents]]
+structure_id = "Si.Supercell.Atoms216"
+representation = "unit-cell"
+schema_version = 1
+byte_size = 31342
+sha256 = "6f5e03b65d8fdde8642b7c9070a3b9e963f0ff9cd03e8be0a3e41e81305ae783"
+
+[[records]]
+structure_id = "Si.B.Substitutional.Atoms216.Ideal"
+representation = "unit-cell"
+schema_version = 1
+sha256 = "e71900bd4c81e6e5f3907af91153a5ce369219b196771150afa7257a267951b9"
+byte_size = 31354
+relative_path = "Si.B.Substitutional.Atoms216.Ideal.json"
+
+[records.provenance]
+kind = "derived"
+operation_id = "projectkoios.structure.substitution"
+operation_version = "1"
+parameters_json = '''{"addition":{"position_from_removed_site_index":0,"symbol":"B"},"removals":[0]}
+'''
+parameters_sha256 = "4fa12254e10e0338aa1d8c066ade35b5ea19001eb37edf5129fb47e5f4db1987"
+result_sha256 = "e71900bd4c81e6e5f3907af91153a5ce369219b196771150afa7257a267951b9"
+
+[[records.provenance.parents]]
+structure_id = "Si.Supercell.Atoms216"
+representation = "unit-cell"
+schema_version = 1
+byte_size = 31342
+sha256 = "6f5e03b65d8fdde8642b7c9070a3b9e963f0ff9cd03e8be0a3e41e81305ae783"
+
+[[records]]
+structure_id = "Si.Supercell.Atoms512"
+representation = "unit-cell"
+schema_version = 1
+sha256 = "1e6d069796cdd549feb986954a67d5eae32411d0e3edf100c42db5d0146bbc1c"
+byte_size = 61062
+relative_path = "Si.Supercell.Atoms512.json"
+
+[records.provenance]
+kind = "derived"
+operation_id = "projectkoios.structure.supercell"
+operation_version = "1"
+parameters_json = '''{"repetitions":[4,4,4]}
+'''
+parameters_sha256 = "d5f6bfb346e43a360e4a07ce5e1f38d22744d4d83e330315829647c35e67bfe5"
+result_sha256 = "1e6d069796cdd549feb986954a67d5eae32411d0e3edf100c42db5d0146bbc1c"
+
+[[records.provenance.parents]]
+structure_id = "Si.ConventionalUnitCell"
+representation = "conventional"
+schema_version = 1
+byte_size = 1367
+sha256 = "e34066dbfcbdc187014256731774a4115674a1f1b6286da5729ad4298b0f4f5e"
+
+[[records]]
+structure_id = "Si.P.Substitutional.Atoms512.Ideal"
+representation = "unit-cell"
+schema_version = 1
+sha256 = "323f5f161268939d28be4759cc3804f452a6328f32f7650f8e92886225b032b2"
+byte_size = 61074
+relative_path = "Si.P.Substitutional.Atoms512.Ideal.json"
+
+[records.provenance]
+kind = "derived"
+operation_id = "projectkoios.structure.substitution"
+operation_version = "1"
+parameters_json = '''{"addition":{"position_from_removed_site_index":0,"symbol":"P"},"removals":[0]}
+'''
+parameters_sha256 = "3c53f9c7908dec583801edae45d31137a2b3b4949ae51d9a0714c7a21f284e97"
+result_sha256 = "323f5f161268939d28be4759cc3804f452a6328f32f7650f8e92886225b032b2"
+
+[[records.provenance.parents]]
+structure_id = "Si.Supercell.Atoms512"
+representation = "unit-cell"
+schema_version = 1
+byte_size = 61062
+sha256 = "1e6d069796cdd549feb986954a67d5eae32411d0e3edf100c42db5d0146bbc1c"
+
+[[records]]
+structure_id = "Si.B.Substitutional.Atoms512.Ideal"
+representation = "unit-cell"
+schema_version = 1
+sha256 = "883021cc922aebeda8acd33e5013464fc9eab25d847cadbc97bf1a5d978eff0b"
+byte_size = 61074
+relative_path = "Si.B.Substitutional.Atoms512.Ideal.json"
+
+[records.provenance]
+kind = "derived"
+operation_id = "projectkoios.structure.substitution"
+operation_version = "1"
+parameters_json = '''{"addition":{"position_from_removed_site_index":0,"symbol":"B"},"removals":[0]}
+'''
+parameters_sha256 = "4fa12254e10e0338aa1d8c066ade35b5ea19001eb37edf5129fb47e5f4db1987"
+result_sha256 = "883021cc922aebeda8acd33e5013464fc9eab25d847cadbc97bf1a5d978eff0b"
+
+[[records.provenance.parents]]
+structure_id = "Si.Supercell.Atoms512"
+representation = "unit-cell"
+schema_version = 1
+byte_size = 61062
+sha256 = "1e6d069796cdd549feb986954a67d5eae32411d0e3edf100c42db5d0146bbc1c"

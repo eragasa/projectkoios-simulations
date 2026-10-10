@@ -1,0 +1,4127 @@
+{
+  "atoms": [
+    {
+      "fractional_position": [
+        0.0,
+        0.125,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.0,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.125,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.0625,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.1875,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.0625,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.1875,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.0,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.125,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.0,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.125,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.0625,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.1875,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.0625,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.1875,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.0,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.125,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.0,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.125,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.0625,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.1875,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.0625,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.1875,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.0,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.125,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.0,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.125,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.0625,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.1875,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.0625,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.1875,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.25,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.375,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.25,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.375,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.3125,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.4375,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.3125,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.4375,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.25,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.375,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.25,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.375,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.3125,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.4375,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.3125,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.4375,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.25,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.375,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.25,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.375,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.3125,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.4375,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.3125,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.4375,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.25,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.375,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.25,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.375,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.3125,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.4375,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.3125,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.4375,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.625,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.5,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.625,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.5625,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.6875,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.5625,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.6875,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.5,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.625,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.5,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.625,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.5625,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.6875,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.5625,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.6875,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.5,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.625,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.5,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.625,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.5625,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.6875,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.5625,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.6875,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.5,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.625,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.5,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.625,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.5625,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.6875,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.5625,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.6875,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.75,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.875,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.75,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.875,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.8125,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.9375,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.8125,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.9375,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.75,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.875,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.75,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.875,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.8125,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.9375,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.8125,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.9375,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.75,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.875,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.75,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.875,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.8125,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.9375,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.8125,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.9375,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.75,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.875,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.75,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.875,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.8125,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0625,
+        0.9375,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.8125,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.1875,
+        0.9375,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.0,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.125,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.0,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.125,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.0625,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.1875,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.0625,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.1875,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.0,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.125,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.0,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.125,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.0625,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.1875,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.0625,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.1875,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.0,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.125,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.0,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.125,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.0625,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.1875,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.0625,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.1875,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.0,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.125,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.0,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.125,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.0625,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.1875,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.0625,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.1875,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.25,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.375,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.25,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.375,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.3125,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.4375,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.3125,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.4375,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.25,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.375,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.25,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.375,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.3125,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.4375,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.3125,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.4375,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.25,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.375,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.25,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.375,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.3125,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.4375,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.3125,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.4375,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.25,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.375,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.25,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.375,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.3125,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.4375,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.3125,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.4375,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.5,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.625,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.5,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.625,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.5625,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.6875,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.5625,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.6875,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.5,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.625,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.5,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.625,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.5625,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.6875,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.5625,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.6875,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.5,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.625,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.5,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.625,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.5625,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.6875,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.5625,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.6875,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.5,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.625,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.5,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.625,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.5625,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.6875,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.5625,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.6875,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.75,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.875,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.75,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.875,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.8125,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.9375,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.8125,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.9375,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.75,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.875,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.75,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.875,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.8125,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.9375,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.8125,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.9375,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.75,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.875,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.75,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.875,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.8125,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.9375,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.8125,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.9375,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.75,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.875,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.75,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.875,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.8125,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.3125,
+        0.9375,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.8125,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.4375,
+        0.9375,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.125,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.0,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.125,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.0625,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.1875,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.0625,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.1875,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.0,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.125,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.0,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.125,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.0625,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.1875,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.0625,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.1875,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.0,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.125,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.0,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.125,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.0625,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.1875,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.0625,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.1875,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.0,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.125,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.0,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.125,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.0625,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.1875,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.0625,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.1875,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.25,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.375,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.25,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.375,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.3125,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.4375,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.3125,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.4375,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.25,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.375,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.25,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.375,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.3125,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.4375,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.3125,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.4375,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.25,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.375,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.25,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.375,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.3125,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.4375,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.3125,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.4375,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.25,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.375,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.25,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.375,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.3125,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.4375,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.3125,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.4375,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.625,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.5,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.625,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.5625,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.6875,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.5625,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.6875,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.5,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.625,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.5,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.625,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.5625,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.6875,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.5625,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.6875,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.625,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.5,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.625,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.5625,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.6875,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.5625,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.6875,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.5,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.625,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.5,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.625,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.5625,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.6875,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.5625,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.6875,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.75,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.875,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.75,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.875,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.8125,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.9375,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.8125,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.9375,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.75,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.875,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.75,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.875,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.8125,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.9375,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.8125,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.9375,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.75,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.875,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.75,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.875,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.8125,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.9375,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.8125,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.9375,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.75,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.875,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.75,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.875,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.8125,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5625,
+        0.9375,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.8125,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.6875,
+        0.9375,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.0,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.125,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.0,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.125,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.0625,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.1875,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.0625,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.1875,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.0,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.125,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.0,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.125,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.0625,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.1875,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.0625,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.1875,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.0,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.125,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.0,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.125,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.0625,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.1875,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.0625,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.1875,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.0,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.125,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.0,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.125,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.0625,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.1875,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.0625,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.1875,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.25,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.375,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.25,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.375,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.3125,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.4375,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.3125,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.4375,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.25,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.375,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.25,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.375,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.3125,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.4375,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.3125,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.4375,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.25,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.375,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.25,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.375,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.3125,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.4375,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.3125,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.4375,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.25,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.375,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.25,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.375,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.3125,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.4375,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.3125,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.4375,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.5,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.625,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.5,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.625,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.5625,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.6875,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.5625,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.6875,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.5,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.625,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.5,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.625,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.5625,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.6875,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.5625,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.6875,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.5,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.625,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.5,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.625,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.5625,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.6875,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.5625,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.6875,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.5,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.625,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.5,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.625,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.5625,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.6875,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.5625,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.6875,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.75,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.875,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.75,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.875,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.8125,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.9375,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.8125,
+        0.1875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.9375,
+        0.0625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.75,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.875,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.75,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.875,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.8125,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.9375,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.8125,
+        0.4375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.9375,
+        0.3125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.75,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.875,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.75,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.875,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.8125,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.9375,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.8125,
+        0.6875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.9375,
+        0.5625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.75,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.875,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.75,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.875,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.8125,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.8125,
+        0.9375,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.8125,
+        0.9375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.9375,
+        0.9375,
+        0.8125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "symbol": "B"
+    }
+  ],
+  "lattice": {
+    "A": {
+      "a1": [
+        4.0,
+        0.0,
+        0.0
+      ],
+      "a2": [
+        0.0,
+        4.0,
+        0.0
+      ],
+      "a3": [
+        0.0,
+        0.0,
+        4.0
+      ],
+      "vector_axis": "columns"
+    },
+    "lattice_parameter": {
+      "magnitude": 5.43,
+      "unit": "angstrom"
+    }
+  },
+  "representation": "unit-cell",
+  "schema_version": 1,
+  "structure_id": "Si.B.Substitutional.Atoms512.Ideal"
+}

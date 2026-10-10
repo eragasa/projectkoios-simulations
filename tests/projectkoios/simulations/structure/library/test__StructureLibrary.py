@@ -15,6 +15,7 @@ from projectkoios.physkit.periodic.unit_cell import (
     AtomicBasis,
     ConventionalUnitCell,
     PrimitiveUnitCell,
+    UnitCell,
     UnitCellJsonCodec,
 )
 from projectkoios.physkit.units import (
@@ -24,6 +25,7 @@ from projectkoios.physkit.units import (
     VectorQuantity,
 )
 from projectkoios.simulations.structure import (
+    DerivedStructureProvenance,
     StructureConflictError,
     StructureIntegrityError,
     StructureLibrary,
@@ -93,6 +95,15 @@ class StructureLibraryTest(unittest.TestCase):
                 "materials-project.mp-23.primitive",
                 "materials-project.mp-160.primitive",
                 "materials-project.mp-568348.primitive",
+                "Si.Supercell.Atoms64",
+                "Si.P.Substitutional.Atoms64.Ideal",
+                "Si.B.Substitutional.Atoms64.Ideal",
+                "Si.Supercell.Atoms216",
+                "Si.P.Substitutional.Atoms216.Ideal",
+                "Si.B.Substitutional.Atoms216.Ideal",
+                "Si.Supercell.Atoms512",
+                "Si.P.Substitutional.Atoms512.Ideal",
+                "Si.B.Substitutional.Atoms512.Ideal",
             ),
         )
         primitive = library.resolve_unique("Si.PrimitiveUnitCell")
@@ -156,7 +167,47 @@ class StructureLibraryTest(unittest.TestCase):
                 1,
             )
             self.assertNotIn("MP_API_KEY", provenance_content.decode("utf-8"))
-        for resolution in (primitive, conventional, nickel, boron, phosphorus):
+        derived = []
+        for atom_count in (64, 216, 512):
+            bulk = library.resolve_unique(f"Si.Supercell.Atoms{atom_count}")
+            phosphorus_defect = library.resolve_unique(
+                f"Si.P.Substitutional.Atoms{atom_count}.Ideal"
+            )
+            boron_defect = library.resolve_unique(
+                f"Si.B.Substitutional.Atoms{atom_count}.Ideal"
+            )
+            self.assertIs(type(bulk.unit_cell), UnitCell)
+            self.assertEqual(len(bulk.unit_cell.atomic_basis.atoms), atom_count)
+            self.assertEqual(
+                len(phosphorus_defect.unit_cell.atomic_basis.atoms), atom_count
+            )
+            self.assertEqual(len(boron_defect.unit_cell.atomic_basis.atoms), atom_count)
+            self.assertEqual(
+                phosphorus_defect.unit_cell.atomic_basis.atoms[-1].symbol, "P"
+            )
+            self.assertEqual(boron_defect.unit_cell.atomic_basis.atoms[-1].symbol, "B")
+            self.assertIs(type(bulk.record.provenance), DerivedStructureProvenance)
+            self.assertEqual(
+                bulk.record.provenance.parents[0].sha256,
+                conventional.record.sha256,
+            )
+            for defect in (phosphorus_defect, boron_defect):
+                self.assertIs(
+                    type(defect.record.provenance), DerivedStructureProvenance
+                )
+                self.assertEqual(
+                    defect.record.provenance.parents[0].sha256,
+                    bulk.record.sha256,
+                )
+            derived.extend((bulk, phosphorus_defect, boron_defect))
+        for resolution in (
+            primitive,
+            conventional,
+            nickel,
+            boron,
+            phosphorus,
+            *derived,
+        ):
             content = resolution.path.read_bytes()
             self.assertEqual(len(content), resolution.record.byte_size)
             self.assertEqual(

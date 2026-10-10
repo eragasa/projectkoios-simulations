@@ -15,6 +15,7 @@ from projectkoios.physkit.periodic.unit_cell import (
     AtomicBasis,
     ConventionalUnitCell,
     UnitCell,
+    UnitCellJsonCodec,
 )
 from projectkoios.physkit.units import (
     PhysicalUnit,
@@ -234,21 +235,50 @@ class UnitCellDefectDeltaTest(unittest.TestCase):
             "silicon_substitutional_defects.py"
         )
 
-        bulk = declarations["SILICON_BULK_SUPERCELL"]
-        phosphorus = declarations["SILICON_PHOSPHORUS_IDEAL_RESULT"]
-        boron = declarations["SILICON_BORON_IDEAL_RESULT"]
-        self.assertEqual(len(bulk.atomic_basis.atoms), 64)
         self.assertEqual(declarations["SUBSTITUTION_SITE_INDEX"], 0)
         self.assertEqual(
-            declarations["SUBSTITUTION_SITE_ORIGIN"],
-            UnitCellSiteOrigin(source_atom_index=0, translation=(0, 0, 0)),
+            declarations["SUPERCELL_REPETITIONS"],
+            ((2, 2, 2), (3, 3, 3), (4, 4, 4)),
         )
-        self.assertEqual(phosphorus.delta.charge_state, 0)
-        self.assertEqual(boron.delta.charge_state, 0)
-        self.assertEqual(phosphorus.unit_cell.atomic_basis.atoms[-1].symbol, "P")
-        self.assertEqual(boron.unit_cell.atomic_basis.atoms[-1].symbol, "B")
-        self.assertEqual(len(phosphorus.unit_cell.atomic_basis.atoms), 64)
-        self.assertEqual(len(boron.unit_cell.atomic_basis.atoms), 64)
+        codec = UnitCellJsonCodec()
+        structure_root = repository / "examples/workflows/pw_dft_scf/structures"
+        for atom_count in (64, 216, 512):
+            bulk = declarations["SILICON_BULK_SUPERCELLS"][atom_count]
+            phosphorus = declarations["SILICON_PHOSPHORUS_IDEAL_RESULTS"][atom_count]
+            boron = declarations["SILICON_BORON_IDEAL_RESULTS"][atom_count]
+            self.assertEqual(len(bulk.atomic_basis.atoms), atom_count)
+            self.assertEqual(
+                declarations["SUBSTITUTION_SITE_ORIGINS"][atom_count],
+                UnitCellSiteOrigin(source_atom_index=0, translation=(0, 0, 0)),
+            )
+            self.assertEqual(phosphorus.delta.charge_state, 0)
+            self.assertEqual(boron.delta.charge_state, 0)
+            self.assertEqual(phosphorus.unit_cell.atomic_basis.atoms[-1].symbol, "P")
+            self.assertEqual(boron.unit_cell.atomic_basis.atoms[-1].symbol, "B")
+            self.assertEqual(len(phosphorus.unit_cell.atomic_basis.atoms), atom_count)
+            self.assertEqual(len(boron.unit_cell.atomic_basis.atoms), atom_count)
+            bulk_unit_cell = UnitCell(
+                direct_lattice=bulk.direct_lattice,
+                lattice_parameter=bulk.lattice_parameter,
+                atomic_basis=bulk.atomic_basis,
+            )
+            for structure_id, unit_cell in (
+                (f"Si.Supercell.Atoms{atom_count}", bulk_unit_cell),
+                (
+                    f"Si.P.Substitutional.Atoms{atom_count}.Ideal",
+                    phosphorus.unit_cell,
+                ),
+                (
+                    f"Si.B.Substitutional.Atoms{atom_count}.Ideal",
+                    boron.unit_cell,
+                ),
+            ):
+                self.assertEqual(
+                    codec.dumps(unit_cell, structure_id=structure_id),
+                    (structure_root / f"{structure_id}.json").read_text(
+                        encoding="utf-8"
+                    ),
+                )
 
     def test_rejects_invalid_removal_and_addition_declarations(self) -> None:
         bulk = SILICON_BULK_SUPERCELL

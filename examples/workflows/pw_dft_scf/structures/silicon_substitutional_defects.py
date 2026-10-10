@@ -20,39 +20,52 @@ SILICON_CONVENTIONAL_RECORD = STRUCTURE_LIBRARY.require_unique(
 SILICON_CONVENTIONAL_CELL = STRUCTURE_LIBRARY.resolve(
     SILICON_CONVENTIONAL_RECORD
 ).unit_cell
-SILICON_BULK_SUPERCELL = (
-    SuperCellBuilder()
-    .action(
-        request=SuperCellConstructionRequest(
-            source_unit_cell=SILICON_CONVENTIONAL_CELL,
-            repetitions=(2, 2, 2),
-        )
-    )
-    .supercell
-)
-
+SUPERCELL_REPETITIONS = ((2, 2, 2), (3, 3, 3), (4, 4, 4))
 SUBSTITUTION_SITE_INDEX = 0
-SUBSTITUTION_SITE_ORIGIN = SILICON_BULK_SUPERCELL.site_origins[SUBSTITUTION_SITE_INDEX]
-SUBSTITUTION_SITE_POSITION = SILICON_BULK_SUPERCELL.atomic_basis.atoms[
-    SUBSTITUTION_SITE_INDEX
-].position_fractional
+SILICON_BULK_SUPERCELLS = {}
+SUBSTITUTION_SITE_ORIGINS = {}
+SILICON_PHOSPHORUS_DELTAS = {}
+SILICON_BORON_DELTAS = {}
+SILICON_PHOSPHORUS_IDEAL_RESULTS = {}
+SILICON_BORON_IDEAL_RESULTS = {}
 
-SILICON_PHOSPHORUS_DELTA = UnitCellDefectDelta(
-    bulk_cell=SILICON_BULK_SUPERCELL,
-    removals=(SUBSTITUTION_SITE_INDEX,),
-    additions=(Atom(symbol="P", position_fractional=SUBSTITUTION_SITE_POSITION),),
-    charge_state=0,
-)
-SILICON_BORON_DELTA = UnitCellDefectDelta(
-    bulk_cell=SILICON_BULK_SUPERCELL,
-    removals=(SUBSTITUTION_SITE_INDEX,),
-    additions=(Atom(symbol="B", position_fractional=SUBSTITUTION_SITE_POSITION),),
-    charge_state=0,
-)
+for repetitions in SUPERCELL_REPETITIONS:
+    supercell = (
+        SuperCellBuilder()
+        .action(
+            request=SuperCellConstructionRequest(
+                source_unit_cell=SILICON_CONVENTIONAL_CELL,
+                repetitions=repetitions,
+            )
+        )
+        .supercell
+    )
+    atom_count = len(supercell.atomic_basis.atoms)
+    substitution_site_position = supercell.atomic_basis.atoms[
+        SUBSTITUTION_SITE_INDEX
+    ].position_fractional
+    phosphorus_delta = UnitCellDefectDelta(
+        bulk_cell=supercell,
+        removals=(SUBSTITUTION_SITE_INDEX,),
+        additions=(Atom(symbol="P", position_fractional=substitution_site_position),),
+        charge_state=0,
+    )
+    boron_delta = UnitCellDefectDelta(
+        bulk_cell=supercell,
+        removals=(SUBSTITUTION_SITE_INDEX,),
+        additions=(Atom(symbol="B", position_fractional=substitution_site_position),),
+        charge_state=0,
+    )
 
-SILICON_PHOSPHORUS_IDEAL_RESULT = UnitCellDefectDeltaApplicator().action(
-    request=SILICON_PHOSPHORUS_DELTA
-)
-SILICON_BORON_IDEAL_RESULT = UnitCellDefectDeltaApplicator().action(
-    request=SILICON_BORON_DELTA
-)
+    SILICON_BULK_SUPERCELLS[atom_count] = supercell
+    SUBSTITUTION_SITE_ORIGINS[atom_count] = supercell.site_origins[
+        SUBSTITUTION_SITE_INDEX
+    ]
+    SILICON_PHOSPHORUS_DELTAS[atom_count] = phosphorus_delta
+    SILICON_BORON_DELTAS[atom_count] = boron_delta
+    SILICON_PHOSPHORUS_IDEAL_RESULTS[atom_count] = (
+        UnitCellDefectDeltaApplicator().action(request=phosphorus_delta)
+    )
+    SILICON_BORON_IDEAL_RESULTS[atom_count] = UnitCellDefectDeltaApplicator().action(
+        request=boron_delta
+    )

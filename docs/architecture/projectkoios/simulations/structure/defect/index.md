@@ -62,24 +62,28 @@ realized electronically and must match it.
 contains concrete neutral, unrelaxed Si:P and Si:B declarations:
 
 1. resolve exact `Si.ConventionalUnitCell` from the reviewed manifest;
-2. construct a diagonal `(2, 2, 2)` pristine `SuperCell`, yielding 64 Si atoms;
+2. construct diagonal `(2, 2, 2)`, `(3, 3, 3)`, and `(4, 4, 4)` pristine
+   `SuperCell` values, yielding 64, 216, and 512 atoms;
 3. select original supercell atom index `0`, whose
    `UnitCellSiteOrigin` is source atom `0` at translation `(0, 0, 0)`;
 4. remove index `0` and add P or B at that exact fractional position;
 5. set `charge_state=0` and apply the delta.
 
 `Si:P`, `Si:B`, and Kröger–Vink notation are human-readable labels, not
-canonical machine identities. The exact declaration identity is the complete
-combination of the parent `StructureRecord`, `(2, 2, 2)` transformation,
-original removal index, ordered added atom and position, and charge state. No
-standalone `StructureRecord` identifier is assigned to either derived result,
-because the version-one library codec stores primitive and conventional source
-cells only. Persisting derived base `UnitCell` values requires a separately
-reviewed schema and provenance contract.
+canonical machine identities. The exact derivation binds the parent
+`StructureRecord`, diagonal transformation, original removal index, and ordered
+added atom. Charge state remains a separate defect declaration and is not
+encoded in structure bytes or IDs.
 
-The example fixes one ideal declaration; it does not assert that the selected
-size, site, charge state, spin state, or geometry is scientifically appropriate
-for a calculation.
+The structure catalog publishes exact base-`UnitCell` records for all nine
+pristine and ideal-defect cells. Their derived provenance names the deterministic
+supercell or substitution operation, canonical parameters, exact parent record,
+and result digest. Regeneration tests compare the declarations with every
+published byte sequence.
+
+These records materialize the requested size matrix but do not assert that the
+sizes, neutral charge, spin treatment, relaxation scope, symmetry handling, or
+local-minimum policy are scientifically accepted for a calculation.
 
 ## Elemental reference selection
 
