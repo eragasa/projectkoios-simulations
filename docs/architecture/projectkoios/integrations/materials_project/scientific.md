@@ -37,6 +37,19 @@ The selected phase's exact structure becomes a candidate local input. A
 compatible local relaxation and final energy calculation supplies the chemical
 potential used with local defect and pristine energies.
 
+## Retained Ni phase
+
+The retained `GGA_GGA+U_R2SCAN` one-element hull selected Materials Project
+material `mp-23`, an fcc Ni phase, from six returned Ni candidates. The copied
+primitive cell is an external database geometry. Its selection establishes
+neither a Project Koios spin specification nor a locally compatible energy.
+
+The Ni spin-validation calculation must separately declare collinear spin,
+initial magnetization, metallic occupation and smearing, exact local
+pseudopotential identity, cutoff, k-point sampling, and acceptance criteria.
+Materials Project magnetic labels or moments are external observations and are
+not substituted for those local specification and evidence fields.
+
 ## Reproducibility qualification
 
 A retained response snapshot makes the observed candidate set and selected

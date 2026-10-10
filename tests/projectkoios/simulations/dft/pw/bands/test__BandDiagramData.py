@@ -21,20 +21,18 @@ from projectkoios.simulations.dft.pw.bands import (
     BandPathVertex,
     PwDftBandsSimulation,
 )
-from projectkoios.simulations.dft.pw.settings import CalculationType, PwDftSettings
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from tests.projectkoios.simulations.dft.pw.support import (
+    resolved_pw_dft_simulation,
+)
 
 
 class BandDiagramDataTest(unittest.TestCase):
-    def test_bands_simulation_rejects_a_nonbands_base_simulation(self) -> None:
+    def test_bands_simulation_requires_resolved_structure_state(self) -> None:
         path = _path()
         bands = _calculation(path)
-        with self.assertRaisesRegex(ValueError, "calculation_type must be bands"):
+        with self.assertRaisesRegex(TypeError, "ResolvedPwDftSimulation"):
             PwDftBandsSimulation(
-                simulation=PwDftSimulation(
-                    unit_cell=bands.simulation.unit_cell,
-                    settings=PwDftSettings(CalculationType.scf),
-                ),
+                simulation=bands.simulation.simulation,  # type: ignore[arg-type]
                 path=path,
             )
 
@@ -102,10 +100,7 @@ def _calculation(path: BandPath) -> PwDftBandsSimulation:
         ),
     )
     return PwDftBandsSimulation(
-        simulation=PwDftSimulation(
-            unit_cell=unit_cell,
-            settings=PwDftSettings(CalculationType.bands),
-        ),
+        simulation=resolved_pw_dft_simulation(unit_cell),
         path=path,
     )
 

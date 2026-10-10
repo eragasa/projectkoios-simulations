@@ -196,7 +196,7 @@ def test_rejects_starting_cell_bytes_that_do_not_match_the_record(
         provenance=replace(starting.record.provenance, result_sha256="f" * 64),
     )
 
-    with pytest.raises(ValueError, match="starting structure bytes"):
+    with pytest.raises(ValueError, match="publication starting structure"):
         PwDftRelaxedStructurePublisher().action(
             PwDftRelaxedStructurePublicationRequest(
                 structure_id="Si.RelaxedUnitCell",
@@ -225,11 +225,16 @@ def test_rejects_evidence_from_a_different_task(tmp_path: Path) -> None:
 def test_rejects_evidence_for_different_normalized_geometry(tmp_path: Path) -> None:
     result = completed_relaxation_result(PwDftRelaxationScope.ATOMIC_POSITIONS)
     evidence = matching_relaxation_evidence(result)
+    starting_cell = result.starting_structure.unit_cell
     altered_result = replace(
         result,
         observation=replace(
             result.observation,
-            final_unit_cell=result.request.simulation.unit_cell,
+            final_unit_cell=UnitCell(
+                direct_lattice=starting_cell.direct_lattice,
+                lattice_parameter=starting_cell.lattice_parameter,
+                atomic_basis=starting_cell.atomic_basis,
+            ),
         ),
     )
 

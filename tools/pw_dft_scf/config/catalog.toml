@@ -1,16 +1,22 @@
 schema_version = 1
 
 [sampling.single-vasp]
+exchange_correlation_identifier = "GGA_X_PBE+GGA_C_PBE"
+pseudopotential_compatibility_label = "PBE"
 kpoint_mesh = [8, 8, 8]
 kpoint_shift = [0, 0, 0]
 wavefunction_cutoff_ev = 400.0
 
 [sampling.single-qe]
+exchange_correlation_identifier = "GGA_X_PBE+GGA_C_PBE"
+pseudopotential_compatibility_label = "PBE"
 kpoint_mesh = [8, 8, 8]
 kpoint_shift = [0, 0, 0]
 wavefunction_cutoff_ev = 408.1707936897154
 
 [sampling.convergence-base]
+exchange_correlation_identifier = "GGA_X_PBE+GGA_C_PBE"
+pseudopotential_compatibility_label = "PBE"
 kpoint_mesh = [8, 8, 8]
 kpoint_shift = [0, 0, 0]
 wavefunction_cutoff_ev = 400.0
@@ -39,12 +45,24 @@ maximum_grid_points = 80
 
 [projection.qe-sssp-pbe-efficiency]
 charge_density_cutoff_ratio = 8.0
+# QE native SCF convergence threshold, in Ry.
 electronic_tolerance_ry = 1.0e-6
+# Absolute Ry tolerance used only for neutral-eV-to-native-Ry comparison.
+electronic_atol_ry = 1.0e-15
 prefix = "system"
 pseudo_dir = "./"
 outdir = "./tmp/"
 input_filename = "pw.in"
 coordinate_precision = 8
+pseudopotential_symbol = "Si"
+pseudopotential_filename = "Si.pbe-n-rrkjus_psl.1.0.0.UPF"
+pseudopotential_format = "upf"
+pseudopotential_format_version = "2.0.1"
+pseudopotential_formalism = "USPP"
+pseudopotential_relativistic_treatment = "scalar-relativistic"
+pseudopotential_valence_electrons = 4
+pseudopotential_byte_size = 1299382
+pseudopotential_sha256 = "ae3aefd0811f9499dbc4a72f1f9ae02ef4fc7f3568bf6f559b68668719c69e2b"
 
 [[projection.qe-sssp-pbe-efficiency.species]]
 symbol = "Si"
@@ -61,3 +79,12 @@ electronic_tolerance_ev = 1.0e-6
 smearing_method = 0
 smearing_width_ev = 0.05
 real_space_projection = false
+pseudopotential_symbol = "Si"
+pseudopotential_filename = "POTCAR"
+pseudopotential_format = "vasp-potcar"
+pseudopotential_format_version = "PAW_PBE-05Jan2001"
+pseudopotential_formalism = "PAW"
+pseudopotential_relativistic_treatment = "scalar-relativistic"
+pseudopotential_valence_electrons = 4
+pseudopotential_byte_size = 195673
+pseudopotential_sha256 = "79d9987ad8750f624c4d6acb2a16d13abf6a777132adc04dc6c8399be72b42bb"

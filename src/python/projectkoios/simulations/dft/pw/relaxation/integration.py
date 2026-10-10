@@ -6,14 +6,13 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.pw.relaxation.base import (
-    PwDftRelaxationRequest,
-    PwDftRelaxationScope,
-)
+from projectkoios.simulations.dft.pw.relaxation.base import PwDftRelaxationScope
 from projectkoios.simulations.dft.pw.relaxation.capabilities import (
     PwDftRelaxationBackendDescription,
     PwDftRelaxationImplementationStatus,
 )
+from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
+from projectkoios.simulations.structure import StructureResolution
 
 
 @dataclass(frozen=True, slots=True)
@@ -93,7 +92,9 @@ class PwDftRelaxationIntegration(ABC):
 
     @abstractmethod
     def project(
-        self, request: PwDftRelaxationRequest
+        self,
+        request: PwDftRelaxationRequest,
+        structure: StructureResolution,
     ) -> PwDftRelaxationInputProjection:
         """Project common intent into deterministic calculator-native inputs."""
         raise NotImplementedError
@@ -166,6 +167,12 @@ class PwDftRelaxationInputWrapper:
         *,
         integration_id: CalculatorIntegrationId,
         request: PwDftRelaxationRequest,
+        structure: StructureResolution,
     ) -> PwDftRelaxationInputProjection:
         """Select the integration and return its native input projection."""
-        return self.registry.resolve(integration_id, request.scope).project(request)
+        # Backend selection uses specification scope; occurrence identity has no
+        # authority to alter scientific degrees of freedom.
+        return self.registry.resolve(
+            integration_id,
+            request.specification.scope,
+        ).project(request, structure)

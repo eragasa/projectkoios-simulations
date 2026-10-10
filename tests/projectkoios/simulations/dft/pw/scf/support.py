@@ -1,60 +1,63 @@
 from __future__ import annotations
 
-import numpy as np
-
-from projectkoios.physkit.periodic import DirectLattice3D
-from projectkoios.physkit.periodic.unit_cell import (
-    Atom,
-    AtomicBasis,
-    UnitCell,
+from projectkoios.simulations.dft.electronic import (
+    DftOccupationMethod,
+    DftOccupationPolicy,
+    PwDftElectronicConvergencePolicy,
 )
-from projectkoios.physkit.units import (
-    PhysicalUnit,
-    ScalarQuantity,
-    Unitless,
-    VectorQuantity,
+from projectkoios.simulations.dft.pseudopotential import (
+    Pseudopotential,
+    PseudopotentialArtifactFormat,
+    PseudopotentialFile,
 )
-from projectkoios.simulations.dft.pw.scf.base import (
-    PwDftScfRequest,
-    PwDftScfSampling,
-)
-from projectkoios.simulations.dft.pw.settings import (
-    CalculationType,
-    PwDftSettings,
-)
+from projectkoios.simulations.dft.pw.scf.request import PwDftScfRequest
+from projectkoios.simulations.dft.pw.scf.specification import PwDftScfSpecification
+from projectkoios.simulations.dft.pw.settings import PwDftKPointSamplingPolicy
 from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from tests.projectkoios.simulations.dft.pw.support import (
+    pbe_exchange_correlation,
+    silicon_structure_resolution,
+)
 
 
 def silicon_scf_request() -> PwDftScfRequest:
+    structure = silicon_structure_resolution()
     return PwDftScfRequest(
         evaluation_id="silicon-scf",
-        simulation=PwDftSimulation(
-            unit_cell=UnitCell(
-                direct_lattice=DirectLattice3D(
-                    a1=np.array([0.5, 0.5, 0.0]),
-                    a2=np.array([0.5, 0.0, 0.5]),
-                    a3=np.array([0.0, 0.5, 0.5]),
-                ),
-                lattice_parameter=ScalarQuantity(5.43, PhysicalUnit("angstrom")),
-                atomic_basis=AtomicBasis(
-                    atoms=(
-                        _silicon_atom((0.0, 0.0, 0.0)),
-                        _silicon_atom((0.25, 0.25, 0.25)),
-                    )
+        specification=PwDftScfSpecification(
+            simulation_id="Si.PrimitiveUnitCell.QE.SCF",
+            simulation=PwDftSimulation(
+                structure=structure.record,
+                exchange_correlation=pbe_exchange_correlation(),
+                pseudopotentials=(
+                    PseudopotentialFile(
+                        pseudopotential=Pseudopotential(
+                            symbol="Si",
+                            exchange_correlation="PBE",
+                            formalism="USPP",
+                            relativistic_treatment="scalar-relativistic",
+                            valence_electrons=4,
+                        ),
+                        artifact_format=PseudopotentialArtifactFormat.UPF,
+                        artifact_format_version="2.0.1",
+                        filename="Si.pbe-n-rrkjus_psl.1.0.0.UPF",
+                        sha256="1" * 64,
+                        byte_size=100,
+                    ),
                 ),
             ),
-            settings=PwDftSettings(calculation_type=CalculationType.scf),
-        ),
-        sampling=PwDftScfSampling(
-            kpoint_mesh=(8, 8, 8),
-            kpoint_shift=(0, 0, 0),
+            kpoint_sampling=PwDftKPointSamplingPolicy(
+                mesh=(8, 8, 8),
+                shift=(0, 0, 0),
+                use_spatial_symmetry=True,
+                use_time_reversal=True,
+            ),
             wavefunction_cutoff_ev=400.0,
+            occupation=DftOccupationPolicy(method=DftOccupationMethod.FIXED),
+            # 1.0e-6 Ry converted to eV preserves the maintained QE fixture.
+            electronic_convergence=PwDftElectronicConvergencePolicy(
+                energy_tolerance_ev=1.3605693122994e-5,
+                maximum_electronic_iterations=100,
+            ),
         ),
-    )
-
-
-def _silicon_atom(position: tuple[float, float, float]) -> Atom:
-    return Atom(
-        symbol="Si",
-        position_fractional=VectorQuantity(np.array(position), Unitless()),
     )

@@ -7,7 +7,7 @@
     "sha256": "87aa72158e2c103c63fce1deca977dc42ff4ba344519a9662aadb96d33eab910",
     "source_revision": "770a0b2d12928a67048e2f3da8d10d057e52179e"
   },
-  "configuration_sha256": "8da988dd770ea9f2cd4736f7a88432a6aa9c45fdc882edb9f3d6793da05658df",
+  "configuration_sha256": "4bbebce54b7104e59c1159d6ddff028b9afd614adb5e60ef6d00d626f516c760",
   "energy_convergence_tolerance_mev_per_atom": 1.0,
   "input": {
     "byte_size": 862,

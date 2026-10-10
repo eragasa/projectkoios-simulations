@@ -105,6 +105,25 @@ class QeScfDataExtractorTest(unittest.TestCase):
             )
         )
 
+    def test_normalizes_collinear_total_magnetization(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            run = _write_successful_run(root)
+            magnetic_output = qe_support.QE_PW_OUTPUT.replace(
+                "JOB DONE.",
+                "     total magnetization = 0.74 Bohr mag/cell\n"
+                "     absolute magnetization = 0.83 Bohr mag/cell\n"
+                "JOB DONE.",
+            )
+            (run / "pw.out").write_text(magnetic_output, encoding="utf-8")
+
+            data = qe_data_extraction.QeScfDataExtractor(artifact_root=root).extract(
+                "run/pw.out"
+            )
+
+        self.assertEqual(data.total_magnetization_electrons, 0.74)
+        self.assertEqual(data.observation.total_magnetization_electrons, 0.74)
+
     def test_facades_optional_qexsd_without_changing_neutral_observation(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)

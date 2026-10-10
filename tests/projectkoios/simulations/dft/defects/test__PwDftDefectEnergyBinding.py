@@ -26,7 +26,9 @@ from projectkoios.simulations.dft.pw.scf.base import (
     PwDftScfNativeArtifact,
     PwDftScfObservation,
 )
+from projectkoios.simulations.dft.pw.simulation import ResolvedPwDftSimulation
 from tests.projectkoios.simulations.dft.pw.scf.support import silicon_scf_request
+from tests.projectkoios.simulations.dft.pw.support import silicon_structure_resolution
 
 
 def _reference(stable_id: str, digit: str) -> DefectContentReference:
@@ -41,8 +43,8 @@ def _reference(stable_id: str, digit: str) -> DefectContentReference:
 
 def test_dft_binding_requires_exact_input_mappings_and_final_scf() -> None:
     request = silicon_scf_request()
-    simulation = replace(
-        request.simulation,
+    simulation_intent = replace(
+        request.specification.simulation,
         pseudopotentials=(
             PseudopotentialFile(
                 pseudopotential=Pseudopotential(
@@ -59,6 +61,10 @@ def test_dft_binding_requires_exact_input_mappings_and_final_scf() -> None:
                 byte_size=100,
             ),
         ),
+    )
+    simulation = ResolvedPwDftSimulation(
+        simulation=simulation_intent,
+        structure=silicon_structure_resolution(),
     )
     integration_id = CalculatorIntegrationId("quantum-espresso")
     content = b"input\n"

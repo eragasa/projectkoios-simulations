@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import tempfile
 import unittest
 from dataclasses import replace
@@ -78,7 +79,7 @@ CONVENTIONAL_CELL = ConventionalUnitCell(
 
 
 class StructureLibraryTest(unittest.TestCase):
-    def test_loads_and_resolves_the_reviewed_silicon_catalog(self) -> None:
+    def test_loads_and_resolves_the_reviewed_structure_catalog(self) -> None:
         repository = Path(__file__).resolve().parents[5]
         manifest = repository / "examples/workflows/pw_dft_scf/structures/catalog.toml"
 
@@ -86,10 +87,15 @@ class StructureLibraryTest(unittest.TestCase):
 
         self.assertEqual(
             tuple(record.structure_id for record in library.records()),
-            ("Si.PrimitiveUnitCell", "Si.ConventionalUnitCell"),
+            (
+                "Si.PrimitiveUnitCell",
+                "Si.ConventionalUnitCell",
+                "materials-project.mp-23.primitive",
+            ),
         )
         primitive = library.resolve_unique("Si.PrimitiveUnitCell")
         conventional = library.resolve_unique("Si.ConventionalUnitCell")
+        nickel = library.resolve_unique("materials-project.mp-23.primitive")
         self.assertIs(type(primitive.unit_cell), PrimitiveUnitCell)
         self.assertIs(type(conventional.unit_cell), ConventionalUnitCell)
         self.assertEqual(
@@ -100,7 +106,38 @@ class StructureLibraryTest(unittest.TestCase):
             conventional.record.representation,
             StructureRepresentation.conventional,
         )
-        for resolution in (primitive, conventional):
+        self.assertIs(type(nickel.unit_cell), PrimitiveUnitCell)
+        self.assertEqual(
+            tuple(atom.symbol for atom in nickel.unit_cell.atomic_basis.atoms),
+            ("Ni",),
+        )
+        self.assertEqual(
+            nickel.record.provenance.source,
+            "https://api.materialsproject.org/",
+        )
+        provenance_path = repository / nickel.record.provenance.record_path
+        provenance_content = provenance_path.read_bytes()
+        self.assertEqual(
+            hashlib.sha256(provenance_content).hexdigest(),
+            nickel.record.provenance.source_sha256,
+        )
+        provenance_payload = json.loads(provenance_content)
+        self.assertEqual(provenance_payload["selection"]["material_id"], "mp-23")
+        self.assertEqual(
+            provenance_payload["structure"]["sha256"],
+            nickel.record.sha256,
+        )
+        self.assertEqual(
+            sum(
+                candidate["material_id"] == "mp-23"
+                and candidate["sha256"]
+                == provenance_payload["selection"]["selected_candidate_sha256"]
+                for candidate in provenance_payload["query_snapshot"]["candidates"]
+            ),
+            1,
+        )
+        self.assertNotIn("MP_API_KEY", provenance_content.decode("utf-8"))
+        for resolution in (primitive, conventional, nickel):
             content = resolution.path.read_bytes()
             self.assertEqual(len(content), resolution.record.byte_size)
             self.assertEqual(

@@ -33,17 +33,17 @@ from projectkoios.integrations.quantumespresso.pw.relaxation.options import (
 )
 from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.electronic import DftSpinMode
+from projectkoios.simulations.dft.electronic import DftOccupationMethod, DftSpinMode
 from projectkoios.simulations.dft.pseudopotential import (
     PseudopotentialArtifactFormat,
-)
-from projectkoios.simulations.dft.pw.relaxation.base import (
-    PwDftRelaxationRequest,
 )
 from projectkoios.simulations.dft.pw.relaxation.integration import (
     PwDftRelaxationInputProjection,
     PwDftRelaxationRenderedInput,
 )
+from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
+from projectkoios.simulations.dft.pw.simulation import ResolvedPwDftSimulation
+from projectkoios.simulations.structure import StructureResolution
 
 
 @dataclass(frozen=True, slots=True)
@@ -99,6 +99,7 @@ class QeRelaxationInputProjection(PwDftRelaxationInputProjection):
 
 def project_relaxation_input(
     request: PwDftRelaxationRequest,
+    structure: StructureResolution,
     configuration: QeRelaxationInputConfiguration,
     *,
     calculation: Literal["relax", "vc-relax"],
@@ -107,6 +108,8 @@ def project_relaxation_input(
     """Assemble one relaxation mode from the authoritative component vocabulary."""
     if type(request) is not PwDftRelaxationRequest:
         raise TypeError("request must be a PwDftRelaxationRequest")
+    if type(structure) is not StructureResolution:
+        raise TypeError("structure must be a StructureResolution")
     if not isinstance(configuration, QeRelaxationInputConfiguration):
         raise TypeError("configuration must be a QeRelaxationInputConfiguration")
     if calculation not in ("relax", "vc-relax"):
@@ -117,41 +120,69 @@ def project_relaxation_input(
         type(lattice_vector_options) is not QeLatticeVectorRelaxationOptions
     ):
         raise TypeError("vc-relax requires lattice-vector relaxation options")
-    atoms = request.simulation.unit_cell.atomic_basis.atoms
+    specification = request.specification
+    simulation = specification.simulation
+    resolved = ResolvedPwDftSimulation(simulation=simulation, structure=structure)
+    atoms = resolved.unit_cell.atomic_basis.atoms
     if {atom.symbol for atom in atoms} != {
         item.symbol for item in configuration.species
     }:
         raise ValueError("QE species must exactly match the unit cell")
-    if request.simulation.pseudopotentials:
+    if simulation.pseudopotentials:
         if any(
             item.artifact_format is not PseudopotentialArtifactFormat.UPF
-            for item in request.simulation.pseudopotentials
+            for item in simulation.pseudopotentials
         ):
             raise ValueError("QE translation requires UPF pseudopotentials")
         configured_filenames = {
             item.symbol: item.pseudopotential_filename for item in configuration.species
         }
         bound_filenames = {
-            item.symbol: item.filename for item in request.simulation.pseudopotentials
+            item.symbol: item.filename for item in simulation.pseudopotentials
         }
         if configured_filenames != bound_filenames:
             raise ValueError(
                 "QE configuration must match exact bound pseudopotential filenames"
             )
-    if request.simulation.spin.mode not in {
+    if simulation.spin.mode not in {
         DftSpinMode.UNPOLARIZED,
         DftSpinMode.COLLINEAR,
     }:
         raise NotImplementedError(
             "QE relaxation translation supports only unpolarized and collinear spin"
         )
-    if request.simulation.spin.initial_site_magnetic_moments_mu_b:
+    if simulation.spin.initial_site_magnetic_moments_mu_b:
         raise NotImplementedError(
             "QE relaxation translation of site-resolved initial moments is not "
             "implemented"
         )
-    cutoff_ry = request.sampling.wavefunction_cutoff_ev * _conversion_factor("eV", "Ry")
-    convergence = request.convergence
+    # Maintained QE relaxation rendering currently exposes only fixed
+    # occupations and native symmetry defaults; unsupported intent fails closed.
+    if specification.occupation.method is not DftOccupationMethod.FIXED:
+        raise NotImplementedError(
+            "QE relaxation smearing translation is not implemented"
+        )
+    if not (
+        specification.kpoint_sampling.use_spatial_symmetry
+        and specification.kpoint_sampling.use_time_reversal
+    ):
+        raise NotImplementedError(
+            "QE relaxation symmetry-reduction translation is not implemented"
+        )
+    neutral_electronic_tolerance_ry = (
+        specification.electronic_convergence.energy_tolerance_ev
+        * _conversion_factor("eV", "Ry")
+    )
+    if (
+        abs(neutral_electronic_tolerance_ry - configuration.electronic_tolerance_ry)
+        > configuration.electronic_atol_ry
+    ):
+        raise ValueError(
+            "QE configuration electronic tolerance must match specification"
+        )
+
+    cutoff_ry = specification.wavefunction_cutoff_ev * _conversion_factor("eV", "Ry")
+    convergence = specification.ionic_convergence
     energy_tolerance_ry = convergence.total_energy_tolerance_ev * _conversion_factor(
         "eV", "Ry"
     )
@@ -175,13 +206,13 @@ def project_relaxation_input(
         species_count=len(configuration.species),
         wavefunction_cutoff_ry=cutoff_ry,
         charge_density_cutoff_ratio=configuration.charge_density_cutoff_ratio,
-        charge_state=request.simulation.charge.charge_state,
-        spin_mode=request.simulation.spin.mode,
+        charge_state=simulation.charge.charge_state,
+        spin_mode=simulation.spin.mode,
         constrain_spin_channel_difference=(
-            request.simulation.spin.constrain_spin_channel_difference
+            simulation.spin.constrain_spin_channel_difference
         ),
         spin_channel_electron_difference=(
-            request.simulation.spin.spin_channel_electron_difference
+            simulation.spin.spin_channel_electron_difference
         ),
     )
     electrons_card = _build_relaxation_electrons_card(
@@ -196,11 +227,11 @@ def project_relaxation_input(
     atomic_species_card = _build_relaxation_atomic_species_card(configuration)
     kpoints_card = _build_relaxation_kpoints_card(request)
     cell_parameters_card = _build_relaxation_cell_parameters_card(
-        request,
+        resolved,
         precision=configuration.coordinate_precision,
     )
     atomic_positions_card = _build_relaxation_atomic_positions_card(
-        request,
+        resolved,
         precision=configuration.coordinate_precision,
     )
     components: list[QeCard] = [
@@ -360,8 +391,8 @@ def _build_relaxation_kpoints_card(
             " ".join(
                 str(value)
                 for value in (
-                    *request.sampling.kpoint_mesh,
-                    *request.sampling.kpoint_shift,
+                    *request.specification.kpoint_sampling.mesh,
+                    *request.specification.kpoint_sampling.shift,
                 )
             ),
         ),
@@ -369,11 +400,11 @@ def _build_relaxation_kpoints_card(
 
 
 def _build_relaxation_cell_parameters_card(
-    request: PwDftRelaxationRequest,
+    simulation: ResolvedPwDftSimulation,
     *,
     precision: int,
 ) -> QeCellParametersCard:
-    unit_cell = request.simulation.unit_cell
+    unit_cell = simulation.unit_cell
     length_factor = MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
         unit_cell.H.unit,
         PhysicalUnit("angstrom"),
@@ -388,7 +419,7 @@ def _build_relaxation_cell_parameters_card(
 
 
 def _build_relaxation_atomic_positions_card(
-    request: PwDftRelaxationRequest,
+    simulation: ResolvedPwDftSimulation,
     *,
     precision: int,
 ) -> QeAtomicPositionsCard:
@@ -397,7 +428,7 @@ def _build_relaxation_atomic_positions_card(
         lines=tuple(
             f"{atom.symbol} "
             f"{_format_vector(atom.position_fractional.magnitude, precision)}"
-            for atom in request.simulation.unit_cell.atomic_basis.atoms
+            for atom in simulation.unit_cell.atomic_basis.atoms
         ),
     )
 

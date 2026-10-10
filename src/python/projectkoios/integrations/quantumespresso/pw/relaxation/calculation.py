@@ -74,6 +74,7 @@ class QeRelaxationCalculationConfiguration:
     wavefunction_cutoff_ry: float
     charge_density_cutoff_ry: float
     electronic_tolerance_ry: float
+    electronic_atol_ry: float
     ionic_relaxation: QeIonicRelaxationOptions
     lattice_vector_relaxation: QeLatticeVectorRelaxationOptions | None
     prefix: str
@@ -130,6 +131,12 @@ class QeRelaxationCalculationConfiguration:
             ("electronic_tolerance_ry", self.electronic_tolerance_ry),
         ):
             _positive_float(numeric_value, label)
+        if (
+            type(self.electronic_atol_ry) is not float
+            or not math.isfinite(self.electronic_atol_ry)
+            or self.electronic_atol_ry < 0.0
+        ):
+            raise ValueError("electronic_atol_ry must be finite and nonnegative")
         if self.charge_density_cutoff_ry < self.wavefunction_cutoff_ry:
             raise ValueError(
                 "charge_density_cutoff_ry must not be below wavefunction cutoff"

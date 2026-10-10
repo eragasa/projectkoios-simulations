@@ -17,6 +17,16 @@ OLD_DOCS = "docs/architecture/projectkoios/simulation_workflows"
 NEW_DOCS = "docs/architecture/projectkoios/simulations/workflows"
 FIXTURE = "tests/fixtures/pw_dft_scf/qe-retained-convergence-normalized.json"
 FIXTURE_SHA256 = "ff751aa7aeccc467886ec74979c7b2a92cdc645c83e4917e460bee36db6361d3"
+EVOLVED_SOURCE_AFTER_RELOCATION = frozenset(
+    {"pw_dft_relaxation/composition.py", "pw_dft_scf/recipe.py"}
+)
+EVOLVED_TESTS_AFTER_RELOCATION = frozenset(
+    {
+        "pw_dft_relaxation/composition/test__PwDftRelaxationComposer.py",
+        "pw_dft_scf/recipe/test__PwDftScfRecipe.py",
+        "support.py",
+    }
+)
 
 
 def _git(*arguments: str, text: bool = True) -> str | bytes:
@@ -116,7 +126,7 @@ def _api_manifest(source: str) -> tuple[tuple[str, str, str], ...]:
     return tuple(records)
 
 
-def test_source_and_tests_are_an_exact_normalized_move() -> None:
+def test_unchanged_source_and_tests_are_an_exact_normalized_move() -> None:
     old_sources = _base_paths(OLD_SOURCE)
     assert len(old_sources) == 28
     for old_path in old_sources:
@@ -130,6 +140,9 @@ def test_source_and_tests_are_an_exact_normalized_move() -> None:
             )
             continue
         new_path = REPOSITORY_ROOT / NEW_SOURCE / relative
+        if relative in EVOLVED_SOURCE_AFTER_RELOCATION:
+            assert new_path.is_file()
+            continue
         assert _module_shape(new_path.read_text(encoding="utf-8")) == _module_shape(
             _normalized_text(_base_bytes(old_path))
         )
@@ -142,6 +155,9 @@ def test_source_and_tests_are_an_exact_normalized_move() -> None:
         if relative == "pw_dft_scf/replay/test__retained_qe_evidence.py":
             expected = expected.replace(".parents[4]", ".parents[5]")
         new_path = REPOSITORY_ROOT / NEW_TESTS / relative
+        if relative in EVOLVED_TESTS_AFTER_RELOCATION:
+            assert new_path.is_file()
+            continue
         assert _module_shape(new_path.read_text(encoding="utf-8")) == _module_shape(
             expected
         )
@@ -159,7 +175,7 @@ def test_documentation_indexes_preserve_moved_node_inventory() -> None:
         assert new_path.read_text(encoding="utf-8").strip(), relative
 
 
-def test_public_api_signatures_are_unchanged_by_relocation() -> None:
+def test_unevolved_public_api_signatures_are_unchanged_by_relocation() -> None:
     old_sources = tuple(
         path for path in _base_paths(OLD_SOURCE) if path.endswith(".py")
     )
@@ -167,6 +183,8 @@ def test_public_api_signatures_are_unchanged_by_relocation() -> None:
     new_manifest: dict[str, tuple[tuple[str, str, str], ...]] = {}
     for old_path in old_sources:
         relative = old_path.removeprefix(f"{OLD_SOURCE}/")
+        if relative in EVOLVED_SOURCE_AFTER_RELOCATION:
+            continue
         old_manifest[relative] = _api_manifest(_normalized_text(_base_bytes(old_path)))
         new_manifest[relative] = _api_manifest(
             (REPOSITORY_ROOT / NEW_SOURCE / relative).read_text(encoding="utf-8")

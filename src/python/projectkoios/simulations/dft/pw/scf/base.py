@@ -8,8 +8,6 @@ from dataclasses import dataclass
 from enum import StrEnum
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.pw.settings import CalculationType
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
 
 _IDENTIFIER = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 _SHA256 = re.compile(r"[0-9a-f]{64}")
@@ -37,49 +35,6 @@ class PwDftScfWorkflowOutcome(PwDftScfObject):
     """Base nominal identity for every terminal SCF workflow outcome."""
 
     __slots__ = ()
-
-
-@dataclass(frozen=True, slots=True)
-class PwDftScfSampling(PwDftScfObject):
-    """Declare calculator-neutral k-point sampling and cutoff energy."""
-
-    kpoint_mesh: tuple[int, int, int]
-    kpoint_shift: tuple[int, int, int]
-    wavefunction_cutoff_ev: float
-
-    def __post_init__(self) -> None:
-        if len(self.kpoint_mesh) != 3 or any(
-            type(value) is not int or value <= 0 for value in self.kpoint_mesh
-        ):
-            raise ValueError("kpoint_mesh must contain three positive integers")
-        if len(self.kpoint_shift) != 3 or any(
-            type(value) is not int or value not in {0, 1} for value in self.kpoint_shift
-        ):
-            raise ValueError("kpoint_shift must contain three zero-or-one integers")
-        if (
-            type(self.wavefunction_cutoff_ev) is not float
-            or not math.isfinite(self.wavefunction_cutoff_ev)
-            or self.wavefunction_cutoff_ev <= 0.0
-        ):
-            raise ValueError("wavefunction cutoff must be a positive finite float")
-
-
-@dataclass(frozen=True, slots=True)
-class PwDftScfRequest(PwDftScfObject):
-    """Declare one calculator-neutral plane-wave DFT SCF evaluation."""
-
-    evaluation_id: str
-    simulation: PwDftSimulation
-    sampling: PwDftScfSampling
-
-    def __post_init__(self) -> None:
-        _validate_identifier(self.evaluation_id, "evaluation_id")
-        if type(self.simulation) is not PwDftSimulation:
-            raise TypeError("simulation must be a PwDftSimulation")
-        if self.simulation.settings.calculation_type is not CalculationType.scf:
-            raise ValueError("simulation calculation type must be scf")
-        if type(self.sampling) is not PwDftScfSampling:
-            raise TypeError("sampling must be a PwDftScfSampling")
 
 
 @dataclass(frozen=True, slots=True)

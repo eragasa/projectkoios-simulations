@@ -46,7 +46,10 @@ from projectkoios.simulations.dft.pw.setyawan_curtarolo_2010.model import (
     SETYAWAN_CURTAROLO_DOI,
     SETYAWAN_CURTAROLO_REVISION,
 )
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation, PwMatrix3
+from projectkoios.simulations.dft.pw.simulation import (
+    PwMatrix3,
+    ResolvedPwDftSimulation,
+)
 
 _IDENTITY_DIRECT_BASIS_TRANSFORM: BandPathDirectBasisTransform = (
     (1, 0, 0),
@@ -127,15 +130,15 @@ class SetyawanCurtaroloPathBindingRequest(DataObject):
     """Request binding of one convention path to one exact simulation cell."""
 
     definition: SetyawanCurtaroloPathDefinition
-    simulation: PwDftSimulation
+    simulation: ResolvedPwDftSimulation
     direct_basis_transform: BandPathDirectBasisTransform | None = None
     lattice_tolerance_angstrom: float = 1.0e-8
 
     def __post_init__(self) -> None:
         if type(self.definition) is not SetyawanCurtaroloPathDefinition:
             raise TypeError("definition must be a SetyawanCurtaroloPathDefinition")
-        if type(self.simulation) is not PwDftSimulation:
-            raise TypeError("simulation must be a PwDftSimulation")
+        if type(self.simulation) is not ResolvedPwDftSimulation:
+            raise TypeError("simulation must be a ResolvedPwDftSimulation")
         if self.direct_basis_transform is not None:
             _validated_integer_basis_transform(self.direct_basis_transform)
         if type(self.lattice_tolerance_angstrom) is not float:

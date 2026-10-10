@@ -36,8 +36,12 @@ class PwDftScfRecipeTest(unittest.TestCase):
         self.assertEqual(len(cutoff.coordinates()), 3)
         self.assertEqual(len(grid.coordinates()), 9)
         projected = grid.request_for(grid.coordinates()[0], scope="initial")
-        self.assertEqual(projected.sampling.kpoint_mesh, (4, 4, 4))
-        self.assertEqual(projected.sampling.wavefunction_cutoff_ev, 300.0)
+        self.assertEqual(projected.specification.kpoint_sampling.mesh, (4, 4, 4))
+        self.assertEqual(projected.specification.wavefunction_cutoff_ev, 300.0)
+        self.assertNotEqual(
+            projected.specification.simulation_id,
+            base.specification.simulation_id,
+        )
 
 
 if __name__ == "__main__":

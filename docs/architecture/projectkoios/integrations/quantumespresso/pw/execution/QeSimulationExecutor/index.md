@@ -1,10 +1,12 @@
 # `QeSimulationExecutor`
 
-The public `execute` action accepts a `QuantumEspressoSimulation`, explicit
-`PseudopotentialRepository`, `executable`, `working_directory`, optional
-`timeout_seconds`, and default-false `execution_authorized`. It rejects an
-unauthorized request before staging. For an authorized request, it requires
-`ControlBlock.pseudo_dir` to select the run directory, resolves and
-cryptographically verifies every declared pseudopotential, atomically stages
-inputs, and invokes `CalculatorExecutor`. Repository resolution or staging
-failures are recorded before an exception is raised.
+The public `execute` action accepts a QE `CalculatorInputRecord`, the exact bound
+`PseudopotentialFile` values, an injected `PseudopotentialLibrary`, executable,
+working directory, optional timeout, and default-false
+`execution_authorized`. It rejects an unauthorized request before staging.
+
+For an authorized request, the executor checks that the record's declared
+external requirements correspond exactly to the bound pseudopotentials,
+resolves and cryptographically verifies their deployment bytes, stages every
+prepared input artifact and pseudopotential, and invokes `CalculatorExecutor`.
+Resolution or staging failures are recorded before an exception is raised.

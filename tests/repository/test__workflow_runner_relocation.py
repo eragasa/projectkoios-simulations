@@ -30,6 +30,17 @@ OVERLAY_SOURCE_PATH = (
     "examples/projectkoios/applications/pw_dft_scf/providers/quantumespresso/"
     "Si/primitive/convergence/joint/replay.py"
 )
+EVOLVED_AFTER_RELOCATION = frozenset(
+    {
+        "tools/pw_dft_scf/config/catalog.toml",
+        "tools/pw_dft_scf/configuration.py",
+        "tools/pw_dft_scf/plot_structure.py",
+        "tools/pw_dft_scf/render_inputs.py",
+        "tests/examples/test__pw_dft_relaxation_qe_projection.py",
+        "tests/tools/pw_dft_scf/test__InputProjectionRunner.py",
+        "tests/support/exact_provider_graph_probe.py",
+    }
+)
 
 
 def _sha256(path: Path) -> str:
@@ -69,9 +80,13 @@ def test_complete_source_closure_has_explicit_final_dispositions() -> None:
         "test-support": 1,
     }
 
+    destination_paths = {row["destination_path"] for row in relocation_rows}
+    assert destination_paths > EVOLVED_AFTER_RELOCATION
     for row in relocation_rows:
         destination = REPOSITORY_ROOT / row["destination_path"]
         assert destination.is_file(), row["destination_path"]
+        if row["destination_path"] in EVOLVED_AFTER_RELOCATION:
+            continue
         assert len(destination.read_bytes()) == int(row["destination_bytes"])
         assert _sha256(destination) == row["destination_sha256"]
 

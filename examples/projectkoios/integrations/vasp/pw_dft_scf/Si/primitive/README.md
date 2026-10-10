@@ -2,7 +2,7 @@
 
 This directory retains a static VASP-native projection for a primitive-silicon
 SCF calculation. The rendered `INCAR`, `KPOINTS`, `POSCAR`, and
-`input-projection.json` files are inspection examples; this repository does not
+`calculator-input-record.json` files are inspection examples; this repository does not
 include an application runner that regenerates or executes them.
 
 The retained

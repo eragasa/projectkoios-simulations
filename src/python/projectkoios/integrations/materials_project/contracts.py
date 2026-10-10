@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import importlib.metadata
 import json
@@ -160,11 +161,14 @@ class MaterialsProjectStructureAdapter:
         for source_site in source:
             if not source_site.is_ordered:
                 raise ValueError("disordered Materials Project sites are unsupported")
-            coordinates = np.asarray(source_site.frac_coords, dtype=np.float64)
+            coordinates = np.asarray(source_site.frac_coords, dtype=np.float64).copy()
             if coordinates.shape != (3,) or not np.all(np.isfinite(coordinates)):
                 raise ValueError(
                     "pymatgen fractional coordinates must be three finite values"
                 )
+            # IEEE signed zero carries no structural meaning but would create
+            # different canonical bytes for identical fractional coordinates.
+            coordinates[coordinates == 0.0] = 0.0
             atoms.append(
                 Atom(
                     symbol=source_site.specie.symbol,
@@ -174,11 +178,14 @@ class MaterialsProjectStructureAdapter:
                     ),
                 )
             )
-        matrix = np.asarray(source.lattice.matrix, dtype=np.float64)
+        matrix = np.asarray(source.lattice.matrix, dtype=np.float64).copy()
         if matrix.shape != (3, 3) or not np.all(np.isfinite(matrix)):
             raise ValueError(
                 "pymatgen lattice matrix must be three by three and finite"
             )
+        # Normalize signed zero before PhysKit canonical serialization for the
+        # same exact-identity reason as fractional coordinates above.
+        matrix[matrix == 0.0] = 0.0
         cell_type: type[UnitCell] = (
             ConventionalUnitCell
             if request.conventional_unit_cell
@@ -394,12 +401,14 @@ class MaterialsProjectQuerySnapshot:
             ) from error
         if retrieved.tzinfo is None or retrieved.utcoffset() is None:
             raise ValueError("retrieved_at_utc must include a UTC offset")
-        for label, value in (
+        for label, optional_value in (
             ("api_endpoint", self.api_endpoint),
             ("database_release", self.database_release),
         ):
-            if value is not None and (
-                type(value) is not str or not value or value != value.strip()
+            if optional_value is not None and (
+                type(optional_value) is not str
+                or not optional_value
+                or optional_value != optional_value.strip()
             ):
                 raise ValueError(f"{label} must be nonempty or None")
 
@@ -489,11 +498,33 @@ class MaterialsProjectElementalReferenceSelector:
         candidate_by_object_identity: dict[int, MaterialsProjectCandidateSnapshot] = {}
         candidate_snapshots: list[MaterialsProjectCandidateSnapshot] = []
         for entry in entries:
-            candidate_material_id = str(entry.entry_id)
+            # Thermo entries identify calculations with suffixed values such as
+            # ``mp-23-r2SCAN``. Structure retrieval requires the unsuffixed
+            # material identity returned in the entry metadata. Retain the whole
+            # entry in canonical_json so calculation identity is not discarded.
+            entry_data = entry.data if isinstance(entry.data, dict) else {}
+            raw_material_id = entry_data.get("material_id")
+            candidate_material_id = (
+                str(raw_material_id)
+                if raw_material_id is not None
+                else str(entry.entry_id)
+            )
             MaterialsProjectStructureRequest(candidate_material_id)
+            # mp-api returns oxidation-state maps keyed by pymatgen Element
+            # objects. ComputedStructureEntry.as_dict() delegates through JSON,
+            # whose object keys must be scalar JSON keys. Normalize those keys on
+            # a shallow snapshot; never mutate the entry used by PhaseDiagram.
+            snapshot_entry = copy.copy(entry)
+            snapshot_data = dict(entry_data)
+            oxidation_states = snapshot_data.get("oxidation_states")
+            if isinstance(oxidation_states, dict):
+                snapshot_data["oxidation_states"] = {
+                    str(key): value for key, value in oxidation_states.items()
+                }
+            snapshot_entry.data = snapshot_data
             canonical_json = (
                 json.dumps(
-                    entry.as_dict(),
+                    snapshot_entry.as_dict(),
                     cls=MontyEncoder,
                     ensure_ascii=False,
                     separators=(",", ":"),
@@ -574,7 +605,13 @@ class MaterialsProjectElementalReferenceSelector:
         selected = phase_diagram.el_refs.get(Element(request.element_symbol))
         if selected is None:
             raise ValueError("pymatgen did not select an elemental reference")
-        material_id = str(selected.entry_id)
+        selected_data = selected.data if isinstance(selected.data, dict) else {}
+        raw_selected_material_id = selected_data.get("material_id")
+        material_id = (
+            str(raw_selected_material_id)
+            if raw_selected_material_id is not None
+            else str(selected.entry_id)
+        )
         MaterialsProjectStructureRequest(material_id)
         energy_per_atom = selected.energy_per_atom
         if energy_per_atom is None:
@@ -587,9 +624,17 @@ class MaterialsProjectElementalReferenceSelector:
             energy_above_hull = 0.0
         selected_snapshot = candidate_by_object_identity.get(id(selected))
         if selected_snapshot is None:
+            selected_snapshot_entry = copy.copy(selected)
+            selected_snapshot_data = dict(selected_data)
+            selected_oxidation_states = selected_snapshot_data.get("oxidation_states")
+            if isinstance(selected_oxidation_states, dict):
+                selected_snapshot_data["oxidation_states"] = {
+                    str(key): value for key, value in selected_oxidation_states.items()
+                }
+            selected_snapshot_entry.data = selected_snapshot_data
             selected_canonical_json = (
                 json.dumps(
-                    selected.as_dict(),
+                    selected_snapshot_entry.as_dict(),
                     cls=MontyEncoder,
                     ensure_ascii=False,
                     separators=(",", ":"),

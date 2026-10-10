@@ -22,10 +22,11 @@ pymatgen `PhaseDiagram`. It selects the entry in `PhaseDiagram.el_refs`, records
 its exact Materials Project identifier, energy per atom, zero hull distance,
 entry count, requested thermodynamic compatibility types, and copied structure.
 
-For the intended defect work, selection requests are made independently for B
-and P using an explicitly declared Materials Project thermodynamic compatibility
-scheme. The selected material IDs must be retained from the actual API response;
-the software does not hard-code an allotrope based on a human label.
+Defect-reference selection requests are made independently for B and P using an
+explicitly declared Materials Project thermodynamic compatibility scheme. The
+Ni spin-validation structure uses the same selection boundary. Selected
+material IDs are retained from actual API responses; the software does not
+hard-code an allotrope based on a human label.
 
 A one-element convex hull selects the lowest compatible calculated elemental
 entry supplied by Materials Project. It is a zero-temperature database and
@@ -33,7 +34,7 @@ compatibility-scheme result. It is not an experimental standard state, finite-
 temperature phase diagram, proof of ground-state stability, or scientific
 acceptance decision.
 
-A caller with an operator-owned API key can inject the current client explicitly:
+A caller with an operator-owned API key injects the client explicitly:
 
 ```python
 from mp_api.client import MPRester
@@ -65,7 +66,7 @@ that retained database response and compatibility scheme.
 
 ## Retrieval snapshot
 
-The current implementation retains the selected ID, selected energies, entry
+The implementation retains the selected ID, selected energies, entry
 count, request, exact copied structure content identity, and an immutable
 `MaterialsProjectQuerySnapshot` containing:
 
@@ -93,7 +94,16 @@ for why one allotrope was selected.
 `mp-N` request. The returned ordered pymatgen `Structure` is copied immediately
 into an immutable `PrimitiveUnitCell` or `ConventionalUnitCell`. Lattice vectors
 are retained in angstrom using a unit scale of one angstrom, and sites retain
-fractional coordinates. Disordered sites are rejected rather than collapsed.
+fractional coordinates. IEEE signed zeros are normalized before canonical
+serialization, and disordered sites are rejected rather than collapsed.
+
+## Retained Ni structure
+
+The retained Ni query requested `GGA_GGA+U_R2SCAN`, received six candidate
+entries, and selected `mp-23` through `PhaseDiagram.el_refs`. The exact primitive
+cell and complete query snapshot are published under
+`examples/workflows/pw_dft_scf/structures/`; the structure catalog binds their
+byte sizes, SHA-256 values, and transfer provenance.
 
 The geometry status is `external_reference_not_calculation_input`. Selecting a
 hull entry does not make its downloaded geometry a converged production input;

@@ -32,12 +32,14 @@ from projectkoios.simulations.dft.pw.relaxation.base import (
 from tests.projectkoios.simulations.dft.pw.relaxation.support import (
     silicon_relaxation_request,
 )
+from tests.projectkoios.simulations.dft.pw.support import silicon_structure_resolution
 
 
 class QeVcRelaxInputProjectorTest(unittest.TestCase):
     def test_renders_variable_cell_input_from_shared_components(self) -> None:
         projection = QeVcRelaxInputProjector(_configuration()).project(
-            silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL)
+            silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL),
+            silicon_structure_resolution(),
         )
 
         self.assertEqual(type(projection), QeRelaxationInputProjection)
@@ -84,7 +86,8 @@ class QeVcRelaxInputProjectorTest(unittest.TestCase):
                 ).project(
                     silicon_relaxation_request(
                         PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL
-                    )
+                    ),
+                    silicon_structure_resolution(),
                 )
 
                 self.assertIn(
@@ -103,7 +106,8 @@ class QeVcRelaxInputProjectorTest(unittest.TestCase):
             QeVcRelaxInputProjector(configuration).project(
                 silicon_relaxation_request(
                     PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL
-                )
+                ),
+                silicon_structure_resolution(),
             )
 
     def test_rejects_incompatible_ion_and_cell_algorithms(self) -> None:
@@ -116,7 +120,8 @@ class QeVcRelaxInputProjectorTest(unittest.TestCase):
             QeVcRelaxInputProjector(configuration).project(
                 silicon_relaxation_request(
                     PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL
-                )
+                ),
+                silicon_structure_resolution(),
             )
 
     def test_rejects_documented_but_unimplemented_cell_algorithm(self) -> None:
@@ -126,7 +131,8 @@ class QeVcRelaxInputProjectorTest(unittest.TestCase):
             QeVcRelaxInputProjector(configuration).project(
                 silicon_relaxation_request(
                     PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL
-                )
+                ),
+                silicon_structure_resolution(),
             )
 
 
@@ -140,6 +146,7 @@ def _configuration(
         ion_dynamics=ion_dynamics,
         charge_density_cutoff_ratio=8.0,
         electronic_tolerance_ry=1.0e-8,
+        electronic_atol_ry=1.0e-15,
         prefix="system",
         pseudo_dir="./",
         outdir="./tmp/",

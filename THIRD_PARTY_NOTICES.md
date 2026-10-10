@@ -67,6 +67,29 @@ project records.
 - Upstream project: <https://github.com/materialsproject/api>
 - License expression: BSD-3-Clause-LBNL
 
+## Materials Project data
+
+The exact Ni candidate-response snapshot and selected primitive structure under
+`examples/workflows/pw_dft_scf/structures/` were retrieved from the Materials
+Project API. The retained selected candidate reports source license label
+`BY-C`; Materials Project publishes its data under the Creative Commons
+Attribution 4.0 International license.
+
+- Data source: <https://materialsproject.org/>
+- Selected material page: <https://materialsproject.org/materials/mp-23>
+- Materials Project record DOI: <https://doi.org/10.17188/1199153>
+- Terms and license: <https://materialsproject.org/about/terms>
+- License: CC-BY-4.0
+- Retrieved at: `2026-10-10T05:50:46.372360+00:00`
+- Candidate-response SHA-256:
+  `bfa20090ac4c40344142925068e32180e776dd293cff295455c2a1d4b4a0f350`
+- Canonical neutral structure SHA-256:
+  `c31a42131de24116e7262fd720147eee2491b8280516bd2aed0eeda618820ade`
+
+The snapshot contains no API credential. Materials Project structure and energy
+data do not establish local calculator conformance, numerical verification, or
+scientific validation.
+
 ## SNAKES / projectkoios-snakes
 
 - Maintained fork: <https://github.com/eragasa/projectkoios-snakes>

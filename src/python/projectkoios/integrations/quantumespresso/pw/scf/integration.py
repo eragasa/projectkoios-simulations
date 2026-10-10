@@ -15,14 +15,11 @@ from projectkoios.integrations.quantumespresso.pw.scf import (
     projection as qe_projection,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.pw.scf.base import (
-    PwDftScfObservation,
-    PwDftScfRequest,
-)
-from projectkoios.simulations.dft.pw.scf.integration import (
-    PwDftScfInputProjection,
-    PwDftScfIntegration,
-)
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.dft.pw.scf.base import PwDftScfObservation
+from projectkoios.simulations.dft.pw.scf.integration import PwDftScfIntegration
+from projectkoios.simulations.dft.pw.scf.request import PwDftScfRequest
+from projectkoios.simulations.structure import StructureResolution
 
 
 @dataclass(frozen=True, slots=True)
@@ -48,11 +45,17 @@ class QePwDftScfIntegration(PwDftScfIntegration):
         """Return the stable Quantum ESPRESSO backend identity."""
         return qe_projection.QE_SCF_INTEGRATION_ID
 
-    def project(self, request: PwDftScfRequest) -> PwDftScfInputProjection:
+    def project(
+        self,
+        request: PwDftScfRequest,
+        structure: StructureResolution,
+    ) -> CalculatorInputRecord:
         """Project common intent through the maintained QE input assembler."""
+        # Resolution stays explicit at the integration boundary: a provider may
+        # consume verified geometry, but it may not silently locate structure bytes.
         return qe_projection.QeScfInputProjector(
             configuration=self.projection_configuration
-        ).project(request)
+        ).project(request, structure)
 
     def analyze(self, output_artifact_id: str) -> PwDftScfObservation:
         """Normalize one retained successful ``pw.x`` observation."""

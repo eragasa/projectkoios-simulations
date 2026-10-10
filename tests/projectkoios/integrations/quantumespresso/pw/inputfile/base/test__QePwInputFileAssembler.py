@@ -22,19 +22,15 @@ from projectkoios.physkit.units import (
     Unitless,
     VectorQuantity,
 )
-from projectkoios.simulations.dft.pw.settings import (
-    CalculationType,
-    PwDftSettings,
-)
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from projectkoios.simulations.dft.pw.settings import CalculationType
 
 
 class QePwInputFileAssemblerTest(unittest.TestCase):
     def test_generates_structure_cards_from_the_shared_unit_cell(self) -> None:
-        simulation = _simulation()
+        unit_cell = _unit_cell()
 
         input_file = QePwInputFileAssembler().assemble(
-            simulation,
+            unit_cell,
             groups=(
                 PwInputGroup(
                     kind="namelist",
@@ -47,6 +43,7 @@ class QePwInputFileAssemblerTest(unittest.TestCase):
                     lines=(),
                 ),
             ),
+            calculation_type=CalculationType.scf,
             cell_parameters_unit="angstrom",
             atomic_positions_unit="crystal",
             coordinate_precision=16,
@@ -58,7 +55,7 @@ class QePwInputFileAssemblerTest(unittest.TestCase):
             ),
         )
 
-        self.assertIs(input_file.unit_cell, simulation.unit_cell)
+        self.assertIs(input_file.unit_cell, unit_cell)
         cards = {
             group.tag.split(maxsplit=1)[0]: group
             for group in input_file.groups
@@ -87,8 +84,9 @@ class QePwInputFileAssemblerTest(unittest.TestCase):
 
     def test_writes_the_columns_of_H_as_cell_parameter_vectors(self) -> None:
         input_file = QePwInputFileAssembler().assemble(
-            _skewed_simulation(),
+            _skewed_unit_cell(),
             groups=(),
+            calculation_type=CalculationType.scf,
             cell_parameters_unit="angstrom",
             atomic_positions_unit="crystal",
             coordinate_precision=2,
@@ -112,7 +110,7 @@ class QePwInputFileAssemblerTest(unittest.TestCase):
     def test_rejects_caller_supplied_structure_cards(self) -> None:
         with self.assertRaisesRegex(ValueError, "must not duplicate"):
             QePwInputFileAssembler().assemble(
-                _simulation(),
+                _unit_cell(),
                 groups=(
                     PwInputGroup(
                         kind="card",
@@ -120,6 +118,7 @@ class QePwInputFileAssemblerTest(unittest.TestCase):
                         lines=("Si 0 0 0",),
                     ),
                 ),
+                calculation_type=CalculationType.scf,
                 cell_parameters_unit="angstrom",
                 atomic_positions_unit="crystal",
                 coordinate_precision=16,
@@ -132,47 +131,41 @@ class QePwInputFileAssemblerTest(unittest.TestCase):
             )
 
 
-def _skewed_simulation() -> PwDftSimulation:
-    return PwDftSimulation(
-        unit_cell=UnitCell(
-            direct_lattice=DirectLattice3D(
-                a1=np.array([1.0, 0.0, 0.0]),
-                a2=np.array([0.2, 2.0, 0.0]),
-                a3=np.array([0.3, 0.4, 3.0]),
-            ),
-            lattice_parameter=ScalarQuantity(2.0, PhysicalUnit("angstrom")),
-            atomic_basis=AtomicBasis(
-                atoms=(
-                    Atom(
-                        symbol="Si",
-                        position_fractional=VectorQuantity(np.zeros(3), Unitless()),
-                    ),
-                )
-            ),
+def _skewed_unit_cell() -> UnitCell:
+    return UnitCell(
+        direct_lattice=DirectLattice3D(
+            a1=np.array([1.0, 0.0, 0.0]),
+            a2=np.array([0.2, 2.0, 0.0]),
+            a3=np.array([0.3, 0.4, 3.0]),
         ),
-        settings=PwDftSettings(calculation_type=CalculationType.scf),
+        lattice_parameter=ScalarQuantity(2.0, PhysicalUnit("angstrom")),
+        atomic_basis=AtomicBasis(
+            atoms=(
+                Atom(
+                    symbol="Si",
+                    position_fractional=VectorQuantity(np.zeros(3), Unitless()),
+                ),
+            )
+        ),
     )
 
 
-def _simulation() -> PwDftSimulation:
-    return PwDftSimulation(
-        unit_cell=UnitCell(
-            direct_lattice=DirectLattice3D(
-                a1=np.array([1.0, 0.0, 0.0]),
-                a2=np.array([0.0, 1.0, 0.0]),
-                a3=np.array([0.0, 0.0, 1.0]),
-            ),
-            lattice_parameter=ScalarQuantity(5.43, PhysicalUnit("angstrom")),
-            atomic_basis=AtomicBasis(
-                atoms=(
-                    Atom(
-                        symbol="Si",
-                        position_fractional=VectorQuantity(np.zeros(3), Unitless()),
-                    ),
-                )
-            ),
+def _unit_cell() -> UnitCell:
+    return UnitCell(
+        direct_lattice=DirectLattice3D(
+            a1=np.array([1.0, 0.0, 0.0]),
+            a2=np.array([0.0, 1.0, 0.0]),
+            a3=np.array([0.0, 0.0, 1.0]),
         ),
-        settings=PwDftSettings(calculation_type=CalculationType.scf),
+        lattice_parameter=ScalarQuantity(5.43, PhysicalUnit("angstrom")),
+        atomic_basis=AtomicBasis(
+            atoms=(
+                Atom(
+                    symbol="Si",
+                    position_fractional=VectorQuantity(np.zeros(3), Unitless()),
+                ),
+            )
+        ),
     )
 
 

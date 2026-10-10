@@ -21,6 +21,7 @@ class QeRelaxationInputConfiguration:
     ion_dynamics: QeIonDynamics
     charge_density_cutoff_ratio: float
     electronic_tolerance_ry: float
+    electronic_atol_ry: float
     prefix: str
     pseudo_dir: str
     outdir: str
@@ -46,6 +47,15 @@ class QeRelaxationInputConfiguration:
         ):
             if type(value) is not float or not math.isfinite(value) or value <= 0.0:
                 raise ValueError(f"{label} must be positive and finite")
+        # This Ry-valued field is only the absolute comparison tolerance for
+        # converted values;
+        # scientific convergence still comes from electronic_tolerance_ry.
+        if (
+            type(self.electronic_atol_ry) is not float
+            or not math.isfinite(self.electronic_atol_ry)
+            or self.electronic_atol_ry < 0.0
+        ):
+            raise ValueError("electronic_atol_ry must be finite and nonnegative")
         for label, text_value in (
             ("prefix", self.prefix),
             ("pseudo_dir", self.pseudo_dir),

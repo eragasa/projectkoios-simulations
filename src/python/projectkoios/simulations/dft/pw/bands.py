@@ -7,8 +7,7 @@ from dataclasses import dataclass
 from enum import StrEnum
 
 from projectkoios.physkit.core.data import DataObject
-from projectkoios.simulations.dft.pw.settings import CalculationType
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from projectkoios.simulations.dft.pw.simulation import ResolvedPwDftSimulation
 
 type BandVector3 = tuple[float, float, float]
 type BandSpectrum = tuple[tuple[tuple[float, ...], ...], ...]
@@ -145,14 +144,12 @@ class BandPath(DataObject):
 class PwDftBandsSimulation(DataObject):
     """Bind a band path to the exact unit cell owned by a PW-DFT simulation."""
 
-    simulation: PwDftSimulation
+    simulation: ResolvedPwDftSimulation
     path: BandPath
 
     def __post_init__(self) -> None:
-        if type(self.simulation) is not PwDftSimulation:
-            raise TypeError("simulation must be a PwDftSimulation")
-        if self.simulation.settings.calculation_type is not CalculationType.bands:
-            raise ValueError("simulation calculation_type must be bands")
+        if type(self.simulation) is not ResolvedPwDftSimulation:
+            raise TypeError("simulation must be a ResolvedPwDftSimulation")
         if type(self.path) is not BandPath:
             raise TypeError("path must be a BandPath")
 

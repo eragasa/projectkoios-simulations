@@ -16,14 +16,11 @@ from projectkoios.integrations.vasp.pw_dft_scf.projection import (
     VaspScfInputProjector,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.pw.scf.base import (
-    PwDftScfObservation,
-    PwDftScfRequest,
-)
-from projectkoios.simulations.dft.pw.scf.integration import (
-    PwDftScfInputProjection,
-    PwDftScfIntegration,
-)
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.dft.pw.scf.base import PwDftScfObservation
+from projectkoios.simulations.dft.pw.scf.integration import PwDftScfIntegration
+from projectkoios.simulations.dft.pw.scf.request import PwDftScfRequest
+from projectkoios.simulations.structure import StructureResolution
 
 
 @dataclass(frozen=True, slots=True)
@@ -46,9 +43,17 @@ class VaspScfIntegration(PwDftScfIntegration):
         """Return the stable VASP backend identity."""
         return VASP_SCF_INTEGRATION_ID
 
-    def project(self, request: PwDftScfRequest) -> PwDftScfInputProjection:
+    def project(
+        self,
+        request: PwDftScfRequest,
+        structure: StructureResolution,
+    ) -> CalculatorInputRecord:
         """Project common intent through maintained VASP input writers."""
-        return VaspScfInputProjector(self.projection_configuration).project(request)
+        # The exact record-to-bytes check is completed before VASP translation;
+        # this adapter therefore receives, rather than invents, resolved geometry.
+        return VaspScfInputProjector(self.projection_configuration).project(
+            request, structure
+        )
 
     def analyze(self, output_artifact_id: str) -> PwDftScfObservation:
         """Normalize one retained successful OUTCAR observation."""

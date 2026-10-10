@@ -1,6 +1,6 @@
 # Materials Project integration implementation rules
 
-## Current modules
+## Modules
 
 ```text
 src/python/projectkoios/integrations/materials_project/
@@ -8,9 +8,9 @@ src/python/projectkoios/integrations/materials_project/
   contracts.py
 ```
 
-The current injected-client boundary, immutable structure copying, canonical
-candidate snapshots, and synthetic tests are authoritative. No client or record
-retains an API key.
+The injected-client boundary, immutable structure copying, canonical candidate
+snapshots, and synthetic tests are authoritative. No client or record retains
+an API key.
 
 ## Snapshot records
 
@@ -23,6 +23,16 @@ Frozen, slotted records represent:
   and copied structure.
 
 `MaterialsProjectCandidateSnapshot` retains each canonical entry document.
+Thermodynamic calculation IDs such as `mp-23-r2SCAN` remain inside that exact
+document, while the separate structure identity comes from the entry's
+`data.material_id`. Structure retrieval never treats a suffixed calculation ID
+as a material ID.
+
+mp-api oxidation-state mappings use pymatgen `Element` objects as keys. Snapshot
+adaptation converts those keys to canonical element-symbol strings on a shallow
+copy before JSON encoding. The `ComputedEntry` passed to `PhaseDiagram` remains
+unmodified.
+
 `MaterialsProjectQuerySnapshot` retains exact query criteria, sorted candidates,
 source response order, response digest, retrieval time, client implementation,
 mp-api and pymatgen versions, and a database release only when the injected
@@ -73,6 +83,28 @@ retained response digest as the exact observation identity.
 
 The published geometry remains an external reference, not a locally relaxed
 production input. Local relaxation receives a new specification and evidence.
+
+## Retained Ni retrieval
+
+The structure catalog publishes `materials-project.mp-23.primitive` from the
+one-element Ni hull requested with thermodynamic compatibility type
+`GGA_GGA+U_R2SCAN`. The retained observation records:
+
+- six complete candidate entries;
+- candidate-response SHA-256
+  `bfa20090ac4c40344142925068e32180e776dd293cff295455c2a1d4b4a0f350`;
+- selected-candidate SHA-256
+  `c812cea38ca06bfe271951a6494c09e13eed51515d8c1e0b0d255d6e16bfccc2`;
+- retrieval time `2026-10-10T05:50:46.372360+00:00`;
+- `mp-api` version `0.46.5` and pymatgen version `2026.9.24`; and
+- canonical neutral structure SHA-256
+  `c31a42131de24116e7262fd720147eee2491b8280516bd2aed0eeda618820ade`.
+
+The client exposed no immutable database-release identifier, so the retained
+candidate response digest is the exact observation identity. The structure
+adapter normalizes IEEE signed zero to positive zero before canonical PhysKit
+serialization because signed zero has no structural meaning and must not split
+content identity.
 
 ## Required verification
 

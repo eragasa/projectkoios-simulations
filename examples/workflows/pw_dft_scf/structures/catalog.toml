@@ -31,3 +31,19 @@ revision = "416be52d539bfbffdbc8a27bd8e13de65404821b"
 record_path = "examples/projectkoios/applications/pw_dft_scf/support/structures/Si.ConventionalUnitCell.json"
 source_sha256 = "e34066dbfcbdc187014256731774a4115674a1f1b6286da5729ad4298b0f4f5e"
 result_sha256 = "e34066dbfcbdc187014256731774a4115674a1f1b6286da5729ad4298b0f4f5e"
+
+[[records]]
+structure_id = "materials-project.mp-23.primitive"
+representation = "primitive"
+schema_version = 1
+sha256 = "c31a42131de24116e7262fd720147eee2491b8280516bd2aed0eeda618820ade"
+byte_size = 619
+relative_path = "Ni.mp-23.PrimitiveUnitCell.json"
+
+[records.provenance]
+kind = "transferred"
+source = "https://api.materialsproject.org/"
+revision = "bfa20090ac4c40344142925068e32180e776dd293cff295455c2a1d4b4a0f350"
+record_path = "examples/workflows/pw_dft_scf/structures/provenance/Ni.mp-23.GGA_GGA+U_R2SCAN.json"
+source_sha256 = "8a847a1bf50438574a6121052ff775a0c2bae02bb3f86b73081a3fb8243bc6e9"
+result_sha256 = "c31a42131de24116e7262fd720147eee2491b8280516bd2aed0eeda618820ade"

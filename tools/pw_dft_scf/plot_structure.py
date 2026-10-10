@@ -25,7 +25,7 @@ class StructurePlotRunner:
     def render(self, campaign_path: Path, output: Path) -> Path:
         """Resolve one campaign structure and write a standalone HTML plot."""
         loaded = self.environment.loader.load(campaign_path)
-        unit_cell = loaded.campaign.recipe.base_request.simulation.unit_cell
+        unit_cell = loaded.structure.unit_cell
         lattice_matrix = unit_cell.A.magnitude
         angstrom_factor = MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
             unit_cell.H.unit,

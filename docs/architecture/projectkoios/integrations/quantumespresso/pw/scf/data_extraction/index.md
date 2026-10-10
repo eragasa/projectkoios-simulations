@@ -16,11 +16,16 @@ continues to return its required calculator-neutral observation by selecting
 
 ## Required defect extension
 
-For charged or spin-polarized defect calculations, extraction must correlate the
-retained output with the exact `CalculatorInputRecord` and normalize the
-reported electron count, total magnetization, spin-channel populations, and
-background-charge observations when QE supplies them. Unavailable quantities
-remain explicit; they are not reconstructed from the requested input.
+For spin-polarized calculations, the stdout parser retains QE's total and
+absolute magnetization in native Bohr-magneton-per-cell units. SCF extraction
+normalizes total magnetization to the numerically equivalent collinear
+spin-channel electron difference; unavailable quantities remain explicit and
+are not reconstructed from requested input.
+
+Charged or spin-polarized defect extraction still requires correlation with the
+exact `CalculatorInputRecord` and normalization of reported electron count,
+spin-channel populations, and background-charge observations when QE supplies
+them.
 
 A result is eligible for DFT defect-energy qualification only when its
 calculation identity, charge convention, spin intent, total energy, completion,

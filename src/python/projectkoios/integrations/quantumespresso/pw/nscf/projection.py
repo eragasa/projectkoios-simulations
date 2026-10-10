@@ -26,7 +26,7 @@ from projectkoios.integrations.quantumespresso.pw.nscf.configuration import (  #
     QeNscfProjectionConfiguration,
 )
 from projectkoios.simulations.dft.pw.settings import CalculationType
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from projectkoios.simulations.structure import StructureResolution
 
 
 @dataclass(frozen=True, slots=True)
@@ -103,18 +103,16 @@ class QeNscfInputProjector:
         if type(self.configuration) is not QeNscfProjectionConfiguration:
             raise TypeError("configuration must be a QeNscfProjectionConfiguration")
 
-    def project(self, simulation: PwDftSimulation) -> QeNscfInputProjection:
+    def project(self, structure: StructureResolution) -> QeNscfInputProjection:
         """Return deterministic input with source-ordered explicit k-points."""
-        if type(simulation) is not PwDftSimulation:
-            raise TypeError("simulation must be a PwDftSimulation")
-        if simulation.settings.calculation_type is not CalculationType.nscf:
-            raise ValueError("simulation calculation type must be nscf")
+        if type(structure) is not StructureResolution:
+            raise TypeError("structure must be a StructureResolution")
         config = self.configuration
         if config.occupations is not QeNscfOccupations.fixed:
             raise NotImplementedError(
                 f"NSCF occupations={config.occupations.value!r} is not implemented"
             )
-        atoms = simulation.unit_cell.atomic_basis.atoms
+        atoms = structure.unit_cell.atomic_basis.atoms
         if {atom.symbol for atom in atoms} != {item.symbol for item in config.species}:
             raise ValueError("QE species must exactly match the unit cell")
         control_block = QeNscfControlBlock(
@@ -146,7 +144,8 @@ class QeNscfInputProjector:
             precision=config.kpoint_precision,
         )
         input_file = QePwInputFileAssembler().assemble(
-            simulation=simulation,
+            unit_cell=structure.unit_cell,
+            calculation_type=CalculationType.nscf,
             groups=tuple(
                 component.to_input_group()
                 for component in (

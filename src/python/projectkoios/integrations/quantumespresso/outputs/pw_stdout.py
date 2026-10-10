@@ -21,6 +21,14 @@ _ATOM_COUNT = re.compile(r"number of atoms/cell\s*=\s*(\d+)", re.IGNORECASE)
 _K_POINT_COUNT = re.compile(r"number of k points\s*=\s*(\d+)", re.IGNORECASE)
 _CUTOFF = re.compile(rf"kinetic-energy cutoff\s*=\s*({_FLOAT})\s*Ry", re.IGNORECASE)
 _TOTAL_ENERGY = re.compile(rf"!\s+total energy\s*=\s*({_FLOAT})\s*Ry", re.IGNORECASE)
+_TOTAL_MAGNETIZATION = re.compile(
+    rf"\btotal magnetization\s*=\s*({_FLOAT})\s+Bohr mag/cell",
+    re.IGNORECASE,
+)
+_ABSOLUTE_MAGNETIZATION = re.compile(
+    rf"\babsolute magnetization\s*=\s*({_FLOAT})\s+Bohr mag/cell",
+    re.IGNORECASE,
+)
 _PRESSURE = re.compile(rf"\bP=\s*({_FLOAT})", re.IGNORECASE)
 _TOTAL_FORCE = re.compile(
     rf"Total force\s*=\s*({_FLOAT})\s+Total SCF correction\s*=\s*({_FLOAT})",
@@ -88,6 +96,8 @@ class QePwStdoutFileResult(QeOutputFileResult[QePwStdoutFile]):
     job_completed: bool
     scf_converged: bool
     total_energy_ry: float | None
+    total_magnetization_bohr_magneton_per_cell: float | None
+    absolute_magnetization_bohr_magneton_per_cell: float | None
     wavefunction_cutoff_ry: float | None
     pressure_kbar: float | None
     total_force_ry_per_bohr: float | None
@@ -126,6 +136,14 @@ class QePwStdoutFileResult(QeOutputFileResult[QePwStdoutFile]):
             raise ValueError("program version must be nonempty when represented")
         for label, value in (
             ("total energy", self.total_energy_ry),
+            (
+                "total magnetization",
+                self.total_magnetization_bohr_magneton_per_cell,
+            ),
+            (
+                "absolute magnetization",
+                self.absolute_magnetization_bohr_magneton_per_cell,
+            ),
             ("wavefunction cutoff", self.wavefunction_cutoff_ry),
             ("pressure", self.pressure_kbar),
             ("total force", self.total_force_ry_per_bohr),
@@ -209,6 +227,11 @@ class QePwStdoutFileResult(QeOutputFileResult[QePwStdoutFile]):
             raise ValueError("SCF nonconvergence count must be nonnegative")
         if type(self.left_handed_axis_warning) is not bool:
             raise TypeError("left_handed_axis_warning must be a boolean")
+        if (
+            self.absolute_magnetization_bohr_magneton_per_cell is not None
+            and self.absolute_magnetization_bohr_magneton_per_cell < 0.0
+        ):
+            raise ValueError("absolute magnetization must be nonnegative")
         if self.wavefunction_cutoff_ry is not None and self.wavefunction_cutoff_ry <= 0:
             raise ValueError("wavefunction cutoff must be positive")
         if self.atom_count is not None and self.atom_count <= 0:
@@ -249,6 +272,8 @@ class QePwStdoutFileParser(QeOutputFileParser[QePwStdoutFile]):
         text = payload.decode("utf-8")
         program_version: str | None = None
         total_energy: float | None = None
+        total_magnetization: float | None = None
+        absolute_magnetization: float | None = None
         wavefunction_cutoff: float | None = None
         pressure: float | None = None
         total_force: float | None = None
@@ -297,6 +322,12 @@ class QePwStdoutFileParser(QeOutputFileParser[QePwStdoutFile]):
                 recognized = True
             if match := _TOTAL_ENERGY.search(line):
                 total_energy = self._native_float(match.group(1))
+                recognized = True
+            if match := _TOTAL_MAGNETIZATION.search(line):
+                total_magnetization = self._native_float(match.group(1))
+                recognized = True
+            if match := _ABSOLUTE_MAGNETIZATION.search(line):
+                absolute_magnetization = self._native_float(match.group(1))
                 recognized = True
             if match := _PRESSURE.search(line):
                 pressure = self._native_float(match.group(1))
@@ -399,6 +430,8 @@ class QePwStdoutFileParser(QeOutputFileParser[QePwStdoutFile]):
             job_completed="job done." in lowered,
             scf_converged="convergence has been achieved" in lowered,
             total_energy_ry=total_energy,
+            total_magnetization_bohr_magneton_per_cell=total_magnetization,
+            absolute_magnetization_bohr_magneton_per_cell=absolute_magnetization,
             wavefunction_cutoff_ry=wavefunction_cutoff,
             pressure_kbar=pressure,
             total_force_ry_per_bohr=total_force,

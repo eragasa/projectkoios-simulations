@@ -22,9 +22,11 @@ from projectkoios.integrations.quantumespresso.pw.vc_relax.configuration import 
     QeVcRelaxProjectionConfiguration,
 )
 from projectkoios.simulations.dft.pw.relaxation.base import (
-    PwDftRelaxationRequest,
+    PwDftCellRelaxationMode,
     PwDftRelaxationScope,
 )
+from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
+from projectkoios.simulations.structure import StructureResolution
 
 
 @dataclass(frozen=True, slots=True)
@@ -37,13 +39,18 @@ class QeVcRelaxInputProjector:
         if type(self.configuration) is not QeVcRelaxProjectionConfiguration:
             raise TypeError("configuration must be a QeVcRelaxProjectionConfiguration")
 
-    def project(self, request: PwDftRelaxationRequest) -> QeRelaxationInputProjection:
+    def project(
+        self,
+        request: PwDftRelaxationRequest,
+        structure: StructureResolution,
+    ) -> QeRelaxationInputProjection:
         """Return deterministic QE ``vc-relax`` input."""
         if type(request) is not PwDftRelaxationRequest:
             raise TypeError("request must be a PwDftRelaxationRequest")
-        if request.scope is not PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL:
+        specification = request.specification
+        if specification.scope is not PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL:
             raise ValueError("vc-relax requires atomic-positions-and-cell scope")
-        convergence = request.convergence
+        convergence = specification.ionic_convergence
         if (
             convergence.target_pressure_kbar is None
             or convergence.pressure_tolerance_kbar is None
@@ -51,8 +58,26 @@ class QeVcRelaxInputProjector:
             raise ValueError("vc-relax requires target and convergence pressure")
         self._validate_native_policy()
         configuration = self.configuration
+        neutral_cell_mode = specification.degrees_of_freedom.cell_mode
+        expected_cell_dofree = {
+            PwDftCellRelaxationMode.VOLUME_ONLY: QeCellDegreesOfFreedom.VOLUME,
+            PwDftCellRelaxationMode.SHAPE_AT_FIXED_VOLUME: QeCellDegreesOfFreedom.SHAPE,
+            PwDftCellRelaxationMode.UNRESTRICTED_VECTORS: QeCellDegreesOfFreedom.ALL,
+        }.get(neutral_cell_mode)
+        # A six-component neutral strain mask cannot be represented faithfully by
+        # the currently maintained QE vocabulary, so it is rejected rather than
+        # approximated with a superficially similar cell_dofree keyword.
+        if expected_cell_dofree is None:
+            raise NotImplementedError(
+                "QE selected-component cell relaxation is not implemented"
+            )
+        if configuration.cell_degrees_of_freedom is not expected_cell_dofree:
+            raise ValueError(
+                "QE cell degrees of freedom must match the neutral specification"
+            )
         return project_relaxation_input(
             request,
+            structure,
             configuration,
             calculation="vc-relax",
             lattice_vector_options=QeLatticeVectorRelaxationOptions(

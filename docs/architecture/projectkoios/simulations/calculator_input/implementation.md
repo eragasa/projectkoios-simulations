@@ -64,17 +64,18 @@ provider-native model into protected core.
 
 ## Integration migration
 
-Existing `PwDftScfInputProjection` and `PwDftRelaxationInputProjection` remain
-the immediate typed rendering results until an atomic migration changes them to
-return or contain a `CalculatorInputRecord`. QE and VASP integrations must create
-the record from the exact rendered bytes rather than reconstructing it later
-from configuration objects. The current QE/VASP SCF translators now derive
-charge and spin fields from neutral declarations, but still return the older
-rendered-input record and therefore cannot yet satisfy evidence correlation.
+The SCF integration protocol returns `CalculatorInputRecord` directly. QE and
+VASP create the record from exact rendered bytes, canonical specification
+identity, exact pseudopotential requirements, and explicit neutral-to-native
+mapping observations. The QE executor stages those artifact bytes and resolves
+the correlated pseudopotentials through an injected `PseudopotentialLibrary`
+before authorized execution. `PwDftScfInputProjection` and
+`PwDftScfRenderedInput` are removed rather than retained as compatibility APIs.
 
-The migration updates integration protocols, SCF and relaxation composition,
-tools, examples, tests, and evidence correlation in one change. No parallel
-legacy and exact-input APIs or compatibility facade is introduced.
+`PwDftRelaxationInputProjection` remains the distinct relaxation rendering
+contract until its own atomic prepared-input migration. It is not an SCF
+compatibility facade. Relaxation result construction already requires exact
+`CalculatorInputRecord` correlation.
 
 ## Integrity and authority
 

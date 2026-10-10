@@ -16,8 +16,9 @@ from projectkoios.integrations.quantumespresso.pw.inputfile.model import (
     PwInputGroup,
     QePwInputFile,
 )
+from projectkoios.physkit.periodic.unit_cell import UnitCell
 from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from projectkoios.simulations.dft.pw.settings import CalculationType
 
 _ELEMENT_SYMBOL = re.compile(r"[A-Z][a-z]?")
 
@@ -293,9 +294,10 @@ class QePwInputFileAssembler:
 
     def assemble(
         self,
-        simulation: PwDftSimulation,
+        unit_cell: UnitCell,
         groups: tuple[PwInputGroup, ...],
         *,
+        calculation_type: CalculationType,
         prefix: str | None = None,
         pseudo_dir: str | None = None,
         outdir: str | None = None,
@@ -306,8 +308,10 @@ class QePwInputFileAssembler:
         control_block: ControlBlock | None = None,
     ) -> QePwInputFile:
         """Add canonical structure components to validated caller groups."""
-        if type(simulation) is not PwDftSimulation:
-            raise TypeError("simulation must be a PwDftSimulation")
+        if not isinstance(unit_cell, UnitCell):
+            raise TypeError("unit_cell must inherit from UnitCell")
+        if type(calculation_type) is not CalculationType:
+            raise TypeError("calculation_type must be a CalculationType")
         if type(groups) is not tuple:
             raise TypeError("groups must be a tuple")
         generated_card_names = {"ATOMIC_POSITIONS", "CELL_PARAMETERS"}
@@ -320,7 +324,7 @@ class QePwInputFileAssembler:
         combined_groups = (
             *groups,
             *_structure_groups(
-                simulation,
+                unit_cell,
                 cell_parameters_unit,
                 atomic_positions_unit,
                 coordinate_precision,
@@ -350,7 +354,7 @@ class QePwInputFileAssembler:
         )
         if control_block is None:
             control_block = ControlBlock(
-                calculation_type=simulation.settings.calculation_type,
+                calculation_type=calculation_type,
                 prefix=prefix,
                 pseudo_dir=pseudo_dir,
                 outdir=outdir,
@@ -358,10 +362,7 @@ class QePwInputFileAssembler:
         else:
             if not isinstance(control_block, ControlBlock):
                 raise TypeError("control_block must inherit from ControlBlock")
-            if (
-                control_block.calculation_type
-                is not simulation.settings.calculation_type
-            ):
+            if control_block.calculation_type is not calculation_type:
                 raise ValueError(
                     "control_block calculation type disagrees with simulation"
                 )
@@ -374,20 +375,19 @@ class QePwInputFileAssembler:
                     raise ValueError(f"{label} disagrees with control_block")
         return QePwInputFile(
             control_block=control_block,
-            unit_cell=simulation.unit_cell,
+            unit_cell=unit_cell,
             groups=(*namelists, *ordered_cards),
         )
 
 
 def _structure_groups(
-    simulation: PwDftSimulation,
+    unit_cell: UnitCell,
     cell_parameters_unit: Literal["alat", "angstrom", "bohr"],
     atomic_positions_unit: Literal["crystal"],
     coordinate_precision: int,
 ) -> tuple[PwInputGroup, ...]:
     if type(coordinate_precision) is not int or coordinate_precision < 1:
         raise ValueError("coordinate_precision must be a positive integer")
-    unit_cell = simulation.unit_cell
     lattice_matrix = unit_cell.A.magnitude
     if cell_parameters_unit != "alat":
         conversion_factor = MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(

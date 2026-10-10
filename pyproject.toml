@@ -72,6 +72,7 @@ markers = [
     "adversarial: malformed, unauthorized, or boundary-hostile cases",
     "integration: interaction between multiple components, files, or retained artifacts",
     "property: deterministic bounded property cases",
+    "simulation: explicitly authorized test that launches a real calculator; the marker alone grants no authority",
     "software_verification: bounded software-contract evidence without scientific validation",
     "smoke: quick check that a non-calculator entry point performs its basic operation",
     "validation: opt-in numerical, statistical, or scientific validation",

@@ -10,11 +10,6 @@ from projectkoios.simulations.dft.pw.relaxation.base import (
     PwDftRelaxationInitialization,
     PwDftRelaxationScope,
 )
-from projectkoios.simulations.dft.pw.settings import (
-    CalculationType,
-    PwDftSettings,
-)
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
 from tests.projectkoios.simulations.dft.pw.relaxation.support import (
     silicon_relaxation_request,
 )
@@ -51,18 +46,20 @@ class PwDftRelaxationRequestTest(unittest.TestCase):
             PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL
         )
 
-        self.assertIsNone(fixed.convergence.target_pressure_kbar)
-        self.assertEqual(variable.convergence.target_pressure_kbar, 0.0)
-
-    def test_rejects_scope_and_calculation_mismatch(self) -> None:
-        request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
-        simulation = PwDftSimulation(
-            unit_cell=request.simulation.unit_cell,
-            settings=PwDftSettings(calculation_type=CalculationType.vc_relax),
+        self.assertIsNone(fixed.specification.ionic_convergence.target_pressure_kbar)
+        self.assertEqual(
+            variable.specification.ionic_convergence.target_pressure_kbar,
+            0.0,
         )
 
-        with self.assertRaisesRegex(ValueError, "does not match scope"):
-            replace(request, simulation=simulation)
+    def test_stage_identity_is_owned_by_the_relaxation_specification(self) -> None:
+        request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
+
+        self.assertEqual(
+            request.specification.scope,
+            PwDftRelaxationScope.ATOMIC_POSITIONS,
+        )
+        self.assertFalse(hasattr(request.specification.simulation, "settings"))
 
     def test_rejects_pressure_controls_for_fixed_cell(self) -> None:
         request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
@@ -75,7 +72,10 @@ class PwDftRelaxationRequestTest(unittest.TestCase):
         )
 
         with self.assertRaisesRegex(ValueError, "must not declare pressure"):
-            replace(request, convergence=policy)
+            replace(
+                request.specification,
+                ionic_convergence=policy,
+            )
 
 
 if __name__ == "__main__":

@@ -8,7 +8,10 @@ from projectkoios.integrations.materials_project import (
     MaterialsProjectStructureRequest,
     MaterialsProjectStructureRetriever,
 )
-from projectkoios.physkit.periodic.unit_cell import ConventionalUnitCell
+from projectkoios.physkit.periodic.unit_cell import (
+    ConventionalUnitCell,
+    UnitCellJsonCodec,
+)
 from tests.projectkoios.integrations.materials_project.support import (
     MaterialsProjectClientDouble,
 )
@@ -41,6 +44,32 @@ def test_copies_structure_without_retaining_mutable_pymatgen_arrays() -> None:
         np.asarray((5.43, 0.0, 0.0)),
     )
     assert reference.geometry_status == "external_reference_not_calculation_input"
+
+
+def test_normalizes_signed_zero_before_canonical_structure_serialization() -> None:
+    source = Structure(
+        Lattice(
+            (
+                (2.0, -0.0, 1.0),
+                (1.0, 2.0, -0.0),
+                (-0.0, -0.0, 2.0),
+            )
+        ),
+        ("Ni",),
+        ((-0.0, -0.0, 0.0),),
+    )
+    client = MaterialsProjectClientDouble(entries={}, structures={"mp-23": source})
+
+    reference = MaterialsProjectStructureRetriever().action(
+        client=client,
+        request=MaterialsProjectStructureRequest("mp-23"),
+    )
+    content = UnitCellJsonCodec().dumps(
+        reference.unit_cell,
+        structure_id=reference.structure_id,
+    )
+
+    assert "-0.0" not in content
 
 
 def test_rejects_disordered_materials_project_sites() -> None:

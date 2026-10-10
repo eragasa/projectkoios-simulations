@@ -5,8 +5,6 @@ from projectkoios.simulations.dft.pw.relaxation.base import (
     PwDftRelaxationConvergencePolicy,
     PwDftRelaxationDegreesOfFreedom,
     PwDftRelaxationInitialization,
-    PwDftRelaxationRequest,
-    PwDftRelaxationSampling,
     PwDftRelaxationScope,
 )
 from projectkoios.simulations.dft.pw.relaxation.observation import (
@@ -18,7 +16,11 @@ from projectkoios.simulations.dft.pw.relaxation.publication import (
     PwDftRelaxedStructurePublicationRequest,
     PwDftRelaxedStructurePublisher,
 )
+from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
 from projectkoios.simulations.dft.pw.relaxation.result import PwDftRelaxationResult
+from projectkoios.simulations.dft.pw.relaxation.specification import (
+    PwDftRelaxationSpecification,
+)
 
 __all__ = (
     "PwDftRelaxedStructurePublication",
@@ -32,6 +34,6 @@ __all__ = (
     "PwDftRelaxationObservation",
     "PwDftRelaxationRequest",
     "PwDftRelaxationResult",
-    "PwDftRelaxationSampling",
     "PwDftRelaxationScope",
+    "PwDftRelaxationSpecification",
 )

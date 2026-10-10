@@ -13,7 +13,6 @@ from projectkoios.simulations.dft.pw.settings import (
     AlignmentKind,
     CalculationType,
 )
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
 
 IBRION_DOCUMENTATION_URL = "https://vasp.at/wiki/IBRION"
 ICHARG_DOCUMENTATION_URL = "https://vasp.at/wiki/ICHARG"
@@ -59,12 +58,14 @@ class VaspCalculationProjection:
 class VaspCalculationProjector:
     """Project one shared calculation type into qualified VASP controls."""
 
-    def project(self, simulation: PwDftSimulation) -> VaspCalculationProjection:
+    def project(self, calculation_type: CalculationType) -> VaspCalculationProjection:
         """Return deterministic INCAR fields without concealing missing policy."""
-        if type(simulation) is not PwDftSimulation:
-            raise TypeError("simulation must be a PwDftSimulation")
+        # Stage identity is supplied by the enclosing specification or adapter;
+        # it no longer leaks into shared PwDftSimulation scientific intent.
+        if type(calculation_type) is not CalculationType:
+            raise TypeError("calculation_type must be a CalculationType")
         assignments, alignment, required_inputs, qualification = _PROJECTIONS[
-            simulation.settings.calculation_type
+            calculation_type
         ]
         return VaspCalculationProjection(
             input_file=IncarFile(

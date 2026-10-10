@@ -16,11 +16,9 @@ from projectkoios.physkit.units import (
     Unitless,
     VectorQuantity,
 )
-from projectkoios.simulations.dft.pw.settings import (
-    CalculationType,
-    PwDftSettings,
+from tests.projectkoios.simulations.dft.pw.support import (
+    resolved_pw_dft_simulation,
 )
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
 
 
 class PwDftSimulationTest(unittest.TestCase):
@@ -42,11 +40,10 @@ class PwDftSimulationTest(unittest.TestCase):
             ),
         )
 
-        settings = PwDftSettings(calculation_type=CalculationType.scf)
-        simulation = PwDftSimulation(unit_cell=unit_cell, settings=settings)
+        simulation = resolved_pw_dft_simulation(unit_cell)
 
         self.assertIs(simulation.unit_cell, unit_cell)
-        self.assertIs(simulation.settings, settings)
+        self.assertEqual(simulation.structure.record, simulation.simulation.structure)
         self.assertEqual(
             simulation.lattice_vectors_angstrom,
             (

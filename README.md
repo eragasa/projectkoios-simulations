@@ -151,3 +151,15 @@ python3.14 -m venv .venv
 .venv/bin/python -m mypy
 .venv/bin/python -m build --wheel
 ```
+
+Tests marked `simulation` launch a real calculator and remain skipped unless the
+operator supplies explicit execution authorization. Select the marker to scope
+an authorized invocation:
+
+```bash
+.venv/bin/python -m pytest -m simulation \
+  --authorize-calculator-execution
+```
+
+The marker alone grants no execution authority. Rendering, parsing, retained
+artifact, and fake-executable tests are not simulation tests.

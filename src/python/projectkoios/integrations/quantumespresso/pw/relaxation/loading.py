@@ -104,6 +104,7 @@ class QeRelaxationCalculationTomlLoader:
             wavefunction_cutoff_ry=_float(sampling, "wavefunction_cutoff_ry"),
             charge_density_cutoff_ry=_float(sampling, "charge_density_cutoff_ry"),
             electronic_tolerance_ry=_float(sampling, "electronic_tolerance_ry"),
+            electronic_atol_ry=_float(sampling, "electronic_atol_ry"),
             ionic_relaxation=QeIonicRelaxationOptions(
                 dynamics=QeIonDynamics(_string(ionic, "dynamics")),
                 maximum_steps=_integer(ionic, "maximum_steps"),
@@ -201,6 +202,7 @@ def _validate_schema(payload: dict[str, object]) -> None:
             "wavefunction_cutoff_ry",
             "charge_density_cutoff_ry",
             "electronic_tolerance_ry",
+            "electronic_atol_ry",
         },
     )
     _require_schema_keys(

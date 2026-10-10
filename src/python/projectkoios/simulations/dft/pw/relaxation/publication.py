@@ -38,6 +38,10 @@ class PwDftRelaxedStructurePublicationRequest:
             raise TypeError("relaxation_result must be a PwDftRelaxationResult")
         if type(self.evidence) is not SimulationEvidenceRecord:
             raise TypeError("evidence must be a SimulationEvidenceRecord")
+        if self.starting_structure != self.relaxation_result.starting_structure:
+            raise ValueError(
+                "publication starting structure must match the relaxation result"
+            )
 
 
 @dataclass(frozen=True, slots=True)
@@ -98,7 +102,8 @@ class PwDftRelaxedStructurePublisher:
         if not observation.completed or not observation.ionic_converged:
             raise ValueError("relaxation observation must be completed and converged")
         if (
-            result.request.scope is PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL
+            result.request.specification.scope
+            is PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL
             and observation.cell_converged is not True
         ):
             raise ValueError("variable-cell observation must report cell convergence")
@@ -137,8 +142,11 @@ class PwDftRelaxedStructurePublisher:
             hashlib.sha256(starting_content).hexdigest() != starting_record.sha256
         ):
             raise ValueError("starting structure bytes must match its exact record")
+        # Result construction already correlates this resolution to the exact
+        # specification record; publication repeats the byte comparison so the
+        # emitted provenance cannot be detached from its starting geometry.
         simulation_starting_content = codec.dumps(
-            result.request.simulation.unit_cell,
+            result.starting_structure.unit_cell,
             structure_id=starting_record.structure_id,
         ).encode("utf-8")
         if simulation_starting_content != starting_content:
@@ -158,7 +166,7 @@ class PwDftRelaxedStructurePublisher:
             PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL: (
                 ObservedStructureScope.atomic_positions_and_cell
             ),
-        }[result.request.scope]
+        }[result.request.specification.scope]
         provenance = ObservedStructureProvenance(
             starting_structure=StructureRecordReference(
                 structure_id=starting_record.structure_id,

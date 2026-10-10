@@ -11,13 +11,12 @@ import numpy as np
 
 from projectkoios.physkit.periodic.unit_cell import UnitCellJsonCodec
 from projectkoios.simulations.calculator_input import CalculatorInputRecord
-from projectkoios.simulations.dft.pw.relaxation.base import (
-    PwDftRelaxationRequest,
-    PwDftRelaxationScope,
-)
+from projectkoios.simulations.dft.pw.relaxation.base import PwDftRelaxationScope
 from projectkoios.simulations.dft.pw.relaxation.observation import (
     PwDftRelaxationObservation,
 )
+from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
+from projectkoios.simulations.structure import StructureResolution
 
 
 @dataclass(frozen=True, slots=True)
@@ -32,6 +31,7 @@ class PwDftRelaxationResult:
     evaluation_id: str
     task_id: str
     request: PwDftRelaxationRequest
+    starting_structure: StructureResolution
     calculator_input: CalculatorInputRecord
     observation: PwDftRelaxationObservation
 
@@ -42,8 +42,29 @@ class PwDftRelaxationResult:
             raise ValueError("evaluation_id must match the relaxation request")
         if type(self.task_id) is not str or not self.task_id.strip():
             raise ValueError("task_id must be nonempty and stripped")
+        if type(self.starting_structure) is not StructureResolution:
+            raise TypeError("starting_structure must be StructureResolution")
+        if (
+            self.starting_structure.record
+            != self.request.specification.simulation.structure
+        ):
+            raise ValueError(
+                "starting_structure must match the specification dependency"
+            )
         if type(self.calculator_input) is not CalculatorInputRecord:
             raise TypeError("calculator_input must be CalculatorInputRecord")
+        # Local import avoids coupling the relaxation package initializer back
+        # into the specification codec while both modules are being initialized.
+        from projectkoios.simulations.library.codec import simulation_source_reference
+
+        # This closes the publication-correlation gap: evidence cannot be paired
+        # with prepared inputs derived from a different exact specification.
+        if self.calculator_input.source != simulation_source_reference(
+            self.request.specification
+        ):
+            raise ValueError(
+                "calculator input source must identify the exact request specification"
+            )
         if type(self.observation) is not PwDftRelaxationObservation:
             raise TypeError("observation must be PwDftRelaxationObservation")
         if any(
@@ -53,7 +74,7 @@ class PwDftRelaxationResult:
             raise ValueError(
                 "relaxation artifacts and calculator input integration must match"
             )
-        starting = self.request.simulation.unit_cell
+        starting = self.starting_structure.unit_cell
         final = self.observation.final_unit_cell
         if len(starting.atomic_basis.atoms) != len(final.atomic_basis.atoms):
             raise ValueError("relaxation must preserve atom count")
@@ -61,7 +82,7 @@ class PwDftRelaxationResult:
             atom.symbol for atom in final.atomic_basis.atoms
         ):
             raise ValueError("relaxation must preserve source-ordered atom symbols")
-        if self.request.scope is PwDftRelaxationScope.ATOMIC_POSITIONS:
+        if self.request.specification.scope is PwDftRelaxationScope.ATOMIC_POSITIONS:
             if self.observation.cell_converged is not None:
                 raise ValueError("fixed-cell relaxation has no cell convergence state")
             if not np.array_equal(starting.A.magnitude, final.A.magnitude):
@@ -109,7 +130,7 @@ class PwDftRelaxationResult:
             "program_version": observation.program_version,
             "representation": self.observation_representation,
             "schema_version": self.observation_schema_version,
-            "scope": self.request.scope.value,
+            "scope": self.request.specification.scope.value,
             "task_id": self.task_id,
             "total_magnetization_electrons": (
                 observation.total_magnetization_electrons

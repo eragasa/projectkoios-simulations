@@ -22,12 +22,14 @@ from projectkoios.simulations.dft.pseudopotential import (
     PseudopotentialArtifactFormat,
     PseudopotentialFile,
 )
-from projectkoios.simulations.dft.pw.settings import CalculationType, PwDftSettings
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from projectkoios.simulations.dft.pw.simulation import ResolvedPwDftSimulation
 from projectkoios.simulations.structure.defect import (
     UnitCellDefectDelta,
     UnitCellDefectDeltaApplicator,
     UnitCellDefectDeltaResult,
+)
+from tests.projectkoios.simulations.dft.pw.support import (
+    resolved_pw_dft_simulation,
 )
 
 
@@ -57,7 +59,7 @@ def _pseudo(symbol: str, valence: int, digit: str) -> PseudopotentialFile:
 
 def _neutral_si_p_simulation(
     spin: DftSpinTreatment,
-) -> tuple[UnitCellDefectDeltaResult, PwDftSimulation]:
+) -> tuple[UnitCellDefectDeltaResult, ResolvedPwDftSimulation]:
     bulk = UnitCell(
         direct_lattice=DirectLattice3D(
             a1=np.array([1.0, 0.0, 0.0]),
@@ -79,12 +81,11 @@ def _neutral_si_p_simulation(
             additions=(_atom("P", (0.0, 0.0, 0.0)),),
         )
     )
-    simulation = PwDftSimulation(
-        unit_cell=result.unit_cell,
-        settings=PwDftSettings(CalculationType.scf),
+    simulation = resolved_pw_dft_simulation(
+        result.unit_cell,
         charge=DftChargeState(),
         spin=spin,
-        pseudopotentials=(_pseudo("Si", 4, "1"), _pseudo("P", 5, "2")),
+        pseudopotentials=(_pseudo("P", 5, "2"), _pseudo("Si", 4, "1")),
     )
     return result, simulation
 
@@ -101,7 +102,7 @@ def test_neutral_si_p_requires_explicit_doublet() -> None:
     binding = PwDftDefectChargeBinding(defect=defect, simulation=simulation)
 
     assert binding.simulation.electron_count == 9
-    assert binding.simulation.charge.delta_n_electrons == 0
+    assert binding.simulation.simulation.charge.delta_n_electrons == 0
 
 
 def test_odd_electron_simulation_rejects_unpolarized_default() -> None:

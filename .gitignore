@@ -11,3 +11,4 @@ dist/
 
 # Machine-local calculator and pseudopotential-library deployment
 /local-execution.toml
+/.env

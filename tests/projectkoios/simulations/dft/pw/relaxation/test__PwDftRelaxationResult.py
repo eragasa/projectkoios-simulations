@@ -11,7 +11,6 @@ from projectkoios.simulations.calculator import CalculatorIntegrationId
 from projectkoios.simulations.calculator_input import (
     CalculatorInputArtifact,
     CalculatorInputRecord,
-    CalculatorInputSourceReference,
 )
 from projectkoios.simulations.dft.pw.relaxation import (
     PwDftRelaxationNativeArtifact,
@@ -19,23 +18,23 @@ from projectkoios.simulations.dft.pw.relaxation import (
     PwDftRelaxationResult,
     PwDftRelaxationScope,
 )
+from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
+from projectkoios.simulations.library import simulation_source_reference
 from tests.projectkoios.simulations.dft.pw.relaxation.support import (
     silicon_relaxation_request,
 )
+from tests.projectkoios.simulations.dft.pw.support import silicon_structure_resolution
 
 
-def _input_record(integration_id: CalculatorIntegrationId) -> CalculatorInputRecord:
+def _input_record(
+    integration_id: CalculatorIntegrationId,
+    request: PwDftRelaxationRequest,
+) -> CalculatorInputRecord:
     content = b"relaxation input\n"
     return CalculatorInputRecord(
         input_id="silicon-relaxation-input",
         schema_version=1,
-        source=CalculatorInputSourceReference(
-            simulation_id="silicon-relaxation",
-            representation="test",
-            schema_version=1,
-            byte_size=10,
-            sha256="1" * 64,
-        ),
+        source=simulation_source_reference(request.specification),
         integration_id=integration_id,
         calculator_name="test calculator",
         calculator_version_constraint="1",
@@ -110,14 +109,16 @@ def _observation(
 def test_fixed_cell_result_preserves_lattice_and_allows_position_changes() -> None:
     request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
     integration_id = CalculatorIntegrationId("quantum-espresso")
+    starting_structure = silicon_structure_resolution()
 
     result = PwDftRelaxationResult(
         evaluation_id=request.evaluation_id,
         task_id="task-1",
         request=request,
-        calculator_input=_input_record(integration_id),
+        starting_structure=starting_structure,
+        calculator_input=_input_record(integration_id, request),
         observation=_observation(
-            _final_cell(request.simulation.unit_cell), integration_id, None
+            _final_cell(starting_structure.unit_cell), integration_id, None
         ),
     )
 
@@ -128,14 +129,16 @@ def test_fixed_cell_result_preserves_lattice_and_allows_position_changes() -> No
 def test_fixed_cell_result_rejects_lattice_change() -> None:
     request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
     integration_id = CalculatorIntegrationId("quantum-espresso")
+    starting_structure = silicon_structure_resolution()
 
     with pytest.raises(ValueError, match="preserve lattice parameter"):
         PwDftRelaxationResult(
             evaluation_id=request.evaluation_id,
             task_id="task-1",
             request=request,
-            calculator_input=_input_record(integration_id),
+            starting_structure=starting_structure,
+            calculator_input=_input_record(integration_id, request),
             observation=_observation(
-                _final_cell(request.simulation.unit_cell, 1.01), integration_id, None
+                _final_cell(starting_structure.unit_cell, 1.01), integration_id, None
             ),
         )

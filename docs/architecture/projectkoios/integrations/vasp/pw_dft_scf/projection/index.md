@@ -3,7 +3,9 @@
 `VASP_SCF_INTEGRATION_ID` identifies the backend. `VaspScfInputProjector`
 composes maintained INCAR, KPOINTS, POSCAR, and calculation renderers. The
 existing Python name uses “projection”; architecturally this is translation into
-exact VASP input files.
+exact VASP input files. It returns one content-addressed
+`CalculatorInputRecord` containing INCAR, KPOINTS, POSCAR, the exact external
+POTCAR requirement, canonical specification correlation, and mapping evidence.
 
 ## Defect extension status
 
@@ -21,8 +23,6 @@ translation must:
   mappings;
 - preserve the exact ordered pseudopotential requirement used to interpret that
   electron count;
-- return a neutral `CalculatorInputRecord` for INCAR, KPOINTS, POSCAR, and all
-  external requirements; and
 - reject unsupported charge or spin intent instead of relying on VASP defaults.
 
 Neutral Si:P requires a spin-polarized doublet with

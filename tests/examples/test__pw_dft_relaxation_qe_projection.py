@@ -19,6 +19,7 @@ from projectkoios.simulations.dft.pw.relaxation.integration import (
 from projectkoios.simulations.workflows.pw_dft_relaxation.composition import (
     PwDftRelaxationCampaign,
 )
+from tests.projectkoios.simulations.dft.pw.support import silicon_structure_resolution
 from tests.projectkoios.simulations.workflows.support import silicon_relaxation_request
 
 
@@ -30,6 +31,7 @@ class QuantumEspressoRelaxationCompositionTest(unittest.TestCase):
                 ion_dynamics=QeIonDynamics.BFGS,
                 charge_density_cutoff_ratio=8.0,
                 electronic_tolerance_ry=1.0e-8,
+                electronic_atol_ry=1.0e-15,
                 prefix="system",
                 pseudo_dir="./",
                 outdir="./tmp/",
@@ -41,6 +43,7 @@ class QuantumEspressoRelaxationCompositionTest(unittest.TestCase):
             campaign_id="silicon-relaxation",
             integration_id=integration.integration_id,
             request=silicon_relaxation_request(),
+            structure=silicon_structure_resolution(),
         )
 
         result = compose(

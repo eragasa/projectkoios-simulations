@@ -9,10 +9,20 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
-from projectkoios.physkit.periodic.unit_cell import UnitCellJsonCodec
+from projectkoios.physkit.periodic.unit_cell import (
+    ConventionalUnitCell,
+    PrimitiveUnitCell,
+    UnitCellJsonCodec,
+)
 from projectkoios.simulations.execution import (
     CalculatorExecutionRequest,
     CalculatorExecutor,
+)
+from projectkoios.simulations.structure import (
+    StructureRecord,
+    StructureRepresentation,
+    StructureResolution,
+    TransferredStructureProvenance,
 )
 
 from .calculation import QeRelaxationCalculationConfiguration
@@ -123,13 +133,49 @@ class QeRelaxationCalculationRunner:
             expected_size=structure_size,
             label="structure",
         )
+        verified_structure_size = structure_path.stat().st_size
         unit_cell = UnitCellJsonCodec().loads(
             structure_path.read_text(encoding="utf-8"),
             expected_structure_id=structure_id,
         )
+        representation = (
+            StructureRepresentation.primitive
+            if type(unit_cell) is PrimitiveUnitCell
+            else (
+                StructureRepresentation.conventional
+                if type(unit_cell) is ConventionalUnitCell
+                else StructureRepresentation.unit_cell
+            )
+        )
+        # The operator-facing repository path may legitimately contain ``..``
+        # components relative to this configuration. Structure provenance instead
+        # requires a normalized record path; the absolute source URI below retains
+        # the complete location without weakening that manifest-safe invariant.
+        record_path = structure_path.name
+        # Execution preparation has already verified the configured file bytes.
+        # The resolution below carries that exact identity into neutral rendering;
+        # it neither authorizes execution nor claims scientific acceptance.
+        structure_record = StructureRecord(
+            structure_id=structure_id,
+            representation=representation,
+            schema_version=1,
+            sha256=structure_sha256,
+            byte_size=verified_structure_size,
+            provenance=TransferredStructureProvenance(
+                source=structure_path.as_uri(),
+                revision=structure_sha256,
+                record_path=record_path,
+                source_sha256=structure_sha256,
+                result_sha256=structure_sha256,
+            ),
+        )
         rendered = QeRelaxationCalculationRenderer().render(
             configuration,
-            unit_cell,
+            StructureResolution(
+                record=structure_record,
+                path=structure_path.resolve(strict=True),
+                unit_cell=unit_cell,
+            ),
         )
 
         if request.execute:

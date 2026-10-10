@@ -15,8 +15,8 @@ from projectkoios.integrations.quantumespresso.pw.nscf.projection import (
     QeNscfInputProjection,
     QeNscfInputProjector,
 )
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
 from projectkoios.simulations.execution import CalculatorExecutionRecord
+from projectkoios.simulations.structure import StructureResolution
 
 
 @dataclass(frozen=True, slots=True)
@@ -31,9 +31,9 @@ class QeNscfIntegration:
                 "projection_configuration must be a QeNscfProjectionConfiguration"
             )
 
-    def project(self, simulation: PwDftSimulation) -> QeNscfInputProjection:
-        """Project calculator-neutral structure state into typed QE cards."""
-        return QeNscfInputProjector(self.projection_configuration).project(simulation)
+    def project(self, structure: StructureResolution) -> QeNscfInputProjection:
+        """Project an exact resolved structure into typed QE cards."""
+        return QeNscfInputProjector(self.projection_configuration).project(structure)
 
     def extract(
         self,

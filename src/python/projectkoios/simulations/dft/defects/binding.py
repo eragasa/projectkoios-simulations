@@ -11,7 +11,7 @@ from projectkoios.simulations.defects import (
     DefectEnergyRole,
 )
 from projectkoios.simulations.dft.pw.scf.base import PwDftScfObservation
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from projectkoios.simulations.dft.pw.simulation import ResolvedPwDftSimulation
 
 
 @dataclass(frozen=True, slots=True)
@@ -21,7 +21,7 @@ class PwDftDefectEnergyBinding:
     energy_id: str
     role: DefectEnergyRole
     simulation_id: str
-    simulation: PwDftSimulation
+    simulation: ResolvedPwDftSimulation
     calculator_input: CalculatorInputRecord
     observation: PwDftScfObservation
     structure: DefectContentReference
@@ -40,9 +40,9 @@ class PwDftDefectEnergyBinding:
                 raise ValueError(f"{label} must be nonempty and stripped")
         if type(self.role) is not DefectEnergyRole:
             raise TypeError("role must be DefectEnergyRole")
-        if type(self.simulation) is not PwDftSimulation:
-            raise TypeError("simulation must be PwDftSimulation")
-        if not self.simulation.pseudopotentials:
+        if type(self.simulation) is not ResolvedPwDftSimulation:
+            raise TypeError("simulation must be ResolvedPwDftSimulation")
+        if not self.simulation.simulation.pseudopotentials:
             raise ValueError(
                 "DFT defect-energy binding requires exact pseudopotentials"
             )
@@ -72,7 +72,7 @@ class PwDftDefectEnergyBinding:
         if charge_mapping is None:
             raise ValueError("calculator input must record the charge mapping")
         if charge_mapping.neutral_value != str(
-            self.simulation.charge.delta_n_electrons
+            self.simulation.simulation.charge.delta_n_electrons
         ):
             raise ValueError(
                 "calculator input charge mapping disagrees with simulation"
@@ -81,7 +81,7 @@ class PwDftDefectEnergyBinding:
         if spin_mapping is None:
             raise ValueError("calculator input must record the spin mapping")
         if spin_mapping.neutral_value.split(";", maxsplit=1)[0] != (
-            self.simulation.spin.mode.value
+            self.simulation.simulation.spin.mode.value
         ):
             raise ValueError("calculator input spin mapping disagrees with simulation")
         if type(self.structure) is not DefectContentReference:

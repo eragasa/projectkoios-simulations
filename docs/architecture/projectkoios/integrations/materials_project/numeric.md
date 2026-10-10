@@ -9,11 +9,12 @@ or silently substitute a different thermo type.
 
 ## Hull-distance handling
 
-The selected elemental reference is expected on the constructed hull. The raw
-computed hull distance is retained. A schema-defined small numerical tolerance
-may qualify a value as numerically zero for reporting, but the original value
-and tolerance remain evidence. The record does not overwrite the raw value with
-zero without retaining that qualification.
+`PhaseDiagram.el_refs` supplies an entry on the constructed one-element hull.
+The selector computes its hull distance and normalizes an absolute value no
+greater than `1.0e-12` eV to `0.0` eV. The complete candidate entries,
+compatibility scheme, response identity, and pymatgen version remain available
+to reconstruct and audit that calculation. No nonzero value outside this fixed
+tolerance is rewritten.
 
 ## Canonical candidate digest
 
@@ -28,15 +29,16 @@ the retained canonical response.
 ## Structure conversion
 
 Lattice vectors are converted with explicit angstrom units and fractional site
-coordinates. Conversion retains source ordering, rejects disordered sites, and
-does not standardize or relax the structure. The resulting structure bytes have
+coordinates. Conversion retains source ordering, normalizes IEEE signed zero,
+rejects disordered sites, and does not standardize or relax the structure. The
+resulting structure bytes have
 their own size and SHA-256 independent of the candidate-set artifact.
 
 ## Selection consistency
 
 The selected candidate must occur exactly once in the retained set. The
-recorded material ID, selected entry ID, energy per atom, hull distance, and
-copied structure must correlate. Candidate count must equal the retained set
+recorded material ID, selected candidate digest, energy per atom, hull distance,
+and copied structure must correlate. Candidate count must equal the retained set
 length, not merely the count reported by an unverified caller.
 
 ## Missing service metadata

@@ -13,17 +13,31 @@ from projectkoios.integrations.quantumespresso.pw.scf import (
 from projectkoios.integrations.vasp.pw_dft_scf.configuration import (
     VaspScfProjectionConfiguration,
 )
+from projectkoios.physkit.units import (
+    MODEL_SYSTEM_UNIT_CONVERTER,
+    PhysicalUnit,
+)
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.pw.scf.base import (
-    PwDftScfRequest,
-    PwDftScfSampling,
+from projectkoios.simulations.dft.electronic import (
+    DftExchangeCorrelationIdentifierScheme,
+    DftExchangeCorrelationModel,
+    DftOccupationMethod,
+    DftOccupationPolicy,
+    PwDftElectronicConvergencePolicy,
 )
-from projectkoios.simulations.dft.pw.settings import (
-    CalculationType,
-    PwDftSettings,
+from projectkoios.simulations.dft.pseudopotential import (
+    Pseudopotential,
+    PseudopotentialArtifactFormat,
+    PseudopotentialFile,
 )
+from projectkoios.simulations.dft.pw.scf.request import PwDftScfRequest
+from projectkoios.simulations.dft.pw.scf.specification import PwDftScfSpecification
+from projectkoios.simulations.dft.pw.settings import PwDftKPointSamplingPolicy
 from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
-from projectkoios.simulations.structure.library import StructureLibrary
+from projectkoios.simulations.structure.library import (
+    StructureLibrary,
+    StructureResolution,
+)
 from projectkoios.simulations.workflows.pw_dft_scf.configuration import (
     PwDftScfCampaignConfiguration,
     PwDftScfRuntimeConfiguration,
@@ -77,6 +91,7 @@ class LoadedWorkflowRunnerConfiguration:
 
     campaign: PwDftScfCampaignConfiguration
     structure_id: str
+    structure: StructureResolution
     projection_profile_id: str
     replay: ReplayDeclaration | None
 
@@ -113,25 +128,116 @@ class WorkflowRunnerConfigurationLoader:
             "sampling",
             sampling_profile_id,
         )
-        simulation = PwDftSimulation(
-            unit_cell=self.structure_library.resolve_unique(structure_id).unit_cell,
-            settings=PwDftSettings(calculation_type=CalculationType.scf),
+        integration_id = CalculatorIntegrationId(
+            value=self._string(campaign_payload, "integration")
         )
+        projection_profile = self._profile(
+            catalog,
+            "projection",
+            projection_profile_id,
+        )
+        structure = self.structure_library.resolve_unique(structure_id)
+        pseudopotential_compatibility_label = self._string(
+            sampling_profile,
+            "pseudopotential_compatibility_label",
+        )
+        pseudopotential = PseudopotentialFile(
+            pseudopotential=Pseudopotential(
+                symbol=self._string(projection_profile, "pseudopotential_symbol"),
+                exchange_correlation=pseudopotential_compatibility_label,
+                formalism=self._string(
+                    projection_profile,
+                    "pseudopotential_formalism",
+                ),
+                relativistic_treatment=self._string(
+                    projection_profile,
+                    "pseudopotential_relativistic_treatment",
+                ),
+                valence_electrons=self._integer(
+                    projection_profile,
+                    "pseudopotential_valence_electrons",
+                ),
+            ),
+            artifact_format=PseudopotentialArtifactFormat(
+                self._string(projection_profile, "pseudopotential_format")
+            ),
+            artifact_format_version=self._string(
+                projection_profile,
+                "pseudopotential_format_version",
+            ),
+            filename=self._string(
+                projection_profile,
+                "pseudopotential_filename",
+            ),
+            sha256=self._string(projection_profile, "pseudopotential_sha256"),
+            byte_size=self._integer(
+                projection_profile,
+                "pseudopotential_byte_size",
+            ),
+        )
+        simulation = PwDftSimulation(
+            structure=structure.record,
+            exchange_correlation=DftExchangeCorrelationModel(
+                identifier_scheme=(
+                    DftExchangeCorrelationIdentifierScheme.LIBXC_COMPOSITE
+                ),
+                identifier=self._string(
+                    sampling_profile,
+                    "exchange_correlation_identifier",
+                ),
+                pseudopotential_compatibility_label=(
+                    pseudopotential_compatibility_label
+                ),
+            ),
+            pseudopotentials=(pseudopotential,),
+        )
+        if integration_id.value == "quantum-espresso":
+            occupation = DftOccupationPolicy(method=DftOccupationMethod.FIXED)
+            electronic_tolerance_ev = self._float(
+                projection_profile,
+                "electronic_tolerance_ry",
+            ) * MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
+                PhysicalUnit("Ry"),
+                PhysicalUnit("eV"),
+            )
+            maximum_electronic_iterations = 100
+        else:
+            if self._integer(projection_profile, "smearing_method") != 0:
+                raise ValueError("only Gaussian VASP runner smearing is supported")
+            occupation = DftOccupationPolicy(
+                method=DftOccupationMethod.GAUSSIAN,
+                smearing_width_ev=self._float(
+                    projection_profile,
+                    "smearing_width_ev",
+                ),
+            )
+            electronic_tolerance_ev = self._float(
+                projection_profile,
+                "electronic_tolerance_ev",
+            )
+            maximum_electronic_iterations = self._integer(
+                projection_profile,
+                "maximum_electronic_steps",
+            )
         base_request = PwDftScfRequest(
             evaluation_id=f"{campaign_id}-base",
-            simulation=simulation,
-            sampling=PwDftScfSampling(
-                kpoint_mesh=self._integer_triplet(
-                    sampling_profile,
-                    "kpoint_mesh",
-                ),
-                kpoint_shift=self._integer_triplet(
-                    sampling_profile,
-                    "kpoint_shift",
+            specification=PwDftScfSpecification(
+                simulation_id=f"Si.PrimitiveUnitCell.{integration_id.value}.SCF",
+                simulation=simulation,
+                kpoint_sampling=PwDftKPointSamplingPolicy(
+                    mesh=self._integer_triplet(sampling_profile, "kpoint_mesh"),
+                    shift=self._integer_triplet(sampling_profile, "kpoint_shift"),
+                    use_spatial_symmetry=True,
+                    use_time_reversal=True,
                 ),
                 wavefunction_cutoff_ev=self._float(
                     sampling_profile,
                     "wavefunction_cutoff_ev",
+                ),
+                occupation=occupation,
+                electronic_convergence=PwDftElectronicConvergencePolicy(
+                    energy_tolerance_ev=electronic_tolerance_ev,
+                    maximum_electronic_iterations=maximum_electronic_iterations,
                 ),
             ),
         )
@@ -145,9 +251,7 @@ class WorkflowRunnerConfigurationLoader:
         )
         runtime = self._mapping(campaign_payload, "runtime")
         configuration = PwDftScfCampaignConfiguration(
-            integration_id=CalculatorIntegrationId(
-                value=self._string(campaign_payload, "integration")
-            ),
+            integration_id=integration_id,
             recipe=recipe,
             runtime=PwDftScfRuntimeConfiguration(
                 maximum_internal_firings=self._integer(
@@ -165,6 +269,7 @@ class WorkflowRunnerConfigurationLoader:
         return LoadedWorkflowRunnerConfiguration(
             campaign=configuration,
             structure_id=structure_id,
+            structure=structure,
             projection_profile_id=projection_profile_id,
             replay=replay,
         )
@@ -193,6 +298,7 @@ class WorkflowRunnerConfigurationLoader:
                 profile,
                 "electronic_tolerance_ry",
             ),
+            electronic_atol_ry=self._float(profile, "electronic_atol_ry"),
             prefix=self._string(profile, "prefix"),
             pseudo_dir=self._string(profile, "pseudo_dir"),
             outdir=self._string(profile, "outdir"),
