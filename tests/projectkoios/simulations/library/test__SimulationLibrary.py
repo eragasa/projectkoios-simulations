@@ -11,6 +11,10 @@ from projectkoios.simulations.dft.pseudopotential import (
     PseudopotentialArtifactFormat,
     PseudopotentialFile,
 )
+from projectkoios.simulations.dft.pw.relaxation import (
+    PwDftCellRelaxationMode,
+    PwDftRelaxationSpecification,
+)
 from projectkoios.simulations.dft.pw.scf.specification import PwDftScfSpecification
 from projectkoios.simulations.library import (
     AuthoredSimulationProvenance,
@@ -36,9 +40,9 @@ from tests.projectkoios.simulations.dft.pw.support import (
 )
 from tests.projectkoios.simulations.library.support import silicon_scf_specification
 
-_REVIEWED_MANIFEST_BYTE_SIZE = 1502
+_REVIEWED_MANIFEST_BYTE_SIZE = 3175
 _REVIEWED_MANIFEST_SHA256 = (
-    "16a52cdd077683e5d25cfa37568f4299b99861dd1a86f1c9b648ce03531f2ffa"
+    "1e013edcfd46214179190d2d2047881f45ea7d7272a2cc89cc3ad18713553d46"
 )
 
 
@@ -59,6 +63,9 @@ def test_loads_and_resolves_the_reviewed_simulation_catalog() -> None:
         "Si.PrimitiveUnitCell.QE.SCF.Single",
         "Si.PrimitiveUnitCell.QE.SCF.ConvergenceBase",
         "Si.PrimitiveUnitCell.VASP.SCF.Single",
+        "Si.ConventionalUnitCell.QE.Relaxation.ReferenceBase",
+        "materials-project.mp-160.primitive.QE.Relaxation.ReferenceBase",
+        "materials-project.mp-568348.primitive.QE.Relaxation.ReferenceBase",
     )
     for record in library.records():
         resolution = library.resolve(record, structure_library=structure_library)
@@ -72,6 +79,42 @@ def test_loads_and_resolves_the_reviewed_simulation_catalog() -> None:
         assert resolution.pseudopotentials == (
             resolution.specification.simulation.pseudopotentials
         )
+
+    reference_expectations = (
+        (
+            "Si.ConventionalUnitCell.QE.Relaxation.ReferenceBase",
+            (6, 6, 6),
+            PwDftCellRelaxationMode.VOLUME_ONLY,
+            "ae3aefd0811f9499dbc4a72f1f9ae02ef4fc7f3568bf6f559b68668719c69e2b",
+        ),
+        (
+            "materials-project.mp-160.primitive.QE.Relaxation.ReferenceBase",
+            (8, 8, 8),
+            PwDftCellRelaxationMode.UNRESTRICTED_VECTORS,
+            "7a1249cabd9c3afd7708ab1d8a10faa8f9b432831d9d2ec91ec23859e2ee0c17",
+        ),
+        (
+            "materials-project.mp-568348.primitive.QE.Relaxation.ReferenceBase",
+            (4, 4, 2),
+            PwDftCellRelaxationMode.UNRESTRICTED_VECTORS,
+            "2d112dfec2e2d9b75a971574d9116aa92249988177791659bbcd2ba15f23c20c",
+        ),
+    )
+    for (
+        simulation_id,
+        mesh,
+        cell_mode,
+        pseudopotential_sha256,
+    ) in reference_expectations:
+        resolution = library.resolve_unique(
+            simulation_id,
+            structure_library=structure_library,
+        )
+        assert type(resolution.specification) is PwDftRelaxationSpecification
+        assert resolution.specification.kpoint_sampling.mesh == mesh
+        assert resolution.specification.degrees_of_freedom.cell_mode is cell_mode
+        assert resolution.specification.wavefunction_cutoff_ev == 748.31312176467
+        assert resolution.pseudopotentials[0].sha256 == pseudopotential_sha256
 
 
 def test_resolves_exact_specification_and_every_scientific_dependency(

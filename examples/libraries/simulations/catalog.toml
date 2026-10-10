@@ -41,3 +41,45 @@ kind = "authored"
 source = "ProjectKoios exact simulation migration"
 author = "ProjectKoios maintainers"
 result_sha256 = "fe6762dd08a654cc9f5f472ede38b09253bc439c9e041a0c55b241c7c03c8ab9"
+
+[[records]]
+simulation_id = "Si.ConventionalUnitCell.QE.Relaxation.ReferenceBase"
+representation = "pw-dft-relaxation"
+schema_version = 1
+byte_size = 2240
+sha256 = "a1f3b8bfadff8320469171a525272ab9d2f2de444a13b4401208143938a402a8"
+relative_path = "pw-dft-relaxation/Si.ConventionalUnitCell.QE.Relaxation.ReferenceBase.json"
+
+[records.provenance]
+kind = "authored"
+source = "ProjectKoios Si defect reference-phase design"
+author = "ProjectKoios maintainers"
+result_sha256 = "a1f3b8bfadff8320469171a525272ab9d2f2de444a13b4401208143938a402a8"
+
+[[records]]
+simulation_id = "materials-project.mp-160.primitive.QE.Relaxation.ReferenceBase"
+representation = "pw-dft-relaxation"
+schema_version = 1
+byte_size = 2245
+sha256 = "587e8e9947a10a9dddaa93ac420daf357d7d004174724d3a7c5c0977fbe2ed9e"
+relative_path = "pw-dft-relaxation/materials-project.mp-160.primitive.QE.Relaxation.ReferenceBase.json"
+
+[records.provenance]
+kind = "authored"
+source = "ProjectKoios Si defect reference-phase design"
+author = "ProjectKoios maintainers"
+result_sha256 = "587e8e9947a10a9dddaa93ac420daf357d7d004174724d3a7c5c0977fbe2ed9e"
+
+[[records]]
+simulation_id = "materials-project.mp-568348.primitive.QE.Relaxation.ReferenceBase"
+representation = "pw-dft-relaxation"
+schema_version = 1
+byte_size = 2269
+sha256 = "a4265ffbcdea7f8488878dabebcb2b0bea47c226a28990cee87bc22991a744d5"
+relative_path = "pw-dft-relaxation/materials-project.mp-568348.primitive.QE.Relaxation.ReferenceBase.json"
+
+[records.provenance]
+kind = "authored"
+source = "ProjectKoios Si defect reference-phase design"
+author = "ProjectKoios maintainers"
+result_sha256 = "a4265ffbcdea7f8488878dabebcb2b0bea47c226a28990cee87bc22991a744d5"

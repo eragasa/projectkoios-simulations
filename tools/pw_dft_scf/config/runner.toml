@@ -2,5 +2,5 @@ schema_version = 1
 catalog = "catalog.toml"
 structure_catalog = "../../../examples/workflows/pw_dft_scf/structures/catalog.toml"
 simulation_catalog = "../../../examples/libraries/simulations/catalog.toml"
-simulation_catalog_byte_size = 1502
-simulation_catalog_sha256 = "16a52cdd077683e5d25cfa37568f4299b99861dd1a86f1c9b648ce03531f2ffa"
+simulation_catalog_byte_size = 3175
+simulation_catalog_sha256 = "1e013edcfd46214179190d2d2047881f45ea7d7272a2cc89cc3ad18713553d46"
