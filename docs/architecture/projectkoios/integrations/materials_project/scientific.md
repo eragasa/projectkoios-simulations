@@ -50,6 +50,21 @@ pseudopotential identity, cutoff, k-point sampling, and acceptance criteria.
 Materials Project magnetic labels or moments are external observations and are
 not substituted for those local specification and evidence fields.
 
+## Retained B and P phases
+
+The matching retained one-element hulls selected B `mp-160` and P `mp-568348`
+from fifteen candidates each. These phases are candidate local reservoir
+structures for future Si:B and Si:P studies. Their Materials Project energies
+must not be combined directly with local pristine or defect energies; compatible
+local relaxation and final-energy calculations remain required.
+
+The retained primitive cells contain 12 B sites and 84 P sites. A smaller P
+allotrope must not be silently substituted merely to reduce local calculation
+cost; that would be a separately identified reservoir-policy decision.
+
+No spin state, relaxation scope, symmetry treatment, or local-minimum policy is
+inferred from these external phase selections.
+
 ## Reproducibility qualification
 
 A retained response snapshot makes the observed candidate set and selected

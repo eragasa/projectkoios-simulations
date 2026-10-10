@@ -106,6 +106,19 @@ adapter normalizes IEEE signed zero to positive zero before canonical PhysKit
 serialization because signed zero has no structural meaning and must not split
 content identity.
 
+## Retained B and P retrievals
+
+The same exact pipeline publishes `materials-project.mp-160.primitive` for B
+and `materials-project.mp-568348.primitive` for P. Each query returned fifteen
+candidate entries. Their retained response digests are respectively
+`95148d83b2951c5d21da5b58271256af8b4a4712966895f93be3c90dbb507d6f` and
+`c33e9b0beeb7c0c7b4e8ec9bd377916b8dc7dd56e5fc16ca338d591a96314631`.
+The neutral structure digests are
+`0c020f96271ab74c9ae073824f682568604c30c0d5004363070d0a41d295ffeb`
+and `5b05d50d0072e62a19a776af0b2aa7315d216f2b39b200d4ff6c922cd0510b33`.
+Both observations used `mp-api` 0.46.5 and pymatgen 2026.9.24, and neither
+response exposed an immutable database-release identifier.
+
 ## Required verification
 
 Tests must cover stable candidate ordering, changed energy/correction/entry

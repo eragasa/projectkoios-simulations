@@ -1,0 +1,703 @@
+{
+  "atoms": [
+    {
+      "fractional_position": [
+        0.60892629,
+        0.96591206,
+        0.92192386
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.59385099,
+        0.20090612,
+        0.95154074
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.20000314,
+        0.62032188,
+        0.32129207
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.83763744,
+        0.55126367,
+        0.5506601
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.35608029,
+        0.02193903,
+        0.53533628
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.86157823,
+        0.71130065,
+        0.9209891
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.21646281,
+        0.69422946,
+        0.61698236
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.67847507,
+        0.1193107,
+        0.33022396
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.61597113,
+        0.52844926,
+        0.67339418
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.90077863,
+        0.81366056,
+        0.67447107
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.36521365,
+        0.25770657,
+        0.56678075
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.0342851,
+        0.94611248,
+        0.11783664
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.05346194,
+        0.86807133,
+        0.82163786
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.20000314,
+        0.87967812,
+        0.17870793
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.54954649,
+        0.39262853,
+        0.83138397
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.68423844,
+        0.75390168,
+        0.70294297
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.86157823,
+        0.78869935,
+        0.5790109
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.09922137,
+        0.18633944,
+        0.32552893
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.35608029,
+        0.47806097,
+        0.96466372
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.64391971,
+        0.52193903,
+        0.03533628
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.9657149,
+        0.05388752,
+        0.88216336
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.13226525,
+        0.46903993,
+        0.9310581
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.0342851,
+        0.55388752,
+        0.38216336
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.48552348,
+        0.91949622,
+        0.60425347
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.94653806,
+        0.36807133,
+        0.32163786
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.2802747,
+        0.80547059,
+        0.38316225
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.94653806,
+        0.13192867,
+        0.17836214
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.45045351,
+        0.89262853,
+        0.33138397
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.39107371,
+        0.03408794,
+        0.07807614
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.38402887,
+        0.02844926,
+        0.17339418
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.59385099,
+        0.29909388,
+        0.54845926
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.86773475,
+        0.96903993,
+        0.4310581
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.45045351,
+        0.60737147,
+        0.16861603
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.7197253,
+        0.30547059,
+        0.88316225
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.9657149,
+        0.44611248,
+        0.61783664
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.35449105,
+        0.24850109,
+        0.66342171
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.64550895,
+        0.75149891,
+        0.33657829
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.13226525,
+        0.03095907,
+        0.5689419
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.86773475,
+        0.53096007,
+        0.0689419
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.17859019,
+        0.42547336,
+        0.8350231
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.39107371,
+        0.46591206,
+        0.42192386
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.83763744,
+        0.94873633,
+        0.9493399
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.31576156,
+        0.24609832,
+        0.29705703
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.82140981,
+        0.92547336,
+        0.3350231
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.16236256,
+        0.05126367,
+        0.0506601
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.64550895,
+        0.74850109,
+        0.16342171
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.36521365,
+        0.24229343,
+        0.93321925
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.40614901,
+        0.70090612,
+        0.45154074
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.67847507,
+        0.3806893,
+        0.16977604
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.40614901,
+        0.79909388,
+        0.04845926
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.21646281,
+        0.80577054,
+        0.88301764
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.78353719,
+        0.30577054,
+        0.38301764
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.79999686,
+        0.12032188,
+        0.82129207
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.32152493,
+        0.8806893,
+        0.66977604
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.64391971,
+        0.97806097,
+        0.46466372
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.68423844,
+        0.74609832,
+        0.79705703
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.48552348,
+        0.58050378,
+        0.89574653
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.78353719,
+        0.19422946,
+        0.11698236
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.35449105,
+        0.25149891,
+        0.83657829
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.2802747,
+        0.69452941,
+        0.11683775
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.09922137,
+        0.31366056,
+        0.17447107
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.7197253,
+        0.19452941,
+        0.61683775
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.54954649,
+        0.10737147,
+        0.66861603
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.9134702,
+        0.2029574,
+        0.45085405
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.63478635,
+        0.75770657,
+        0.06678075
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.31576156,
+        0.25390168,
+        0.20294297
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.32152493,
+        0.6193107,
+        0.83022396
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.61597113,
+        0.97155074,
+        0.82660582
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.0865298,
+        0.7029574,
+        0.95085405
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.63478635,
+        0.74229343,
+        0.43321925
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.90077863,
+        0.68633944,
+        0.82552893
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.17859019,
+        0.07452664,
+        0.6649769
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.13842177,
+        0.28869935,
+        0.0790109
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.51447652,
+        0.41949722,
+        0.10425347
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.51447652,
+        0.08050278,
+        0.39574653
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.0865298,
+        0.7970426,
+        0.54914595
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.13842177,
+        0.21130065,
+        0.4209891
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.82140981,
+        0.57452664,
+        0.1649769
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.16236256,
+        0.44873633,
+        0.4493399
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.9134702,
+        0.2970426,
+        0.04914595
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.38402887,
+        0.47155074,
+        0.32660582
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.05346194,
+        0.63192867,
+        0.67836214
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.79999686,
+        0.37967812,
+        0.67870793
+      ],
+      "symbol": "P"
+    },
+    {
+      "fractional_position": [
+        0.60892629,
+        0.53408794,
+        0.57807614
+      ],
+      "symbol": "P"
+    }
+  ],
+  "lattice": {
+    "A": {
+      "a1": [
+        9.20884424,
+        0.0,
+        0.0
+      ],
+      "a2": [
+        0.0,
+        9.15060439,
+        -1.28872369
+      ],
+      "a3": [
+        0.0,
+        0.01285957,
+        22.9625162
+      ],
+      "vector_axis": "columns"
+    },
+    "lattice_parameter": {
+      "magnitude": 1.0,
+      "unit": "angstrom"
+    }
+  },
+  "representation": "primitive",
+  "schema_version": 1,
+  "structure_id": "materials-project.mp-568348.primitive"
+}

@@ -67,20 +67,22 @@ flowchart TD
 The candidate-response digest identifies the retained observation, not a later
 service state.
 
-## Ni publication path
+## Elemental publication paths
 
 ```mermaid
 flowchart TD
-    query[Ni + GGA_GGA+U_R2SCAN]
-    six[Six retained candidate entries]
+    query[Ni, B, or P + GGA_GGA+U_R2SCAN]
+    candidates[Complete retained candidate entries]
     hull[One-element pymatgen hull]
-    selected[Selected material mp-23]
+    selected[Selected exact mp-N material]
     copied[Canonical primitive UnitCell]
-    catalog[StructureLibrary record<br/>materials-project.mp-23.primitive]
-    local[Separate local spin specification]
+    catalog[Exact StructureLibrary record]
+    local[Separate local simulation specification]
 
-    query --> six --> hull --> selected --> copied --> catalog --> local
+    query --> candidates --> hull --> selected --> copied --> catalog --> local
 ```
+
+The retained selections are Ni `mp-23`, B `mp-160`, and P `mp-568348`.
 
 ## Local-energy boundary
 

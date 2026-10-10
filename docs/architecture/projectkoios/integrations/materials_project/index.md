@@ -97,13 +97,14 @@ are retained in angstrom using a unit scale of one angstrom, and sites retain
 fractional coordinates. IEEE signed zeros are normalized before canonical
 serialization, and disordered sites are rejected rather than collapsed.
 
-## Retained Ni structure
+## Retained elemental structures
 
-The retained Ni query requested `GGA_GGA+U_R2SCAN`, received six candidate
-entries, and selected `mp-23` through `PhaseDiagram.el_refs`. The exact primitive
-cell and complete query snapshot are published under
-`examples/workflows/pw_dft_scf/structures/`; the structure catalog binds their
-byte sizes, SHA-256 values, and transfer provenance.
+The retained `GGA_GGA+U_R2SCAN` one-element queries selected Ni `mp-23` from
+six candidates, B `mp-160` from fifteen candidates, and P `mp-568348` from
+fifteen candidates through `PhaseDiagram.el_refs`. Their exact primitive cells
+and complete query snapshots are published under
+`examples/workflows/pw_dft_scf/structures/`; the structure catalog binds byte
+sizes, SHA-256 values, and transfer provenance.
 
 The geometry status is `external_reference_not_calculation_input`. Selecting a
 hull entry does not make its downloaded geometry a converged production input;

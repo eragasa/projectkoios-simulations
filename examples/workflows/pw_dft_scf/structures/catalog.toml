@@ -47,3 +47,35 @@ revision = "bfa20090ac4c40344142925068e32180e776dd293cff295455c2a1d4b4a0f350"
 record_path = "examples/workflows/pw_dft_scf/structures/provenance/Ni.mp-23.GGA_GGA+U_R2SCAN.json"
 source_sha256 = "8a847a1bf50438574a6121052ff775a0c2bae02bb3f86b73081a3fb8243bc6e9"
 result_sha256 = "c31a42131de24116e7262fd720147eee2491b8280516bd2aed0eeda618820ade"
+
+[[records]]
+structure_id = "materials-project.mp-160.primitive"
+representation = "primitive"
+schema_version = 1
+sha256 = "0c020f96271ab74c9ae073824f682568604c30c0d5004363070d0a41d295ffeb"
+byte_size = 2115
+relative_path = "B.mp-160.PrimitiveUnitCell.json"
+
+[records.provenance]
+kind = "transferred"
+source = "https://api.materialsproject.org/"
+revision = "95148d83b2951c5d21da5b58271256af8b4a4712966895f93be3c90dbb507d6f"
+record_path = "examples/workflows/pw_dft_scf/structures/provenance/B.mp-160.GGA_GGA+U_R2SCAN.json"
+source_sha256 = "f7e168814161d1b39f45403a362cc0678a75d8612d8781d68f229ef28aea61ba"
+result_sha256 = "0c020f96271ab74c9ae073824f682568604c30c0d5004363070d0a41d295ffeb"
+
+[[records]]
+structure_id = "materials-project.mp-568348.primitive"
+representation = "primitive"
+schema_version = 1
+sha256 = "5b05d50d0072e62a19a776af0b2aa7315d216f2b39b200d4ff6c922cd0510b33"
+byte_size = 11557
+relative_path = "P.mp-568348.PrimitiveUnitCell.json"
+
+[records.provenance]
+kind = "transferred"
+source = "https://api.materialsproject.org/"
+revision = "c33e9b0beeb7c0c7b4e8ec9bd377916b8dc7dd56e5fc16ca338d591a96314631"
+record_path = "examples/workflows/pw_dft_scf/structures/provenance/P.mp-568348.GGA_GGA+U_R2SCAN.json"
+source_sha256 = "114cf32e6e10c83661c47619229f8d39b2e30a724ee73a42809d7ed0eed27dea"
+result_sha256 = "5b05d50d0072e62a19a776af0b2aa7315d216f2b39b200d4ff6c922cd0510b33"

@@ -1,0 +1,127 @@
+{
+  "atoms": [
+    {
+      "fractional_position": [
+        0.00997004,
+        0.65428512,
+        0.00997004
+      ],
+      "symbol": "B"
+    },
+    {
+      "fractional_position": [
+        0.00997004,
+        0.00997004,
+        0.65428512
+      ],
+      "symbol": "B"
+    },
+    {
+      "fractional_position": [
+        0.65428512,
+        0.00997004,
+        0.00997004
+      ],
+      "symbol": "B"
+    },
+    {
+      "fractional_position": [
+        0.34571488,
+        0.99002996,
+        0.99002996
+      ],
+      "symbol": "B"
+    },
+    {
+      "fractional_position": [
+        0.99002996,
+        0.34571488,
+        0.99002996
+      ],
+      "symbol": "B"
+    },
+    {
+      "fractional_position": [
+        0.99002996,
+        0.99002996,
+        0.34571488
+      ],
+      "symbol": "B"
+    },
+    {
+      "fractional_position": [
+        0.22056557,
+        0.63163483,
+        0.22056557
+      ],
+      "symbol": "B"
+    },
+    {
+      "fractional_position": [
+        0.22056557,
+        0.22056557,
+        0.63163483
+      ],
+      "symbol": "B"
+    },
+    {
+      "fractional_position": [
+        0.63163483,
+        0.22056557,
+        0.22056557
+      ],
+      "symbol": "B"
+    },
+    {
+      "fractional_position": [
+        0.36836517,
+        0.77943443,
+        0.77943443
+      ],
+      "symbol": "B"
+    },
+    {
+      "fractional_position": [
+        0.77943443,
+        0.36836517,
+        0.77943443
+      ],
+      "symbol": "B"
+    },
+    {
+      "fractional_position": [
+        0.77943443,
+        0.77943443,
+        0.36836517
+      ],
+      "symbol": "B"
+    }
+  ],
+  "lattice": {
+    "A": {
+      "a1": [
+        4.2804641,
+        -0.00172243,
+        2.66533213
+      ],
+      "a2": [
+        1.47931971,
+        4.01671422,
+        2.66533213
+      ],
+      "a3": [
+        -0.00247162,
+        -0.00172244,
+        5.04245687
+      ],
+      "vector_axis": "columns"
+    },
+    "lattice_parameter": {
+      "magnitude": 1.0,
+      "unit": "angstrom"
+    }
+  },
+  "representation": "primitive",
+  "schema_version": 1,
+  "structure_id": "materials-project.mp-160.primitive"
+}

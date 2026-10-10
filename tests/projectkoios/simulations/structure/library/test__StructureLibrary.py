@@ -91,11 +91,15 @@ class StructureLibraryTest(unittest.TestCase):
                 "Si.PrimitiveUnitCell",
                 "Si.ConventionalUnitCell",
                 "materials-project.mp-23.primitive",
+                "materials-project.mp-160.primitive",
+                "materials-project.mp-568348.primitive",
             ),
         )
         primitive = library.resolve_unique("Si.PrimitiveUnitCell")
         conventional = library.resolve_unique("Si.ConventionalUnitCell")
         nickel = library.resolve_unique("materials-project.mp-23.primitive")
+        boron = library.resolve_unique("materials-project.mp-160.primitive")
+        phosphorus = library.resolve_unique("materials-project.mp-568348.primitive")
         self.assertIs(type(primitive.unit_cell), PrimitiveUnitCell)
         self.assertIs(type(conventional.unit_cell), ConventionalUnitCell)
         self.assertEqual(
@@ -112,32 +116,47 @@ class StructureLibraryTest(unittest.TestCase):
             ("Ni",),
         )
         self.assertEqual(
-            nickel.record.provenance.source,
-            "https://api.materialsproject.org/",
-        )
-        provenance_path = repository / nickel.record.provenance.record_path
-        provenance_content = provenance_path.read_bytes()
-        self.assertEqual(
-            hashlib.sha256(provenance_content).hexdigest(),
-            nickel.record.provenance.source_sha256,
-        )
-        provenance_payload = json.loads(provenance_content)
-        self.assertEqual(provenance_payload["selection"]["material_id"], "mp-23")
-        self.assertEqual(
-            provenance_payload["structure"]["sha256"],
-            nickel.record.sha256,
+            {atom.symbol for atom in boron.unit_cell.atomic_basis.atoms},
+            {"B"},
         )
         self.assertEqual(
-            sum(
-                candidate["material_id"] == "mp-23"
-                and candidate["sha256"]
-                == provenance_payload["selection"]["selected_candidate_sha256"]
-                for candidate in provenance_payload["query_snapshot"]["candidates"]
-            ),
-            1,
+            {atom.symbol for atom in phosphorus.unit_cell.atomic_basis.atoms},
+            {"P"},
         )
-        self.assertNotIn("MP_API_KEY", provenance_content.decode("utf-8"))
-        for resolution in (primitive, conventional, nickel):
+        for external, material_id in (
+            (nickel, "mp-23"),
+            (boron, "mp-160"),
+            (phosphorus, "mp-568348"),
+        ):
+            self.assertEqual(
+                external.record.provenance.source,
+                "https://api.materialsproject.org/",
+            )
+            provenance_path = repository / external.record.provenance.record_path
+            provenance_content = provenance_path.read_bytes()
+            self.assertEqual(
+                hashlib.sha256(provenance_content).hexdigest(),
+                external.record.provenance.source_sha256,
+            )
+            provenance_payload = json.loads(provenance_content)
+            self.assertEqual(
+                provenance_payload["selection"]["material_id"], material_id
+            )
+            self.assertEqual(
+                provenance_payload["structure"]["sha256"],
+                external.record.sha256,
+            )
+            self.assertEqual(
+                sum(
+                    candidate["material_id"] == material_id
+                    and candidate["sha256"]
+                    == provenance_payload["selection"]["selected_candidate_sha256"]
+                    for candidate in provenance_payload["query_snapshot"]["candidates"]
+                ),
+                1,
+            )
+            self.assertNotIn("MP_API_KEY", provenance_content.decode("utf-8"))
+        for resolution in (primitive, conventional, nickel, boron, phosphorus):
             content = resolution.path.read_bytes()
             self.assertEqual(len(content), resolution.record.byte_size)
             self.assertEqual(
