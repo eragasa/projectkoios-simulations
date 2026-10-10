@@ -102,6 +102,23 @@ symmetry reduction is allowed, and whether time-reversal reduction is allowed.
 The wavefunction cutoff is a separate positive finite eV quantity. Provider
 profiles may choose algorithms, but not overwrite these scientific values.
 
+## Provider-compatible specification identity
+
+A single specification is reused across providers only when every scientific
+field has an explicitly compatible native mapping. Existing QE and VASP input
+fixtures intentionally differ in occupation and electronic-convergence values:
+QE's retained semiconductor input relies on fixed occupations and a tolerance
+expressed in Ry, while the retained VASP input declares `ISMEAR = 0`, `SIGMA =
+0.05`, and an eV `EDIFF`. These are distinct canonical specifications rather
+than two renderings of falsely identical intent.
+
+Cross-provider comparisons therefore retain both exact `SimulationRecord`
+identities and an explicit compatibility qualification. They do not coerce one
+provider profile into another specification, silently overwrite neutral
+values, or claim scientific equivalence. This rule preserves the reviewed
+calculator-input fixture bytes while making their scientific difference
+visible in exact identity.
+
 ## SCF specification
 
 `PwDftScfSpecification` contains, in scientific order:
