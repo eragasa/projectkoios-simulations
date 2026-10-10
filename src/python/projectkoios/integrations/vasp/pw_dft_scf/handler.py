@@ -88,7 +88,7 @@ class VaspPwDftScfActionHandler(PwDftScfActionHandler):
             raise PermissionError("VASP calculator execution is not authorized")
         submitted = PwDftScfTaskSubmitted(task_id=task.task_id)
         try:
-            self.executor.execute(task.execution_request)
+            self.executor.action(request=task.execution_request)
         except CalculatorExecutionError as error:
             return (
                 submitted,

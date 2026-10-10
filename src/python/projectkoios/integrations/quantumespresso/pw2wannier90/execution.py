@@ -189,8 +189,8 @@ class QePw2Wannier90Runner:
             shutil.copyfile(source, destination)
         assert manifest is not None
         QeSavedStateManifestVerifier().verify(manifest, staged_outdir)
-        record = CalculatorExecutor().execute(
-            CalculatorExecutionRequest(
+        record = CalculatorExecutor().action(
+            request=CalculatorExecutionRequest(
                 command=(
                     str(request.executable.absolute()),
                     "-in",

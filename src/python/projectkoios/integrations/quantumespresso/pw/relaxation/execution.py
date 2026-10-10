@@ -253,8 +253,8 @@ class QeRelaxationCalculationRunner:
             output / configuration.pseudopotential_filename,
         )
         (output / "tmp").mkdir()
-        record = CalculatorExecutor().execute(
-            CalculatorExecutionRequest(
+        record = CalculatorExecutor().action(
+            request=CalculatorExecutionRequest(
                 command=(
                     str(request.executable.resolve()),
                     "-in",

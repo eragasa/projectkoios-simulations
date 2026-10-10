@@ -121,12 +121,12 @@ class VaspPwDftScfActionHandlerTest(unittest.TestCase):
             handler = _handler(root, run)
 
             with (
-                patch.object(CalculatorExecutor, "execute") as execute,
+                patch.object(CalculatorExecutor, "action") as action,
                 self.assertRaisesRegex(PermissionError, "not authorized"),
             ):
                 handler.handle(SubmitPwDftScfTask(task_id="vasp-task"))
 
-            execute.assert_not_called()
+            action.assert_not_called()
 
     def test_submit_composes_the_bounded_executor(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
@@ -140,7 +140,7 @@ class VaspPwDftScfActionHandlerTest(unittest.TestCase):
                 returncode=0,
             )
 
-            with patch.object(CalculatorExecutor, "execute", return_value=record):
+            with patch.object(CalculatorExecutor, "action", return_value=record):
                 events = handler.handle(SubmitPwDftScfTask(task_id="vasp-task"))
 
         self.assertEqual(
@@ -170,7 +170,7 @@ class VaspPwDftScfActionHandlerTest(unittest.TestCase):
                 record_path=run / "execution.json",
             )
 
-            with patch.object(CalculatorExecutor, "execute", side_effect=error):
+            with patch.object(CalculatorExecutor, "action", side_effect=error):
                 events = handler.handle(SubmitPwDftScfTask(task_id="vasp-task"))
 
         self.assertIsInstance(events[0], PwDftScfTaskSubmitted)

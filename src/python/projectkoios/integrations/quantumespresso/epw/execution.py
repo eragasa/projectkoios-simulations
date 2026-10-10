@@ -214,8 +214,8 @@ class QeEpwRunner:
             )
 
         assert request.executable is not None
-        record = CalculatorExecutor().execute(
-            CalculatorExecutionRequest(
+        record = CalculatorExecutor().action(
+            request=CalculatorExecutionRequest(
                 command=(
                     str(request.executable.absolute()),
                     "-in",

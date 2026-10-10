@@ -127,8 +127,8 @@ class QeSimulationExecutor:
             for item, source in resolved:
                 _copy_atomic(source, working_directory / item.filename)
         except (OSError, LookupError, ValueError) as error:
-            executor.record_preflight_failure(request, error)
-        return executor.execute(request)
+            executor.record_preflight_failure(request=request, error=error)
+        return executor.action(request=request)
 
 
 def _prepare_outdir(working_directory: Path, outdir: str | None) -> None:
