@@ -6,8 +6,8 @@ import re
 from dataclasses import dataclass
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.relaxation.integration import (
-    PwDftRelaxationInputProjection,
     PwDftRelaxationInputWrapper,
     PwDftRelaxationIntegrationRegistry,
 )
@@ -79,7 +79,7 @@ class PwDftRelaxationCompositionResult:
     """Return projected inputs and a non-authorizing external handoff."""
 
     campaign: PwDftRelaxationCampaign
-    projection: PwDftRelaxationInputProjection
+    prepared_input: CalculatorInputRecord
     execution_handoff: PwDftRelaxationExecutionHandoff
 
 
@@ -100,20 +100,22 @@ class PwDftRelaxationComposer:
         """Project input only; never invoke or authorize a calculator."""
         if type(campaign) is not PwDftRelaxationCampaign:
             raise TypeError("campaign must be a PwDftRelaxationCampaign")
-        projection = PwDftRelaxationInputWrapper(self.registry).project(
+        prepared_input = PwDftRelaxationInputWrapper(self.registry).project(
             integration_id=campaign.integration_id,
             request=campaign.request,
             structure=campaign.structure,
         )
         return PwDftRelaxationCompositionResult(
             campaign=campaign,
-            projection=projection,
+            prepared_input=prepared_input,
             execution_handoff=PwDftRelaxationExecutionHandoff(
                 campaign_id=campaign.campaign_id,
                 integration_id=campaign.integration_id,
                 rendered_input_filenames=tuple(
-                    item.filename for item in projection.rendered_inputs
+                    item.filename for item in prepared_input.artifacts
                 ),
-                required_external_inputs=projection.required_external_inputs,
+                required_external_inputs=tuple(
+                    item.filename for item in prepared_input.external_requirements
+                ),
             ),
         )

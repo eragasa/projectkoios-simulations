@@ -1,4 +1,4 @@
-schema_version = 1
+schema_version = 2
 calculation_id = "si-primitive-qe75-vc-relax"
 phase = "vc-relax"
 integration_id = "quantum-espresso"
@@ -26,6 +26,7 @@ exchange_correlation = "PBE"
 formalism = "USPP"
 relativistic_treatment = "scalar-relativistic"
 upf_version = "2.0.1"
+valence_electrons = 4
 mass_amu = 28.086
 
 [sampling]

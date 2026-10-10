@@ -61,7 +61,7 @@ class QeRelaxationCalculationRendererTest(unittest.TestCase):
 
         self.assertEqual(
             hashlib.sha256(rendered.encode("ascii")).hexdigest(),
-            "f4990b1a4152c61d3d7ad7887b13543c0afa58e7470d82da27f066d1ea3b7b40",
+            "e30e5f549b2ac79f1b1b6d466dc623467043018b7b1990a8f16ef4c542f7d6c8",
         )
         self.assertNotIn("&CELL", rendered)
 
@@ -97,7 +97,7 @@ class QeRelaxationCalculationRendererTest(unittest.TestCase):
 
         self.assertEqual(
             hashlib.sha256(rendered.encode("ascii")).hexdigest(),
-            "c7ecb8d346113c4f73dcc4226bf7e9275f225113f1e6c0b0083f328e16674e06",
+            "7053bd423b8c002e37c08b89a8529439e0b727676981ee991b8680910974e611",
         )
         self.assertIn("&CELL", rendered)
 

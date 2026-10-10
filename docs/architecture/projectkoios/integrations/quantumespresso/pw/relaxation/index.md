@@ -9,7 +9,14 @@ Both modes return the unified [`QeRelaxData`](data/index.md) facade. It retains
 stdout, stderr, the stdout-observed trajectory, the supplied parsed QEXSD
 document record, interpreted final structure, optional execution record, exact
 artifact identities, and mechanical consistency observations without defining
-scientific acceptance policy.
+scientific acceptance policy. `QeRelaxData.normalize()` requires the exact
+starting `StructureResolution` and interpreted QEXSD final structure, preserves
+the exact starting lattice for fixed-cell relaxation, and converts terminal
+energy, maximum force, stress,
+pressure, magnetization, convergence state, ionic-step count, and provider
+version into `PwDftRelaxationObservation`. QE compression-positive
+`Ry/bohr³` stress is converted explicitly to tension-positive pascals while the
+native stream record remains unchanged.
 
 The package does not define a third QE calculation mode or duplicate QEXSD XML
 parsing.

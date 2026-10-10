@@ -8,9 +8,9 @@ from projectkoios.integrations.quantumespresso.pw.relax.configuration import (  
     QeRelaxProjectionConfiguration,
 )
 from projectkoios.integrations.quantumespresso.pw.relaxation.projection import (  # noqa: E501
-    QeRelaxationInputProjection,
     project_relaxation_input,
 )
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.relaxation.base import PwDftRelaxationScope
 from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
 from projectkoios.simulations.structure import StructureResolution
@@ -30,8 +30,8 @@ class QeRelaxInputProjector:
         self,
         request: PwDftRelaxationRequest,
         structure: StructureResolution,
-    ) -> QeRelaxationInputProjection:
-        """Return deterministic QE ``relax`` input."""
+    ) -> CalculatorInputRecord:
+        """Return exact prepared QE ``relax`` input."""
         if type(request) is not PwDftRelaxationRequest:
             raise TypeError("request must be a PwDftRelaxationRequest")
         if request.specification.scope is not PwDftRelaxationScope.ATOMIC_POSITIONS:

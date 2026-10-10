@@ -24,12 +24,13 @@ comparison.
 - [Numeric contract](numeric.md)
 - [Scientific semantics](scientific.md)
 
-## Provider aggregate
+## Exact prepared input
 
-`QeRelaxationInputProjection` retains native option records, common QE cards,
-and rendered input. Fixed-cell `relax` forbids lattice-vector options and a
-`&CELL` card; `vc-relax` requires both. No nominal mode-specific card subclasses
-are introduced when a common card already represents the native section.
+The translator returns the shared exact `CalculatorInputRecord`. It retains the
+rendered `pw.x` artifact bytes, source specification identity, exact external
+pseudopotential requirements, neutral-to-native mapping observations, and the
+relaxation preparation operation. Fixed-cell `relax` forbids lattice-vector
+options and a `&CELL` card; `vc-relax` requires both.
 
 Relaxation translation maps integral `delta_n_electrons` through QE's
 positive-charge convention, renders supported collinear spin and constrained
@@ -37,10 +38,6 @@ spin-channel difference, verifies exact bound UPF filenames, maps the declared
 cell-relaxation mode to explicit QE degrees of freedom, and fails closed for
 unsupported occupation, symmetry, spin, initial-moment, or cell intent.
 
-The translator returns `QeRelaxationInputProjection`, not the required exact
-`CalculatorInputRecord`. Completing that atomic result-contract migration
-requires exact rendered bytes, external pseudopotential requirements, and all
-neutral-to-native mapping observations.
-
-Rendering does not authorize `pw.x` execution and does not establish
-convergence or scientific acceptance.
+Both modes render `tstress = .true.` so fixed-cell and variable-cell
+relaxations retain terminal stress output. Rendering does not authorize `pw.x`
+execution and does not establish convergence or scientific acceptance.

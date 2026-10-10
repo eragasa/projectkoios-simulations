@@ -9,6 +9,7 @@ from typing import ClassVar
 
 import numpy as np
 
+from projectkoios.physkit.mechanics.stress import StressSignConvention
 from projectkoios.physkit.periodic.unit_cell import UnitCellJsonCodec
 from projectkoios.simulations.calculator_input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.relaxation.base import PwDftRelaxationScope
@@ -26,7 +27,7 @@ class PwDftRelaxationResult:
     observation_representation: ClassVar[str] = (
         "projectkoios.pw-dft-relaxation-observation+json"
     )
-    observation_schema_version: ClassVar[int] = 1
+    observation_schema_version: ClassVar[int] = 2
 
     evaluation_id: str
     task_id: str
@@ -106,6 +107,17 @@ class PwDftRelaxationResult:
                 structure_id="PwDftRelaxationObservation.FinalUnitCell",
             )
         )
+        stress_tensor = observation.stress_tensor
+        canonical_stress = None
+        if stress_tensor is not None:
+            normalized_stress = stress_tensor.to_si().to_sign_convention(
+                StressSignConvention.TENSION_POSITIVE
+            )
+            canonical_stress = {
+                "components": normalized_stress.components.magnitude.tolist(),
+                "sign_convention": normalized_stress.sign_convention.value,
+                "unit": "pascal",
+            }
         payload = {
             "cell_converged": observation.cell_converged,
             "completed": observation.completed,
@@ -131,6 +143,7 @@ class PwDftRelaxationResult:
             "representation": self.observation_representation,
             "schema_version": self.observation_schema_version,
             "scope": self.request.specification.scope.value,
+            "stress_tensor": canonical_stress,
             "task_id": self.task_id,
             "total_magnetization_electrons": (
                 observation.total_magnetization_electrons

@@ -17,6 +17,11 @@ from projectkoios.simulations.dft.electronic import (
     DftOccupationPolicy,
     PwDftElectronicConvergencePolicy,
 )
+from projectkoios.simulations.dft.pseudopotential import (
+    Pseudopotential,
+    PseudopotentialArtifactFormat,
+    PseudopotentialFile,
+)
 from projectkoios.simulations.dft.pw.relaxation.base import (
     PwDftCellRelaxationMode,
     PwDftRelaxationConvergencePolicy,
@@ -64,6 +69,22 @@ def silicon_relaxation_request(
             simulation=PwDftSimulation(
                 structure=structure.record,
                 exchange_correlation=pbe_exchange_correlation(),
+                pseudopotentials=(
+                    PseudopotentialFile(
+                        pseudopotential=Pseudopotential(
+                            symbol="Si",
+                            exchange_correlation="PBE",
+                            formalism="USPP",
+                            relativistic_treatment="scalar-relativistic",
+                            valence_electrons=4,
+                        ),
+                        artifact_format=PseudopotentialArtifactFormat.UPF,
+                        artifact_format_version="2.0.1",
+                        filename="Si.test.UPF",
+                        sha256="1" * 64,
+                        byte_size=100,
+                    ),
+                ),
             ),
             kpoint_sampling=PwDftKPointSamplingPolicy(
                 mesh=(4, 4, 4),
@@ -163,6 +184,7 @@ def completed_relaxation_result(
             final_total_energy_ev=-10.0,
             maximum_force_ev_per_angstrom=0.005,
             pressure_kbar=0.1,
+            stress_tensor=None,
             total_magnetization_electrons=0.0,
             program_version="7.4",
             native_artifacts=(

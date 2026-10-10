@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+import hashlib
 import unittest
 
 import pytest
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
+from projectkoios.simulations.calculator_input import (
+    CalculatorExternalInputRequirement,
+    CalculatorInputArtifact,
+    CalculatorInputRecord,
+)
 from projectkoios.simulations.dft.pw.relaxation.base import PwDftRelaxationScope
 from projectkoios.simulations.dft.pw.relaxation.capabilities import (
     PwDftRelaxationBackendDescription,
@@ -12,12 +18,11 @@ from projectkoios.simulations.dft.pw.relaxation.capabilities import (
     PwDftRelaxationInputModel,
 )
 from projectkoios.simulations.dft.pw.relaxation.integration import (
-    PwDftRelaxationInputProjection,
     PwDftRelaxationIntegration,
     PwDftRelaxationIntegrationRegistry,
-    PwDftRelaxationRenderedInput,
 )
 from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
+from projectkoios.simulations.library import simulation_source_reference
 from projectkoios.simulations.structure import StructureResolution
 from projectkoios.simulations.workflows.pw_dft_relaxation.composition import (
     PwDftRelaxationCampaign,
@@ -45,13 +50,42 @@ class _ProjectionOnlyIntegration(PwDftRelaxationIntegration):
         self,
         request: PwDftRelaxationRequest,
         structure: StructureResolution,
-    ) -> PwDftRelaxationInputProjection:
+    ) -> CalculatorInputRecord:
         self.assert_request(request)
-        return PwDftRelaxationInputProjection(
+        content = b"input\n"
+        return CalculatorInputRecord(
+            input_id="projection-only-input",
+            schema_version=1,
+            source=simulation_source_reference(request.specification),
             integration_id=self.integration_id,
-            rendered_inputs=(PwDftRelaxationRenderedInput("input.in", "input\n"),),
-            required_external_inputs=("Si.UPF",),
-            qualification="Projection only; calculator execution is not authorized.",
+            calculator_name="projection-only",
+            calculator_version_constraint="1",
+            representation="synthetic-input",
+            artifacts=(
+                CalculatorInputArtifact(
+                    role="primary-input",
+                    filename="input.in",
+                    media_type="text/plain",
+                    content=content,
+                    byte_size=len(content),
+                    sha256=hashlib.sha256(content).hexdigest(),
+                ),
+            ),
+            external_requirements=(
+                CalculatorExternalInputRequirement(
+                    role="pseudopotential",
+                    stable_id=f"Si.{'1' * 64}",
+                    filename="Si.UPF",
+                    format="UPF;version=2",
+                    byte_size=100,
+                    sha256="1" * 64,
+                    provenance="synthetic-test",
+                    element_symbol="Si",
+                ),
+            ),
+            mappings=(),
+            preparation_operation="test.prepare",
+            preparation_version="1",
         )
 
     @staticmethod
@@ -74,7 +108,7 @@ class PwDftRelaxationComposerTest(unittest.TestCase):
             PwDftRelaxationIntegrationRegistry((integration,))
         ).compose(campaign)
 
-        self.assertEqual(result.projection.rendered_inputs[0].filename, "input.in")
+        self.assertEqual(result.prepared_input.artifacts[0].filename, "input.in")
         self.assertEqual(
             result.execution_handoff.authority_requirement,
             "separate-explicit-external-authority-required",

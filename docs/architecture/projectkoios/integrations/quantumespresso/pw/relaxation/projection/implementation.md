@@ -25,24 +25,31 @@ Translation then converts the neutral scientific electronic threshold from eV
 to Ry and requires agreement with `electronic_tolerance_ry` within
 `electronic_atol_ry`.
 
-After qualification, only `electronic_tolerance_ry` is written to the
-`&ELECTRONS` card as `conv_thr`. `electronic_atol_ry` remains provider mapping
+After qualification, `electronic_tolerance_ry` is written to the `&ELECTRONS`
+card as `conv_thr`, and the neutral maximum electronic-iteration count is
+written as `electron_maxstep`. Fixed occupations are rendered explicitly rather
+than left to a provider default. `electronic_atol_ry` remains provider mapping
 configuration and is not calculator input.
 
 The implementation independently converts wavefunction cutoff, ionic energy
 tolerance, and force tolerance. Variable-cell adapters additionally map the
 selected neutral cell mode to explicit QE cell degrees of freedom; unsupported
-modes raise instead of falling back to QE defaults.
+modes raise instead of falling back to QE defaults. Both relaxation modes
+request stress output explicitly; fixed-cell residual stress is therefore
+retained rather than silently unavailable.
 
 ## Retained calculation declarations
 
-`QeRelaxationCalculationTomlLoader` requires both numeric fields in the closed
-`[sampling]` mapping. `QeRelaxationCalculationRenderer` constructs the neutral
-specification from the retained native declaration, propagates
+The version-two `QeRelaxationCalculationTomlLoader` requires both numeric fields
+in the closed `[sampling]` mapping and exact pseudopotential valence-electron
+metadata. `QeRelaxationCalculationRenderer` constructs the neutral specification
+and exact `PseudopotentialFile` from the retained native declaration, propagates
 `electronic_atol_ry` into the fixed- or variable-cell projection configuration,
 and renders through the same translation path. Unknown or missing declaration
 keys are rejected.
 
-The result remains a pure prepared-input transformation. Filesystem writing,
-calculator execution, normalization, evidence, and acceptance are separate
-operations.
+The result is an exact `CalculatorInputRecord` containing rendered artifact
+bytes, externally resolved pseudopotential identities, source correlation, and
+mapping qualifications. It remains a pure prepared-input transformation.
+Filesystem writing, calculator execution, normalization, evidence, and
+acceptance are separate operations.

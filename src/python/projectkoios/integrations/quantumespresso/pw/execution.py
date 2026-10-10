@@ -43,8 +43,13 @@ class QeSimulationExecutor:
             raise ValueError("prepared input must target Quantum ESPRESSO")
         if prepared_input.representation != "quantum-espresso-pw-input":
             raise ValueError("prepared input representation must be QE pw.x input")
-        if prepared_input.preparation_operation != "projectkoios.qe.pw.scf.prepare":
-            raise ValueError("prepared input operation must be QE SCF preparation")
+        if prepared_input.preparation_operation not in {
+            "projectkoios.qe.pw.scf.prepare",
+            "projectkoios.qe.pw.relaxation.prepare",
+        }:
+            raise ValueError(
+                "prepared input operation must be a supported QE pw.x preparation"
+            )
         if type(pseudopotentials) is not tuple or not pseudopotentials:
             raise ValueError("pseudopotentials must be a nonempty tuple")
         if any(not isinstance(item, PseudopotentialFile) for item in pseudopotentials):

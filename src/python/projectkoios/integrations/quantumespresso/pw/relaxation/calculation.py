@@ -68,6 +68,7 @@ class QeRelaxationCalculationConfiguration:
     pseudopotential_formalism: str
     pseudopotential_relativistic_treatment: str
     pseudopotential_upf_version: str
+    pseudopotential_valence_electrons: int
     pseudopotential_mass_amu: float
     kpoint_mesh: tuple[int, int, int]
     kpoint_shift: tuple[int, int, int]
@@ -124,6 +125,11 @@ class QeRelaxationCalculationConfiguration:
             ("pseudopotential_upf_version", self.pseudopotential_upf_version),
         ):
             _validate_string(text_value, label)
+        if (
+            type(self.pseudopotential_valence_electrons) is not int
+            or self.pseudopotential_valence_electrons <= 0
+        ):
+            raise ValueError("pseudopotential_valence_electrons must be positive")
         for label, numeric_value in (
             ("pseudopotential_mass_amu", self.pseudopotential_mass_amu),
             ("wavefunction_cutoff_ry", self.wavefunction_cutoff_ry),

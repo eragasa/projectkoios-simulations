@@ -51,9 +51,10 @@ class QuantumEspressoRelaxationCompositionTest(unittest.TestCase):
             PwDftRelaxationIntegrationRegistry((integration,)),
         )
 
-        self.assertEqual(result.projection.rendered_inputs[0].filename, "pw.in")
+        self.assertEqual(result.prepared_input.artifacts[0].filename, "pw.in")
         self.assertIn(
-            "calculation = 'relax'", result.projection.rendered_inputs[0].text
+            "calculation = 'relax'",
+            result.prepared_input.artifacts[0].content.decode("ascii"),
         )
         self.assertEqual(
             result.execution_handoff.authority_requirement,

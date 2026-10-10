@@ -5,9 +5,11 @@
 The protected relaxation domain defines requests, scope, sampling, convergence
 policy, normalized terminal observations, native-artifact identity,
 request/input/result correlation, canonical observation bytes, and pure exact
-relaxed-structure publication. QE and VASP output-normalization adapters remain
-to be implemented before these records support complete provider-independent
-defect workflows.
+relaxed-structure publication. QE normalization now covers terminal geometry,
+energy, maximum force, stress, pressure, magnetization, and provider version.
+VASP normalization and complete per-atom normalized force vectors remain to be
+implemented before these records support complete provider-independent defect
+workflows.
 
 ## Existing request contract
 
@@ -31,7 +33,7 @@ provider result:
 - final base `UnitCell`;
 - final energy when represented;
 - final forces and maximum force when represented;
-- stress and pressure when represented;
+- a unit-aware PhysKit `StressTensor` and scalar pressure when represented;
 - ionic step count and trajectory artifact identity;
 - spin or magnetization observations when represented;
 - native artifact identities; and
@@ -43,9 +45,11 @@ convergence, and ionic convergence is not workflow or scientific acceptance.
 ## Result and exact publication
 
 `PwDftRelaxationResult` correlates the request, exact `CalculatorInputRecord`,
-normalized observation, and native artifacts. Its version-one canonical
+normalized observation, and native artifacts. Its version-two canonical
 observation bytes make the normalized geometry and mechanical facts
-content-addressable.
+content-addressable. Stress is canonicalized to pascals with tension-positive
+components for serialization and comparison; the runtime tensor remains
+unit-aware and native calculator evidence retains native units and convention.
 
 `PwDftRelaxedStructurePublisher` correlates that result with an exact starting
 `StructureResolution` and a `SimulationEvidenceRecord`. It rejects unmatched

@@ -7,6 +7,8 @@ import unittest
 from dataclasses import dataclass
 from pathlib import Path
 
+import numpy as np
+
 from projectkoios.integrations.quantumespresso.pw.data_extraction.base import (
     QePwDataSources,
 )
@@ -14,11 +16,22 @@ from projectkoios.integrations.quantumespresso.pw.relax.data_extraction import (
     QeRelaxDataExtractor,
 )
 from projectkoios.integrations.quantumespresso.pw.relaxation.data import QeRelaxData
+from projectkoios.physkit.mechanics.stress import StressSignConvention
+from projectkoios.physkit.units import PhysicalUnit
+from tests.projectkoios.simulations.dft.pw.support import silicon_structure_resolution
 
 _STDOUT = b"""Program PWSCF v.7.5 starts on 1Jan2026
 axis vectors are left-handed
 ! total energy = -10.001000 Ry
 convergence has been achieved in 3 iterations
+Forces acting on atoms (Cartesian axes, Ry/au):
+atom 1 type 1 force = 0.000001 0.000000 0.000000
+atom 2 type 1 force = -0.000001 0.000000 0.000000
+Total force = 0.000002 Total SCF correction = 0.000000
+ total stress (Ry/bohr**3) (kbar) P= 0.30
+ 0.000001 0.000000 0.000000 0.10 0.00 0.00
+ 0.000000 0.000002 0.000000 0.00 0.20 0.00
+ 0.000000 0.000000 0.000003 0.00 0.00 0.30
 energy new = -10.000900 Ry
 bfgs converged in 3 scf cycles and 2 bfgs steps
 (criteria: energy < 1.0E-04, force < 1.0E-03)
@@ -133,6 +146,39 @@ class QeRelaxDataExtractorTest(unittest.TestCase):
         self.assertTrue(data.consistency.qexsd_present)
         self.assertTrue(data.consistency.terminal_status_matches)
         self.assertIsNone(data.consistency.atom_count_matches)
+
+        starting_structure = silicon_structure_resolution()
+        observation = data.normalize(starting_structure)
+
+        assert observation.stress_tensor is not None
+        self.assertEqual(
+            observation.stress_tensor.components.unit,
+            PhysicalUnit("pascal"),
+        )
+        self.assertIs(
+            observation.stress_tensor.sign_convention,
+            StressSignConvention.TENSION_POSITIVE,
+        )
+        self.assertTrue(
+            np.all(np.diag(observation.stress_tensor.components.magnitude) < 0.0)
+        )
+        self.assertAlmostEqual(
+            observation.pressure_kbar,
+            observation.stress_tensor.hydrostatic_pressure.magnitude / 1.0e8,
+        )
+        self.assertTrue(
+            np.array_equal(
+                observation.final_unit_cell.direct_lattice.A,
+                starting_structure.unit_cell.direct_lattice.A,
+            )
+        )
+        self.assertEqual(
+            observation.final_unit_cell.lattice_parameter,
+            starting_structure.unit_cell.lattice_parameter,
+        )
+        self.assertEqual(observation.program_version, "7.5")
+        self.assertEqual(observation.ionic_step_count, 2)
+        self.assertEqual(len(observation.native_artifacts), 3)
 
     def test_does_not_manufacture_success_from_empty_stderr(self) -> None:
         data = QeRelaxDataExtractor().extract(

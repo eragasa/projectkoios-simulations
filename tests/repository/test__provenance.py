@@ -411,7 +411,7 @@ def test_physkit_runtime_dependency_has_a_compatible_lower_bound() -> None:
     with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as stream:
         project = tomllib.load(stream)["project"]
 
-    assert "projectkoios-physkit>=0.1.0" in project["dependencies"]
+    assert "projectkoios-physkit>=0.1.2" in project["dependencies"]
     assert not any("git+" in dependency for dependency in project["dependencies"])
     readme = (REPOSITORY_ROOT / "README.md").read_text()
     assert "projectkoios.integrations.wannier90/provenance.json" in readme

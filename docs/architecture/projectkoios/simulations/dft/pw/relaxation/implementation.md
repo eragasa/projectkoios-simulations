@@ -14,8 +14,8 @@ src/python/projectkoios/simulations/dft/pw/relaxation/
 ```
 
 The request, observation, result, and publication contracts are implemented.
-Provider output-normalization adapters and richer cell-relaxation modes remain
-future work.
+QE output normalization is implemented; VASP normalization, complete normalized
+per-atom force vectors, and richer cell-relaxation modes remain future work.
 
 ## Observation fields
 
@@ -41,9 +41,10 @@ allowing a completed provider run that failed convergence.
 - one normalized observation; and
 - exact native artifact identities.
 
-It emits deterministic version-one canonical observation JSON including the
+It emits deterministic version-two canonical observation JSON including the
 final base `UnitCell`, occurrence identifiers, scope, mechanical facts, program
-version, and artifact identities. `PwDftRelaxedStructurePublisher` requires the
+version, and artifact identities. Unit-aware runtime stress is canonicalized to
+pascals with tension-positive components. `PwDftRelaxedStructurePublisher` requires the
 `SimulationEvidenceRecord.normalization` identity to match those bytes exactly.
 The result stores no retry count, queue state, lease, mutable status, or reusable
 execution authority.

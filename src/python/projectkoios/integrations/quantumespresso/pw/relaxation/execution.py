@@ -220,9 +220,12 @@ class QeRelaxationCalculationRunner:
                     "filename": configuration.pseudopotential_filename,
                     "sha256": configuration.pseudopotential.sha256,
                     "symbol": configuration.pseudopotential_symbol,
+                    "valence_electrons": (
+                        configuration.pseudopotential_valence_electrons
+                    ),
                 },
                 "qualification": configuration.qualification_statements,
-                "schema_version": 1,
+                "schema_version": 2,
                 "structure": {
                     "byte_size": structure_path.stat().st_size,
                     "reference": (

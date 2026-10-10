@@ -6,6 +6,7 @@ import math
 import re
 from dataclasses import dataclass
 
+from projectkoios.physkit.mechanics.stress import StressTensor
 from projectkoios.physkit.periodic.unit_cell import UnitCell
 from projectkoios.simulations.calculator import CalculatorIntegrationId
 
@@ -48,6 +49,7 @@ class PwDftRelaxationObservation:
     final_total_energy_ev: float | None
     maximum_force_ev_per_angstrom: float | None
     pressure_kbar: float | None
+    stress_tensor: StressTensor | None
     total_magnetization_electrons: float | None
     program_version: str | None
     native_artifacts: tuple[PwDftRelaxationNativeArtifact, ...]
@@ -81,6 +83,11 @@ class PwDftRelaxationObservation:
             self.maximum_force_ev_per_angstrom < 0.0
         ):
             raise ValueError("maximum_force_ev_per_angstrom must be nonnegative")
+        if (
+            self.stress_tensor is not None
+            and type(self.stress_tensor) is not StressTensor
+        ):
+            raise TypeError("stress_tensor must be a StressTensor or None")
         if self.program_version is not None and (
             type(self.program_version) is not str
             or not self.program_version

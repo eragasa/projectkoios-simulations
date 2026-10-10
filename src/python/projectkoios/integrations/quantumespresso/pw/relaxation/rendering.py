@@ -28,6 +28,11 @@ from projectkoios.simulations.dft.electronic import (
     DftOccupationPolicy,
     PwDftElectronicConvergencePolicy,
 )
+from projectkoios.simulations.dft.pseudopotential import (
+    Pseudopotential,
+    PseudopotentialArtifactFormat,
+    PseudopotentialFile,
+)
 from projectkoios.simulations.dft.pw.relaxation.base import (
     PwDftCellRelaxationMode,
     PwDftRelaxationConvergencePolicy,
@@ -111,6 +116,30 @@ class QeRelaxationCalculationRenderer:
                 simulation=PwDftSimulation(
                     structure=structure.record,
                     exchange_correlation=exchange_correlation,
+                    pseudopotentials=(
+                        PseudopotentialFile(
+                            pseudopotential=Pseudopotential(
+                                symbol=configuration.pseudopotential_symbol,
+                                exchange_correlation=(
+                                    configuration.pseudopotential_exchange_correlation
+                                ),
+                                formalism=configuration.pseudopotential_formalism,
+                                relativistic_treatment=(
+                                    configuration.pseudopotential_relativistic_treatment
+                                ),
+                                valence_electrons=(
+                                    configuration.pseudopotential_valence_electrons
+                                ),
+                            ),
+                            artifact_format=PseudopotentialArtifactFormat.UPF,
+                            artifact_format_version=(
+                                configuration.pseudopotential_upf_version
+                            ),
+                            filename=configuration.pseudopotential_filename,
+                            sha256=configuration.pseudopotential.sha256,
+                            byte_size=configuration.pseudopotential.byte_size,
+                        ),
+                    ),
                 ),
                 kpoint_sampling=PwDftKPointSamplingPolicy(
                     mesh=configuration.kpoint_mesh,
@@ -208,7 +237,14 @@ class QeRelaxationCalculationRenderer:
                     cell_degrees_of_freedom=lattice_options.degrees_of_freedom,
                 )
             ).project(request, structure)
-        return projection.rendered_inputs[0].text
+        primary = tuple(
+            artifact
+            for artifact in projection.artifacts
+            if artifact.role == "primary-input"
+        )
+        if len(primary) != 1:
+            raise ValueError("QE relaxation input must contain one primary artifact")
+        return primary[0].content.decode("ascii")
 
 
 def _convert(value: float, source: str, target: str) -> float:

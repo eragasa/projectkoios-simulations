@@ -52,6 +52,23 @@ class QeSimulationExecutorTest(unittest.TestCase):
 
             self.assertEqual(tuple(working_directory.iterdir()), ())
 
+    def test_accepts_relaxation_preparation_before_authorization_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            working_directory = Path(temporary_directory)
+            prepared, pseudopotential, library = _prepared_input_and_library(
+                working_directory,
+                preparation_operation="projectkoios.qe.pw.relaxation.prepare",
+            )
+
+            with self.assertRaisesRegex(PermissionError, "not authorized"):
+                QeSimulationExecutor().execute(
+                    prepared,
+                    (pseudopotential,),
+                    library,
+                    Path(sys.executable),
+                    working_directory,
+                )
+
     def test_records_missing_library_artifact_without_starting_qe(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             working_directory = Path(temporary_directory)
@@ -83,6 +100,8 @@ class QeSimulationExecutorTest(unittest.TestCase):
 
 def _prepared_input_and_library(
     working_directory: Path,
+    *,
+    preparation_operation: str = "projectkoios.qe.pw.scf.prepare",
 ) -> tuple[CalculatorInputRecord, QePseudopotentialFile, PseudopotentialLibrary]:
     pseudopotential = _pseudopotential_file()
     content = (
@@ -125,7 +144,7 @@ def _prepared_input_and_library(
             ),
         ),
         mappings=(),
-        preparation_operation="projectkoios.qe.pw.scf.prepare",
+        preparation_operation=preparation_operation,
         preparation_version="1",
     )
     # The directory exists but intentionally lacks the exact required bytes, so

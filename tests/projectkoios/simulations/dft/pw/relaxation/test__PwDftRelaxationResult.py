@@ -1,12 +1,22 @@
 from __future__ import annotations
 
 import hashlib
+import json
 
 import numpy as np
 import pytest
 
+from projectkoios.physkit.mechanics.stress import (
+    StressSignConvention,
+    StressTensor,
+)
 from projectkoios.physkit.periodic.unit_cell import Atom, AtomicBasis, UnitCell
-from projectkoios.physkit.units import Unitless, VectorQuantity
+from projectkoios.physkit.units import (
+    MatrixQuantity,
+    PhysicalUnit,
+    Unitless,
+    VectorQuantity,
+)
 from projectkoios.simulations.calculator import CalculatorIntegrationId
 from projectkoios.simulations.calculator_input import (
     CalculatorInputArtifact,
@@ -83,6 +93,7 @@ def _observation(
     final_cell: UnitCell,
     integration_id: CalculatorIntegrationId,
     cell_converged: bool | None,
+    stress_tensor: StressTensor | None = None,
 ) -> PwDftRelaxationObservation:
     return PwDftRelaxationObservation(
         final_unit_cell=final_cell,
@@ -93,6 +104,7 @@ def _observation(
         final_total_energy_ev=-10.0,
         maximum_force_ev_per_angstrom=0.005,
         pressure_kbar=0.1,
+        stress_tensor=stress_tensor,
         total_magnetization_electrons=0.0,
         program_version="test-1",
         native_artifacts=(
@@ -124,6 +136,45 @@ def test_fixed_cell_result_preserves_lattice_and_allows_position_changes() -> No
 
     assert result.observation.ionic_converged
     assert result.observation.cell_converged is None
+
+
+def test_observation_identity_canonicalizes_stress_to_si_tension_positive() -> None:
+    request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
+    integration_id = CalculatorIntegrationId("quantum-espresso")
+    starting_structure = silicon_structure_resolution()
+    native_stress = StressTensor(
+        components=MatrixQuantity(
+            np.diag(np.asarray((1.0, 2.0, 3.0), dtype=np.float64)),
+            PhysicalUnit("gigapascal"),
+        ),
+        sign_convention=StressSignConvention.COMPRESSION_POSITIVE,
+    )
+    result = PwDftRelaxationResult(
+        evaluation_id=request.evaluation_id,
+        task_id="task-1",
+        request=request,
+        starting_structure=starting_structure,
+        calculator_input=_input_record(integration_id, request),
+        observation=_observation(
+            _final_cell(starting_structure.unit_cell),
+            integration_id,
+            None,
+            native_stress,
+        ),
+    )
+
+    payload = json.loads(result.canonical_observation_bytes)
+
+    assert payload["schema_version"] == 2
+    assert payload["stress_tensor"] == {
+        "components": [
+            [-1.0e9, -0.0, -0.0],
+            [-0.0, -2.0e9, -0.0],
+            [-0.0, -0.0, -3.0e9],
+        ],
+        "sign_convention": "tension-positive",
+        "unit": "pascal",
+    }
 
 
 def test_fixed_cell_result_rejects_lattice_change() -> None:

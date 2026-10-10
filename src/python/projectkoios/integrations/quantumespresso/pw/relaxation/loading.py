@@ -44,7 +44,7 @@ class QeRelaxationCalculationTomlLoader:
         ):
             raise ValueError("configuration must be a bounded regular file")
         payload = tomllib.loads(path.read_text(encoding="utf-8"))
-        if payload.get("schema_version") != 1:
+        if payload.get("schema_version") != 2:
             raise ValueError("unsupported configuration schema")
         _validate_schema(payload)
         structure = _mapping(payload, "structure")
@@ -97,6 +97,10 @@ class QeRelaxationCalculationTomlLoader:
             pseudopotential_upf_version=_string(
                 pseudopotential,
                 "upf_version",
+            ),
+            pseudopotential_valence_electrons=_integer(
+                pseudopotential,
+                "valence_electrons",
             ),
             pseudopotential_mass_amu=_float(pseudopotential, "mass_amu"),
             kpoint_mesh=_integer_triplet(sampling, "kpoint_mesh"),
@@ -190,6 +194,7 @@ def _validate_schema(payload: dict[str, object]) -> None:
             "formalism",
             "relativistic_treatment",
             "upf_version",
+            "valence_electrons",
             "mass_amu",
         },
     )

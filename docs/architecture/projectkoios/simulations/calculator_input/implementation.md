@@ -72,10 +72,11 @@ the correlated pseudopotentials through an injected `PseudopotentialLibrary`
 before authorized execution. `PwDftScfInputProjection` and
 `PwDftScfRenderedInput` are removed rather than retained as compatibility APIs.
 
-`PwDftRelaxationInputProjection` remains the distinct relaxation rendering
-contract until its own atomic prepared-input migration. It is not an SCF
-compatibility facade. Relaxation result construction already requires exact
-`CalculatorInputRecord` correlation.
+The relaxation integration protocol also returns `CalculatorInputRecord`
+directly. QE relaxation translation supplies exact rendered bytes, source
+correlation, complete pseudopotential identities, and explicit mapping
+observations. The former relaxation-specific rendered-input and projection
+records are removed rather than retained as compatibility APIs.
 
 ## Integrity and authority
 

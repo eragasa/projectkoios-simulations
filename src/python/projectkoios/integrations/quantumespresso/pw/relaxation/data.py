@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Literal
 
+import numpy as np
+
 from projectkoios.integrations.quantumespresso.outputs.pw_stderr import (
     QePwStderrFileResult,
 )
@@ -26,7 +28,26 @@ from projectkoios.integrations.quantumespresso.pw.relaxation.trajectory import (
     QeRelaxationTrajectory,
     QeRelaxationTrajectoryStep,
 )
+from projectkoios.physkit.mechanics.stress import (
+    StressSignConvention,
+    StressTensor,
+)
+from projectkoios.physkit.periodic.unit_cell import UnitCell
+from projectkoios.physkit.units import (
+    MODEL_SYSTEM_UNIT_CONVERTER,
+    MatrixQuantity,
+    PhysicalUnit,
+    ScalarQuantity,
+)
+from projectkoios.simulations.calculator import CalculatorIntegrationId
+from projectkoios.simulations.dft.pw.relaxation.observation import (
+    PwDftRelaxationNativeArtifact,
+    PwDftRelaxationObservation,
+)
 from projectkoios.simulations.execution import CalculatorExecutionRecord
+from projectkoios.simulations.structure import StructureResolution
+
+_QE_INTEGRATION_ID = CalculatorIntegrationId("quantum-espresso")
 
 QeQexsdRelaxationData = QeQexsdData
 
@@ -203,6 +224,141 @@ class QeRelaxData:
     def optimizer_converged(self) -> bool:
         """Expose the native stdout optimizer convergence observation."""
         return self.stdout.geometry_optimization_converged
+
+    def normalize(
+        self,
+        starting_structure: StructureResolution,
+    ) -> PwDftRelaxationObservation:
+        """Normalize terminal QE values without deciding scientific acceptance."""
+        if type(starting_structure) is not StructureResolution:
+            raise TypeError("starting_structure must be a StructureResolution")
+        final_structure = self.final_structure
+        if final_structure is None:
+            raise ValueError(
+                "normalized relaxation observation requires QEXSD structure"
+            )
+        stdout = self.stdout
+        if stdout.total_energy_ry is None:
+            raise ValueError("normalized relaxation observation requires total energy")
+        if stdout.bfgs_step_count is None:
+            raise ValueError(
+                "normalized relaxation observation requires BFGS step count"
+            )
+        native_stress = (
+            stdout.optimizer_stress_ry_per_bohr_cubed
+            if stdout.optimizer_stress_ry_per_bohr_cubed is not None
+            else stdout.stress_ry_per_bohr_cubed
+        )
+        stress_tensor = None
+        if native_stress is not None:
+            stress_tensor = (
+                StressTensor(
+                    components=MatrixQuantity(
+                        np.asarray(native_stress, dtype=np.float64),
+                        PhysicalUnit("rydberg / bohr ** 3"),
+                    ),
+                    sign_convention=StressSignConvention.COMPRESSION_POSITIVE,
+                )
+                .to_si()
+                .to_sign_convention(StressSignConvention.TENSION_POSITIVE)
+            )
+        maximum_force_ry_per_bohr = (
+            stdout.optimizer_maximum_atomic_force_ry_per_bohr
+            if stdout.optimizer_maximum_atomic_force_ry_per_bohr is not None
+            else stdout.maximum_atomic_force_ry_per_bohr
+        )
+        pressure_kbar = (
+            MODEL_SYSTEM_UNIT_CONVERTER.convert_scalar(
+                stress_tensor.hydrostatic_pressure,
+                PhysicalUnit("kilobar"),
+            ).magnitude
+            if stress_tensor is not None
+            else (
+                stdout.optimizer_pressure_kbar
+                if stdout.optimizer_pressure_kbar is not None
+                else stdout.pressure_kbar
+            )
+        )
+        observed_unit_cell = final_structure.unit_cell
+        starting_unit_cell = starting_structure.unit_cell
+        starting_symbols = tuple(
+            atom.symbol for atom in starting_unit_cell.atomic_basis.atoms
+        )
+        observed_symbols = tuple(
+            atom.symbol for atom in observed_unit_cell.atomic_basis.atoms
+        )
+        if starting_symbols != observed_symbols:
+            raise ValueError("QEXSD final structure composition or order changed")
+        final_unit_cell = (
+            UnitCell(
+                direct_lattice=starting_unit_cell.direct_lattice,
+                lattice_parameter=starting_unit_cell.lattice_parameter,
+                atomic_basis=observed_unit_cell.atomic_basis,
+            )
+            if self.calculation == "relax"
+            else observed_unit_cell
+        )
+        artifacts = [
+            _normalized_artifact(self.stdout_artifact),
+            _normalized_artifact(self.stderr_artifact),
+        ]
+        if self.qexsd is not None:
+            artifacts.append(
+                PwDftRelaxationNativeArtifact(
+                    integration_id=_QE_INTEGRATION_ID,
+                    artifact_id=final_structure.source_path,
+                    sha256=final_structure.source_sha256,
+                    byte_size=final_structure.source_byte_count,
+                )
+            )
+        return PwDftRelaxationObservation(
+            final_unit_cell=final_unit_cell,
+            ionic_step_count=stdout.bfgs_step_count,
+            completed=stdout.job_completed,
+            ionic_converged=stdout.geometry_optimization_converged,
+            cell_converged=(
+                stdout.geometry_optimization_converged
+                if self.calculation == "vc-relax"
+                else None
+            ),
+            final_total_energy_ev=_convert_scalar(
+                stdout.total_energy_ry,
+                "rydberg",
+                "electron_volt",
+            ),
+            maximum_force_ev_per_angstrom=(
+                _convert_scalar(
+                    maximum_force_ry_per_bohr,
+                    "rydberg / bohr",
+                    "electron_volt / angstrom",
+                )
+                if maximum_force_ry_per_bohr is not None
+                else None
+            ),
+            pressure_kbar=pressure_kbar,
+            stress_tensor=stress_tensor,
+            total_magnetization_electrons=(
+                stdout.total_magnetization_bohr_magneton_per_cell
+            ),
+            program_version=stdout.program_version,
+            native_artifacts=tuple(artifacts),
+        )
+
+
+def _convert_scalar(value: float, source: str, target: str) -> float:
+    return MODEL_SYSTEM_UNIT_CONVERTER.convert_scalar(
+        ScalarQuantity(value, PhysicalUnit(source)),
+        PhysicalUnit(target),
+    ).magnitude
+
+
+def _normalized_artifact(artifact: QePwNativeArtifact) -> PwDftRelaxationNativeArtifact:
+    return PwDftRelaxationNativeArtifact(
+        integration_id=_QE_INTEGRATION_ID,
+        artifact_id=artifact.relative_path,
+        sha256=artifact.sha256,
+        byte_size=artifact.byte_size,
+    )
 
 
 def assemble_qe_relax_data(
