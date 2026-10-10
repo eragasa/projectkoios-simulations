@@ -24,8 +24,9 @@ subset of neutral intent, but it must reject every unsupported value explicitly.
 It does not contain a decoded `UnitCell`, a calculation/stage type, an
 occurrence identifier, provider configuration, execution authority, evidence,
 or acceptance state. `SimulationResolution` supplies the exact matching
-`StructureResolution`, decoded cell, and ordered exact pseudopotential file/path
-resolutions required for calculator-input translation.
+`StructureResolution`, decoded cell, and ordered exact `PseudopotentialFile`
+requirements needed for calculator-input translation. Machine-local paths are
+resolved separately at input consumption or execution.
 
 ### Exchange-correlation identity
 
@@ -211,9 +212,10 @@ The migration order is:
 2. atomically add specification codecs and records, remove shared calculation
    type, replace both request shapes, establish derived identities, return
    `CalculatorInputRecord` from projectors, and update every consumer;
-3. completed: add strict manifest-backed resolution; then
-4. pending: publish reviewed study catalogs and remove remaining tool-side
-   scientific reconstruction.
+3. completed: add strict manifest-backed resolution and reviewed silicon base
+   records; then
+4. completed: replace tool-side scientific reconstruction with exact record
+   selection in maintained SCF campaigns.
 
 There is no mixed old/new request interval, compatibility facade, alias, or
 placeholder source identity. Before publication, all maintained QE/VASP

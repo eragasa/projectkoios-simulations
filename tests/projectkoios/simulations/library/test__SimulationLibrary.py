@@ -11,9 +11,6 @@ from projectkoios.simulations.dft.pseudopotential import (
     PseudopotentialArtifactFormat,
     PseudopotentialFile,
 )
-from projectkoios.simulations.dft.pseudopotential.library import (
-    PseudopotentialLibrary,
-)
 from projectkoios.simulations.dft.pw.scf.specification import PwDftScfSpecification
 from projectkoios.simulations.library import (
     AuthoredSimulationProvenance,
@@ -32,19 +29,55 @@ from projectkoios.simulations.library import (
 from projectkoios.simulations.structure import (
     StructureLibrary,
     StructureLibraryEntry,
+    StructureLibraryManifestLoader,
 )
 from tests.projectkoios.simulations.dft.pw.support import (
     silicon_structure_resolution,
 )
 from tests.projectkoios.simulations.library.support import silicon_scf_specification
 
+_REVIEWED_MANIFEST_BYTE_SIZE = 1502
+_REVIEWED_MANIFEST_SHA256 = (
+    "16a52cdd077683e5d25cfa37568f4299b99861dd1a86f1c9b648ce03531f2ffa"
+)
+
+
+def test_loads_and_resolves_the_reviewed_simulation_catalog() -> None:
+    repository = Path(__file__).resolve().parents[4]
+    manifest = repository / "examples/libraries/simulations/catalog.toml"
+    structure_library = StructureLibraryManifestLoader(
+        (repository / "examples/workflows/pw_dft_scf/structures/catalog.toml").resolve()
+    ).load()
+
+    library = SimulationLibraryManifestLoader(
+        manifest_path=manifest.resolve(),
+        expected_sha256=_REVIEWED_MANIFEST_SHA256,
+        expected_byte_size=_REVIEWED_MANIFEST_BYTE_SIZE,
+    ).load()
+
+    assert tuple(record.simulation_id for record in library.records()) == (
+        "Si.PrimitiveUnitCell.QE.SCF.Single",
+        "Si.PrimitiveUnitCell.QE.SCF.ConvergenceBase",
+        "Si.PrimitiveUnitCell.VASP.SCF.Single",
+    )
+    for record in library.records():
+        resolution = library.resolve(record, structure_library=structure_library)
+        assert (
+            resolution.record.sha256
+            == hashlib.sha256(resolution.path.read_bytes()).hexdigest()
+        )
+        assert (
+            resolution.structure.record == resolution.specification.simulation.structure
+        )
+        assert resolution.pseudopotentials == (
+            resolution.specification.simulation.pseudopotentials
+        )
+
 
 def test_resolves_exact_specification_and_every_scientific_dependency(
     tmp_path: Path,
 ) -> None:
-    specification, content, record, structure_library, pseudopotential_library = (
-        _fixture(tmp_path)
-    )
+    specification, content, record, structure_library = _fixture(tmp_path)
     library = SimulationLibrary(
         root=tmp_path,
         entries=(SimulationLibraryEntry(record, "simulation.json"),),
@@ -53,19 +86,13 @@ def test_resolves_exact_specification_and_every_scientific_dependency(
     resolution = library.resolve(
         record,
         structure_library=structure_library,
-        pseudopotential_library=pseudopotential_library,
     )
 
     assert resolution.record is record
     assert resolution.path == (tmp_path / "simulation.json").resolve()
     assert resolution.specification == specification
     assert resolution.structure.record == specification.simulation.structure
-    assert resolution.pseudopotentials == (
-        (
-            specification.simulation.pseudopotentials[0],
-            tmp_path / "pseudopotentials" / "Si.upf",
-        ),
-    )
+    assert resolution.pseudopotentials == specification.simulation.pseudopotentials
     assert library.records() == (record,)
     assert library.require_unique(record.simulation_id) is record
     assert len(content) == record.byte_size
@@ -74,7 +101,7 @@ def test_resolves_exact_specification_and_every_scientific_dependency(
 def test_requires_an_exact_record_when_a_stable_identifier_has_history(
     tmp_path: Path,
 ) -> None:
-    first, _, first_record, structures, pseudopotentials = _fixture(tmp_path)
+    first, _, first_record, structures = _fixture(tmp_path)
     second = replace(first, wavefunction_cutoff_ev=500.0)
     second_content = SimulationJsonCodec().dumps(second)
     (tmp_path / "second.json").write_bytes(second_content)
@@ -94,7 +121,6 @@ def test_requires_an_exact_record_when_a_stable_identifier_has_history(
         library.resolve(
             second_record,
             structure_library=structures,
-            pseudopotential_library=pseudopotentials,
         ).specification
         == second
     )
@@ -103,7 +129,7 @@ def test_requires_an_exact_record_when_a_stable_identifier_has_history(
 def test_reports_undeclared_missing_changed_and_symlinked_records(
     tmp_path: Path,
 ) -> None:
-    specification, content, record, structures, pseudopotentials = _fixture(tmp_path)
+    specification, content, record, structures = _fixture(tmp_path)
     path = tmp_path / "simulation.json"
     library = SimulationLibrary(
         root=tmp_path,
@@ -118,7 +144,6 @@ def test_reports_undeclared_missing_changed_and_symlinked_records(
         library.resolve(
             other_record,
             structure_library=structures,
-            pseudopotential_library=pseudopotentials,
         )
     with pytest.raises(SimulationNotFoundError, match="not declared"):
         library.require_unique("Si.Other.SCF")
@@ -128,7 +153,6 @@ def test_reports_undeclared_missing_changed_and_symlinked_records(
         library.resolve(
             record,
             structure_library=structures,
-            pseudopotential_library=pseudopotentials,
         )
 
     path.unlink()
@@ -139,14 +163,13 @@ def test_reports_undeclared_missing_changed_and_symlinked_records(
         library.resolve(
             record,
             structure_library=structures,
-            pseudopotential_library=pseudopotentials,
         )
 
 
 def test_rejects_decoded_identity_and_representation_mismatches(
     tmp_path: Path,
 ) -> None:
-    specification, content, record, structures, pseudopotentials = _fixture(tmp_path)
+    specification, content, record, structures = _fixture(tmp_path)
 
     wrong_representation = _record(
         specification.simulation_id,
@@ -161,7 +184,6 @@ def test_rejects_decoded_identity_and_representation_mismatches(
         library.resolve(
             wrong_representation,
             structure_library=structures,
-            pseudopotential_library=pseudopotentials,
         )
 
     wrong_identifier = _record("Si.Other.SCF", content)
@@ -173,47 +195,30 @@ def test_rejects_decoded_identity_and_representation_mismatches(
         library.resolve(
             wrong_identifier,
             structure_library=structures,
-            pseudopotential_library=pseudopotentials,
         )
     assert record.sha256 == wrong_identifier.sha256
 
 
-def test_fails_closed_when_exact_dependencies_are_unavailable(tmp_path: Path) -> None:
-    _, _, record, structures, pseudopotentials = _fixture(tmp_path)
+def test_fails_closed_when_an_exact_structure_dependency_is_unavailable(
+    tmp_path: Path,
+) -> None:
+    _, _, record, _ = _fixture(tmp_path)
     library = SimulationLibrary(
         root=tmp_path,
         entries=(SimulationLibraryEntry(record, "simulation.json"),),
     )
     empty_structures_root = tmp_path / "empty-structures"
     empty_structures_root.mkdir()
-    empty_pseudopotentials_root = tmp_path / "empty-pseudopotentials"
-    empty_pseudopotentials_root.mkdir()
 
     with pytest.raises(SimulationDependencyError, match="structure"):
         library.resolve(
             record,
             structure_library=StructureLibrary(empty_structures_root, ()),
-            pseudopotential_library=pseudopotentials,
-        )
-    empty_pseudopotential_library = PseudopotentialLibrary(empty_pseudopotentials_root)
-    with pytest.raises(SimulationDependencyError, match="pseudopotential"):
-        library.resolve(
-            record,
-            structure_library=structures,
-            pseudopotential_library=empty_pseudopotential_library,
-        )
-
-    (empty_pseudopotentials_root / "Si.upf").write_bytes(b"wrong exact bytes")
-    with pytest.raises(SimulationDependencyError, match="none matched"):
-        library.resolve(
-            record,
-            structure_library=structures,
-            pseudopotential_library=empty_pseudopotential_library,
         )
 
 
 def test_authenticates_and_loads_a_strict_manifest(tmp_path: Path) -> None:
-    specification, content, record, structures, pseudopotentials = _fixture(tmp_path)
+    specification, content, record, structures = _fixture(tmp_path)
     manifest = _write_manifest(tmp_path, record)
     manifest_content = manifest.read_bytes()
 
@@ -228,7 +233,6 @@ def test_authenticates_and_loads_a_strict_manifest(tmp_path: Path) -> None:
         library.resolve_unique(
             specification.simulation_id,
             structure_library=structures,
-            pseudopotential_library=pseudopotentials,
         ).specification
         == specification
     )
@@ -249,7 +253,7 @@ def test_rejects_unauthenticated_or_oversized_manifests(
     value: int | str,
     message: str,
 ) -> None:
-    _, _, record, _, _ = _fixture(tmp_path)
+    _, _, record, _ = _fixture(tmp_path)
     manifest = _write_manifest(tmp_path, record)
     content = manifest.read_bytes()
     arguments: dict[str, object] = {
@@ -266,7 +270,7 @@ def test_rejects_unauthenticated_or_oversized_manifests(
 def test_rejects_a_manifest_replaced_by_a_symlink_after_construction(
     tmp_path: Path,
 ) -> None:
-    _, _, record, _, _ = _fixture(tmp_path)
+    _, _, record, _ = _fixture(tmp_path)
     manifest = _write_manifest(tmp_path, record)
     content = manifest.read_bytes()
     loader = SimulationLibraryManifestLoader(
@@ -286,7 +290,7 @@ def test_rejects_a_manifest_replaced_by_a_symlink_after_construction(
 def test_rejects_unknown_manifest_keys_and_record_path_traversal(
     tmp_path: Path,
 ) -> None:
-    _, _, record, _, _ = _fixture(tmp_path)
+    _, _, record, _ = _fixture(tmp_path)
     manifest = _write_manifest(tmp_path, record)
     manifest.write_text(
         manifest.read_text(encoding="utf-8") + "unknown = true\n",
@@ -305,7 +309,7 @@ def test_rejects_unknown_manifest_keys_and_record_path_traversal(
 
 
 def test_enforces_the_record_byte_limit_before_resolution(tmp_path: Path) -> None:
-    _, content, record, _, _ = _fixture(tmp_path)
+    _, content, record, _ = _fixture(tmp_path)
 
     with pytest.raises(ValueError, match="exceeds maximum_record_bytes"):
         SimulationLibrary(
@@ -322,7 +326,6 @@ def _fixture(
     bytes,
     SimulationRecord,
     StructureLibrary,
-    PseudopotentialLibrary,
 ]:
     pseudopotential_content = b"exact silicon pseudopotential"
     pseudopotential = PseudopotentialFile(
@@ -361,18 +364,7 @@ def _fixture(
             ),
         ),
     )
-    pseudopotential_root = root / "pseudopotentials"
-    pseudopotential_root.mkdir()
-    (pseudopotential_root / pseudopotential.filename).write_bytes(
-        pseudopotential_content
-    )
-    return (
-        specification,
-        content,
-        record,
-        structure_library,
-        PseudopotentialLibrary(pseudopotential_root),
-    )
+    return specification, content, record, structure_library
 
 
 def _record(

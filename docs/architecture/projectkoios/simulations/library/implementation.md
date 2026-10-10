@@ -26,8 +26,8 @@ The bounded architecture council converged on these version-one boundaries:
 - a specification stores one complete `StructureRecord`, but not duplicate
   `UnitCell` bytes;
 - `SimulationResolution` supplies the matching verified `StructureResolution`
-  and ordered exact `(PseudopotentialFile, Path)` resolutions to
-  calculator-input translators;
+  and ordered exact `PseudopotentialFile` requirements to calculator-input
+  translators, without requiring machine-local deployment paths;
 - the existing `PseudopotentialFile` and byte-verifying
   `PseudopotentialLibrary` remain the one exact pseudopotential dependency and
   resolver rather than gaining a parallel record hierarchy;
@@ -46,8 +46,8 @@ The bounded architecture council converged on these version-one boundaries:
 The schema, specification codecs and records, request replacement, derived
 identities, and projector return types landed atomically. Projectors construct
 source references from exact canonical specifications rather than placeholder
-digests. Manifest-backed resolution is now implemented; removal of remaining
-tool-side reconstruction is the next migration step.
+digests. Manifest-backed resolution and removal of tool-side scientific
+reconstruction are now implemented.
 
 ## Specification locations
 
@@ -129,11 +129,13 @@ Resolution must proceed in this order:
 7. verify every referenced structure and pseudopotential record identity; and
 8. return an immutable `SimulationResolution`.
 
-Dependency verification consumes caller-supplied neutral structure and
-pseudopotential libraries. `SimulationLibraryManifestLoader` additionally
-requires caller-supplied manifest byte size and SHA-256 before parsing. The
-simulation library does not search arbitrary filesystem roots or substitute a
-record that merely has the same friendly ID.
+Dependency verification consumes a caller-supplied neutral structure library.
+Exact `PseudopotentialFile` requirements are authenticated inside the canonical
+simulation bytes but remain unresolved machine-local external requirements.
+`SimulationLibraryManifestLoader` additionally requires caller-supplied manifest
+byte size and SHA-256 before parsing. The simulation library does not search
+arbitrary filesystem roots or substitute a record that merely has the same
+friendly ID.
 
 ## Calculator-input boundary
 
@@ -176,7 +178,8 @@ The implementation sequence and current completion state are:
 6. completed: atomically change requests to contain specifications;
 7. completed: update recipes, workflows, integrations, examples, and tests;
 8. completed: add the manifest-backed simulation library; and
-9. pending: remove remaining tool-side reconstruction of neutral requests.
+9. completed: replace tool-side reconstruction with authenticated exact
+   simulation-record selection.
 
 No simultaneous old/new request API, compatibility alias, or alternate library
 is allowed.

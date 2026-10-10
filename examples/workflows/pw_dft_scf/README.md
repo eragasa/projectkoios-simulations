@@ -9,9 +9,11 @@
 | Quantum ESPRESSO | `qe-single.toml` | `qe-kpoint.toml` | `qe-cutoff.toml` | `qe-grid.toml` |
 | VASP | `vasp-single.toml` | `vasp-kpoint.toml` | `vasp-cutoff.toml` | `vasp-grid.toml` |
 
-The TOML documents select stable integration, structure, sampling, coordinate,
-policy, and projection-profile identities. They do not identify executables or
-carry execution authority.
+The TOML documents select a stable integration, an exact authenticated base
+simulation record, optional convergence coordinates and policy, and a
+calculator-input projection profile. They do not reconstruct scientific intent,
+identify executables, or carry execution authority. The base records live in
+[`../../libraries/simulations`](../../libraries/simulations/README.md).
 
 ## Comparisons and structures
 

@@ -1,9 +1,8 @@
-schema_version = 2
+schema_version = 3
 integration = "vasp"
 mode = "single"
 campaign_id = "silicon-scf-vasp"
-structure_id = "Si.PrimitiveUnitCell"
-sampling_profile = "single-vasp"
+simulation_id = "Si.PrimitiveUnitCell.VASP.SCF.Single"
 projection_profile = "vasp-static-scf"
 
 [runtime]

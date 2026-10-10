@@ -6,6 +6,7 @@ import tomllib
 from dataclasses import dataclass
 from pathlib import Path
 
+from projectkoios.simulations.library import SimulationLibraryManifestLoader
 from tools.pw_dft_scf.configuration import (
     WorkflowRunnerConfigurationLoader,
 )
@@ -40,12 +41,27 @@ class WorkflowRunnerEnvironment:
             root,
             cls._string(payload, "structure_catalog"),
         )
+        simulation_catalog_path = cls._resolve_file(
+            root,
+            cls._string(payload, "simulation_catalog"),
+        )
         return cls(
             configuration_path=configuration_path.resolve(),
             loader=WorkflowRunnerConfigurationLoader(
                 catalog_path=catalog_path,
                 structure_library=WorkflowStructureLibraryLoader(
                     manifest_path=structure_catalog_path
+                ).load(),
+                simulation_library=SimulationLibraryManifestLoader(
+                    manifest_path=simulation_catalog_path,
+                    expected_sha256=cls._string(
+                        payload,
+                        "simulation_catalog_sha256",
+                    ),
+                    expected_byte_size=cls._integer(
+                        payload,
+                        "simulation_catalog_byte_size",
+                    ),
                 ).load(),
             ),
         )
@@ -59,6 +75,14 @@ class WorkflowRunnerEnvironment:
         if not path.is_file() or path.is_symlink():
             raise ValueError("runner file path must identify a regular file")
         return path
+
+    @staticmethod
+    def _integer(payload: dict[str, object], key: str) -> int:
+        """Require one positive built-in integer."""
+        value = payload.get(key)
+        if type(value) is not int or value <= 0:
+            raise ValueError(f"{key} must be a positive integer")
+        return value
 
     @staticmethod
     def _string(payload: dict[str, object], key: str) -> str:

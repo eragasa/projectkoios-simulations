@@ -32,8 +32,21 @@ OVERLAY_SOURCE_PATH = (
 )
 EVOLVED_AFTER_RELOCATION = frozenset(
     {
+        "examples/workflows/pw_dft_scf/README.md",
+        "examples/workflows/pw_dft_scf/campaigns/qe-cutoff.toml",
+        "examples/workflows/pw_dft_scf/campaigns/qe-grid.toml",
+        "examples/workflows/pw_dft_scf/campaigns/qe-kpoint.toml",
+        "examples/workflows/pw_dft_scf/campaigns/qe-single.toml",
+        "examples/workflows/pw_dft_scf/campaigns/vasp-cutoff.toml",
+        "examples/workflows/pw_dft_scf/campaigns/vasp-grid.toml",
+        "examples/workflows/pw_dft_scf/campaigns/vasp-kpoint.toml",
+        "examples/workflows/pw_dft_scf/campaigns/vasp-single.toml",
+        "tools/pw_dft_scf/README.md",
+        "tools/pw_dft_scf/config/README.md",
         "tools/pw_dft_scf/config/catalog.toml",
+        "tools/pw_dft_scf/config/runner.toml",
         "tools/pw_dft_scf/configuration.py",
+        "tools/pw_dft_scf/environment.py",
         "tools/pw_dft_scf/plot_structure.py",
         "tools/pw_dft_scf/render_inputs.py",
         "tests/examples/test__pw_dft_relaxation_qe_projection.py",

@@ -10,11 +10,6 @@ from pathlib import Path
 from typing import Any, cast
 
 from projectkoios.simulations.dft.pseudopotential import PseudopotentialFile
-from projectkoios.simulations.dft.pseudopotential.library import (
-    PseudopotentialIntegrityError,
-    PseudopotentialLibrary,
-    PseudopotentialNotFoundError,
-)
 from projectkoios.simulations.dft.pw.relaxation.specification import (
     PwDftRelaxationSpecification,
 )
@@ -100,7 +95,7 @@ class SimulationResolution:
     path: Path
     specification: SimulationSpecification
     structure: StructureResolution
-    pseudopotentials: tuple[tuple[PseudopotentialFile, Path], ...]
+    pseudopotentials: tuple[PseudopotentialFile, ...]
 
     def __post_init__(self) -> None:
         if type(self.record) is not SimulationRecord:
@@ -122,19 +117,12 @@ class SimulationResolution:
         if self.structure.record != self.specification.simulation.structure:
             raise ValueError("resolved structure must match the specification")
         if type(self.pseudopotentials) is not tuple or any(
-            type(item) is not tuple
-            or len(item) != 2
-            or type(item[0]) is not PseudopotentialFile
-            or not isinstance(item[1], Path)
-            or not item[1].is_absolute()
-            for item in self.pseudopotentials
+            type(item) is not PseudopotentialFile for item in self.pseudopotentials
         ):
             raise TypeError(
-                "pseudopotentials must contain exact file and absolute path pairs"
+                "pseudopotentials must contain exact PseudopotentialFile values"
             )
-        if tuple(item[0] for item in self.pseudopotentials) != (
-            self.specification.simulation.pseudopotentials
-        ):
+        if self.pseudopotentials != self.specification.simulation.pseudopotentials:
             raise ValueError(
                 "resolved pseudopotentials must match the specification order"
             )
@@ -222,13 +210,11 @@ class SimulationLibrary:
         simulation_id: str,
         *,
         structure_library: StructureLibrary,
-        pseudopotential_library: PseudopotentialLibrary,
     ) -> SimulationResolution:
         """Resolve the sole exact record for one stable identifier."""
         return self.resolve(
             self.require_unique(simulation_id),
             structure_library=structure_library,
-            pseudopotential_library=pseudopotential_library,
         )
 
     def resolve(
@@ -236,15 +222,12 @@ class SimulationLibrary:
         required: SimulationRecord,
         *,
         structure_library: StructureLibrary,
-        pseudopotential_library: PseudopotentialLibrary,
     ) -> SimulationResolution:
-        """Verify, decode, and resolve every exact scientific dependency."""
+        """Verify, decode, and resolve exact calculator-neutral dependencies."""
         if type(required) is not SimulationRecord:
             raise TypeError("required must be a SimulationRecord")
         if type(structure_library) is not StructureLibrary:
             raise TypeError("structure_library must be a StructureLibrary")
-        if type(pseudopotential_library) is not PseudopotentialLibrary:
-            raise TypeError("pseudopotential_library must be a PseudopotentialLibrary")
         matches = tuple(entry for entry in self.entries if entry.record == required)
         if not matches:
             raise SimulationNotFoundError(
@@ -325,16 +308,10 @@ class SimulationLibrary:
             )
         try:
             structure = structure_library.resolve(specification.simulation.structure)
-            pseudopotentials = tuple(
-                (item, pseudopotential_library.resolve(item))
-                for item in specification.simulation.pseudopotentials
-            )
         except (
             StructureNotFoundError,
             StructureConflictError,
             StructureIntegrityError,
-            PseudopotentialNotFoundError,
-            PseudopotentialIntegrityError,
         ) as error:
             raise SimulationDependencyError(
                 "simulation dependency resolution failed for "
@@ -345,7 +322,7 @@ class SimulationLibrary:
             path=resolved,
             specification=specification,
             structure=structure,
-            pseudopotentials=pseudopotentials,
+            pseudopotentials=specification.simulation.pseudopotentials,
         )
 
 

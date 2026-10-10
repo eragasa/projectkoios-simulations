@@ -22,6 +22,16 @@ from tools.pw_dft_scf.render_inputs import (
 )
 
 _FIXTURE_SHA256 = "bfc9f867474c86d20359a23563cf3d6277928bcf435a126357fd2bdc4732f57e"
+_CAMPAIGN_SIMULATION_IDS = {
+    "silicon-scf-qe": "Si.PrimitiveUnitCell.QE.SCF.Single",
+    "silicon-kpoints-qe": "Si.PrimitiveUnitCell.QE.SCF.ConvergenceBase",
+    "silicon-encut-qe": "Si.PrimitiveUnitCell.QE.SCF.ConvergenceBase",
+    "silicon-cross-qe": "Si.PrimitiveUnitCell.QE.SCF.ConvergenceBase",
+    "silicon-scf-vasp": "Si.PrimitiveUnitCell.VASP.SCF.Single",
+    "silicon-kpoints-vasp": "Si.PrimitiveUnitCell.VASP.SCF.Single",
+    "silicon-encut-vasp": "Si.PrimitiveUnitCell.VASP.SCF.Single",
+    "silicon-cross-vasp": "Si.PrimitiveUnitCell.VASP.SCF.Single",
+}
 _CAMPAIGN_RELOCATIONS = {
     "silicon-scf-qe": "campaigns/qe-single.toml",
     "silicon-kpoints-qe": "campaigns/qe-kpoint.toml",
@@ -68,10 +78,12 @@ class InputProjectionRunnerTest(unittest.TestCase):
                 self.assertEqual(declaration["campaign_id"], expected["campaign_id"])
                 self.assertEqual(declaration["mode"], expected["mode"])
                 self.assertEqual(declaration["integration"], expected["provider"])
-                self.assertEqual(declaration["structure_id"], expected["structure_id"])
                 self.assertEqual(
-                    declaration["sampling_profile"], expected["sampling_profile"]
+                    declaration["simulation_id"],
+                    _CAMPAIGN_SIMULATION_IDS[expected["campaign_id"]],
                 )
+                self.assertNotIn("structure_id", declaration)
+                self.assertNotIn("sampling_profile", declaration)
                 self.assertEqual(
                     declaration.get("coordinate_profile"),
                     expected["coordinate_profile"],

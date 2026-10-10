@@ -13,11 +13,11 @@ are not included in the wheel and never start QE or VASP.
 | `plot_structure.py` | Write a standalone Plotly structure visualization |
 
 `configuration.py`, `environment.py`, and `structure_repository.py` implement
-shared bounded loading. `config/runner.toml` points to the scientific-profile
-catalog and the exact, provenance-bearing structure-library manifest under
-`examples/workflows/pw_dft_scf/structures`. The tool adapter delegates structure
-identity, integrity, schema, and provenance checks to the production-neutral
-`projectkoios.simulations.structure.StructureLibrary` contract.
+shared bounded loading. `config/runner.toml` pins the authenticated simulation
+manifest, the exact provenance-bearing structure manifest, and the remaining
+projection/recipe catalog. The adapter delegates exact simulation and structure
+integrity checks to the protected `SimulationLibrary` and `StructureLibrary`
+contracts instead of reconstructing neutral scientific specifications.
 
 Install the `cpn` extra for local Petri-net replay and the `visualization` extra
 for structure plotting. Calculator execution always requires a separate
