@@ -2,93 +2,155 @@
 
 ## Layer map
 
-```text
-protected projectkoios.simulations core
-  requests | results | settings | normalized observations | integrations IDs
-                              |
-                              v
-projectkoios.simulations.workflows
-  +-- pw_dft_scf
-  |    +-- configuration and recipes
-  |    +-- single-result comparison
-  |    +-- convergence assessment/comparison/control/replay
-  |    +-- engine-neutral Petri-net name inventory and facade
-  |    `-- authoritative optional local SNAKES PetriNet
-  |
-  `-- pw_dft_relaxation
-       +-- campaign and projection composition
-       +-- external-authority-required handoff
-       `-- projection/handoff workflow-shape name inventory
+```mermaid
+flowchart TD
+    core[Protected projectkoios.simulations core<br/>requests, settings, observations, evidence]
+    workflows[projectkoios.simulations.workflows]
+
+    subgraph scf[pw_dft_scf]
+        scfConfig[Configuration and recipes]
+        scfAssessment[Convergence assessment and replay]
+        scfInventory[Engine-neutral name inventory]
+        scfCpn[Authoritative optional SNAKES PetriNet]
+    end
+
+    subgraph relax[pw_dft_relaxation]
+        relaxCampaign[Campaign and input composition]
+        relaxHandoff[External-authority-required handoff]
+        relaxInventory[Projection and handoff name inventory]
+    end
+
+    workflows --> scfConfig
+    workflows --> relaxCampaign
+    scfConfig --> scfAssessment --> scfInventory --> scfCpn
+    relaxCampaign --> relaxHandoff --> relaxInventory
+    scfConfig --> core
+    relaxCampaign --> core
 ```
 
-The arrow points inward. Protected core modules never import the workflow
-composition layer.
+Allowed production dependencies point inward. The protected core never imports
+the workflow composition layer.
 
 ## SCF composition flow
 
-```text
-neutral SCF request
-       |
-       +--> single recipe ------------------------------+
-       +--> k-point/cutoff/grid recipe -> coordinates --+--> child SCF results
-                                                         |
-normalized observations -> assessment -> controller ----+
-                                                         |
-successful results ------> qualified comparison          |
-normalized replay evidence -> replay actionizer ---------+
-                                                         v
-                                             typed domain outcomes
+```mermaid
+flowchart LR
+    request[Neutral SCF request]
+    single[Single recipe]
+    convergence[K-point, cutoff, or grid recipe]
+    coordinates[Child coordinates]
+    child[Single-SCF child results]
+    observations[Normalized observations]
+    assessment[Convergence assessment]
+    controller[Extend, criterion-satisfied, or budget outcome]
+    comparison[Qualified comparison]
+    replay[Normalized replay evidence]
+    outcome[Typed domain outcomes]
+
+    request --> single --> child
+    request --> convergence --> coordinates --> child
+    observations --> assessment --> controller --> outcome
+    child --> comparison --> outcome
+    replay --> outcome
 ```
 
-Comparison never turns unlike calculator-native energy zeros into an
+Comparison does not treat unlike calculator-native absolute energy zeros as an
 unqualified equivalence claim. Replay consumes normalized evidence rather than
 provider artifacts.
 
 ## Relaxation composition flow
 
-```text
-neutral relaxation request + selected integration ID
-                         |
-                         v
-               input projection wrapper
-                         |
-                         v
- projected inputs + required external inputs + non-authorizing handoff
+```mermaid
+flowchart LR
+    request[Neutral relaxation request]
+    integration[Selected integration ID]
+    projection[Input projection wrapper]
+    prepared[CalculatorInputRecord]
+    external[Required external inputs]
+    handoff[Non-authorizing execution handoff]
+
+    request --> projection
+    integration --> projection
+    projection --> prepared
+    projection --> external
+    prepared --> handoff
+    external --> handoff
 ```
 
 The handoff states that separate explicit external authority is required. It
 cannot start a calculator.
 
-## Current Petri-net ownership and future extraction
+## Chained-calculation boundary
 
-```text
-projectkoios.simulations.workflows today       WORKFLOWS after extraction
-----------------------------------------       --------------------------
-typed domain requests/actions/results   --->   runtime-neutral bindings
-SCF SNAKES PetriNet topology            --->   extracted/compiled CPN plan
-  places + transitions                         transition occurrences
-  arcs + guards + token expressions            queues, leases, retries
-bounded in-process firing                       cancellation and delivery
-non-authorizing handoffs                        execution authority
+```mermaid
+sequenceDiagram
+    participant C as Scientific parent workflow
+    participant W as External Workflow runner
+    participant E as Single-simulation executor
+
+    C->>W: child requirement A
+    C->>W: child requirement B
+    C->>W: child requirement C
+    W->>E: execute A
+    E-->>W: terminal A evidence
+    Note over W,E: concurrency one admits the next child only now
+    W->>E: execute B
+    E-->>W: terminal B evidence
+    W->>E: execute C
+    E-->>W: terminal C evidence
+    W-->>C: ordered normalized child outcomes
 ```
 
-The SCF `PetriNet` is authoritative today. `PwDftScfWorkflowDefinition` is a
-conformance inventory of its names, not a second topology representation. There
-is no reverse import from this package to a generic Workflow service or durable
-runtime. The temporary SNAKES CPN is a bounded in-process engine adapter, not a
-queue, scheduler, or authority service.
+The parent may enumerate convergence coordinates, reference phases, defect
+starts, or supercell sizes. It never converts those children into one batch
+calculator invocation. Retry and next-child admission remain runtime concerns;
+convergence and basin decisions remain scientific composition.
+
+## Current Petri-net ownership and future extraction
+
+```mermaid
+flowchart LR
+    subgraph owner[projectkoios.simulations.workflows today]
+        domain[Typed domain requests, actions, and results]
+        net[SCF SNAKES PetriNet<br/>places, transitions, arcs, guards, expressions]
+        local[Bounded in-process firing]
+        handoffs[Non-authorizing handoffs]
+    end
+
+    subgraph runtime[Generic Workflow after reviewed extraction]
+        binding[Runtime-neutral bindings]
+        plan[Canonical compiled CPN plan]
+        occurrences[Transition occurrences]
+        lifecycle[Queues, leases, retries, cancellation, delivery]
+        authority[Execution authority]
+    end
+
+    domain --> binding
+    net --> plan
+    local --> occurrences
+    handoffs --> lifecycle
+    handoffs --> authority
+```
+
+The SCF `PetriNet` is authoritative today. Its definition record is a
+conformance inventory, not a second topology. The local adapter is not a queue,
+scheduler, or authority service.
 
 ## Tool and example boundary
 
-```text
-examples: declarations/data ---> repository tools ---> public integrations
-          demonstrations              |                       |
-                                      +-> local CPN            +-> projection/parsing
-                                      +-> planning/comparison/visualization
+```mermaid
+flowchart LR
+    examples[Reviewed declarations and demonstrations]
+    tools[Repository tools]
+    cpn[Local optional CPN]
+    integrations[Public provider integrations]
+    calculator[Calculator executable]
 
-repository tools --------X--------> calculator executable
+    examples --> tools
+    tools --> cpn
+    tools --> integrations
+    tools --x calculator
 ```
 
-The crossed edge is prohibited. Tools and examples remain outside wheel package
-discovery and cannot convert an ordinary test or smoke invocation into
-execution authority.
+Tools and examples remain outside wheel package discovery and cannot convert an
+ordinary test or smoke invocation into execution authority.

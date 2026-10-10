@@ -36,11 +36,13 @@ an observed conventional cell. Its 2×2×2, 3×3×3, and 4×4×4 replications th
 produce matched 64-, 216-, and 512-atom pristine, Si:P, and Si:B records.
 
 ```text
-local relaxed host -> pristine supercell -> ideal substitution
+local relaxed host -> pristine supercell -> declared substitution start
                                               |
-                         symmetry-broken fixed-cell ion relaxation
+                              qualified low-cost pre-relaxation
                                               |
-                                          final SCF
+                              production fixed-cell relaxation
+                                              |
+                                      separate final SCF
 ```
 
 The primary dilute-defect protocol fixes every supercell to the same locally
@@ -50,13 +52,16 @@ full-cell calculations are finite-concentration strain diagnostics and cannot
 replace the fixed-host formation-energy series.
 
 Spatial symmetry and time-reversal k-point reduction are disabled for every
-defect relaxation and its final SCF. Each size and species starts from the ideal
-cell and from deterministic 0.01 angstrom impurity displacements along the host
-`<100>` and `<111>` directions. All three occurrences retain distinct evidence;
-the lowest compatible converged final-SCF energy is the reported observed
-basin. A relaxation convergence flag alone is not called proof of a local or
-global minimum. A stronger minimum claim requires separately specified
-vibrational-stability evidence.
+defect pre-relaxation, production relaxation, and final SCF. Each size and
+species starts from the ideal cell and from deterministic 0.01 angstrom impurity
+displacements along the host `<100>` and `<111>` directions. A lower-cost
+pre-relaxation only supplies an exact starting geometry for a production
+relaxation; it does not supply the energy used to select a basin. All three
+occurrences retain distinct evidence, and the lowest compatible converged
+production final-SCF energy is the reported observed basin. A relaxation
+convergence flag alone is not called proof of a local or global minimum. A
+stronger minimum claim requires separately specified vibrational-stability
+evidence.
 
 ## Elemental references
 

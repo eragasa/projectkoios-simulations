@@ -81,6 +81,25 @@ does not prescribe a universal electron-volt threshold. The point-defect
 literature demonstrates that finite-size behavior depends on defect charge,
 material response, boundary conditions, and correction model [1, 2].
 
+## Staged large-cell relaxation
+
+Large supercells do not intrinsically require a larger plane-wave cutoff. At a
+fixed cutoff they already contain more plane waves because their real-space
+volume is larger. The cutoff remains qualified against the exact elements and
+pseudopotentials; reciprocal sampling is scaled separately with cell size.
+
+A lower-cost pre-relaxation may use a reviewed lower cutoff, coarser k-point
+mesh, and looser electronic and ionic termination criteria. It must preserve the
+production charge, spin, fixed-host boundary condition, and disabled symmetry
+reductions. The production stage continues from its exact output geometry and
+re-relaxes at the accepted production cutoff, charge-density cutoff, k-point
+rule, and force criterion.
+
+Pre-relaxation energy is not formation-energy evidence and cannot by itself
+eliminate ideal, `<100>`, or `<111>` starts. Low-resolution numerical error may
+change basin ordering. Basin selection uses compatible separate final SCFs
+after production relaxation.
+
 ## Relaxation checks before energy comparison
 
 Before selecting a defect energy, the workflow requires:

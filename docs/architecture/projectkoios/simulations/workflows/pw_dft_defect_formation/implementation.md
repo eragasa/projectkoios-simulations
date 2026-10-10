@@ -22,6 +22,64 @@ src/python/projectkoios/simulations/workflows/pw_dft_defect_formation/
 
 No source package or public symbol described here exists yet.
 
+## Existing prerequisites
+
+The target package composes rather than replaces the following implemented
+capabilities:
+
+- exact structure, pseudopotential, simulation-library, and calculator-input
+  records;
+- QE SCF projection, one-simulation execution, output normalization, and the
+  authoritative single-SCF CPN lifecycle;
+- calculator-neutral SCF recipes and energy-only convergence assessment;
+- QE fixed-cell and variable-cell relaxation projection, execution, parsing,
+  stress normalization, and result contracts;
+- immutable simulation-evidence record types and pure relaxed-structure
+  publication;
+- exact supercell construction and ideal substitution deltas;
+- charge, spin, symmetry, compatibility, formation-energy, relaxation-energy,
+  and pairwise size-difference contracts; and
+- exact starting relaxation specifications for Si, B `mp-160`, and P
+  `mp-568348`.
+
+These units are not yet a production chain. In particular, no production
+assembler creates a `SimulationEvidenceRecord` from one execution, the
+relaxation workflow stops at a non-authorizing projection handoff, and the
+planned defect workflow package is absent.
+
+## Remaining workflow and task inventory
+
+Implementation proceeds in dependency order:
+
+1. add byte-preserving live stdout emission to the single-simulation executor
+   while retaining exact stdout and terminal failure evidence;
+2. add a production evidence assembler that correlates one exact specification,
+   prepared input, execution record, native artifacts, and normalized
+   observation;
+3. generalize convergence coordinates beyond cubic `(n, n, n)` meshes and add
+   force and stress observations and numerical criteria alongside energy;
+4. separate "numerical criterion satisfied" from scientific acceptance, then
+   compose a parent convergence workflow from single-SCF child occurrences;
+5. complete the relaxation action/event lifecycle from projection through
+   external execution, normalization, evidence, and terminal outcome;
+6. compose elemental-reference convergence, relaxation, final-SCF, evidence,
+   relaxed-structure publication, and chemical-potential derivation for Si, B,
+   and P;
+7. regenerate pristine 64-, 216-, and 512-atom cells from the observed relaxed
+   Si host and materialize ideal, `<100>`, and `<111>` starts;
+8. compose qualified pre-relaxation, production relaxation, and final-SCF child
+   occurrences for every dopant, size, and start;
+9. select the lowest compatible converged observed basin while retaining every
+   declared start and failure;
+10. run matched pristine final SCFs and assemble defect/pristine compatibility;
+11. derive formation energies and independently assess formation-energy and
+    residual-stress size stability; and
+12. optionally compose full-cell finite-concentration strain diagnostics.
+
+Every numbered calculation task is one simulation occurrence. An external
+Workflow runtime may sequence them with deployment concurrency one, but no
+campaign object or executor may batch them into one calculator invocation.
+
 ## Allowed imports
 
 Production modules may import:
@@ -50,7 +108,8 @@ One study declaration identifies complete records for:
 - the locally relaxed zero-pressure conventional Si observation;
 - every pristine supercell specification derived from that observed host;
 - every ideal and declared symmetry-broken Si:P and Si:B starting structure;
-- every fixed-host ion-only relaxation and resulting final-SCF specification;
+- every qualified fixed-host pre-relaxation, production relaxation, and
+  resulting final-SCF specification;
 - optional full ion-and-cell diagnostic specifications and final SCFs;
 - diamond-silicon reference relaxation and SCF;
 - hull-selected boron and phosphorus reference relaxation and SCF;
@@ -71,9 +130,12 @@ spatial-symmetry and time-reversal k-point reductions.
 
 The three required defect starts are exact ideal, 0.01 angstrom impurity
 translation along host `<100>`, and 0.01 angstrom impurity translation along host
-`<111>`. The composition layer retains all results and identifies the lowest
-compatible converged observed basin; it does not relabel optimizer completion as
-vibrational proof of a minimum.
+`<111>`. A pre-relaxation uses a lower-cost but reviewed numerical profile only
+to obtain a better starting geometry. Its output carries exact lineage into a
+production relaxation; its approximate energy cannot eliminate a declared
+basin. The composition layer retains all results and identifies the lowest
+compatible converged observed basin from separate production final SCFs. It
+does not relabel optimizer completion as vibrational proof of a minimum.
 
 ## Decisions and handoffs
 
