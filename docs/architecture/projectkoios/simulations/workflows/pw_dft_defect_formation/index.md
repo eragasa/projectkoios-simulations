@@ -31,19 +31,19 @@ three conventional-cell replication sizes:
 | `(3, 3, 3)` | 216 | `Si:P`, `Si:B` |
 | `(4, 4, 4)` | 512 | `Si:P`, `Si:B` |
 
-For every defect and supercell size, the study declares an ideal host-geometry
-cell, an ion-only fixed-cell relaxation, and a full ion-and-cell relaxation.
-Each resulting geometry receives a compatible final SCF so the ion-only and
-fully relaxed energies can be compared as the cell-strain contribution without
-using optimizer-step energies. Every neutral Si:P stage is explicitly
-spin-polarized as a doublet; it cannot reuse the non-spin-polarized bulk-silicon
-profile.
+The committed catalog contains exact topology fixtures for the ideal cells, but
+production supercells are rebuilt from one locally optimized zero-pressure Si
+host. For every defect and size, the primary study declares ideal, `<100>`, and
+`<111>` symmetry-broken starts, fixed-host ion relaxation, and a compatible
+final SCF. Optional full-cell runs are separately labeled finite-concentration
+strain diagnostics. Every neutral Si:P and Si:B stage is explicitly
+spin-polarized as a doublet and disables spatial and time-reversal symmetry
+reductions; it cannot reuse the unpolarized bulk-silicon profile.
 
 The study also requires compatible local relaxation and final-SCF
-specifications for diamond silicon and the actual boron and phosphorus phases
-selected by the injected Materials Project integration. Selected phase IDs
-cannot be hard-coded before the authenticated hull query is performed and
-retained.
+specifications for diamond silicon and the retained B `mp-160` and P
+`mp-568348` phases selected by authenticated Materials Project hull queries.
+Their database energies are not used as local chemical potentials.
 
 ## Composition stages
 
@@ -52,21 +52,19 @@ The target composition is:
 1. resolve the exact relaxed host structure and derive each pristine supercell;
 2. create each ideal defect by changing only the declared host-site species,
    preserving the host-supercell lattice parameters and atomic positions;
-3. obtain or request `ATOMIC_POSITIONS` relaxation evidence and publish the
-   ion-relaxed structure after verifying that its lattice remains fixed;
-4. initialize `ATOMIC_POSITIONS_AND_CELL` relaxation from the ion-relaxed
-   structure, obtain or request its evidence, and publish the fully relaxed
-   structure with pressure qualification;
-5. obtain or request a separate final SCF for the ideal, ion-relaxed, and fully
-   relaxed structures under one qualified energy model;
-6. qualify pristine, defect, and elemental-reference evidence;
-7. derive local elemental chemical potentials and neutral substitution
-   formation energies;
-8. derive ionic, cell-strain, and total relaxation energies, including
-   `E_ion_only - E_fully_relaxed` at zero external pressure;
-9. compare matched 64-, 216-, and 512-atom observations; and
-10. apply explicit workflow-owned formation-energy and strain-energy acceptance
-    policies.
+3. derive exact ideal, `<100>`, and `<111>` starting cells and disable spatial
+   and time-reversal symmetry reductions;
+4. obtain or request `ATOMIC_POSITIONS` relaxation evidence for each start and
+   publish ion-relaxed structures after verifying that each lattice is fixed;
+5. obtain or request separate final SCFs and retain the lowest compatible
+   converged observed basin without claiming a proven global minimum;
+6. retain the residual stress tensor for the fixed-host size series;
+7. optionally obtain pressure-qualified `ATOMIC_POSITIONS_AND_CELL` diagnostics;
+8. qualify pristine, defect, and elemental-reference evidence;
+9. derive local elemental chemical potentials and neutral substitution
+   formation energies; and
+10. compare matched 64-, 216-, and 512-atom observations under explicit
+    workflow-owned formation-energy and residual-stress policies.
 
 Every calculation handoff remains non-authorizing. Missing evidence produces a
 typed requirement or handoff, not implicit execution.

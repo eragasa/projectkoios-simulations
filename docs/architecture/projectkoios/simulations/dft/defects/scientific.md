@@ -32,15 +32,17 @@ finite-size corrections, as reviewed by Freysoldt *et al.* [1]. The architecture
 retains charged calculations but rejects incomplete charged formation-energy
 arithmetic.
 
-## Phosphorus donor spin
+## Neutral donor and acceptor spin
 
 Neutral substitutional phosphorus in silicon has a bound donor electron with
-`S = 1/2` [2]. The current Si:P workflow therefore declares a collinear
-spin-polarized doublet with one more electron in one spin channel than the
-other. This spin state is explicit even though `delta_n_electrons == 0`.
+`S = 1/2` [2]. Replacing Si by B instead removes one valence electron from the
+neutral baseline and leaves an odd-electron acceptor state. The current Si:P and
+Si:B workflows therefore declare collinear spin-polarized doublets with an
+absolute spin-channel electron difference of one. This spin intent is explicit
+even though `delta_n_electrons == 0`.
 
-The ideal, ion-only, fully relaxed, and final-SCF specifications used in one
-energy series must retain compatible spin intent. A non-spin-polarized
+The ideal, symmetry-broken, fixed-host-relaxed, and final-SCF specifications
+used in one energy series must retain compatible spin intent. A non-spin-polarized
 calculation is a different scientific specification, not an interchangeable
 optimization. Evidence should retain observed total magnetization or
 spin-channel populations when the calculator supplies them.

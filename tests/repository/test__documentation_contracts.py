@@ -302,7 +302,7 @@ def test_target_architecture_preserves_identity_and_authority_boundaries() -> No
         "projectkoios.simulations.dft.defects",
         "projectkoios.simulations.defects",
         "charge_state == -delta_n_electrons",
-        "neutral Si:P workflow requires a collinear spin-polarized doublet",
+        "neutral Si:P and Si:B workflow requires collinear spin-polarized doublets",
         "does not duplicate the generic formation-energy",
     ):
         assert required in dft_binding
@@ -310,15 +310,16 @@ def test_target_architecture_preserves_identity_and_authority_boundaries() -> No
         "64-, 216-, and 512-atom",
         "non-authorizing",
         "does not displace the current SCF Petri-net authority",
-        "preserving the host-supercell lattice parameters and atomic positions",
-        "E_ion_only - E_fully_relaxed",
-        "Every neutral Si:P stage is explicitly spin-polarized as a doublet",
+        "fixed-host ion relaxation",
+        "lowest compatible converged observed basin",
+        "Every neutral Si:P and Si:B stage is explicitly spin-polarized as a doublet",
     ):
         assert required in workflow
     for required in (
         "Materials Project",
         "charge_state == -delta_n_electrons",
         "Neutral Si:P is a spin-polarized doublet",
+        "Neutral substitutional Si:B likewise has an odd valence-electron count",
         "delta_n_electrons`, which remains zero",
     ):
         assert required in workflow_scientific

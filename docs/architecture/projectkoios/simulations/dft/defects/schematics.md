@@ -36,10 +36,10 @@ PwDftSimulation.delta_n_electrons ----+
 Changing Si to P or B changes the neutral valence count through the species and
 pseudopotentials. It does not by itself change `delta_n_electrons`.
 
-## Neutral Si:P spin binding
+## Neutral Si:P and Si:B spin binding
 
 ```text
-neutral Si:P structure
+neutral Si:P or Si:B structure
         |
         +--> delta_n_electrons = 0
         +--> collinear spin polarized
@@ -47,7 +47,7 @@ neutral Si:P structure
         `--> doublet study intent
                     |
                     v
-ideal / ion-only / fully relaxed / final-SCF records
+ideal / symmetry-broken / fixed-host / final-SCF records
                     |
                     v
 require compatible spin treatment before energy subtraction

@@ -3,7 +3,8 @@
 ## Status
 
 An initial protected-core implementation now binds structural charge to
-`delta_n_electrons`, enforces the neutral substitutional Si:P doublet, qualifies
+`delta_n_electrons`, enforces neutral substitutional Si:P and Si:B doublets,
+qualifies
 converged final SCFs with exact pseudopotentials and prepared-input charge/spin
 mappings, and delegates neutral formation-energy arithmetic to
 [`projectkoios.simulations.defects`](../../defects/index.md). Complete cutoff,
@@ -52,8 +53,9 @@ The binding retains spin mode, intended spin-channel electron difference,
 constraint policy, initial moments, and normalized observed magnetization when
 available. It does not infer spin intent from a calculator default.
 
-The current neutral Si:P workflow requires a collinear spin-polarized doublet.
-That is a workflow scientific requirement checked through this DFT binding, not
+The current neutral Si:P and Si:B workflow requires collinear spin-polarized
+doublets. That is a workflow scientific requirement checked through this DFT
+binding, not
 a universal property of every defect accepted by
 `projectkoios.simulations.defects`.
 

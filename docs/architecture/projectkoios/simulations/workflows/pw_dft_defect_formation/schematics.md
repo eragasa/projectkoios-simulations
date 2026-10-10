@@ -12,17 +12,15 @@ exact prepared calculator-input records
         v
 resolve declared study roles
         |
-        +--> ideal defect: preserve host lattice and positions
+        +--> ideal + <100> + <111> defect starts
         |          |
-        |          +--> final SCF
         |          v
-        +--> ion-only relaxation: fixed host lattice
+        +--> ion-only relaxation: fixed host lattice, reductions disabled
         |          |
-        |          +--> publish structure --> final SCF
+        |          +--> publish structures --> final SCFs
+        |          `--> select lowest compatible observed basin
         |          v
-        +--> full ion-and-cell relaxation: declared pressure
-        |          |
-        |          +--> publish structure --> final SCF
+        +--> optional full ion-and-cell diagnostic: declared pressure
         |
         +--> each missing calculation becomes a non-authorizing handoff
         |
@@ -31,7 +29,7 @@ qualify completed evidence
         |
         +--> local Si/B/P chemical potentials
         +--> pristine and Si:P/Si:B formation energies
-        `--> ionic, cell-strain, and total relaxation energies
+        `--> ionic relaxation and residual-stress observations
         |
         v
 ordered 64 / 216 / 512 atom observations
@@ -78,10 +76,10 @@ Si pristine 512 ----+     Si:P 512 ----+     Si:B 512 ----+
 ```
 
 Each defect energy is paired with the pristine cell of the same declared
-supercell transformation. Each size also retains matched ideal, ion-only, and
-fully relaxed defect structures. The zero-pressure cell-strain value is
-`E_ion_only - E_fully_relaxed`, using separate compatible final SCFs. Elemental
-references are shared only after exact compatibility qualification.
+supercell transformation. Each size retains all three fixed-host defect starts,
+relaxed structures, final SCFs, basin selection, and residual stress. Optional
+full-cell release evidence is labeled as a finite-concentration diagnostic.
+Elemental references are shared only after exact compatibility qualification.
 
 ## Runtime boundary
 

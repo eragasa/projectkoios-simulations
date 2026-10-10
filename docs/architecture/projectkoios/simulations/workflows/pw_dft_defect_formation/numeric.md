@@ -16,14 +16,17 @@ For each impurity and each 64-, 216-, and 512-atom host size, the workflow
 requires exact roles for:
 
 - pristine host final SCF;
-- ideal defect final SCF;
-- ion-only relaxation and ion-relaxed final SCF; and
-- full relaxation and fully relaxed final SCF.
+- ideal, `<100>`, and `<111>` defect starts;
+- fixed-host ion relaxation and final SCF for every start;
+- lowest-compatible-observed-basin selection; and
+- residual stress for the selected fixed-host result.
 
-Formation energy additionally requires compatible local Si and impurity
-chemical-potential evidence. Every neutral Si:P role requires an exact
-spin-polarized doublet specification and prepared calculator inputs that realize
-it. A missing role produces a typed requirement or an inconclusive outcome,
+Optional full-cell diagnostics remain separate roles. Formation energy
+additionally requires compatible local Si and impurity chemical-potential
+evidence. Every neutral Si:P and Si:B role requires an exact spin-polarized
+doublet specification, disabled spatial and time-reversal reductions, and
+prepared calculator inputs that realize them. A missing role produces a typed
+requirement or an inconclusive outcome,
 never an assumed zero or a reused unlike calculation.
 
 ## Plane-wave DFT compatibility
@@ -54,10 +57,11 @@ The policy assesses at least two ordered series independently:
 
 ```text
 formation_energy[size]
-cell_strain_energy[size]
+fixed_host_residual_stress[size]
 ```
 
-It may also assess ionic and total relaxation energies. Each series declares
+It may also assess ionic relaxation energies and optional full-cell release
+energies. Each series declares
 its own units, comparison metric, threshold, stable window, maximum additional
 sizes, and missing-evidence behavior. Formation-energy stability cannot stand
 in for strain-energy stability or vice versa.
@@ -79,16 +83,19 @@ material response, boundary conditions, and correction model [1, 2].
 
 ## Relaxation checks before energy comparison
 
-Before deriving strain energy, the workflow requires:
+Before selecting a defect energy, the workflow requires:
 
-- completed and converged ion-only and full relaxation observations;
-- exact provenance from the same ideal defect declaration;
-- fixed-lattice verification for the ion-only result;
-- pressure qualification for the full result;
-- compatible final-SCF settings, including identical spin intent across the
-  three neutral Si:P stages, and converged observations; and
-- an explicit zero-pressure total-energy comparison or a separately supported
-  common thermodynamic potential.
+- completed fixed-host relaxation observations from all three declared starts;
+- exact provenance from the same defect declaration;
+- fixed-lattice verification for every result;
+- compatible final-SCF settings, including identical doublet intent across all
+  neutral Si:P or Si:B starts, disabled reductions, and converged observations;
+- lowest-observed-basin selection from compatible final-SCF energies; and
+- an explicit statement that optimizer convergence is not vibrational proof of
+  a local or global minimum.
+
+An optional full-cell comparison additionally requires pressure qualification
+and a common zero-pressure total-energy convention.
 
 Unexpected negative relaxation terms are reported with their evidence. They
 produce an inconclusive or rejected qualification according to policy; they are

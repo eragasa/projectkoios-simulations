@@ -47,10 +47,11 @@ They must not import:
 One study declaration identifies complete records for:
 
 - the source conventional silicon cell;
-- every pristine supercell specification;
-- every ideal host-geometry Si:P and Si:B defect specification;
-- every ion-only fixed-cell relaxation and resulting final-SCF specification;
-- every full ion-and-cell relaxation and resulting final-SCF specification;
+- the locally relaxed zero-pressure conventional Si observation;
+- every pristine supercell specification derived from that observed host;
+- every ideal and declared symmetry-broken Si:P and Si:B starting structure;
+- every fixed-host ion-only relaxation and resulting final-SCF specification;
+- optional full ion-and-cell diagnostic specifications and final SCFs;
 - diamond-silicon reference relaxation and SCF;
 - hull-selected boron and phosphorus reference relaxation and SCF;
 - calculator-specific input-rendering profiles; and
@@ -62,10 +63,17 @@ calculation models, spin treatments, or any violation of
 `charge_state == -delta_n_electrons`. It must prove that the ideal defect has the
 host lattice and positions, that ion-only relaxation preserves that lattice,
 and that full relaxation descends from the same ion-relaxed defect under
-explicit pressure controls. Every neutral Si:P role must declare collinear spin
-polarization and one more electron in one spin channel than the other. Bulk,
-Si:B, and nonneutral Si:P roles must each carry their own explicit spin
-specification rather than inheriting the Si:P value.
+explicit pressure controls. Every neutral Si:P and Si:B role must declare collinear spin
+polarization with an absolute spin-channel electron difference of one. Bulk and
+nonneutral roles carry their own explicit spin specifications rather than
+inheriting a defect value. Defect relaxations and final SCFs must disable both
+spatial-symmetry and time-reversal k-point reductions.
+
+The three required defect starts are exact ideal, 0.01 angstrom impurity
+translation along host `<100>`, and 0.01 angstrom impurity translation along host
+`<111>`. The composition layer retains all results and identifies the lowest
+compatible converged observed basin; it does not relabel optimizer completion as
+vibrational proof of a minimum.
 
 ## Decisions and handoffs
 
@@ -115,11 +123,12 @@ prepared-input records, and normalized evidence. It cannot read
 
 ## Required verification
 
-Tests must cover the full 64/216/512 role matrix, missing roles, exact-record
-ambiguity, impurity and size mismatch, charge/electron-count sign and mismatch
-validation, neutral-only formation-energy enforcement, required neutral-Si:P
-spin polarization, spin mismatch rejection, evidence qualification failure,
-chemical-potential provenance, formation-energy sign
+Tests must cover the full 64/216/512 role matrix, three exact starting basins,
+missing roles, exact-record ambiguity, impurity and size mismatch,
+charge/electron-count sign and mismatch validation, neutral-only
+formation-energy enforcement, required neutral-Si:P and Si:B doublet spin,
+symmetry-disable intent, spin mismatch rejection, evidence qualification
+failure, chemical-potential provenance, formation-energy sign
 convention, threshold boundaries, stable windows, budgets, and deterministic
 decision ordering. Repository gates must enforce provider-independent imports
 and calculator-free tests.

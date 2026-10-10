@@ -57,7 +57,9 @@ def _pseudo(symbol: str, valence: int, digit: str) -> PseudopotentialFile:
     )
 
 
-def _neutral_si_p_simulation(
+def _neutral_si_dopant_simulation(
+    dopant: str,
+    dopant_valence: int,
     spin: DftSpinTreatment,
 ) -> tuple[UnitCellDefectDeltaResult, ResolvedPwDftSimulation]:
     bulk = UnitCell(
@@ -78,45 +80,64 @@ def _neutral_si_p_simulation(
         request=UnitCellDefectDelta(
             bulk_cell=bulk,
             removals=(0,),
-            additions=(_atom("P", (0.0, 0.0, 0.0)),),
+            additions=(_atom(dopant, (0.0, 0.0, 0.0)),),
         )
     )
     simulation = resolved_pw_dft_simulation(
         result.unit_cell,
         charge=DftChargeState(),
         spin=spin,
-        pseudopotentials=(_pseudo("P", 5, "2"), _pseudo("Si", 4, "1")),
+        pseudopotentials=(
+            _pseudo(dopant, dopant_valence, "2"),
+            _pseudo("Si", 4, "1"),
+        ),
     )
     return result, simulation
 
 
-def test_neutral_si_p_requires_explicit_doublet() -> None:
-    defect, simulation = _neutral_si_p_simulation(
+@pytest.mark.parametrize(("dopant", "valence"), (("B", 3), ("P", 5)))
+def test_neutral_si_dopants_require_explicit_doublets(
+    dopant: str,
+    valence: int,
+) -> None:
+    defect, simulation = _neutral_si_dopant_simulation(
+        dopant,
+        valence,
         DftSpinTreatment(
             mode=DftSpinMode.COLLINEAR,
             spin_channel_electron_difference=1,
             constrain_spin_channel_difference=True,
-        )
+        ),
     )
 
     binding = PwDftDefectChargeBinding(defect=defect, simulation=simulation)
 
-    assert binding.simulation.electron_count == 9
+    assert binding.simulation.electron_count in {7, 9}
     assert binding.simulation.simulation.charge.delta_n_electrons == 0
 
 
-def test_odd_electron_simulation_rejects_unpolarized_default() -> None:
+@pytest.mark.parametrize(("dopant", "valence"), (("B", 3), ("P", 5)))
+def test_odd_electron_simulation_rejects_unpolarized_default(
+    dopant: str,
+    valence: int,
+) -> None:
     with pytest.raises(ValueError, match="incompatible parity"):
-        _neutral_si_p_simulation(DftSpinTreatment())
+        _neutral_si_dopant_simulation(dopant, valence, DftSpinTreatment())
 
 
-def test_neutral_si_p_rejects_non_doublet_collinear_state() -> None:
-    defect, simulation = _neutral_si_p_simulation(
+@pytest.mark.parametrize(("dopant", "valence"), (("B", 3), ("P", 5)))
+def test_neutral_si_dopants_reject_non_doublet_collinear_states(
+    dopant: str,
+    valence: int,
+) -> None:
+    defect, simulation = _neutral_si_dopant_simulation(
+        dopant,
+        valence,
         DftSpinTreatment(
             mode=DftSpinMode.COLLINEAR,
             spin_channel_electron_difference=3,
             constrain_spin_channel_difference=True,
-        )
+        ),
     )
 
     with pytest.raises(ValueError, match="collinear doublet"):

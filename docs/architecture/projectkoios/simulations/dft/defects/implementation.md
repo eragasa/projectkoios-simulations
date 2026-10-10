@@ -14,7 +14,7 @@ src/python/projectkoios/simulations/dft/defects/
 - `binding.py` correlates an exact plane-wave DFT simulation, prepared inputs,
   normalized final-SCF observation, and method-neutral energy evidence.
 - `charge.py` validates structural `charge_state`, `delta_n_electrons`, the exact
-  derived cell, and the neutral substitutional Si:P doublet.
+  derived cell, and neutral substitutional Si:P and Si:B doublets.
 - `compatibility.py` currently compares method/model, qualification, and final
   SCF state and produces the method-neutral compatibility record.
 - `formation_energy.py` validates the plane-wave DFT method and invokes the
@@ -105,7 +105,8 @@ substitution.
 
 Tests must cover neutral substitutions, positive and negative charge signs,
 neutral valence changes, mismatched structural and electronic charge, missing
-spin intent, neutral Si:P doublet qualification, pseudopotential and functional
-mismatch, cutoff and k-point differences, calculator/version identity, missing
+spin intent, neutral Si:P and Si:B doublet qualification, pseudopotential and
+functional mismatch, cutoff and k-point differences, calculator/version
+identity, missing
 prepared inputs, unconverged final SCF, and conversion to method-neutral energy
 terms. Tests use synthetic evidence and never execute a calculator.

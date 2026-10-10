@@ -41,10 +41,10 @@ Before subtraction, the DFT compatibility result compares:
 Permitted differences are explicit. A missing field is unavailable evidence,
 not an assumed match.
 
-## Spin-polarized Si:P
+## Spin-polarized Si:P and Si:B
 
-Every neutral Si:P geometry and final SCF in one series uses a collinear
-spin-polarized doublet specification. The prepared input must show how the
+Every neutral Si:P and Si:B geometry and final SCF in one series uses a
+collinear spin-polarized doublet specification. The prepared input must show how the
 calculator represents the spin-channel difference or initialization. The
 normalized result retains observed total magnetization or spin populations when
 available.

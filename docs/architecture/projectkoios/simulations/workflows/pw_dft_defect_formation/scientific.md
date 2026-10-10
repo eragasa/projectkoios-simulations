@@ -6,10 +6,10 @@ The initial Si:P and Si:B studies ask three separate questions:
 
 1. What neutral substitution formation energy follows from compatible local
    defect, pristine, and elemental-reference calculations?
-2. How much energy is released by internal ionic relaxation at a fixed host
-   lattice?
-3. How much additional energy is released when the periodic cell is also
-   allowed to relax, and how do those quantities change with supercell size?
+2. How much energy is released by internal ionic relaxation at a fixed,
+   locally optimized host lattice?
+3. What residual stress remains under that dilute-defect boundary condition,
+   and how do formation energy and stress change with supercell size?
 
 The workflow keeps these questions separate. One accepted result does not imply
 acceptance of the others. The initial formation-energy studies are neutral:
@@ -19,32 +19,44 @@ must record nonzero `delta_n_electrons` with
 remains unavailable until its additional physical terms are represented.
 
 Neutral Si:P is a spin-polarized doublet because its bound donor electron has
-`S = 1/2` [4]. The ideal, ion-only, fully relaxed, and final-SCF specifications
-therefore all declare the same doublet spin intent. This is separate from
-`delta_n_electrons`, which remains zero for neutral Si:P. A non-spin-polarized
-Si:P result is incompatible with this study rather than an interchangeable
+`S = 1/2` [4]. Neutral substitutional Si:B likewise has an odd valence-electron
+count: replacing four-valence-electron Si by three-valence-electron B leaves one
+hole. Under the collinear single-determinant model, both defects therefore
+require `abs(N_up - N_down) == 1`. Their ideal, ion-only, and final-SCF
+specifications declare that constrained doublet intent. This is separate from
+`delta_n_electrons`, which remains zero. An unpolarized neutral Si:P or Si:B
+result is incompatible with this study rather than an interchangeable
 lower-cost calculation.
 
 ## Matched defect series
 
-Every 64-, 216-, and 512-atom host supercell produces matched Si:P and Si:B
-records with identical scientific roles:
+The transferred conventional Si cell is a starting geometry, not the production
+host lattice. A compatible local zero-pressure bulk relaxation first publishes
+an observed conventional cell. Its 2×2×2, 3×3×3, and 4×4×4 replications then
+produce matched 64-, 216-, and 512-atom pristine, Si:P, and Si:B records.
 
 ```text
-host geometry -> ideal substitution -> ion-only relaxation -> full relaxation
-                       |                       |                    |
-                   final SCF               final SCF            final SCF
+local relaxed host -> pristine supercell -> ideal substitution
+                                              |
+                         symmetry-broken fixed-cell ion relaxation
+                                              |
+                                          final SCF
 ```
 
-The ideal substitution preserves the exact host lattice and host positions.
-The ion-only stage preserves that lattice and changes positions. The full stage
-starts from the ion-only result and permits positions and cell parameters to
-change under declared pressure controls.
+The primary dilute-defect protocol fixes every supercell to the same locally
+optimized host lattice and relaxes atomic positions only. It does not use a
+separately optimized cell for each finite defect concentration. Optional
+full-cell calculations are finite-concentration strain diagnostics and cannot
+replace the fixed-host formation-energy series.
 
-This sequence provides clear provenance and comparable roles. It does not prove
-that a relaxation reached the global minimum. Alternative initial distortions
-or symmetry-breaking calculations may be required if evidence indicates
-multiple local minima.
+Spatial symmetry and time-reversal k-point reduction are disabled for every
+defect relaxation and its final SCF. Each size and species starts from the ideal
+cell and from deterministic 0.01 angstrom impurity displacements along the host
+`<100>` and `<111>` directions. All three occurrences retain distinct evidence;
+the lowest compatible converged final-SCF energy is the reported observed
+basin. A relaxation convergence flag alone is not called proof of a local or
+global minimum. A stronger minimum claim requires separately specified
+vibrational-stability evidence.
 
 ## Elemental references
 
@@ -58,20 +70,25 @@ analysis [1, 2]. Their database energies are not mixed with local defect
 energies. The selected structures become exact local inputs, and the subsequent
 local evidence supplies `mu_Si`, `mu_B`, and `mu_P`.
 
-## Strain-energy interpretation
+## Strain interpretation
 
-The workflow uses the operational zero-pressure definition documented in the
-[defect scientific basis](../../defects/scientific.md):
+The primary series retains the final stress tensor from each fixed-host
+relaxation and final SCF. Stress convergence with 64, 216, and 512 atoms is
+reported independently from formation-energy convergence; stress is not folded
+into the neutral formation-energy equation.
+
+An optional zero-pressure full-cell diagnostic may evaluate the operational
+quantity documented in the [defect scientific basis](../../defects/scientific.md):
 
 ```text
-E_strain = E_final_scf(ion-only) - E_final_scf(fully_relaxed).
+E_cell_release = E_final_scf(fixed-host) - E_final_scf(fully-relaxed).
 ```
 
-This measures the energetic effect of releasing the fixed-cell constraint in
-the finite periodic supercell. Elastic point-defect theory explains why cell
-boundary conditions and interactions with periodic images matter [3]. The
-workflow therefore reports the exact cell size and does not rename this value
-as an isolated-defect elastic energy.
+This measures release of the fixed-cell constraint at one finite periodic defect
+concentration. Elastic point-defect theory explains why boundary conditions and
+periodic-image interactions matter [3]. The workflow reports exact cell size,
+volume change, and boundary condition and does not rename this quantity as an
+isolated-defect elastic energy.
 
 ## Acceptance claims
 
@@ -82,9 +99,10 @@ state separately whether evidence supports:
 - numerical compatibility;
 - SCF convergence;
 - ionic relaxation completion;
-- cell relaxation completion;
-- formation-energy size stability; and
-- strain-energy size stability.
+- lowest-observed-basin selection across all declared starts;
+- fixed-cell residual-stress size stability;
+- optional cell-relaxation completion; and
+- formation-energy size stability.
 
 “Accepted” means the declared policy was satisfied for the retained evidence.
 It does not mean experimental validation, universal transferability, or proof
