@@ -17,8 +17,7 @@ CPN_IMPLEMENTATION = (
 )
 PSEUDOPOTENTIAL_LIBRARY = (
     REPOSITORY_ROOT
-    / "docs"
-    / "projectkoios/simulations/dft/pseudopotential_repository"
+    / "docs/projectkoios/simulations/dft/pseudopotential/library"
     / "PseudopotentialLibrary/index.md"
 )
 LOCAL_EXECUTION = REPOSITORY_ROOT / "docs/local-execution.md"
@@ -57,11 +56,9 @@ PW_DFT_DEFECT_WORKFLOW_ARCHITECTURE = (
     / "docs/architecture/projectkoios/simulations/workflows"
     / "pw_dft_defect_formation"
 )
-UNIMPLEMENTED_TARGET_ARCHITECTURE_TRIOS = (
-    SIMULATION_LIBRARY_ARCHITECTURE,
-    PW_DFT_DEFECT_WORKFLOW_ARCHITECTURE,
-)
+UNIMPLEMENTED_TARGET_ARCHITECTURE_TRIOS = (PW_DFT_DEFECT_WORKFLOW_ARCHITECTURE,)
 INITIAL_IMPLEMENTATION_ARCHITECTURE_TRIOS = (
+    SIMULATION_LIBRARY_ARCHITECTURE,
     SIMULATION_EVIDENCE_ARCHITECTURE,
     CALCULATOR_INPUT_ARCHITECTURE,
     DEFECTS_ARCHITECTURE,
@@ -100,12 +97,9 @@ def test_revised_navigation_documents_have_no_broken_relative_links() -> None:
         REPOSITORY_ROOT
         / "docs"
         / "architecture/projectkoios/simulations/workflows/pw_dft_scf/cpn/index.md",
+        REPOSITORY_ROOT / "docs/projectkoios/simulations/dft/pseudopotential/index.md",
         REPOSITORY_ROOT
-        / "docs"
-        / "projectkoios/simulations/dft/pseudopotential_repository/index.md",
-        REPOSITORY_ROOT
-        / "docs/projectkoios/simulations/dft/pseudopotential_repository"
-        / "PseudopotentialRepository/index.md",
+        / "docs/projectkoios/simulations/dft/pseudopotential/library/index.md",
         REPOSITORY_ROOT
         / "docs/architecture/projectkoios/simulations/structure/index.md",
         STRUCTURE_LIBRARY,
@@ -150,7 +144,6 @@ def test_pseudopotential_library_reference_covers_api_and_failures() -> None:
         "## Construction contract",
         "## `resolve(required)`",
         "### Resolution failures",
-        "## `build_repository(required)`",
         "## Example",
     ):
         assert required_section in documentation

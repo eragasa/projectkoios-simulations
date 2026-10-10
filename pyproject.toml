@@ -67,7 +67,7 @@ namespaces = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--strict-markers"
+addopts = "--strict-markers --import-mode=importlib"
 markers = [
     "adversarial: malformed, unauthorized, or boundary-hostile cases",
     "integration: interaction between multiple components, files, or retained artifacts",

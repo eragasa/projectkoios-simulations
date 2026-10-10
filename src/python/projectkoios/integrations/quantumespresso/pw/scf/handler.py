@@ -13,7 +13,7 @@ from projectkoios.integrations.quantumespresso.pw.scf import (
 )
 from projectkoios.simulations.calculator_input import CalculatorInputRecord
 from projectkoios.simulations.dft.pseudopotential import PseudopotentialFile
-from projectkoios.simulations.dft.pseudopotential_repository import (
+from projectkoios.simulations.dft.pseudopotential.library import (
     PseudopotentialLibrary,
 )
 from projectkoios.simulations.dft.pw.scf.actions import (

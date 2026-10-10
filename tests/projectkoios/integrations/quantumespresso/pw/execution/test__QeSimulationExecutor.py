@@ -22,7 +22,7 @@ from projectkoios.simulations.calculator_input import (
     CalculatorInputRecord,
     CalculatorInputSourceReference,
 )
-from projectkoios.simulations.dft.pseudopotential_repository import (
+from projectkoios.simulations.dft.pseudopotential.library import (
     PseudopotentialLibrary,
 )
 from projectkoios.simulations.execution import (

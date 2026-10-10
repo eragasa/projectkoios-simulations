@@ -36,7 +36,7 @@ from projectkoios.simulations.dft.pseudopotential import (
     PseudopotentialArtifactFormat,
     PseudopotentialFile,
 )
-from projectkoios.simulations.dft.pseudopotential_repository import (
+from projectkoios.simulations.dft.pseudopotential.library import (
     PseudopotentialLibrary,
 )
 from projectkoios.simulations.dft.pw.scf.request import PwDftScfRequest

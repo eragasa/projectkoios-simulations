@@ -1,6 +1,6 @@
 # Simulation library implementation rules
 
-## Planned production modules
+## Production modules
 
 ```text
 src/python/projectkoios/simulations/library/
@@ -10,14 +10,14 @@ src/python/projectkoios/simulations/library/
   library.py
 ```
 
-- `record.py` will define `SimulationRepresentation`, `SimulationProvenance`,
-  and `SimulationRecord`.
-- `codec.py` will own one strict codec for each supported representation.
-- `library.py` will define `SimulationLibraryEntry`, `SimulationResolution`,
+- `record.py` defines `SimulationRepresentation`, `SimulationProvenance`, and
+  `SimulationRecord`.
+- `codec.py` owns strict canonical codecs for both supported representations.
+- `library.py` defines `SimulationLibraryEntry`, `SimulationResolution`,
   `SimulationLibrary`, `SimulationLibraryManifestLoader`, and domain-specific
-  manifest, absence, conflict, and integrity failures.
+  manifest, absence, conflict, dependency, and integrity failures.
 
-These names are architectural commitments, not currently importable APIs.
+These records and resolvers are public importable protected-core APIs.
 
 ## Version-one decision packet
 
@@ -26,7 +26,8 @@ The bounded architecture council converged on these version-one boundaries:
 - a specification stores one complete `StructureRecord`, but not duplicate
   `UnitCell` bytes;
 - `SimulationResolution` supplies the matching verified `StructureResolution`
-  and decoded cell to calculator-input translators;
+  and ordered exact `(PseudopotentialFile, Path)` resolutions to
+  calculator-input translators;
 - the existing `PseudopotentialFile` and byte-verifying
   `PseudopotentialLibrary` remain the one exact pseudopotential dependency and
   resolver rather than gaining a parallel record hierarchy;
@@ -42,12 +43,11 @@ The bounded architecture council converged on these version-one boundaries:
   canonical specification bytes and a deterministic derived
   `SimulationRecord`, even when that record is not persisted in a catalog.
 
-The atomic migration order is schema decisions first, then—in one unreleased
-repository-wide change—specification codecs and records, request replacement,
-derived identities, and projector return types. No projector may construct a
-placeholder source digest from the flattened request. Provider mapping gates
-must pass before version-one identities become public and immutable. Manifest
-persistence and removal of tool-side reconstruction follow that atomic change.
+The schema, specification codecs and records, request replacement, derived
+identities, and projector return types landed atomically. Projectors construct
+source references from exact canonical specifications rather than placeholder
+digests. Manifest-backed resolution is now implemented; removal of remaining
+tool-side reconstruction is the next migration step.
 
 ## Specification locations
 
@@ -62,7 +62,7 @@ projectkoios.simulations.dft.pw.relaxation.specification
 projectkoios.simulations.dft.pw.relaxation.request
 ```
 
-`PwDftSimulation` will own calculator-neutral structure,
+`PwDftSimulation` owns calculator-neutral structure,
 `delta_n_electrons`, spin, exchange-correlation, occupation, and
 pseudopotential requirements shared by SCF and relaxation. Stage-specific
 specification records will own sampling, relaxation scope, and convergence
@@ -114,7 +114,7 @@ meaning of an existing version.
 
 ## Manifest and resolution
 
-The manifest will use one strict schema version and complete key sets. Each
+The manifest uses one strict schema version and complete key sets. Each
 entry binds one `SimulationRecord` to one normalized relative `.json` path
 beneath an explicit library root.
 
@@ -129,9 +129,11 @@ Resolution must proceed in this order:
 7. verify every referenced structure and pseudopotential record identity; and
 8. return an immutable `SimulationResolution`.
 
-Dependency verification may consume caller-supplied neutral structure and
-pseudopotential libraries. The simulation library must not search arbitrary
-filesystem roots or substitute a record that merely has the same friendly ID.
+Dependency verification consumes caller-supplied neutral structure and
+pseudopotential libraries. `SimulationLibraryManifestLoader` additionally
+requires caller-supplied manifest byte size and SHA-256 before parsing. The
+simulation library does not search arbitrary filesystem roots or substitute a
+record that merely has the same friendly ID.
 
 ## Calculator-input boundary
 
@@ -161,22 +163,20 @@ value so evidence can verify what was requested.
 
 ## Atomic migration
 
-The implementation sequence is:
+The implementation sequence and current completion state are:
 
-1. extend `StructureLibrary` with an exact general `UnitCell` representation
-   and derivation provenance for ideal, ion-relaxed, and fully relaxed cells;
-2. define a protected neutral relaxation observation/result and outward QE/VASP
-   normalization adapters;
-3. define the protected exact `CalculatorInputRecord` and outward calculator
-   input translation, including charge and spin translation for SCF and both
-   relaxation scopes;
-4. freeze simulation schemas and dependency-reference rules;
-5. introduce SCF and relaxation specification records;
-6. atomically change existing request records to contain specifications;
-7. update recipes, workflows, integrations, tools, examples, and tests in the
-   same change;
-8. add the manifest-backed simulation library; and
-9. remove tool-side reconstruction of neutral requests.
+1. completed: extend `StructureLibrary` with an exact general `UnitCell`
+   representation and derivation provenance;
+2. completed: define protected relaxation observations/results and outward
+   normalization boundaries;
+3. completed: define exact `CalculatorInputRecord` and outward calculator-input
+   translation;
+4. completed: freeze simulation schemas and dependency-reference rules;
+5. completed: introduce SCF and relaxation specification records;
+6. completed: atomically change requests to contain specifications;
+7. completed: update recipes, workflows, integrations, examples, and tests;
+8. completed: add the manifest-backed simulation library; and
+9. pending: remove remaining tool-side reconstruction of neutral requests.
 
 No simultaneous old/new request API, compatibility alias, or alternate library
 is allowed.

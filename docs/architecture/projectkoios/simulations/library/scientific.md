@@ -3,10 +3,9 @@
 ## Status
 
 This document freezes the scientific content of version-one plane-wave DFT SCF
-and relaxation specifications. It does not itself publish canonical record
-bytes. The codec, record, request, source-reference, projector, and consumer
-migration is one atomic unreleased change after the fields below exist in the
-protected core.
+and relaxation specifications. The codec, record, request, source-reference,
+projector, and consumer migration is implemented in the protected core. A
+manifest-backed library now authenticates and resolves canonical record bytes.
 
 Provider normalization is a release gate for the resulting schema, not an
 excuse to derive provider-native fields first. A provider may support a proper
@@ -25,8 +24,8 @@ subset of neutral intent, but it must reject every unsupported value explicitly.
 It does not contain a decoded `UnitCell`, a calculation/stage type, an
 occurrence identifier, provider configuration, execution authority, evidence,
 or acceptance state. `SimulationResolution` supplies the exact matching
-`StructureResolution`, decoded cell, and verified pseudopotential repository
-entries required for calculator-input translation.
+`StructureResolution`, decoded cell, and ordered exact pseudopotential file/path
+resolutions required for calculator-input translation.
 
 ### Exchange-correlation identity
 
@@ -212,8 +211,9 @@ The migration order is:
 2. atomically add specification codecs and records, remove shared calculation
    type, replace both request shapes, establish derived identities, return
    `CalculatorInputRecord` from projectors, and update every consumer;
-3. add strict manifest-backed resolution and reviewed example records; then
-4. remove tool-side scientific reconstruction.
+3. completed: add strict manifest-backed resolution; then
+4. pending: publish reviewed study catalogs and remove remaining tool-side
+   scientific reconstruction.
 
 There is no mixed old/new request interval, compatibility facade, alias, or
 placeholder source identity. Before publication, all maintained QE/VASP

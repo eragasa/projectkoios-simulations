@@ -55,36 +55,23 @@ scientific preference.
 | The required value is not a `PseudopotentialFile` | `TypeError` |
 | A candidate disappears or becomes unreadable during inspection | The underlying filesystem exception propagates |
 
-The method does not suppress filesystem races. Consumers requiring a stable
-artifact should immediately construct and retain the exact repository entry;
-`PseudopotentialRepository.resolve()` verifies the bytes again when consumed.
-
-## `build_repository(required)`
-
-`required` must be an exact tuple of `PseudopotentialFile` values. A list or any
-other container raises `TypeError`; a tuple containing another value also raises
-`TypeError`.
-
-The method resolves requirements in caller order and returns
-`PseudopotentialRepository(entries=...)`. An empty tuple produces an empty
-repository. Repeated or metadata-conflicting declarations for the same artifact
-identity are rejected by `PseudopotentialRepository` as non-unique.
+The method does not suppress filesystem races. A consumer that retains a path
+must retain the exact `PseudopotentialFile` requirement with it and resolve or
+re-verify the bytes at the boundary where they are consumed.
 
 ## Example
 
 ```python
 from pathlib import Path
 
-from projectkoios.simulations.dft.pseudopotential_repository import (
+from projectkoios.simulations.dft.pseudopotential.library import (
     PseudopotentialLibrary,
 )
 
 # `required_file` is a fully specified PseudopotentialFile selected elsewhere.
 library = PseudopotentialLibrary(Path("/opt/pseudopotentials/quantum-espresso"))
 path = library.resolve(required_file)
-repository = library.build_repository((required_file,))
-assert repository.resolve(required_file) == path
 ```
 
-Creating the library, resolving a path, or building a repository does not run a
-calculator and does not constitute execution authorization.
+Creating the library or resolving a path does not run a calculator and does not
+constitute execution authorization.

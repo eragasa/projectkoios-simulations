@@ -2,16 +2,15 @@
 
 ## Status
 
-This node specifies a target protected-core capability. The production
-`projectkoios.simulations.library` package and its public records do not yet
-exist. Documentation precedes implementation so the new library can reuse the
-existing SCF and relaxation domain contracts rather than introduce a competing
-simulation hierarchy.
+This node documents the initial protected-core implementation. The production
+`projectkoios.simulations.library` package provides exact SCF and relaxation
+records, strict canonical codecs, authenticated manifest loading, and typed
+resolution of complete scientific dependencies.
 
 ## Purpose
 
-`SimulationLibrary` will catalog immutable, calculator-neutral calculation
-specifications. It will provide exact identity, deterministic representation,
+`SimulationLibrary` catalogs immutable, calculator-neutral calculation
+specifications. It provides exact identity, deterministic representation,
 integrity verification, provenance, and typed resolution for plane-wave DFT
 SCF and relaxation specifications.
 
@@ -36,13 +35,13 @@ The library stores the specification on the left. The request on the right is
 an occurrence envelope created by workflow composition. An `evaluation_id` is
 therefore never part of a specification's content identity.
 
-The specification types will be introduced by atomically refactoring the
-existing `PwDftScfRequest` and `PwDftRelaxationRequest` contracts. Parallel old
-and new request shapes, aliases, and compatibility facades are not permitted.
+The specification types were introduced by atomically refactoring the prior
+`PwDftScfRequest` and `PwDftRelaxationRequest` contracts. Parallel old and new
+request shapes, aliases, and compatibility facades are not permitted.
 
 ## Exact record identity
 
-A planned `SimulationRecord` carries:
+A `SimulationRecord` carries:
 
 - a stable qualified `simulation_id` used for human and manifest lookup;
 - a `SimulationRepresentation` distinguishing SCF and relaxation payloads;
@@ -91,6 +90,5 @@ input files remains outside this library.
 - select elemental chemical-potential phases.
 
 See [`scientific.md`](scientific.md) for the frozen version-one scientific
-schema, [`implementation.md`](implementation.md) for the planned module and
-migration rules, and [`schematics.md`](schematics.md) for identity and
-dependency flows.
+schema, [`implementation.md`](implementation.md) for the module and resolution
+rules, and [`schematics.md`](schematics.md) for identity and dependency flows.
