@@ -22,19 +22,13 @@ from projectkoios.integrations.quantumespresso.pw.nscf.configuration import (  #
 from projectkoios.integrations.quantumespresso.pw.nscf.projection import (  # noqa: E501
     QeNscfInputProjector,
 )
-from projectkoios.simulations.dft.pw.settings import (
-    CalculationType,
-    PwDftSettings,
-)
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
-from tests.projectkoios.simulations.dft.pw.scf.support import (
-    silicon_scf_request,
-)
+from projectkoios.simulations.structure import StructureResolution
+from tests.projectkoios.simulations.dft.pw.support import silicon_structure_resolution
 
 
 class QeNscfInputProjectorTest(unittest.TestCase):
     def test_projects_explicit_kpoint_order_and_saved_state_identity(self) -> None:
-        projection = QeNscfInputProjector(_configuration()).project(_simulation())
+        projection = QeNscfInputProjector(_configuration()).project(_structure())
 
         self.assertEqual(type(projection.system_card), QeSystemCard)
         self.assertEqual(type(projection.electrons_card), QeElectronsCard)
@@ -72,7 +66,7 @@ class QeNscfInputProjectorTest(unittest.TestCase):
         )
 
         with self.assertRaisesRegex(NotImplementedError, "smearing"):
-            QeNscfInputProjector(configuration).project(_simulation())
+            QeNscfInputProjector(configuration).project(_structure())
 
     def test_configuration_rejects_reducible_kpoint_policy(self) -> None:
         with self.assertRaisesRegex(ValueError, "requires symmetry"):
@@ -119,12 +113,8 @@ def _configuration() -> QeNscfProjectionConfiguration:
     )
 
 
-def _simulation() -> PwDftSimulation:
-    source = silicon_scf_request().simulation
-    return PwDftSimulation(
-        unit_cell=source.unit_cell,
-        settings=PwDftSettings(calculation_type=CalculationType.nscf),
-    )
+def _structure() -> StructureResolution:
+    return silicon_structure_resolution()
 
 
 if __name__ == "__main__":

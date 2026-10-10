@@ -327,6 +327,26 @@ def test_workflow_namespace_relocation_preserves_historical_transfer() -> None:
     ]
 
 
+def test_materials_project_integration_is_bound_to_exact_ksdft_source() -> None:
+    transfer = _transfer()
+    extraction = next(
+        item
+        for item in transfer["extractions"]
+        if item["component"] == "projectkoios.integrations.materials_project"
+    )
+
+    assert extraction["source_commit"] == ("c47d3cfcee7d4a46b66b14426650d5d811b3848d")
+    assert extraction["source_tree"] == "011e125d5c6a9a686643ff96bd20a8b35e4c55d3"
+    assert extraction["source_implementation_tree"] == (
+        "e3c7a01a94050a4e9e79099186ff872b634f420d"
+    )
+    assert extraction["source_test_tree"] == (
+        "5bd346469a95f14577d9a546e1122d8c074f7ca2"
+    )
+    assert extraction["calculator_execution_performed"] is False
+    assert extraction["network_retrieval_performed"] is False
+
+
 def test_preserved_historical_license_files_have_declared_identities() -> None:
     transfer = _transfer()
 
@@ -391,7 +411,7 @@ def test_physkit_runtime_dependency_has_a_compatible_lower_bound() -> None:
     with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as stream:
         project = tomllib.load(stream)["project"]
 
-    assert "projectkoios-physkit>=0.1.0" in project["dependencies"]
+    assert "projectkoios-physkit>=0.1.2" in project["dependencies"]
     assert not any("git+" in dependency for dependency in project["dependencies"])
     readme = (REPOSITORY_ROOT / "README.md").read_text()
     assert "projectkoios.integrations.wannier90/provenance.json" in readme

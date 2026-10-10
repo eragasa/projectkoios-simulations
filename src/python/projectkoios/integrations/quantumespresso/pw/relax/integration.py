@@ -10,14 +10,9 @@ from projectkoios.integrations.quantumespresso.pw.relax.configuration import (  
 from projectkoios.integrations.quantumespresso.pw.relax.projection import (  # noqa: E501
     QeRelaxInputProjector,
 )
-from projectkoios.integrations.quantumespresso.pw.relaxation.projection import (  # noqa: E501
-    QeRelaxationInputProjection,
-)
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.pw.relaxation.base import (
-    PwDftRelaxationRequest,
-    PwDftRelaxationScope,
-)
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.dft.pw.relaxation.base import PwDftRelaxationScope
 from projectkoios.simulations.dft.pw.relaxation.capabilities import (
     PW_DFT_RELAXATION_BACKEND_DESCRIPTIONS,
     PwDftRelaxationBackendDescription,
@@ -25,6 +20,8 @@ from projectkoios.simulations.dft.pw.relaxation.capabilities import (
 from projectkoios.simulations.dft.pw.relaxation.integration import (
     PwDftRelaxationIntegration,
 )
+from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
+from projectkoios.simulations.structure import StructureResolution
 
 
 @dataclass(frozen=True, slots=True)
@@ -52,6 +49,10 @@ class QePwRelaxIntegration(PwDftRelaxationIntegration):
             supported_scopes=(PwDftRelaxationScope.ATOMIC_POSITIONS,),
         )
 
-    def project(self, request: PwDftRelaxationRequest) -> QeRelaxationInputProjection:
-        """Return deterministic fixed-cell QE input."""
-        return QeRelaxInputProjector(self.configuration).project(request)
+    def project(
+        self,
+        request: PwDftRelaxationRequest,
+        structure: StructureResolution,
+    ) -> CalculatorInputRecord:
+        """Return exact prepared fixed-cell QE input."""
+        return QeRelaxInputProjector(self.configuration).project(request, structure)

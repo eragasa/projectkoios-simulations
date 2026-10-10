@@ -18,7 +18,7 @@ SOURCE_MANIFEST_SHA256 = (
     "a941ad9efec74067fcf36dc80e05cc11834dd5a59be75c16f38ad61ad375c87f"
 )
 RELOCATION_MANIFEST_SHA256 = (
-    "f510e2c9e9175d30d633fb74db2f1d1dd33f1fc159d6baea6e38aefc8f8dcdb7"
+    "e3abc3492cf46b35dd842da5ca849777e5f6e776311e207a7f53513b5e374409"
 )
 APPLICATIONS_COMMIT = "416be52d539bfbffdbc8a27bd8e13de65404821b"
 REPLAY_OVERLAY_COMMIT = "7b687fb23b9877b744bfba3455040db2cbf94292"
@@ -29,6 +29,30 @@ FIXTURE_SHA256 = "bfc9f867474c86d20359a23563cf3d6277928bcf435a126357fd2bdc4732f5
 OVERLAY_SOURCE_PATH = (
     "examples/projectkoios/applications/pw_dft_scf/providers/quantumespresso/"
     "Si/primitive/convergence/joint/replay.py"
+)
+EVOLVED_AFTER_RELOCATION = frozenset(
+    {
+        "examples/workflows/pw_dft_scf/README.md",
+        "examples/workflows/pw_dft_scf/campaigns/qe-cutoff.toml",
+        "examples/workflows/pw_dft_scf/campaigns/qe-grid.toml",
+        "examples/workflows/pw_dft_scf/campaigns/qe-kpoint.toml",
+        "examples/workflows/pw_dft_scf/campaigns/qe-single.toml",
+        "examples/workflows/pw_dft_scf/campaigns/vasp-cutoff.toml",
+        "examples/workflows/pw_dft_scf/campaigns/vasp-grid.toml",
+        "examples/workflows/pw_dft_scf/campaigns/vasp-kpoint.toml",
+        "examples/workflows/pw_dft_scf/campaigns/vasp-single.toml",
+        "tools/pw_dft_scf/README.md",
+        "tools/pw_dft_scf/config/README.md",
+        "tools/pw_dft_scf/config/catalog.toml",
+        "tools/pw_dft_scf/config/runner.toml",
+        "tools/pw_dft_scf/configuration.py",
+        "tools/pw_dft_scf/environment.py",
+        "tools/pw_dft_scf/plot_structure.py",
+        "tools/pw_dft_scf/render_inputs.py",
+        "tests/examples/test__pw_dft_relaxation_qe_projection.py",
+        "tests/tools/pw_dft_scf/test__InputProjectionRunner.py",
+        "tests/support/exact_provider_graph_probe.py",
+    }
 )
 
 
@@ -69,9 +93,13 @@ def test_complete_source_closure_has_explicit_final_dispositions() -> None:
         "test-support": 1,
     }
 
+    destination_paths = {row["destination_path"] for row in relocation_rows}
+    assert destination_paths > EVOLVED_AFTER_RELOCATION
     for row in relocation_rows:
         destination = REPOSITORY_ROOT / row["destination_path"]
         assert destination.is_file(), row["destination_path"]
+        if row["destination_path"] in EVOLVED_AFTER_RELOCATION:
+            continue
         assert len(destination.read_bytes()) == int(row["destination_bytes"])
         assert _sha256(destination) == row["destination_sha256"]
 

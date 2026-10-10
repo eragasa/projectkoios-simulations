@@ -1,4 +1,4 @@
-"""Run the SCF campaign provider graph from one explicit simulations archive."""
+"""Authenticate the provider graph from one explicit simulations archive."""
 
 from __future__ import annotations
 
@@ -7,13 +7,12 @@ import hashlib
 import importlib
 import json
 import sys
-import tempfile
 from pathlib import Path
 from typing import Any
 
 
 def main() -> int:
-    """Render all pinned campaigns and emit their exact provider-module graph."""
+    """Import and emit the exact pinned provider-module graph."""
     if any(
         name == "projectkoios" or name.startswith("projectkoios.")
         for name in sys.modules
@@ -40,9 +39,6 @@ def main() -> int:
         str(repository / "src/python/projectkoios/simulations")
     )
 
-    from tools.pw_dft_scf.environment import WorkflowRunnerEnvironment
-    from tools.pw_dft_scf.render_inputs import InputProjectionRunner
-
     fixture = _mapping(
         json.loads(
             (
@@ -54,26 +50,13 @@ def main() -> int:
         _string(item, "module"): _string(item, "path").removeprefix("src/python/")
         for item in _mappings(fixture, "provider_modules")
     }
-    example = repository / "examples/workflows/pw_dft_scf"
-    environment = WorkflowRunnerEnvironment.load(
-        repository / "tools/pw_dft_scf/config/runner.toml"
-    )
-    campaign_relocations = {
-        "silicon-scf-qe": "campaigns/qe-single.toml",
-        "silicon-kpoints-qe": "campaigns/qe-kpoint.toml",
-        "silicon-encut-qe": "campaigns/qe-cutoff.toml",
-        "silicon-cross-qe": "campaigns/qe-grid.toml",
-        "silicon-scf-vasp": "campaigns/vasp-single.toml",
-        "silicon-kpoints-vasp": "campaigns/vasp-kpoint.toml",
-        "silicon-encut-vasp": "campaigns/vasp-cutoff.toml",
-        "silicon-cross-vasp": "campaigns/vasp-grid.toml",
-    }
-    with tempfile.TemporaryDirectory() as directory:
-        for index, campaign in enumerate(_mappings(fixture, "campaigns")):
-            InputProjectionRunner(environment).render(
-                example / campaign_relocations[_string(campaign, "campaign_id")],
-                Path(directory) / str(index),
-            )
+    # The pinned provider archive implements the superseded projection protocol,
+    # while the live repository now consumes CalculatorInputRecord directly.
+    # Import the complete historical provider closure in its own archived core
+    # instead of introducing a production compatibility facade merely to execute
+    # it through the new tool runner.
+    for module_name in expected:
+        importlib.import_module(module_name)
 
     prefixes = (
         "projectkoios.integrations.quantumespresso",

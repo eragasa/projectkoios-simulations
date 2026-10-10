@@ -11,11 +11,10 @@ from projectkoios.integrations.quantumespresso.pw.execution import (
 from projectkoios.integrations.quantumespresso.pw.scf import (
     integration as qe_integration,
 )
-from projectkoios.integrations.quantumespresso.pw.simulation import (
-    QuantumEspressoSimulation,
-)
-from projectkoios.simulations.dft.pseudopotential_repository import (
-    PseudopotentialRepository,
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.dft.pseudopotential import PseudopotentialFile
+from projectkoios.simulations.dft.pseudopotential.library import (
+    PseudopotentialLibrary,
 )
 from projectkoios.simulations.dft.pw.scf.actions import (
     AnalyzePwDftScfOutput,
@@ -43,8 +42,9 @@ from projectkoios.simulations.execution import (
 class QePwDftScfTask(PwDftScfHandlerTask):
     """Bind one QE simulation and operator resources to workflow identities."""
 
-    simulation: QuantumEspressoSimulation
-    pseudopotential_repository: PseudopotentialRepository
+    prepared_input: CalculatorInputRecord
+    pseudopotentials: tuple[PseudopotentialFile, ...]
+    pseudopotential_library: PseudopotentialLibrary
     executable: Path
     working_directory: Path
     timeout_seconds: float | None = None
@@ -52,12 +52,16 @@ class QePwDftScfTask(PwDftScfHandlerTask):
 
     def __post_init__(self) -> None:
         super(QePwDftScfTask, self).__post_init__()
-        if type(self.simulation) is not QuantumEspressoSimulation:
-            raise TypeError("simulation must be a QuantumEspressoSimulation")
-        if type(self.pseudopotential_repository) is not PseudopotentialRepository:
-            raise TypeError(
-                "pseudopotential_repository must be a PseudopotentialRepository"
-            )
+        if type(self.prepared_input) is not CalculatorInputRecord:
+            raise TypeError("prepared_input must be a CalculatorInputRecord")
+        if type(self.pseudopotentials) is not tuple or not self.pseudopotentials:
+            raise ValueError("pseudopotentials must be a nonempty tuple")
+        if any(
+            not isinstance(item, PseudopotentialFile) for item in self.pseudopotentials
+        ):
+            raise TypeError("pseudopotentials must contain PseudopotentialFile values")
+        if type(self.pseudopotential_library) is not PseudopotentialLibrary:
+            raise TypeError("pseudopotential_library must be a PseudopotentialLibrary")
         if not isinstance(self.executable, Path) or not self.executable.is_absolute():
             raise ValueError("executable must be an absolute Path")
         if not isinstance(self.working_directory, Path):
@@ -72,8 +76,10 @@ class QePwDftScfTask(PwDftScfHandlerTask):
             raise ValueError("timeout_seconds must be a positive float or None")
         if type(self.execution_authorized) is not bool:
             raise TypeError("execution_authorized must be a bool")
-        if Path(self.output_artifact_id).name != self.simulation.output_filename:
-            raise ValueError("output_artifact_id must name the simulation output file")
+        if Path(self.output_artifact_id).name in {
+            artifact.filename for artifact in self.prepared_input.artifacts
+        }:
+            raise ValueError("output artifact must differ from prepared input files")
 
 
 @dataclass(frozen=True, slots=True)
@@ -116,10 +122,12 @@ class QePwDftScfActionHandler(PwDftScfActionHandler):
         submitted = PwDftScfTaskSubmitted(task_id=task.task_id)
         try:
             self.executor.execute(
-                simulation=task.simulation,
-                repository=task.pseudopotential_repository,
+                prepared_input=task.prepared_input,
+                pseudopotentials=task.pseudopotentials,
+                pseudopotential_library=task.pseudopotential_library,
                 executable=task.executable,
                 working_directory=task.working_directory,
+                output_filename=Path(task.output_artifact_id).name,
                 timeout_seconds=task.timeout_seconds,
                 execution_authorized=task.execution_authorized,
             )

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -14,9 +13,7 @@ from projectkoios.integrations.vasp.pw_dft_scf.projection import (
     VASP_SCF_INTEGRATION_ID,
     VaspScfInputProjector,
 )
-from projectkoios.simulations.dft.pw.scf.integration import (
-    PwDftScfInputProjection,
-)
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
 from tools.pw_dft_scf.environment import (
     WorkflowRunnerEnvironment,
 )
@@ -34,51 +31,39 @@ class InputProjectionRunner:
         request = loaded.campaign.recipe.base_request
         integration_id = loaded.campaign.integration_id
         if integration_id == qe_projection.QE_SCF_INTEGRATION_ID:
-            projection = qe_projection.QeScfInputProjector(
+            prepared_input = qe_projection.QeScfInputProjector(
                 configuration=self.environment.loader.qe_projection_configuration(
                     loaded.projection_profile_id
                 )
-            ).project(request)
+            ).project(request, loaded.structure)
         elif integration_id == VASP_SCF_INTEGRATION_ID:
-            projection = VaspScfInputProjector(
+            prepared_input = VaspScfInputProjector(
                 configuration=(
                     self.environment.loader.vasp_projection_configuration(
                         loaded.projection_profile_id
                     )
                 )
-            ).project(request)
+            ).project(request, loaded.structure)
         else:
             raise ValueError(f"unsupported integration: {integration_id.value}")
-        return self._write_projection(projection, output_directory)
+        return self._write_prepared_input(prepared_input, output_directory)
 
     @staticmethod
-    def _write_projection(
-        projection: PwDftScfInputProjection,
+    def _write_prepared_input(
+        prepared_input: CalculatorInputRecord,
         output_directory: Path,
     ) -> tuple[Path, ...]:
-        """Write rendered inputs without resolving external pseudopotentials."""
+        """Write exact prepared inputs without resolving external dependencies."""
         output_directory.mkdir(parents=True, exist_ok=True)
         if output_directory.is_symlink():
             raise ValueError("output_directory must not be a symlink")
         paths: list[Path] = []
-        for rendered in projection.rendered_inputs:
-            destination = output_directory / rendered.filename
-            destination.write_text(rendered.text, encoding="ascii")
+        for artifact in prepared_input.artifacts:
+            destination = output_directory / artifact.filename
+            destination.write_bytes(artifact.content)
             paths.append(destination)
-        metadata_path = output_directory / "input-projection.json"
-        metadata_path.write_text(
-            json.dumps(
-                {
-                    "integration_id": projection.integration_id.value,
-                    "qualification": projection.qualification,
-                    "required_external_inputs": projection.required_external_inputs,
-                },
-                indent=2,
-                sort_keys=True,
-            )
-            + "\n",
-            encoding="ascii",
-        )
+        metadata_path = output_directory / "calculator-input-record.json"
+        metadata_path.write_bytes(prepared_input.canonical_bytes)
         paths.append(metadata_path)
         return tuple(paths)
 

@@ -175,6 +175,10 @@ class QeScfData:
         return self.observation.wavefunction_cutoff_ev
 
     @property
+    def total_magnetization_electrons(self) -> float | None:
+        return self.observation.total_magnetization_electrons
+
+    @property
     def diagnostics(self) -> tuple[PwDftScfDiagnostic, ...]:
         return self.observation.diagnostics
 
@@ -263,6 +267,12 @@ class QeScfDataExtractor:
             program_version=parsed.program_version,
             irreducible_kpoint_count=parsed.k_point_count,
             wavefunction_cutoff_ev=self._ry_to_ev(parsed.wavefunction_cutoff_ry),
+            # In collinear spin-only QE output, one Bohr magneton per cell is
+            # numerically one spin-channel electron difference. Preserve the
+            # provider unit in the stream record and normalize only here.
+            total_magnetization_electrons=(
+                parsed.total_magnetization_bohr_magneton_per_cell
+            ),
             diagnostics=diagnostics,
         )
         qexsd = (

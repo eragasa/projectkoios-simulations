@@ -26,12 +26,21 @@ from projectkoios.integrations.quantumespresso.saved_state import (
     QeSavedStateManifestVerifier,
     QeSavedStatePseudopotential,
 )
-from projectkoios.physkit.periodic.unit_cell import UnitCellJsonCodec
-from projectkoios.simulations.dft.pw.settings import CalculationType, PwDftSettings
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from projectkoios.physkit.periodic.unit_cell import (
+    ConventionalUnitCell,
+    PrimitiveUnitCell,
+    UnitCell,
+    UnitCellJsonCodec,
+)
 from projectkoios.simulations.execution import (
     CalculatorExecutionRequest,
     CalculatorExecutor,
+)
+from projectkoios.simulations.structure import (
+    StructureRecord,
+    StructureRepresentation,
+    StructureResolution,
+    TransferredStructureProvenance,
 )
 
 _SHA256 = re.compile(r"[0-9a-f]{64}")
@@ -124,12 +133,34 @@ class QeNscfCalculationRunner:
             structure_path.read_text(encoding="utf-8"),
             expected_structure_id=configuration.structure_id,
         )
+        representation = {
+            PrimitiveUnitCell: StructureRepresentation.primitive,
+            ConventionalUnitCell: StructureRepresentation.conventional,
+            UnitCell: StructureRepresentation.unit_cell,
+        }.get(type(unit_cell))
+        if representation is None:
+            raise TypeError("decoded NSCF structure has an unsupported unit-cell type")
+        structure_record = StructureRecord(
+            structure_id=configuration.structure_id,
+            representation=representation,
+            schema_version=1,
+            sha256=configuration.structure.sha256,
+            byte_size=configuration.structure.byte_size,
+            provenance=TransferredStructureProvenance(
+                source="QeNscfCalculationConfiguration",
+                revision=_sha256(configuration_path),
+                record_path=f"structure/{structure_path.name}",
+                source_sha256=configuration.structure.sha256,
+                result_sha256=configuration.structure.sha256,
+            ),
+        )
         projection = QeNscfInputProjector(
             configuration.projection_configuration()
         ).project(
-            PwDftSimulation(
+            StructureResolution(
+                record=structure_record,
+                path=structure_path,
                 unit_cell=unit_cell,
-                settings=PwDftSettings(calculation_type=CalculationType.nscf),
             )
         )
 

@@ -13,6 +13,12 @@ runnable tutorials.
 | [`workflows/pw_dft_relaxation/qe_projection.py`](workflows/pw_dft_relaxation/qe_projection.py) | Project calculator-neutral relaxation intent into QE-native input. | Never |
 | [`workflows/pw_dft_scf/replay_normalized_evidence.py`](workflows/pw_dft_scf/replay_normalized_evidence.py) | Replay normalized SCF evidence through workflow policies. | Never |
 
+## Exact scientific libraries
+
+[`libraries/simulations/`](libraries/simulations/README.md) contains the
+authenticated canonical simulation records selected by the maintained SCF
+campaigns. Catalog resolution performs no calculator execution.
+
 ## Workflow declarations
 
 [`workflows/`](workflows/README.md) contains compact, calculator-free examples of

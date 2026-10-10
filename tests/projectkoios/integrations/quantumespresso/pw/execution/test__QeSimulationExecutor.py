@@ -6,7 +6,6 @@ import tempfile
 import unittest
 from pathlib import Path
 
-import numpy as np
 import pytest
 
 from projectkoios.integrations.quantumespresso.pseudopotential import (
@@ -16,30 +15,16 @@ from projectkoios.integrations.quantumespresso.pseudopotential import (
 from projectkoios.integrations.quantumespresso.pw.execution import (
     QeSimulationExecutor,
 )
-from projectkoios.integrations.quantumespresso.pw.inputfile.model import (
-    ControlBlock,
-    QePwInputFile,
+from projectkoios.simulations.calculator import CalculatorIntegrationId
+from projectkoios.simulations.calculator_input import (
+    CalculatorExternalInputRequirement,
+    CalculatorInputArtifact,
+    CalculatorInputRecord,
+    CalculatorInputSourceReference,
 )
-from projectkoios.integrations.quantumespresso.pw.simulation import (
-    QuantumEspressoSimulation,
+from projectkoios.simulations.dft.pseudopotential.library import (
+    PseudopotentialLibrary,
 )
-from projectkoios.physkit.periodic import DirectLattice3D
-from projectkoios.physkit.periodic.unit_cell import (
-    Atom,
-    AtomicBasis,
-    UnitCell,
-)
-from projectkoios.physkit.units import (
-    PhysicalUnit,
-    ScalarQuantity,
-    Unitless,
-    VectorQuantity,
-)
-from projectkoios.simulations.dft.pseudopotential_repository import (
-    PseudopotentialRepository,
-    PseudopotentialRepositoryEntry,
-)
-from projectkoios.simulations.dft.pw.settings import CalculationType
 from projectkoios.simulations.execution import (
     CalculatorExecutionError,
     ExecutionStatus,
@@ -52,27 +37,50 @@ class QeSimulationExecutorTest(unittest.TestCase):
     def test_rejects_execution_without_explicit_authorization(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             working_directory = Path(temporary_directory)
-            simulation, repository = _simulation_and_repository(working_directory)
+            prepared, pseudopotential, library = _prepared_input_and_library(
+                working_directory
+            )
 
             with self.assertRaisesRegex(PermissionError, "not authorized"):
                 QeSimulationExecutor().execute(
-                    simulation,
-                    repository,
+                    prepared,
+                    (pseudopotential,),
+                    library,
                     Path(sys.executable),
                     working_directory,
                 )
 
             self.assertEqual(tuple(working_directory.iterdir()), ())
 
-    def test_records_missing_repository_artifact_without_starting_qe(self) -> None:
+    def test_accepts_relaxation_preparation_before_authorization_gate(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             working_directory = Path(temporary_directory)
-            simulation, repository = _simulation_and_repository(working_directory)
+            prepared, pseudopotential, library = _prepared_input_and_library(
+                working_directory,
+                preparation_operation="projectkoios.qe.pw.relaxation.prepare",
+            )
+
+            with self.assertRaisesRegex(PermissionError, "not authorized"):
+                QeSimulationExecutor().execute(
+                    prepared,
+                    (pseudopotential,),
+                    library,
+                    Path(sys.executable),
+                    working_directory,
+                )
+
+    def test_records_missing_library_artifact_without_starting_qe(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            working_directory = Path(temporary_directory)
+            prepared, pseudopotential, library = _prepared_input_and_library(
+                working_directory
+            )
 
             with self.assertRaises(CalculatorExecutionError) as caught:
                 QeSimulationExecutor().execute(
-                    simulation,
-                    repository,
+                    prepared,
+                    (pseudopotential,),
+                    library,
                     Path(sys.executable),
                     working_directory,
                     execution_authorized=True,
@@ -90,30 +98,58 @@ class QeSimulationExecutorTest(unittest.TestCase):
             self.assertFalse((working_directory / "pw.out").exists())
 
 
-def _simulation_and_repository(
+def _prepared_input_and_library(
     working_directory: Path,
-) -> tuple[QuantumEspressoSimulation, PseudopotentialRepository]:
-    pseudopotential_file = _pseudopotential_file()
-    simulation = QuantumEspressoSimulation(
-        input_file=QePwInputFile(
-            control_block=ControlBlock(
-                calculation_type=CalculationType.scf,
-                pseudo_dir=".",
-            ),
-            unit_cell=_unit_cell(),
-            groups=(),
+    *,
+    preparation_operation: str = "projectkoios.qe.pw.scf.prepare",
+) -> tuple[CalculatorInputRecord, QePseudopotentialFile, PseudopotentialLibrary]:
+    pseudopotential = _pseudopotential_file()
+    content = (
+        b"&CONTROL\n calculation = 'scf'\n pseudo_dir = './'\n outdir = './tmp/'\n/\n"
+    )
+    prepared = CalculatorInputRecord(
+        input_id="Si.QE.PreparedInput",
+        schema_version=1,
+        source=CalculatorInputSourceReference(
+            simulation_id="Si.QE.SCF",
+            representation="projectkoios.pw-dft-scf+json",
+            schema_version=1,
+            byte_size=100,
+            sha256="1" * 64,
         ),
-        pseudopotentials=(pseudopotential_file,),
-    )
-    repository = PseudopotentialRepository(
-        entries=(
-            PseudopotentialRepositoryEntry(
-                pseudopotential_file=pseudopotential_file,
-                path=working_directory / "repository" / "Si.upf",
+        integration_id=CalculatorIntegrationId("quantum-espresso"),
+        calculator_name="Quantum ESPRESSO pw.x",
+        calculator_version_constraint=">=7.5,<8",
+        representation="quantum-espresso-pw-input",
+        artifacts=(
+            CalculatorInputArtifact(
+                role="primary-input",
+                filename="pw.in",
+                media_type="text/plain; charset=us-ascii",
+                content=content,
+                byte_size=len(content),
+                sha256=hashlib.sha256(content).hexdigest(),
             ),
-        )
+        ),
+        external_requirements=(
+            CalculatorExternalInputRequirement(
+                role="pseudopotential",
+                stable_id=f"Si.{pseudopotential.sha256}",
+                filename=pseudopotential.filename,
+                format="upf;version=2.0.1",
+                byte_size=pseudopotential.byte_size,
+                sha256=pseudopotential.sha256,
+                provenance="canonical-simulation-specification:" + "1" * 64,
+                element_symbol="Si",
+            ),
+        ),
+        mappings=(),
+        preparation_operation=preparation_operation,
+        preparation_version="1",
     )
-    return simulation, repository
+    # The directory exists but intentionally lacks the exact required bytes, so
+    # execution preflight exercises PseudopotentialLibrary's fail-closed lookup.
+    return prepared, pseudopotential, PseudopotentialLibrary(working_directory)
 
 
 def _pseudopotential_file() -> QePseudopotentialFile:
@@ -130,25 +166,6 @@ def _pseudopotential_file() -> QePseudopotentialFile:
         filename="Si.upf",
         sha256=hashlib.sha256(content).hexdigest(),
         byte_size=len(content),
-    )
-
-
-def _unit_cell() -> UnitCell:
-    return UnitCell(
-        direct_lattice=DirectLattice3D(
-            a1=np.array([1.0, 0.0, 0.0]),
-            a2=np.array([0.0, 1.0, 0.0]),
-            a3=np.array([0.0, 0.0, 1.0]),
-        ),
-        lattice_parameter=ScalarQuantity(5.43, PhysicalUnit("angstrom")),
-        atomic_basis=AtomicBasis(
-            atoms=(
-                Atom(
-                    symbol="Si",
-                    position_fractional=VectorQuantity(np.zeros(3), Unitless()),
-                ),
-            )
-        ),
     )
 
 

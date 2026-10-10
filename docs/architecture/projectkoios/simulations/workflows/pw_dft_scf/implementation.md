@@ -63,7 +63,9 @@ replay overlay only, exact fixture identity, and calculator-free execution.
 ## Documentation map
 
 Every documented production package, subpackage, and public class node under
-this SCF capability has an `index.md`, `schematics.md`, and `implementation.md`
-trio. The wheel-carried CPN has its own architecture nodes. Repository tools and
-compact examples use concise READMEs rather than misleading production-style
-class documentation.
+this SCF capability has the required `index.md`, `schematics.md`, and
+`implementation.md` trio. A node also adds `scientific.md` or `numeric.md` when
+it owns physical interpretation or numerical convergence claims that require
+separate qualification and citations. The wheel-carried CPN has its own
+architecture nodes. Repository tools and compact examples use concise READMEs
+rather than misleading production-style class documentation.

@@ -68,12 +68,14 @@ class QeRelaxationCalculationConfiguration:
     pseudopotential_formalism: str
     pseudopotential_relativistic_treatment: str
     pseudopotential_upf_version: str
+    pseudopotential_valence_electrons: int
     pseudopotential_mass_amu: float
     kpoint_mesh: tuple[int, int, int]
     kpoint_shift: tuple[int, int, int]
     wavefunction_cutoff_ry: float
     charge_density_cutoff_ry: float
     electronic_tolerance_ry: float
+    electronic_atol_ry: float
     ionic_relaxation: QeIonicRelaxationOptions
     lattice_vector_relaxation: QeLatticeVectorRelaxationOptions | None
     prefix: str
@@ -123,6 +125,11 @@ class QeRelaxationCalculationConfiguration:
             ("pseudopotential_upf_version", self.pseudopotential_upf_version),
         ):
             _validate_string(text_value, label)
+        if (
+            type(self.pseudopotential_valence_electrons) is not int
+            or self.pseudopotential_valence_electrons <= 0
+        ):
+            raise ValueError("pseudopotential_valence_electrons must be positive")
         for label, numeric_value in (
             ("pseudopotential_mass_amu", self.pseudopotential_mass_amu),
             ("wavefunction_cutoff_ry", self.wavefunction_cutoff_ry),
@@ -130,6 +137,12 @@ class QeRelaxationCalculationConfiguration:
             ("electronic_tolerance_ry", self.electronic_tolerance_ry),
         ):
             _positive_float(numeric_value, label)
+        if (
+            type(self.electronic_atol_ry) is not float
+            or not math.isfinite(self.electronic_atol_ry)
+            or self.electronic_atol_ry < 0.0
+        ):
+            raise ValueError("electronic_atol_ry must be finite and nonnegative")
         if self.charge_density_cutoff_ry < self.wavefunction_cutoff_ry:
             raise ValueError(
                 "charge_density_cutoff_ry must not be below wavefunction cutoff"

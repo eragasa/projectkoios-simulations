@@ -3,6 +3,7 @@ from __future__ import annotations
 import unittest
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.scf.actions import (
     AnalyzePwDftScfOutput,
     RegisterPwDftScfTask,
@@ -12,7 +13,6 @@ from projectkoios.simulations.dft.pw.scf.base import (
     PwDftScfAction,
     PwDftScfNativeArtifact,
     PwDftScfObservation,
-    PwDftScfRequest,
 )
 from projectkoios.simulations.dft.pw.scf.events import (
     PwDftScfOutputAnalyzed,
@@ -27,10 +27,9 @@ from projectkoios.simulations.dft.pw.scf.handler import (
     ReplayPwDftScfActionHandler,
     ReplayPwDftScfTask,
 )
-from projectkoios.simulations.dft.pw.scf.integration import (
-    PwDftScfInputProjection,
-    PwDftScfIntegration,
-)
+from projectkoios.simulations.dft.pw.scf.integration import PwDftScfIntegration
+from projectkoios.simulations.dft.pw.scf.request import PwDftScfRequest
+from projectkoios.simulations.structure import StructureResolution
 
 
 class PwDftScfActionHandlerTest(unittest.TestCase):
@@ -171,7 +170,11 @@ class _FakeIntegration(PwDftScfIntegration):
     def integration_id(self) -> CalculatorIntegrationId:
         return CalculatorIntegrationId(value="fake")
 
-    def project(self, request: PwDftScfRequest) -> PwDftScfInputProjection:
+    def project(
+        self,
+        request: PwDftScfRequest,
+        structure: StructureResolution,
+    ) -> CalculatorInputRecord:
         raise NotImplementedError
 
     def analyze(self, output_artifact_id: str) -> PwDftScfObservation:

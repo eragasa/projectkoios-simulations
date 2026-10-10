@@ -20,7 +20,6 @@ from projectkoios.simulations.dft.pw.bands import (
     BandPathVertex,
     PwDftBandsSimulation,
 )
-from projectkoios.simulations.dft.pw.settings import CalculationType, PwDftSettings
 from projectkoios.simulations.dft.pw.setyawan_curtarolo_2010 import (
     SetyawanCurtaroloAppendixACase,
     SetyawanCurtaroloLattice,
@@ -28,7 +27,9 @@ from projectkoios.simulations.dft.pw.setyawan_curtarolo_2010 import (
     SetyawanCurtaroloPathBindingRequest,
     SetyawanCurtaroloPathDefinition,
 )
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from tests.projectkoios.simulations.dft.pw.support import (
+    resolved_pw_dft_simulation,
+)
 
 _HARTREE_TO_EV = 27.211386245988
 _BOHR_TO_ANGSTROM = 0.529177210903
@@ -37,10 +38,7 @@ _BOHR_TO_ANGSTROM = 0.529177210903
 class QeBandsDataTest(unittest.TestCase):
     def test_projects_a_bound_setyawan_curtarolo_path(self) -> None:
         qexsd = QeQexsdData.from_document(_document())
-        simulation = PwDftSimulation(
-            unit_cell=qexsd.final_structure.unit_cell,
-            settings=PwDftSettings(CalculationType.bands),
-        )
+        simulation = resolved_pw_dft_simulation(qexsd.final_structure.unit_cell)
         lattice_parameter = simulation.lattice_vectors_angstrom[0][0]
         definition = SetyawanCurtaroloPathDefinition(
             SetyawanCurtaroloLattice(
@@ -270,10 +268,7 @@ def _path() -> BandPath:
 
 def _calculation(path: BandPath, qexsd: QeQexsdData) -> PwDftBandsSimulation:
     return PwDftBandsSimulation(
-        simulation=PwDftSimulation(
-            unit_cell=qexsd.final_structure.unit_cell,
-            settings=PwDftSettings(CalculationType.bands),
-        ),
+        simulation=resolved_pw_dft_simulation(qexsd.final_structure.unit_cell),
         path=path,
     )
 

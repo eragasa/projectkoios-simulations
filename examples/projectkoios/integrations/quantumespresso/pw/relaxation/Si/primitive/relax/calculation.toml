@@ -1,4 +1,4 @@
-schema_version = 1
+schema_version = 2
 calculation_id = "si-primitive-qe75-relax"
 phase = "relax"
 integration_id = "quantum-espresso"
@@ -26,6 +26,7 @@ exchange_correlation = "PBE"
 formalism = "USPP"
 relativistic_treatment = "scalar-relativistic"
 upf_version = "2.0.1"
+valence_electrons = 4
 mass_amu = 28.086
 
 [sampling]
@@ -33,7 +34,10 @@ kpoint_mesh = [14, 14, 14]
 kpoint_shift = [0, 0, 0]
 wavefunction_cutoff_ry = 40.0
 charge_density_cutoff_ry = 320.0
+# QE native electronic convergence threshold, in Ry.
 electronic_tolerance_ry = 1.0e-6
+# Absolute Ry tolerance used only for neutral-eV-to-native-Ry comparison.
+electronic_atol_ry = 1.0e-15
 
 [ionic_relaxation]
 dynamics = "bfgs"

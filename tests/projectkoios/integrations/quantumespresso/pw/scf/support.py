@@ -3,36 +3,20 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
-import numpy as np
-
 from projectkoios.integrations.quantumespresso.pseudopotential import (
     QePseudopotential,
     QePseudopotentialFile,
 )
-from projectkoios.integrations.quantumespresso.pw.inputfile.model import (
-    ControlBlock,
-    QePwInputFile,
+from projectkoios.simulations.calculator import CalculatorIntegrationId
+from projectkoios.simulations.calculator_input import (
+    CalculatorExternalInputRequirement,
+    CalculatorInputArtifact,
+    CalculatorInputRecord,
+    CalculatorInputSourceReference,
 )
-from projectkoios.integrations.quantumespresso.pw.simulation import (
-    QuantumEspressoSimulation,
+from projectkoios.simulations.dft.pseudopotential.library import (
+    PseudopotentialLibrary,
 )
-from projectkoios.physkit.periodic import DirectLattice3D
-from projectkoios.physkit.periodic.unit_cell import (
-    Atom,
-    AtomicBasis,
-    UnitCell,
-)
-from projectkoios.physkit.units import (
-    PhysicalUnit,
-    ScalarQuantity,
-    Unitless,
-    VectorQuantity,
-)
-from projectkoios.simulations.dft.pseudopotential_repository import (
-    PseudopotentialRepository,
-    PseudopotentialRepositoryEntry,
-)
-from projectkoios.simulations.dft.pw.settings import CalculationType
 
 EXPECTED_PROGRAM_VERSION = "7.5"
 EXPECTED_ATOM_COUNT = 2
@@ -67,38 +51,50 @@ QE_SUCCESSFUL_EXECUTION_RECORD = {
 }
 
 
-def qe_simulation() -> QuantumEspressoSimulation:
-    return QuantumEspressoSimulation(
-        input_file=QePwInputFile(
-            control_block=ControlBlock(
-                calculation_type=CalculationType.scf,
-                pseudo_dir=".",
-            ),
-            unit_cell=UnitCell(
-                direct_lattice=DirectLattice3D(
-                    a1=np.array([1.0, 0.0, 0.0]),
-                    a2=np.array([0.0, 1.0, 0.0]),
-                    a3=np.array([0.0, 0.0, 1.0]),
-                ),
-                lattice_parameter=ScalarQuantity(
-                    magnitude=5.43,
-                    unit=PhysicalUnit(expression="angstrom"),
-                ),
-                atomic_basis=AtomicBasis(
-                    atoms=(
-                        Atom(
-                            symbol="Si",
-                            position_fractional=VectorQuantity(
-                                magnitude=np.zeros(3),
-                                unit=Unitless(),
-                            ),
-                        ),
-                    )
-                ),
-            ),
-            groups=(),
+def qe_prepared_input() -> CalculatorInputRecord:
+    content = (
+        b"&CONTROL\n calculation = 'scf'\n pseudo_dir = './'\n outdir = './tmp/'\n/\n"
+    )
+    pseudopotential = qe_pseudopotential_file()
+    return CalculatorInputRecord(
+        input_id="Si.QE.PreparedInput",
+        schema_version=1,
+        source=CalculatorInputSourceReference(
+            simulation_id="Si.QE.SCF",
+            representation="projectkoios.pw-dft-scf+json",
+            schema_version=1,
+            byte_size=100,
+            sha256="1" * 64,
         ),
-        pseudopotentials=(qe_pseudopotential_file(),),
+        integration_id=CalculatorIntegrationId("quantum-espresso"),
+        calculator_name="Quantum ESPRESSO pw.x",
+        calculator_version_constraint=">=7.5,<8",
+        representation="quantum-espresso-pw-input",
+        artifacts=(
+            CalculatorInputArtifact(
+                role="primary-input",
+                filename="pw.in",
+                media_type="text/plain; charset=us-ascii",
+                content=content,
+                byte_size=len(content),
+                sha256=hashlib.sha256(content).hexdigest(),
+            ),
+        ),
+        external_requirements=(
+            CalculatorExternalInputRequirement(
+                role="pseudopotential",
+                stable_id=f"Si.{pseudopotential.sha256}",
+                filename=pseudopotential.filename,
+                format="upf;version=2.0.1",
+                byte_size=pseudopotential.byte_size,
+                sha256=pseudopotential.sha256,
+                provenance="canonical-simulation-specification:" + "1" * 64,
+                element_symbol="Si",
+            ),
+        ),
+        mappings=(),
+        preparation_operation="projectkoios.qe.pw.scf.prepare",
+        preparation_version="1",
     )
 
 
@@ -119,13 +115,7 @@ def qe_pseudopotential_file() -> QePseudopotentialFile:
     )
 
 
-def qe_repository(root: Path) -> PseudopotentialRepository:
-    pseudo = qe_pseudopotential_file()
-    return PseudopotentialRepository(
-        entries=(
-            PseudopotentialRepositoryEntry(
-                pseudopotential_file=pseudo,
-                path=root / "repository" / pseudo.filename,
-            ),
-        )
-    )
+def qe_library(root: Path) -> PseudopotentialLibrary:
+    library_root = root / "repository"
+    library_root.mkdir(exist_ok=True)
+    return PseudopotentialLibrary(library_root)

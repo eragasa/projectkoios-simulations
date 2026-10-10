@@ -1,0 +1,107 @@
+{
+  "query_snapshot": {
+    "api_endpoint": "https://api.materialsproject.org/",
+    "candidates": [
+      {
+        "byte_size": 1363,
+        "canonical_json": "{\"@class\":\"ComputedStructureEntry\",\"@module\":\"pymatgen.core.entries\",\"composition\":{\"Ni\":1.0},\"correction\":0.0,\"data\":{\"aspherical\":true,\"last_updated\":\"2026-05-29 05:04:13.049328+00:00\",\"license\":\"BY-C\",\"material_id\":\"mp-1008728\",\"oxidation_states\":{\"Ni\":0.0},\"oxide_type\":\"None\",\"run_type\":\"R2SCAN\",\"task_id\":\"aaaegsyg\"},\"energy\":-11.86245793,\"energy_adjustments\":[],\"entry_id\":{\"@class\":\"EntryID\",\"@module\":\"emmet.core.types.pymatgen_types.computed_entries_adapter\",\"@version\":null,\"identifier\":\"mp-aaacfkfg\",\"separator\":\"-\",\"suffix\":\"r2SCAN\"},\"parameters\":{\"hubbards\":null,\"is_hubbard\":null,\"potcar_spec\":[{\"@class\":\"PotcarSpec\",\"@module\":\"emmet.core.vasp.calculation\",\"@version\":null,\"hash\":\"bf64860049b4773f663b2dcd2dcf2462\",\"summary_stats\":null,\"titel\":\"PAW_PBE Ni_pv 06Sep2000\"}],\"run_type\":\"r2SCAN\"},\"structure\":{\"@class\":\"Structure\",\"@module\":\"pymatgen.core.structure\",\"charge\":0.0,\"lattice\":{\"a\":2.3966654972590486,\"alpha\":109.47122063449069,\"b\":2.3966654972590486,\"beta\":109.47122063449069,\"c\":2.3966654972590486,\"gamma\":109.47122063449069,\"matrix\":[[1.38371547,1.38371547,1.38371547],[1.38371547,-1.38371547,-1.38371547],[-1.38371547,1.38371547,-1.38371547]],\"pbc\":[true,true,true],\"volume\":10.597425704098887},\"properties\":{},\"sites\":[{\"abc\":[0.0,0.0,0.0],\"label\":\"Ni\",\"properties\":{},\"species\":[{\"element\":\"Ni\",\"occu\":1.0}],\"xyz\":[0.0,0.0,0.0]}]}}\n",
+        "material_id": "mp-1008728",
+        "sha256": "6834ba4027955aa46110307fa08508534628e178e352354bd4bee525d8c8f59e"
+      },
+      {
+        "byte_size": 2479,
+        "canonical_json": "{\"@class\":\"ComputedStructureEntry\",\"@module\":\"pymatgen.core.entries\",\"composition\":{\"Ni\":2.0},\"correction\":-12.403160960000001,\"data\":{\"aspherical\":true,\"last_updated\":\"2026-05-29 05:04:12.113885+00:00\",\"license\":\"BY-C\",\"material_id\":\"mp-1014111\",\"oxidation_states\":{\"Ni\":0.0},\"oxide_type\":\"None\",\"run_type\":\"GGA\",\"task_id\":\"aaadymmc\"},\"energy\":-10.3197951,\"energy_adjustments\":[{\"@class\":\"ConstantEnergyAdjustment\",\"@module\":\"pymatgen.core.entries\",\"@version\":null,\"cls\":{\"@class\":\"MaterialsProjectDFTMixingScheme\",\"@module\":\"pymatgen.analysis.compatibility.mixing_scheme\",\"@version\":null,\"check_potcar\":true,\"compat_1\":{\"@class\":\"MaterialsProject2020Compatibility\",\"@module\":\"pymatgen.analysis.compatibility\",\"@version\":null},\"compat_2\":null,\"fuzzy_matching\":false,\"run_type_1\":\"GGA(+U)\",\"run_type_2\":\"r2SCAN\",\"structure_matcher\":{\"@class\":\"StructureMatcher\",\"@module\":\"pymatgen.core.structure_matcher\",\"allow_subset\":false,\"angle_tol\":5,\"attempt_supercell\":false,\"comparator\":{\"@class\":\"SpeciesComparator\",\"@module\":\"pymatgen.core.structure_matcher\",\"version\":\"1.0\"},\"ignored_species\":[],\"ltol\":0.2,\"primitive_cell\":true,\"scale\":true,\"stol\":0.3,\"supercell_size\":\"num_sites\",\"version\":\"1.0\"}},\"description\":\"Place GGA(+U) energy onto the r2SCAN hull\",\"name\":\"MP GGA(+U)/r2SCAN mixing adjustment\",\"uncertainty\":0.0,\"value\":-12.403160960000001}],\"entry_id\":{\"@class\":\"EntryID\",\"@module\":\"emmet.core.types.pymatgen_types.computed_entries_adapter\",\"@version\":null,\"identifier\":\"mp-aaacfseh\",\"separator\":\"-\",\"suffix\":\"GGA\"},\"parameters\":{\"hubbards\":null,\"is_hubbard\":null,\"potcar_spec\":[{\"@class\":\"PotcarSpec\",\"@module\":\"emmet.core.vasp.calculation\",\"@version\":null,\"hash\":\"252a974c7f603c1f24e30fd36a0dba30\",\"summary_stats\":null,\"titel\":\"PAW_PBE Ni_pv 06Sep2000\"}],\"run_type\":\"GGA\"},\"structure\":{\"@class\":\"Structure\",\"@module\":\"pymatgen.core.structure\",\"charge\":0.0,\"lattice\":{\"a\":2.416684227834493,\"alpha\":90.0,\"b\":2.416684227834493,\"beta\":90.0,\"c\":13.515347,\"gamma\":120.00000623722715,\"matrix\":[[1.208342,-2.09291,0.0],[1.208342,2.09291,0.0],[0.0,0.0,13.515347]],\"pbc\":[true,true,true],\"volume\":68.35930211462892},\"properties\":{},\"sites\":[{\"abc\":[0.333333,0.666667,0.425238],\"label\":\"Ni\",\"properties\":{\"magmom\":0.714},\"species\":[{\"element\":\"Ni\",\"occu\":1.0}],\"xyz\":[1.208342,0.69763806194,5.747239127586]},{\"abc\":[0.666667,0.333333,0.574762],\"label\":\"Ni\",\"properties\":{\"magmom\":0.707},\"species\":[{\"element\":\"Ni\",\"occu\":1.0}],\"xyz\":[1.208342,-0.6976380619399999,7.768107872414]}]}}\n",
+        "material_id": "mp-1014111",
+        "sha256": "f51680b7e1df297151cea82f86596a28cf8394f72e895dde4318ebba40e404a2"
+      },
+      {
+        "byte_size": 1489,
+        "canonical_json": "{\"@class\":\"ComputedStructureEntry\",\"@module\":\"pymatgen.core.entries\",\"composition\":{\"Ni\":2.0},\"correction\":0.0,\"data\":{\"aspherical\":true,\"last_updated\":\"2026-05-29 05:04:12.514585+00:00\",\"license\":\"BY-C\",\"material_id\":\"mp-10257\",\"oxidation_states\":{\"Ni\":0.0},\"oxide_type\":\"None\",\"run_type\":\"R2SCAN\",\"task_id\":\"aaaegqet\"},\"energy\":-23.87176374,\"energy_adjustments\":[],\"entry_id\":{\"@class\":\"EntryID\",\"@module\":\"emmet.core.types.pymatgen_types.computed_entries_adapter\",\"@version\":null,\"identifier\":\"mp-aaaaapen\",\"separator\":\"-\",\"suffix\":\"r2SCAN\"},\"parameters\":{\"hubbards\":null,\"is_hubbard\":null,\"potcar_spec\":[{\"@class\":\"PotcarSpec\",\"@module\":\"emmet.core.vasp.calculation\",\"@version\":null,\"hash\":\"bf64860049b4773f663b2dcd2dcf2462\",\"summary_stats\":null,\"titel\":\"PAW_PBE Ni_pv 06Sep2000\"}],\"run_type\":\"r2SCAN\"},\"structure\":{\"@class\":\"Structure\",\"@module\":\"pymatgen.core.structure\",\"charge\":0.0,\"lattice\":{\"a\":2.44802298,\"alpha\":90.0,\"b\":2.4480228156906607,\"beta\":90.0,\"c\":4.07280757,\"gamma\":120.00000222028537,\"matrix\":[[2.44802298,0.0,0.0],[-1.22401149,2.1200499,-0.0],[0.0,0.0,4.07280757]],\"pbc\":[true,true,true],\"volume\":21.137589751186848},\"properties\":{},\"sites\":[{\"abc\":[0.333333,0.666667,0.25],\"label\":\"Ni\",\"properties\":{},\"species\":[{\"element\":\"Ni\",\"occu\":1.0}],\"xyz\":[-1.224011490047081e-06,1.4133673066833001,1.0182018925]},{\"abc\":[0.666667,0.333333,0.75],\"label\":\"Ni\",\"properties\":{},\"species\":[{\"element\":\"Ni\",\"occu\":1.0}],\"xyz\":[1.22401271401149,0.7066825933167,3.0546056775]}]}}\n",
+        "material_id": "mp-10257",
+        "sha256": "8db48fcb44555bb9cee84ed8912c9df864850557e5d81ec258bb977ff286c9eb"
+      },
+      {
+        "byte_size": 2426,
+        "canonical_json": "{\"@class\":\"ComputedStructureEntry\",\"@module\":\"pymatgen.core.entries\",\"composition\":{\"Ni\":2.0},\"correction\":-12.403160960000001,\"data\":{\"aspherical\":true,\"last_updated\":\"2026-05-29 05:04:12.238594+00:00\",\"license\":\"BY-C\",\"material_id\":\"mp-1094136\",\"oxidation_states\":{\"Ni\":0.0},\"oxide_type\":\"None\",\"run_type\":\"GGA\",\"task_id\":\"aaadynuv\"},\"energy\":-10.08057028,\"energy_adjustments\":[{\"@class\":\"ConstantEnergyAdjustment\",\"@module\":\"pymatgen.core.entries\",\"@version\":null,\"cls\":{\"@class\":\"MaterialsProjectDFTMixingScheme\",\"@module\":\"pymatgen.analysis.compatibility.mixing_scheme\",\"@version\":null,\"check_potcar\":true,\"compat_1\":{\"@class\":\"MaterialsProject2020Compatibility\",\"@module\":\"pymatgen.analysis.compatibility\",\"@version\":null},\"compat_2\":null,\"fuzzy_matching\":false,\"run_type_1\":\"GGA(+U)\",\"run_type_2\":\"r2SCAN\",\"structure_matcher\":{\"@class\":\"StructureMatcher\",\"@module\":\"pymatgen.core.structure_matcher\",\"allow_subset\":false,\"angle_tol\":5,\"attempt_supercell\":false,\"comparator\":{\"@class\":\"SpeciesComparator\",\"@module\":\"pymatgen.core.structure_matcher\",\"version\":\"1.0\"},\"ignored_species\":[],\"ltol\":0.2,\"primitive_cell\":true,\"scale\":true,\"stol\":0.3,\"supercell_size\":\"num_sites\",\"version\":\"1.0\"}},\"description\":\"Place GGA(+U) energy onto the r2SCAN hull\",\"name\":\"MP GGA(+U)/r2SCAN mixing adjustment\",\"uncertainty\":0.0,\"value\":-12.403160960000001}],\"entry_id\":{\"@class\":\"EntryID\",\"@module\":\"emmet.core.types.pymatgen_types.computed_entries_adapter\",\"@version\":null,\"identifier\":\"mp-aaackgoe\",\"separator\":\"-\",\"suffix\":\"GGA\"},\"parameters\":{\"hubbards\":null,\"is_hubbard\":null,\"potcar_spec\":[{\"@class\":\"PotcarSpec\",\"@module\":\"emmet.core.vasp.calculation\",\"@version\":null,\"hash\":\"252a974c7f603c1f24e30fd36a0dba30\",\"summary_stats\":null,\"titel\":\"PAW_PBE Ni_pv 06Sep2000\"}],\"run_type\":\"GGA\"},\"structure\":{\"@class\":\"Structure\",\"@module\":\"pymatgen.core.structure\",\"charge\":0.0,\"lattice\":{\"a\":2.382050161873381,\"alpha\":90.0,\"b\":2.382050161873381,\"beta\":90.0,\"c\":14.912334,\"gamma\":120.00000449589884,\"matrix\":[[1.191025,-2.062916,0.0],[1.191025,2.062916,0.0],[0.0,0.0,14.912334]],\"pbc\":[true,true,true],\"volume\":73.2787478555789},\"properties\":{},\"sites\":[{\"abc\":[0.0,0.0,0.423977],\"label\":\"Ni\",\"properties\":{\"magmom\":0.73},\"species\":[{\"element\":\"Ni\",\"occu\":1.0}],\"xyz\":[0.0,0.0,6.322486632317999]},{\"abc\":[0.0,0.0,0.576023],\"label\":\"Ni\",\"properties\":{\"magmom\":0.73},\"species\":[{\"element\":\"Ni\",\"occu\":1.0}],\"xyz\":[0.0,0.0,8.589847367682]}]}}\n",
+        "material_id": "mp-1094136",
+        "sha256": "29e0702ecc5e1aefa63105164aa0f8c2c4ab3bd0abafdee9648170490d23b193"
+      },
+      {
+        "byte_size": 2272,
+        "canonical_json": "{\"@class\":\"ComputedStructureEntry\",\"@module\":\"pymatgen.core.entries\",\"composition\":{\"Ni\":1.0},\"correction\":-6.2015804800000005,\"data\":{\"aspherical\":true,\"last_updated\":\"2026-05-29 05:04:12.244970+00:00\",\"license\":\"BY-C\",\"material_id\":\"mp-1246134\",\"oxidation_states\":{\"Ni\":0.0},\"oxide_type\":\"None\",\"run_type\":\"GGA\",\"task_id\":\"aaaecmml\"},\"energy\":-5.37022588,\"energy_adjustments\":[{\"@class\":\"ConstantEnergyAdjustment\",\"@module\":\"pymatgen.core.entries\",\"@version\":null,\"cls\":{\"@class\":\"MaterialsProjectDFTMixingScheme\",\"@module\":\"pymatgen.analysis.compatibility.mixing_scheme\",\"@version\":null,\"check_potcar\":true,\"compat_1\":{\"@class\":\"MaterialsProject2020Compatibility\",\"@module\":\"pymatgen.analysis.compatibility\",\"@version\":null},\"compat_2\":null,\"fuzzy_matching\":false,\"run_type_1\":\"GGA(+U)\",\"run_type_2\":\"r2SCAN\",\"structure_matcher\":{\"@class\":\"StructureMatcher\",\"@module\":\"pymatgen.core.structure_matcher\",\"allow_subset\":false,\"angle_tol\":5,\"attempt_supercell\":false,\"comparator\":{\"@class\":\"SpeciesComparator\",\"@module\":\"pymatgen.core.structure_matcher\",\"version\":\"1.0\"},\"ignored_species\":[],\"ltol\":0.2,\"primitive_cell\":true,\"scale\":true,\"stol\":0.3,\"supercell_size\":\"num_sites\",\"version\":\"1.0\"}},\"description\":\"Place GGA(+U) energy onto the r2SCAN hull\",\"name\":\"MP GGA(+U)/r2SCAN mixing adjustment\",\"uncertainty\":0.0,\"value\":-6.2015804800000005}],\"entry_id\":{\"@class\":\"EntryID\",\"@module\":\"emmet.core.types.pymatgen_types.computed_entries_adapter\",\"@version\":null,\"identifier\":\"mp-aaacsxkg\",\"separator\":\"-\",\"suffix\":\"GGA\"},\"parameters\":{\"hubbards\":null,\"is_hubbard\":null,\"potcar_spec\":[{\"@class\":\"PotcarSpec\",\"@module\":\"emmet.core.vasp.calculation\",\"@version\":null,\"hash\":\"252a974c7f603c1f24e30fd36a0dba30\",\"summary_stats\":null,\"titel\":\"PAW_PBE Ni_pv 06Sep2000\"}],\"run_type\":\"GGA\"},\"structure\":{\"@class\":\"Structure\",\"@module\":\"pymatgen.core.structure\",\"charge\":0.0,\"lattice\":{\"a\":2.338222,\"alpha\":119.99999864498164,\"b\":2.3980959508843673,\"beta\":90.0,\"c\":2.3980959508843673,\"gamma\":90.0,\"matrix\":[[0.0,0.0,-2.338222],[-1.199048,-2.076812,0.0],[-1.199048,2.076812,0.0]],\"pbc\":[true,true,true],\"volume\":11.645268105377864},\"properties\":{},\"sites\":[{\"abc\":[0.0,0.0,0.0],\"label\":\"Ni\",\"properties\":{\"magmom\":0.478},\"species\":[{\"element\":\"Ni\",\"occu\":1.0}],\"xyz\":[0.0,0.0,0.0]}]}}\n",
+        "material_id": "mp-1246134",
+        "sha256": "c82a9191fe477814b8c3329e9d70d0d1d54f422be1f324fb9380c60edfc8ed3f"
+      },
+      {
+        "byte_size": 1325,
+        "canonical_json": "{\"@class\":\"ComputedStructureEntry\",\"@module\":\"pymatgen.core.entries\",\"composition\":{\"Ni\":1.0},\"correction\":0.0,\"data\":{\"aspherical\":true,\"last_updated\":\"2026-05-29 05:04:12.808619+00:00\",\"license\":\"BY-C\",\"material_id\":\"mp-23\",\"oxidation_states\":{\"Ni\":0.0},\"oxide_type\":\"None\",\"run_type\":\"R2SCAN\",\"task_id\":\"aaaegxkp\"},\"energy\":-11.98171716,\"energy_adjustments\":[],\"entry_id\":{\"@class\":\"EntryID\",\"@module\":\"emmet.core.types.pymatgen_types.computed_entries_adapter\",\"@version\":null,\"identifier\":\"mp-aaaaaaax\",\"separator\":\"-\",\"suffix\":\"r2SCAN\"},\"parameters\":{\"hubbards\":null,\"is_hubbard\":null,\"potcar_spec\":[{\"@class\":\"PotcarSpec\",\"@module\":\"emmet.core.vasp.calculation\",\"@version\":null,\"hash\":\"bf64860049b4773f663b2dcd2dcf2462\",\"summary_stats\":null,\"titel\":\"PAW_PBE Ni_pv 06Sep2000\"}],\"run_type\":\"r2SCAN\"},\"structure\":{\"@class\":\"Structure\",\"@module\":\"pymatgen.core.structure\",\"charge\":0.0,\"lattice\":{\"a\":2.457298948810437,\"alpha\":60.00000721843609,\"b\":2.457299396215298,\"beta\":60.00000119555076,\"c\":2.45729885,\"gamma\":60.00001459210662,\"matrix\":[[2.12808334,-0.0,1.22864943],[0.70936078,2.00637688,1.22864943],[-0.0,-0.0,2.45729885]],\"pbc\":[true,true,true],\"volume\":10.492020341068946},\"properties\":{},\"sites\":[{\"abc\":[-0.0,-0.0,0.0],\"label\":\"Ni\",\"properties\":{},\"species\":[{\"element\":\"Ni\",\"occu\":1.0}],\"xyz\":[0.0,0.0,0.0]}]}}\n",
+        "material_id": "mp-23",
+        "sha256": "c812cea38ca06bfe271951a6494c09e13eed51515d8c1e0b0d255d6e16bfccc2"
+      }
+    ],
+    "client_implementation": "mp_api.client.mprester.MPRester",
+    "criteria_json": "{\"additional_criteria\":{\"thermo_types\":[\"GGA_GGA+U_R2SCAN\"]},\"elements\":[\"Ni\"]}\n",
+    "database_release": null,
+    "element_symbol": "Ni",
+    "mp_api_version": "0.46.5",
+    "pymatgen_version": "2026.9.24",
+    "response_byte_size": 11462,
+    "response_sha256": "bfa20090ac4c40344142925068e32180e776dd293cff295455c2a1d4b4a0f350",
+    "retrieved_at_utc": "2026-10-10T05:50:46.372360+00:00",
+    "source_order_content_identities": [
+      [
+        "mp-1014111",
+        "f51680b7e1df297151cea82f86596a28cf8394f72e895dde4318ebba40e404a2"
+      ],
+      [
+        "mp-1246134",
+        "c82a9191fe477814b8c3329e9d70d0d1d54f422be1f324fb9380c60edfc8ed3f"
+      ],
+      [
+        "mp-1094136",
+        "29e0702ecc5e1aefa63105164aa0f8c2c4ab3bd0abafdee9648170490d23b193"
+      ],
+      [
+        "mp-10257",
+        "8db48fcb44555bb9cee84ed8912c9df864850557e5d81ec258bb977ff286c9eb"
+      ],
+      [
+        "mp-1008728",
+        "6834ba4027955aa46110307fa08508534628e178e352354bd4bee525d8c8f59e"
+      ],
+      [
+        "mp-23",
+        "c812cea38ca06bfe271951a6494c09e13eed51515d8c1e0b0d255d6e16bfccc2"
+      ]
+    ],
+    "thermo_types": [
+      "GGA_GGA+U_R2SCAN"
+    ]
+  },
+  "request": {
+    "conventional_unit_cell": false,
+    "element_symbol": "Ni",
+    "thermo_types": [
+      "GGA_GGA+U_R2SCAN"
+    ]
+  },
+  "schema_version": 1,
+  "selection": {
+    "energy_above_hull_ev": 0.0,
+    "energy_per_atom_ev": -11.98171716,
+    "entry_count": 6,
+    "material_id": "mp-23",
+    "selected_candidate_sha256": "c812cea38ca06bfe271951a6494c09e13eed51515d8c1e0b0d255d6e16bfccc2"
+  },
+  "structure": {
+    "byte_size": 619,
+    "database_name": "Materials Project",
+    "geometry_status": "external_reference_not_calculation_input",
+    "material_id": "mp-23",
+    "representation": "primitive",
+    "schema_version": 1,
+    "sha256": "c31a42131de24116e7262fd720147eee2491b8280516bd2aed0eeda618820ade",
+    "source_url": "https://materialsproject.org/materials/mp-23",
+    "structure_id": "materials-project.mp-23.primitive"
+  }
+}

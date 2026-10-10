@@ -2,10 +2,8 @@
 
 Calculator-neutral density-functional-theory records.
 
-- [`pseudopotential`](pseudopotential/index.md) owns pseudopotential metadata
-  and file identities.
-- [`pseudopotential_repository`](pseudopotential_repository/index.md) resolves
-  exact local artifacts.
+- [`pseudopotential`](pseudopotential/index.md) owns pseudopotential metadata,
+  exact file identities, and machine-local byte resolution.
 - [`pw`](pw/index.md) owns plane-wave DFT simulations, settings, and
   calculation-mode contracts.
 

@@ -6,11 +6,8 @@ import math
 import re
 from dataclasses import dataclass, replace
 
-from projectkoios.simulations.dft.pw.scf.base import (
-    PwDftScfObject,
-    PwDftScfRequest,
-    PwDftScfSampling,
-)
+from projectkoios.simulations.dft.pw.scf.base import PwDftScfObject
+from projectkoios.simulations.dft.pw.scf.request import PwDftScfRequest
 from projectkoios.simulations.workflows.pw_dft_scf.convergence.base import (
     PwDftScfConvergenceCoordinate,
 )
@@ -46,16 +43,26 @@ class PwDftScfRecipe(PwDftScfObject):
         mesh = coordinate.mesh_density
         cutoff = coordinate.wavefunction_cutoff_ev
         cutoff_label = f"{cutoff:g}".replace(".", "p")
+        base_specification = self.base_request.specification
+        derived_specification = replace(
+            base_specification,
+            # Every changed scientific coordinate receives distinct canonical
+            # specification identity. Workflow scope affects occurrences only.
+            simulation_id=(
+                f"{base_specification.simulation_id}.Derived.k{mesh}.e{cutoff_label}"
+            ),
+            kpoint_sampling=replace(
+                base_specification.kpoint_sampling,
+                mesh=(mesh, mesh, mesh),
+            ),
+            wavefunction_cutoff_ev=cutoff,
+        )
         return replace(
             self.base_request,
             evaluation_id=(
                 f"{self.campaign_id}-{scope}-k{mesh}-e{cutoff_label}".lower()
             ),
-            sampling=PwDftScfSampling(
-                kpoint_mesh=(mesh, mesh, mesh),
-                kpoint_shift=self.base_request.sampling.kpoint_shift,
-                wavefunction_cutoff_ev=cutoff,
-            ),
+            specification=derived_specification,
         )
 
 
@@ -81,7 +88,7 @@ class PwDftScfKpointConvergenceRecipe(PwDftScfRecipe):
 
     def coordinates(self) -> tuple[PwDftScfConvergenceCoordinate, ...]:
         """Return ordered initial k-point convergence coordinates."""
-        cutoff = self.base_request.sampling.wavefunction_cutoff_ev
+        cutoff = self.base_request.specification.wavefunction_cutoff_ev
         return tuple(
             PwDftScfConvergenceCoordinate(mesh, cutoff) for mesh in self.mesh_densities
         )
@@ -101,11 +108,11 @@ class PwDftScfCutoffConvergenceRecipe(PwDftScfRecipe):
             raise TypeError("wavefunction_cutoffs_ev must contain floats")
         if type(self.policy) is not PwDftScfConvergencePolicy:
             raise TypeError("policy must be a PwDftScfConvergencePolicy")
-        _cubic_mesh_density(self.base_request.sampling.kpoint_mesh)
+        _cubic_mesh_density(self.base_request.specification.kpoint_sampling.mesh)
 
     def coordinates(self) -> tuple[PwDftScfConvergenceCoordinate, ...]:
         """Return ordered initial cutoff convergence coordinates."""
-        mesh = _cubic_mesh_density(self.base_request.sampling.kpoint_mesh)
+        mesh = _cubic_mesh_density(self.base_request.specification.kpoint_sampling.mesh)
         return tuple(
             PwDftScfConvergenceCoordinate(mesh, cutoff)
             for cutoff in self.wavefunction_cutoffs_ev

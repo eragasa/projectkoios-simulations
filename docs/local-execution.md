@@ -6,11 +6,11 @@
 it to the ignored repository-root `local-execution.toml` when recording paths
 for local manual use.
 
-The repository currently provides no production parser, loader, schema object,
-or automatic tool integration for this file. Its presence is not a supported
+The repository provides no production parser, loader, schema object, or
+automatic tool integration for this file. Its presence is not a supported
 runtime API, and no workflow, test, example, or smoke marker reads it to obtain
 execution authority. The template and its local copy do not constitute execution
-authorization. A future loader requires separate design review, typed
+authorization. Adding a loader requires separate design review, typed
 validation, and explicit authorization semantics.
 
 ## Template fields
@@ -27,7 +27,7 @@ wannier90 = "/absolute/path/to/wannier90.x"
 directory = "/absolute/path/to/quantum-espresso-pseudopotentials"
 ```
 
-| Key | Operator meaning | Current software behavior |
+| Key | Operator meaning | Software behavior |
 |---|---|---|
 | `schema_version` | Documents template shape version `1`. | Not parsed or negotiated. |
 | `executables.pw` | Intended local `pw.x` path. | Not discovered, validated, or invoked. |
@@ -51,7 +51,7 @@ Calculator execution remains fail-closed and requires a separate explicit
 authorization at the execution boundary. Copying, editing, rendering, or testing
 this template grants no authority and executes no calculator.
 
-## Intended manual workflow
+## Manual workflow
 
 1. Copy `local-execution.example.toml` to `local-execution.toml`.
 2. Replace every placeholder with a machine-local absolute path.
@@ -60,3 +60,59 @@ this template grants no authority and executes no calculator.
    object; no automatic loader exists.
 5. Supply execution authorization separately if and only if a calculator runner
    is intentionally invoked.
+
+## Pytest simulation policy
+
+`@pytest.mark.simulation` identifies a test that launches a real calculator.
+Input rendering, retained-evidence parsing, contract tests, and fake-executable
+tests do not carry this marker.
+
+The marker classifies the test but grants no execution authority. Repository
+pytest configuration skips every `simulation` test unless the operator supplies
+the separate authorization option. Selecting the marker without that option
+remains fail-closed.
+
+```bash
+# Selection alone: collected simulation tests remain skipped.
+.venv/bin/python -m pytest -m simulation
+
+# Explicitly authorized real-calculator test invocation.
+.venv/bin/python -m pytest -m simulation \
+  --authorize-calculator-execution
+```
+
+A marked test must receive calculator paths and exact external resources through
+an explicit test or operator configuration. The authorization option does not
+discover executables, select pseudopotentials, accept scientific results, or
+turn `local-execution.toml` into a runtime API. Calculator processes must not be
+started during test-module import or collection, before the authorization gate
+can skip the test.
+
+## QE Si/Ni spin validation
+
+The marked QE spin-validation tests require two explicit environment variables:
+
+- `PROJECTKOIOS_VALIDATION_QE_PW_EXECUTABLE`: absolute path to the exact QE 7.5
+  `pw.x` declared by SHA-256 and byte size in the test;
+- `PROJECTKOIOS_VALIDATION_QE_PSEUDOPOTENTIAL_LIBRARY`: absolute root injected
+  into `PseudopotentialLibrary`.
+
+The tests author complete Si and Ni `PseudopotentialFile` requirements. The
+library resolves and verifies those exact bytes during each execution workflow;
+it does not select an artifact by element or filename. The invocation remains
+separately authorization-gated:
+
+```bash
+PROJECTKOIOS_VALIDATION_QE_PW_EXECUTABLE=/absolute/path/to/pw.x \
+PROJECTKOIOS_VALIDATION_QE_PSEUDOPOTENTIAL_LIBRARY=/absolute/library/root \
+.venv/bin/python -m pytest \
+  tests/projectkoios/integrations/quantumespresso/pw/scf/validation \
+  --authorize-calculator-execution
+```
+
+The Si case is an unpolarized spin-symmetric control. The Ni case uses the exact
+retained `materials-project.mp-23.primitive` structure, Gaussian smearing, and a
+2 μB authored symmetry-breaking initial moment. It accepts completed and
+converged execution with nonzero total and absolute magnetization. This bounded
+qualitative check does not establish numerical convergence or a reference Ni
+magnetic moment.

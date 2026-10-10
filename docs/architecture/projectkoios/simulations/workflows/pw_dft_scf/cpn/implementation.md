@@ -115,7 +115,8 @@ an invariant violation and raises `RuntimeError`.
 
 The package is wheel-carried but dependency-optional. The `cpn` extra supplies
 the reviewed `projectkoios-snakes` source at commit
-`72dbb1dbf0a91349faca21ceb660923cc442a8e9`. The net consumes typed external
+`c959528c3b35c12563b7ba291ca036e1ebb58f7e`. The distribution is named
+`projectkoios-snakes` while preserving the compatible `snakes` import. The net consumes typed external
 events and emits typed actions and outcomes. It contains no executable path,
 provider implementation, queue, lease, retry service, persistence mechanism, or
 calculator authority. Tests use synthetic events and never execute a

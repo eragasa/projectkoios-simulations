@@ -36,16 +36,27 @@ path, reusable authority, or live Workflow runtime state.
 `pw_dft_relaxation` owns:
 
 - a campaign that binds neutral relaxation intent to a selected integration;
-- deterministic input-projection composition;
+- deterministic translation of a neutral request into calculator input files
+  (called input projection in the current Python API);
 - a non-authorizing external-execution handoff; and
-- an engine-neutral projection/handoff workflow-shape declaration. There is no
+- an engine-neutral input-translation/handoff workflow-shape declaration. There
+  is no
   executable relaxation Petri net in this package.
+
+### Planned defect-formation composition
+
+[`pw_dft_defect_formation`](pw_dft_defect_formation/index.md) documents a target
+composition for exact structure and simulation records, existing relaxation
+and SCF capabilities, local elemental chemical potentials, neutral Si:P and
+Si:B formation energies, and matched 64-, 216-, and 512-atom size-convergence
+assessment. The production package and executable topology do not yet exist.
+The documentation does not displace the current SCF Petri-net authority.
 
 ## Tools and examples
 
 Operational commands live under `tools/pw_dft_scf`, outside package discovery.
-They provide projection, replay, planning, two forms of comparison, and
-visualization over public workflow and integration contracts.
+They provide calculator-input rendering, replay, planning, two forms of
+comparison, and visualization over public workflow and integration contracts.
 
 The compact `examples/workflows` tree contains only reviewed campaign,
 comparison, and structure declarations plus small replay and relaxation

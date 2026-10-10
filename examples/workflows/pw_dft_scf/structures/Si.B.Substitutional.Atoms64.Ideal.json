@@ -1,0 +1,543 @@
+{
+  "atoms": [
+    {
+      "fractional_position": [
+        0.0,
+        0.25,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.0,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.25,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.125,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.375,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.125,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.375,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.0,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.25,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.0,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.25,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.125,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.375,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.125,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.375,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.5,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.75,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.5,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.75,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.625,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.875,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.625,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.875,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.5,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.75,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.5,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.25,
+        0.75,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.625,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.125,
+        0.875,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.625,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.375,
+        0.875,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.0,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.25,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.0,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.25,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.125,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.375,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.125,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.375,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.0,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.25,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.0,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.25,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.125,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.375,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.125,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.375,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.5,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.75,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.5,
+        0.25
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.75,
+        0.0
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.625,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.875,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.625,
+        0.375
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.875,
+        0.125
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.5,
+        0.75,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.5,
+        0.75
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.75,
+        0.75,
+        0.5
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.625,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.625,
+        0.875,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.625,
+        0.875
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.875,
+        0.875,
+        0.625
+      ],
+      "symbol": "Si"
+    },
+    {
+      "fractional_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "symbol": "B"
+    }
+  ],
+  "lattice": {
+    "A": {
+      "a1": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "a2": [
+        0.0,
+        2.0,
+        0.0
+      ],
+      "a3": [
+        0.0,
+        0.0,
+        2.0
+      ],
+      "vector_axis": "columns"
+    },
+    "lattice_parameter": {
+      "magnitude": 5.43,
+      "unit": "angstrom"
+    }
+  },
+  "representation": "unit-cell",
+  "schema_version": 1,
+  "structure_id": "Si.B.Substitutional.Atoms64.Ideal"
+}

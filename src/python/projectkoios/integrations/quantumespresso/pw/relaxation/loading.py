@@ -44,7 +44,7 @@ class QeRelaxationCalculationTomlLoader:
         ):
             raise ValueError("configuration must be a bounded regular file")
         payload = tomllib.loads(path.read_text(encoding="utf-8"))
-        if payload.get("schema_version") != 1:
+        if payload.get("schema_version") != 2:
             raise ValueError("unsupported configuration schema")
         _validate_schema(payload)
         structure = _mapping(payload, "structure")
@@ -98,12 +98,17 @@ class QeRelaxationCalculationTomlLoader:
                 pseudopotential,
                 "upf_version",
             ),
+            pseudopotential_valence_electrons=_integer(
+                pseudopotential,
+                "valence_electrons",
+            ),
             pseudopotential_mass_amu=_float(pseudopotential, "mass_amu"),
             kpoint_mesh=_integer_triplet(sampling, "kpoint_mesh"),
             kpoint_shift=_integer_triplet(sampling, "kpoint_shift"),
             wavefunction_cutoff_ry=_float(sampling, "wavefunction_cutoff_ry"),
             charge_density_cutoff_ry=_float(sampling, "charge_density_cutoff_ry"),
             electronic_tolerance_ry=_float(sampling, "electronic_tolerance_ry"),
+            electronic_atol_ry=_float(sampling, "electronic_atol_ry"),
             ionic_relaxation=QeIonicRelaxationOptions(
                 dynamics=QeIonDynamics(_string(ionic, "dynamics")),
                 maximum_steps=_integer(ionic, "maximum_steps"),
@@ -189,6 +194,7 @@ def _validate_schema(payload: dict[str, object]) -> None:
             "formalism",
             "relativistic_treatment",
             "upf_version",
+            "valence_electrons",
             "mass_amu",
         },
     )
@@ -201,6 +207,7 @@ def _validate_schema(payload: dict[str, object]) -> None:
             "wavefunction_cutoff_ry",
             "charge_density_cutoff_ry",
             "electronic_tolerance_ry",
+            "electronic_atol_ry",
         },
     )
     _require_schema_keys(

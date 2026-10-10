@@ -7,6 +7,7 @@ from projectkoios.integrations.quantumespresso.pseudopotential import (
     QePseudopotentialFile,
 )
 from projectkoios.simulations.dft.pseudopotential import (
+    PseudopotentialArtifactFormat,
     PseudopotentialFile,
 )
 
@@ -31,6 +32,11 @@ class QePseudopotentialFileTest(unittest.TestCase):
         self.assertIsInstance(pseudopotential_file, PseudopotentialFile)
         self.assertIs(pseudopotential_file.pseudopotential, pseudopotential)
         self.assertEqual(pseudopotential_file.symbol, "Si")
+        self.assertIs(
+            pseudopotential_file.artifact_format,
+            PseudopotentialArtifactFormat.UPF,
+        )
+        self.assertEqual(pseudopotential_file.artifact_format_version, "2.0.1")
 
 
 if __name__ == "__main__":

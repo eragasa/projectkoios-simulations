@@ -14,15 +14,13 @@ from projectkoios.integrations.vasp.pw_dft_scf.configuration import (
     VaspScfProjectionConfiguration,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.pw.scf.base import (
-    PwDftScfRequest,
-    PwDftScfSampling,
+from projectkoios.simulations.dft.pw.scf.request import PwDftScfRequest
+from projectkoios.simulations.dft.pw.scf.specification import PwDftScfSpecification
+from projectkoios.simulations.library import SimulationLibrary
+from projectkoios.simulations.structure.library import (
+    StructureLibrary,
+    StructureResolution,
 )
-from projectkoios.simulations.dft.pw.settings import (
-    CalculationType,
-    PwDftSettings,
-)
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
 from projectkoios.simulations.workflows.pw_dft_scf.configuration import (
     PwDftScfCampaignConfiguration,
     PwDftScfRuntimeConfiguration,
@@ -37,7 +35,6 @@ from projectkoios.simulations.workflows.pw_dft_scf.recipe import (
     PwDftScfRecipe,
     PwDftScfSingleCalculationRecipe,
 )
-from tools.pw_dft_scf.structure_repository import MinimalStructureRepository
 
 
 def resolve_example_reference(
@@ -77,6 +74,7 @@ class LoadedWorkflowRunnerConfiguration:
 
     campaign: PwDftScfCampaignConfiguration
     structure_id: str
+    structure: StructureResolution
     projection_profile_id: str
     replay: ReplayDeclaration | None
 
@@ -86,54 +84,40 @@ class WorkflowRunnerConfigurationLoader:
     """Resolve campaign profile IDs through reviewed local repositories."""
 
     catalog_path: Path
-    structure_repository: MinimalStructureRepository
+    structure_library: StructureLibrary
+    simulation_library: SimulationLibrary
 
     def __post_init__(self) -> None:
         if not self.catalog_path.is_file() or self.catalog_path.is_symlink():
             raise ValueError("catalog_path must be a regular nonsymlink file")
-        if type(self.structure_repository) is not MinimalStructureRepository:
-            raise TypeError("structure_repository must be a MinimalStructureRepository")
+        if type(self.structure_library) is not StructureLibrary:
+            raise TypeError("structure_library must be a StructureLibrary")
+        if type(self.simulation_library) is not SimulationLibrary:
+            raise TypeError("simulation_library must be a SimulationLibrary")
 
     def load(self, campaign_path: Path) -> LoadedWorkflowRunnerConfiguration:
         """Resolve one compact campaign into typed scientific configuration."""
-        campaign_payload = self._toml(campaign_path, expected_schema=2)
+        campaign_payload = self._toml(campaign_path, expected_schema=3)
         catalog = self._toml(self.catalog_path, expected_schema=1)
         campaign_id = self._string(campaign_payload, "campaign_id")
-        structure_id = self._string(campaign_payload, "structure_id")
-        sampling_profile_id = self._string(
-            campaign_payload,
-            "sampling_profile",
-        )
+        simulation_id = self._string(campaign_payload, "simulation_id")
         projection_profile_id = self._string(
             campaign_payload,
             "projection_profile",
         )
-        sampling_profile = self._profile(
-            catalog,
-            "sampling",
-            sampling_profile_id,
+        integration_id = CalculatorIntegrationId(
+            value=self._string(campaign_payload, "integration")
         )
-        simulation = PwDftSimulation(
-            unit_cell=self.structure_repository.resolve(structure_id),
-            settings=PwDftSettings(calculation_type=CalculationType.scf),
+        resolution = self.simulation_library.resolve_unique(
+            simulation_id,
+            structure_library=self.structure_library,
         )
+        if type(resolution.specification) is not PwDftScfSpecification:
+            raise ValueError("campaign simulation must be a PW-DFT SCF specification")
+        structure = resolution.structure
         base_request = PwDftScfRequest(
             evaluation_id=f"{campaign_id}-base",
-            simulation=simulation,
-            sampling=PwDftScfSampling(
-                kpoint_mesh=self._integer_triplet(
-                    sampling_profile,
-                    "kpoint_mesh",
-                ),
-                kpoint_shift=self._integer_triplet(
-                    sampling_profile,
-                    "kpoint_shift",
-                ),
-                wavefunction_cutoff_ev=self._float(
-                    sampling_profile,
-                    "wavefunction_cutoff_ev",
-                ),
-            ),
+            specification=resolution.specification,
         )
         mode = self._string(campaign_payload, "mode")
         recipe = self._recipe(
@@ -145,9 +129,7 @@ class WorkflowRunnerConfigurationLoader:
         )
         runtime = self._mapping(campaign_payload, "runtime")
         configuration = PwDftScfCampaignConfiguration(
-            integration_id=CalculatorIntegrationId(
-                value=self._string(campaign_payload, "integration")
-            ),
+            integration_id=integration_id,
             recipe=recipe,
             runtime=PwDftScfRuntimeConfiguration(
                 maximum_internal_firings=self._integer(
@@ -164,7 +146,8 @@ class WorkflowRunnerConfigurationLoader:
         )
         return LoadedWorkflowRunnerConfiguration(
             campaign=configuration,
-            structure_id=structure_id,
+            structure_id=structure.record.structure_id,
+            structure=structure,
             projection_profile_id=projection_profile_id,
             replay=replay,
         )
@@ -193,6 +176,7 @@ class WorkflowRunnerConfigurationLoader:
                 profile,
                 "electronic_tolerance_ry",
             ),
+            electronic_atol_ry=self._float(profile, "electronic_atol_ry"),
             prefix=self._string(profile, "prefix"),
             pseudo_dir=self._string(profile, "pseudo_dir"),
             outdir=self._string(profile, "outdir"),
@@ -223,7 +207,6 @@ class WorkflowRunnerConfigurationLoader:
             ),
             smearing_method=self._integer(profile, "smearing_method"),
             smearing_width_ev=self._float(profile, "smearing_width_ev"),
-            spin_polarization=self._integer(profile, "spin_polarization"),
             real_space_projection=self._boolean(
                 profile,
                 "real_space_projection",
@@ -427,15 +410,3 @@ class WorkflowRunnerConfigurationLoader:
         ):
             raise ValueError(f"{key} must be a number array")
         return tuple(float(item) for item in value)
-
-    @classmethod
-    def _integer_triplet(
-        cls,
-        mapping: Mapping[str, object],
-        key: str,
-    ) -> tuple[int, int, int]:
-        """Require exactly three integer values."""
-        value = cls._integer_tuple(mapping, key)
-        if len(value) != 3:
-            raise ValueError(f"{key} must contain three integers")
-        return value[0], value[1], value[2]

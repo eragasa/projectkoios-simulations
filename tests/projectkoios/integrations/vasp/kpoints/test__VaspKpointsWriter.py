@@ -24,7 +24,6 @@ from projectkoios.simulations.dft.pw.bands import (
     BandPathVertex,
     PwDftBandsSimulation,
 )
-from projectkoios.simulations.dft.pw.settings import CalculationType, PwDftSettings
 from projectkoios.simulations.dft.pw.setyawan_curtarolo_2010 import (
     SetyawanCurtaroloAppendixACase,
     SetyawanCurtaroloLattice,
@@ -32,7 +31,9 @@ from projectkoios.simulations.dft.pw.setyawan_curtarolo_2010 import (
     SetyawanCurtaroloPathBindingRequest,
     SetyawanCurtaroloPathDefinition,
 )
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from tests.projectkoios.simulations.dft.pw.support import (
+    resolved_pw_dft_simulation,
+)
 
 
 class VaspKpointsWriterTest(unittest.TestCase):
@@ -171,10 +172,7 @@ def _calculation(
             )
         ),
     )
-    return PwDftBandsSimulation(
-        PwDftSimulation(cell, PwDftSettings(CalculationType.bands)),
-        path,
-    )
+    return PwDftBandsSimulation(resolved_pw_dft_simulation(cell), path)
 
 
 if __name__ == "__main__":

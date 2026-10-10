@@ -21,7 +21,6 @@ from projectkoios.simulations.dft.pw.bands import (
     BandPathDirectBasisTransform,
     PwDftBandsSimulation,
 )
-from projectkoios.simulations.dft.pw.settings import CalculationType, PwDftSettings
 from projectkoios.simulations.dft.pw.setyawan_curtarolo_2010 import (
     SETYAWAN_CURTAROLO_CONVENTION_NAME,
     SETYAWAN_CURTAROLO_DOI,
@@ -38,7 +37,13 @@ from projectkoios.simulations.dft.pw.setyawan_curtarolo_2010 import (
     SetyawanCurtaroloPathBindingResult,
     SetyawanCurtaroloPathDefinition,
 )
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation, PwMatrix3
+from projectkoios.simulations.dft.pw.simulation import (
+    PwMatrix3,
+    ResolvedPwDftSimulation,
+)
+from tests.projectkoios.simulations.dft.pw.support import (
+    resolved_pw_dft_simulation,
+)
 from tests.support.repository_root import REPOSITORY_ROOT
 
 
@@ -701,7 +706,7 @@ def _triclinic(
 
 def _binding(
     definition: SetyawanCurtaroloPathDefinition,
-    simulation: PwDftSimulation,
+    simulation: ResolvedPwDftSimulation,
     *,
     direct_basis_transform: BandPathDirectBasisTransform | None = None,
 ) -> SetyawanCurtaroloPathBindingResult:
@@ -715,7 +720,7 @@ def _binding(
 
 def _bind(
     definition: SetyawanCurtaroloPathDefinition,
-    simulation: PwDftSimulation,
+    simulation: ResolvedPwDftSimulation,
     *,
     direct_basis_transform: BandPathDirectBasisTransform | None = None,
 ) -> PwDftBandsSimulation:
@@ -743,9 +748,9 @@ def _rotate_about_z(vectors: PwMatrix3, *, angle_radians: float) -> PwMatrix3:
     )  # type: ignore[return-value]
 
 
-def _simulation(vectors: PwMatrix3) -> PwDftSimulation:
-    return PwDftSimulation(
-        unit_cell=UnitCell(
+def _simulation(vectors: PwMatrix3) -> ResolvedPwDftSimulation:
+    return resolved_pw_dft_simulation(
+        UnitCell(
             direct_lattice=DirectLattice3D(
                 a1=np.asarray(vectors[0]),
                 a2=np.asarray(vectors[1]),
@@ -760,8 +765,7 @@ def _simulation(vectors: PwMatrix3) -> PwDftSimulation:
                     ),
                 )
             ),
-        ),
-        settings=PwDftSettings(CalculationType.bands),
+        )
     )
 
 

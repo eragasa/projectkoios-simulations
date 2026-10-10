@@ -1,0 +1,39 @@
+{
+  "atoms": [
+    {
+      "fractional_position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "symbol": "Ni"
+    }
+  ],
+  "lattice": {
+    "A": {
+      "a1": [
+        2.12808334,
+        0.0,
+        1.22864943
+      ],
+      "a2": [
+        0.70936078,
+        2.00637688,
+        1.22864943
+      ],
+      "a3": [
+        0.0,
+        0.0,
+        2.45729885
+      ],
+      "vector_axis": "columns"
+    },
+    "lattice_parameter": {
+      "magnitude": 1.0,
+      "unit": "angstrom"
+    }
+  },
+  "representation": "primitive",
+  "schema_version": 1,
+  "structure_id": "materials-project.mp-23.primitive"
+}

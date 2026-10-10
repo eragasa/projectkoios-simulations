@@ -8,8 +8,6 @@ from dataclasses import dataclass
 from enum import StrEnum
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.pw.settings import CalculationType
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
 
 _IDENTIFIER = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 _SHA256 = re.compile(r"[0-9a-f]{64}")
@@ -37,49 +35,6 @@ class PwDftScfWorkflowOutcome(PwDftScfObject):
     """Base nominal identity for every terminal SCF workflow outcome."""
 
     __slots__ = ()
-
-
-@dataclass(frozen=True, slots=True)
-class PwDftScfSampling(PwDftScfObject):
-    """Declare calculator-neutral k-point sampling and cutoff energy."""
-
-    kpoint_mesh: tuple[int, int, int]
-    kpoint_shift: tuple[int, int, int]
-    wavefunction_cutoff_ev: float
-
-    def __post_init__(self) -> None:
-        if len(self.kpoint_mesh) != 3 or any(
-            type(value) is not int or value <= 0 for value in self.kpoint_mesh
-        ):
-            raise ValueError("kpoint_mesh must contain three positive integers")
-        if len(self.kpoint_shift) != 3 or any(
-            type(value) is not int or value not in {0, 1} for value in self.kpoint_shift
-        ):
-            raise ValueError("kpoint_shift must contain three zero-or-one integers")
-        if (
-            type(self.wavefunction_cutoff_ev) is not float
-            or not math.isfinite(self.wavefunction_cutoff_ev)
-            or self.wavefunction_cutoff_ev <= 0.0
-        ):
-            raise ValueError("wavefunction cutoff must be a positive finite float")
-
-
-@dataclass(frozen=True, slots=True)
-class PwDftScfRequest(PwDftScfObject):
-    """Declare one calculator-neutral plane-wave DFT SCF evaluation."""
-
-    evaluation_id: str
-    simulation: PwDftSimulation
-    sampling: PwDftScfSampling
-
-    def __post_init__(self) -> None:
-        _validate_identifier(self.evaluation_id, "evaluation_id")
-        if type(self.simulation) is not PwDftSimulation:
-            raise TypeError("simulation must be a PwDftSimulation")
-        if self.simulation.settings.calculation_type is not CalculationType.scf:
-            raise ValueError("simulation calculation type must be scf")
-        if type(self.sampling) is not PwDftScfSampling:
-            raise TypeError("sampling must be a PwDftScfSampling")
 
 
 @dataclass(frozen=True, slots=True)
@@ -151,6 +106,9 @@ class PwDftScfObservation(PwDftScfObject):
     program_version: str | None = None
     irreducible_kpoint_count: int | None = None
     wavefunction_cutoff_ev: float | None = None
+    total_magnetization_electrons: float | None = None
+    spin_up_electrons: float | None = None
+    spin_down_electrons: float | None = None
     diagnostics: tuple[PwDftScfDiagnostic, ...] = ()
 
     def __post_init__(self) -> None:
@@ -172,6 +130,39 @@ class PwDftScfObservation(PwDftScfObject):
             or self.wavefunction_cutoff_ev <= 0.0
         ):
             raise ValueError("observed wavefunction cutoff must be positive and finite")
+        for label, value in (
+            ("total_magnetization_electrons", self.total_magnetization_electrons),
+            ("spin_up_electrons", self.spin_up_electrons),
+            ("spin_down_electrons", self.spin_down_electrons),
+        ):
+            if value is not None and (
+                type(value) is not float or not math.isfinite(value)
+            ):
+                raise ValueError(f"{label} must be a finite float when represented")
+        if (self.spin_up_electrons is None) is not (self.spin_down_electrons is None):
+            raise ValueError(
+                "spin-channel electron populations must both be set or omitted"
+            )
+        if (
+            self.spin_up_electrons is not None
+            and self.spin_down_electrons is not None
+            and (self.spin_up_electrons < 0.0 or self.spin_down_electrons < 0.0)
+        ):
+            raise ValueError("spin-channel electron populations must be nonnegative")
+        if (
+            self.total_magnetization_electrons is not None
+            and self.spin_up_electrons is not None
+            and self.spin_down_electrons is not None
+            and not math.isclose(
+                self.total_magnetization_electrons,
+                self.spin_up_electrons - self.spin_down_electrons,
+                rel_tol=0.0,
+                abs_tol=1e-9,
+            )
+        ):
+            raise ValueError(
+                "total magnetization must equal spin-up minus spin-down electrons"
+            )
         if type(self.diagnostics) is not tuple or any(
             type(diagnostic) is not PwDftScfDiagnostic
             for diagnostic in self.diagnostics

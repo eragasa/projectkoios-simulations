@@ -23,10 +23,34 @@ absent; no alias or compatibility facade was introduced.
 
 ## Contents
 
+- [`structure`](structure/index.md) defines exact manifest-backed structures,
+  derived supercells, and generic ideal defect deltas.
+- [`library`](library/index.md) specifies the planned exact manifest-backed
+  catalog of immutable SCF and relaxation specifications.
+- [`calculator_input`](calculator_input/index.md) specifies exact rendered
+  calculator inputs and external-file requirements without carrying execution
+  authority.
+- [`evidence`](evidence/index.md) specifies the planned immutable correlation of
+  exact specifications, rendered calculator input files, artifacts, and
+  normalized observations.
+- [`defects`](defects/index.md) specifies planned method-neutral chemical
+  potentials, formation and relaxation energies, and mechanical size-convergence
+  derivations.
+- [`dft/defects`](dft/defects/index.md) specifies the planned plane-wave DFT
+  binding for electron count, charge, spin, model compatibility, and qualified
+  final-SCF evidence. It supplies inputs to `simulations.defects`; it does not
+  own the equations.
+- [`dft/pw/relaxation`](dft/pw/relaxation/index.md) documents the existing
+  neutral request contract and planned provider-independent relaxation
+  observation and result.
 - [`workflows`](workflows/index.md) defines owner-specific, runtime-neutral
   workflow composition.
-- Existing `dft`, `structure`, `calculator`, `execution`, and other non-workflow
-  subtrees remain members of the protected core.
+- Existing `dft`, `calculator`, `execution`, and other non-workflow subtrees
+  remain members of the protected core.
+
+The library, evidence, and DFT-defect nodes are documentation-first target
+architectures. Their production packages do not yet exist; the documents mark
+that status explicitly and do not establish importable APIs.
 - Calculator-specific syntax, parsing, artifact handling, and execution remain
   outside the umbrella under `projectkoios.integrations` or
   `projectkoios.adapters`.

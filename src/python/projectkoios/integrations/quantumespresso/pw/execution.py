@@ -8,14 +8,10 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
-from projectkoios.integrations.quantumespresso.pw.inputfile.model import (
-    PwInputWriter,
-)
-from projectkoios.integrations.quantumespresso.pw.simulation import (
-    QuantumEspressoSimulation,
-)
-from projectkoios.simulations.dft.pseudopotential_repository import (
-    PseudopotentialRepository,
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.dft.pseudopotential import PseudopotentialFile
+from projectkoios.simulations.dft.pseudopotential.library import (
+    PseudopotentialLibrary,
 )
 from projectkoios.simulations.execution import (
     CalculatorExecutionRecord,
@@ -26,23 +22,40 @@ from projectkoios.simulations.execution import (
 
 @dataclass(frozen=True, slots=True)
 class QeSimulationExecutor:
-    """Resolve exact pseudopotentials before staging and executing ``pw.x``."""
+    """Stage exact prepared inputs before executing ``pw.x``."""
 
     def execute(
         self,
-        simulation: QuantumEspressoSimulation,
-        repository: PseudopotentialRepository,
+        prepared_input: CalculatorInputRecord,
+        pseudopotentials: tuple[PseudopotentialFile, ...],
+        pseudopotential_library: PseudopotentialLibrary,
         executable: Path,
         working_directory: Path,
         *,
+        output_filename: str = "pw.out",
         timeout_seconds: float | None = None,
         execution_authorized: bool = False,
     ) -> CalculatorExecutionRecord:
-        """Run ``pw.x`` or record and raise a pseudopotential preflight failure."""
-        if type(simulation) is not QuantumEspressoSimulation:
-            raise TypeError("simulation must be a QuantumEspressoSimulation")
-        if type(repository) is not PseudopotentialRepository:
-            raise TypeError("repository must be a PseudopotentialRepository")
+        """Run ``pw.x`` or record and raise an exact-input preflight failure."""
+        if type(prepared_input) is not CalculatorInputRecord:
+            raise TypeError("prepared_input must be a CalculatorInputRecord")
+        if prepared_input.integration_id.value != "quantum-espresso":
+            raise ValueError("prepared input must target Quantum ESPRESSO")
+        if prepared_input.representation != "quantum-espresso-pw-input":
+            raise ValueError("prepared input representation must be QE pw.x input")
+        if prepared_input.preparation_operation not in {
+            "projectkoios.qe.pw.scf.prepare",
+            "projectkoios.qe.pw.relaxation.prepare",
+        }:
+            raise ValueError(
+                "prepared input operation must be a supported QE pw.x preparation"
+            )
+        if type(pseudopotentials) is not tuple or not pseudopotentials:
+            raise ValueError("pseudopotentials must be a nonempty tuple")
+        if any(not isinstance(item, PseudopotentialFile) for item in pseudopotentials):
+            raise TypeError("pseudopotentials must contain PseudopotentialFile values")
+        if type(pseudopotential_library) is not PseudopotentialLibrary:
+            raise TypeError("pseudopotential_library must be a PseudopotentialLibrary")
         if not isinstance(executable, Path):
             raise TypeError("executable must be a Path")
         if not isinstance(working_directory, Path):
@@ -51,37 +64,66 @@ class QeSimulationExecutor:
             raise TypeError("execution_authorized must be a bool")
         if not execution_authorized:
             raise PermissionError("Quantum ESPRESSO execution is not authorized")
-        pseudo_dir = simulation.input_file.control_block.pseudo_dir
-        if pseudo_dir not in {".", "./"}:
+        if type(output_filename) is not str:
+            raise TypeError("output_filename must be a string")
+        primary_inputs = tuple(
+            artifact
+            for artifact in prepared_input.artifacts
+            if artifact.role == "primary-input"
+        )
+        if len(primary_inputs) != 1:
+            raise ValueError("QE prepared input must have one primary-input artifact")
+        primary_input = primary_inputs[0]
+        declared_requirements = tuple(
+            sorted(
+                (
+                    requirement.filename,
+                    requirement.sha256,
+                    requirement.byte_size,
+                    requirement.element_symbol,
+                )
+                for requirement in prepared_input.external_requirements
+            )
+        )
+        bound_requirements = tuple(
+            sorted(
+                (item.filename, item.sha256, item.byte_size, item.symbol)
+                for item in pseudopotentials
+            )
+        )
+        if declared_requirements != bound_requirements:
             raise ValueError(
-                "QeSimulationExecutor requires ControlBlock.pseudo_dir to be '.'"
+                "prepared external requirements must match bound pseudopotentials"
             )
 
         request = CalculatorExecutionRequest(
-            command=(str(executable), "-in", simulation.input_filename),
+            command=(str(executable), "-in", primary_input.filename),
             working_directory=working_directory,
-            stdout_filename=simulation.output_filename,
+            stdout_filename=output_filename,
             stderr_filename="pw.err",
             required_input_filenames=(
-                simulation.input_filename,
-                *(item.filename for item in simulation.pseudopotentials),
+                *(artifact.filename for artifact in prepared_input.artifacts),
+                *(item.filename for item in pseudopotentials),
             ),
             timeout_seconds=timeout_seconds,
             execution_authorized=True,
         )
         executor = CalculatorExecutor()
         try:
-            _prepare_outdir(
-                working_directory,
-                simulation.input_file.control_block.outdir,
-            )
+            _prepare_outdir(working_directory, "./tmp/")
+            # Scientific intent has already selected complete immutable file
+            # identities. The injected deployment library locates those exact
+            # bytes during execution preflight; it never chooses by element or
+            # filename and it grants no calculator authority.
             resolved = tuple(
-                (item, repository.resolve(item)) for item in simulation.pseudopotentials
+                (item, pseudopotential_library.resolve(item))
+                for item in pseudopotentials
             )
-            _write_atomic(
-                working_directory / simulation.input_filename,
-                PwInputWriter().render(simulation.input_file).encode("ascii"),
-            )
+            for artifact in prepared_input.artifacts:
+                _write_atomic(
+                    working_directory / artifact.filename,
+                    artifact.content,
+                )
             for item, source in resolved:
                 _copy_atomic(source, working_directory / item.filename)
         except (OSError, LookupError, ValueError) as error:

@@ -36,3 +36,17 @@ stored artifact after the tee leaves the process-output hot path. The ordinary
 offline `extract()` methods remain available.
 
 `QeVcRelaxData` is a compatibility alias of `QeRelaxData`.
+
+## Required neutral observation adapter
+
+Before defect-structure publication, `QeRelaxData` must be adapted into the
+planned protected `PwDftRelaxationObservation` and
+`PwDftRelaxationResult`. The adapter identifies the source of final positions,
+lattice, energy, forces, stress/pressure, ionic convergence, charge, and spin
+observations and retains source disagreements.
+
+For fixed-cell relaxation, the exact input lattice remains authoritative and a
+printed lattice is consistency evidence. For variable-cell relaxation, the
+qualified final observed lattice becomes part of the normalized structure. The
+adapter performs no structure-library mutation and makes no scientific
+acceptance decision.

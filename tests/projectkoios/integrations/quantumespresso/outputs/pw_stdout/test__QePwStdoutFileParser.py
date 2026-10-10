@@ -153,6 +153,23 @@ class QePwStdoutFileParserTest(unittest.TestCase):
         self.assertTrue(output.left_handed_axis_warning)
         self.assertTrue(output.job_completed)
 
+    def test_parse_retains_collinear_magnetization_in_native_units(self) -> None:
+        output = QePwStdoutFileParser().parse(
+            b"     total magnetization       =     -0.74 Bohr mag/cell\n"
+            b"     absolute magnetization    =      0.83 Bohr mag/cell\n"
+            b"JOB DONE.\n",
+            output_file=QePwStdoutFile.from_prefix(prefix="nickel"),
+        )
+
+        self.assertEqual(
+            output.total_magnetization_bohr_magneton_per_cell,
+            -0.74,
+        )
+        self.assertEqual(
+            output.absolute_magnetization_bohr_magneton_per_cell,
+            0.83,
+        )
+
     def test_parse_accepts_fortran_double_exponents(self) -> None:
         output = QePwStdoutFileParser().parse(
             b"! total energy = -1.234500D+01 Ry\nJOB DONE.\n",

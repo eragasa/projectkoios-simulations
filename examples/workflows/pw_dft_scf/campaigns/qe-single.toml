@@ -1,9 +1,8 @@
-schema_version = 2
+schema_version = 3
 integration = "quantum-espresso"
 mode = "single"
 campaign_id = "silicon-scf-qe"
-structure_id = "Si.PrimitiveUnitCell"
-sampling_profile = "single-qe"
+simulation_id = "Si.PrimitiveUnitCell.QE.SCF.Single"
 projection_profile = "qe-sssp-pbe-efficiency"
 
 [runtime]

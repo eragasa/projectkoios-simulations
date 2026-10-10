@@ -6,12 +6,13 @@ import re
 from dataclasses import dataclass
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.pw.relaxation.base import PwDftRelaxationRequest
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.relaxation.integration import (
-    PwDftRelaxationInputProjection,
     PwDftRelaxationInputWrapper,
     PwDftRelaxationIntegrationRegistry,
 )
+from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
+from projectkoios.simulations.structure import StructureResolution
 
 _IDENTIFIER = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 
@@ -23,6 +24,7 @@ class PwDftRelaxationCampaign:
     campaign_id: str
     integration_id: CalculatorIntegrationId
     request: PwDftRelaxationRequest
+    structure: StructureResolution
 
     def __post_init__(self) -> None:
         if type(self.campaign_id) is not str or not _IDENTIFIER.fullmatch(
@@ -33,6 +35,10 @@ class PwDftRelaxationCampaign:
             raise TypeError("integration_id must be a CalculatorIntegrationId")
         if type(self.request) is not PwDftRelaxationRequest:
             raise TypeError("request must be a PwDftRelaxationRequest")
+        if type(self.structure) is not StructureResolution:
+            raise TypeError("structure must be a StructureResolution")
+        if self.structure.record != self.request.specification.simulation.structure:
+            raise ValueError("structure must match the campaign specification")
 
 
 @dataclass(frozen=True, slots=True)
@@ -73,7 +79,7 @@ class PwDftRelaxationCompositionResult:
     """Return projected inputs and a non-authorizing external handoff."""
 
     campaign: PwDftRelaxationCampaign
-    projection: PwDftRelaxationInputProjection
+    prepared_input: CalculatorInputRecord
     execution_handoff: PwDftRelaxationExecutionHandoff
 
 
@@ -94,19 +100,22 @@ class PwDftRelaxationComposer:
         """Project input only; never invoke or authorize a calculator."""
         if type(campaign) is not PwDftRelaxationCampaign:
             raise TypeError("campaign must be a PwDftRelaxationCampaign")
-        projection = PwDftRelaxationInputWrapper(self.registry).project(
+        prepared_input = PwDftRelaxationInputWrapper(self.registry).project(
             integration_id=campaign.integration_id,
             request=campaign.request,
+            structure=campaign.structure,
         )
         return PwDftRelaxationCompositionResult(
             campaign=campaign,
-            projection=projection,
+            prepared_input=prepared_input,
             execution_handoff=PwDftRelaxationExecutionHandoff(
                 campaign_id=campaign.campaign_id,
                 integration_id=campaign.integration_id,
                 rendered_input_filenames=tuple(
-                    item.filename for item in projection.rendered_inputs
+                    item.filename for item in prepared_input.artifacts
                 ),
-                required_external_inputs=projection.required_external_inputs,
+                required_external_inputs=tuple(
+                    item.filename for item in prepared_input.external_requirements
+                ),
             ),
         )

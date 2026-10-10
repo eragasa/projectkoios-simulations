@@ -15,7 +15,7 @@ authors = [
 ]
 dependencies = [
     "numpy>=2.3,<3",
-    "projectkoios-physkit>=0.1.0",
+    "projectkoios-physkit>=0.1.2",
 ]
 
 [project.urls]
@@ -24,19 +24,25 @@ Documentation = "https://github.com/eragasa/projectkoios-simulations/tree/main/d
 
 [project.optional-dependencies]
 cpn = [
-    "SNAKES @ git+https://github.com/eragasa/projectkoios-snakes.git@72dbb1dbf0a91349faca21ceb660923cc442a8e9",
+    "projectkoios-snakes @ git+https://github.com/eragasa/projectkoios-snakes.git@c959528c3b35c12563b7ba291ca036e1ebb58f7e",
 ]
 visualization = [
     "plotly>=6.5,<7",
 ]
+materials-project = [
+    "mp-api>=0.46,<0.47",
+    "pymatgen>=2026.5,<2027",
+]
 development = [
     "build>=1.3,<2",
     "mypy>=2.3,<3",
+    "mp-api>=0.46,<0.47",
     "numpy>=2.3,<3",
     "plotly>=6.5,<7",
+    "pymatgen>=2026.5,<2027",
     "pytest>=9.1,<10",
     "ruff>=0.16,<1",
-    "SNAKES @ git+https://github.com/eragasa/projectkoios-snakes.git@72dbb1dbf0a91349faca21ceb660923cc442a8e9",
+    "projectkoios-snakes @ git+https://github.com/eragasa/projectkoios-snakes.git@c959528c3b35c12563b7ba291ca036e1ebb58f7e",
 ]
 
 [tool.setuptools]
@@ -61,11 +67,12 @@ namespaces = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--strict-markers"
+addopts = "--strict-markers --import-mode=importlib"
 markers = [
     "adversarial: malformed, unauthorized, or boundary-hostile cases",
     "integration: interaction between multiple components, files, or retained artifacts",
     "property: deterministic bounded property cases",
+    "simulation: explicitly authorized test that launches a real calculator; the marker alone grants no authority",
     "software_verification: bounded software-contract evidence without scientific validation",
     "smoke: quick check that a non-calculator entry point performs its basic operation",
     "validation: opt-in numerical, statistical, or scientific validation",

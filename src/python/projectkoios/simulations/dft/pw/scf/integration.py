@@ -6,54 +6,10 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.pw.scf.base import (
-    PwDftScfObservation,
-    PwDftScfRequest,
-)
-
-
-@dataclass(frozen=True, slots=True)
-class PwDftScfRenderedInput:
-    """Represent one deterministic calculator text input file."""
-
-    filename: str
-    text: str
-
-    def __post_init__(self) -> None:
-        if (
-            not self.filename
-            or self.filename in {".", ".."}
-            or "/" in self.filename
-            or "\\" in self.filename
-        ):
-            raise ValueError("rendered input filename must be a basename")
-        if type(self.text) is not str:
-            raise TypeError("rendered input text must be a string")
-
-
-@dataclass(frozen=True, slots=True)
-class PwDftScfInputProjection:
-    """Return rendered files and exact unresolved external input names."""
-
-    integration_id: CalculatorIntegrationId
-    rendered_inputs: tuple[PwDftScfRenderedInput, ...]
-    required_external_inputs: tuple[str, ...]
-    qualification: str
-
-    def __post_init__(self) -> None:
-        filenames = tuple(item.filename for item in self.rendered_inputs)
-        if len(filenames) != len(set(filenames)):
-            raise ValueError("rendered input filenames must be unique")
-        if any(
-            not filename
-            or filename in {".", ".."}
-            or "/" in filename
-            or "\\" in filename
-            for filename in self.required_external_inputs
-        ):
-            raise ValueError("required external inputs must be basenames")
-        if not self.qualification or self.qualification != self.qualification.strip():
-            raise ValueError("qualification must be nonempty and stripped")
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.dft.pw.scf.base import PwDftScfObservation
+from projectkoios.simulations.dft.pw.scf.request import PwDftScfRequest
+from projectkoios.simulations.structure import StructureResolution
 
 
 class PwDftScfIntegration(ABC):
@@ -68,8 +24,12 @@ class PwDftScfIntegration(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def project(self, request: PwDftScfRequest) -> PwDftScfInputProjection:
-        """Project calculator-neutral intent into deterministic native inputs."""
+    def project(
+        self,
+        request: PwDftScfRequest,
+        structure: StructureResolution,
+    ) -> CalculatorInputRecord:
+        """Prepare exact, content-addressed calculator inputs."""
         raise NotImplementedError
 
     @abstractmethod

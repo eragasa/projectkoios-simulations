@@ -6,73 +6,14 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.dft.pw.relaxation.base import (
-    PwDftRelaxationRequest,
-    PwDftRelaxationScope,
-)
+from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.dft.pw.relaxation.base import PwDftRelaxationScope
 from projectkoios.simulations.dft.pw.relaxation.capabilities import (
     PwDftRelaxationBackendDescription,
     PwDftRelaxationImplementationStatus,
 )
-
-
-@dataclass(frozen=True, slots=True)
-class PwDftRelaxationRenderedInput:
-    """Represent one deterministic calculator-native input file."""
-
-    filename: str
-    text: str
-
-    def __post_init__(self) -> None:
-        if (
-            type(self.filename) is not str
-            or not self.filename
-            or self.filename in {".", ".."}
-            or "/" in self.filename
-            or "\\" in self.filename
-        ):
-            raise ValueError("filename must be a basename")
-        if type(self.text) is not str:
-            raise TypeError("text must be a string")
-
-
-@dataclass(frozen=True, slots=True)
-class PwDftRelaxationInputProjection:
-    """Return native files and unresolved external input names."""
-
-    integration_id: CalculatorIntegrationId
-    rendered_inputs: tuple[PwDftRelaxationRenderedInput, ...]
-    required_external_inputs: tuple[str, ...]
-    qualification: str
-
-    def __post_init__(self) -> None:
-        if type(self.integration_id) is not CalculatorIntegrationId:
-            raise TypeError("integration_id must be a CalculatorIntegrationId")
-        if not self.rendered_inputs or any(
-            type(item) is not PwDftRelaxationRenderedInput
-            for item in self.rendered_inputs
-        ):
-            raise TypeError(
-                "rendered_inputs must contain PwDftRelaxationRenderedInput values"
-            )
-        filenames = tuple(item.filename for item in self.rendered_inputs)
-        if len(filenames) != len(set(filenames)):
-            raise ValueError("rendered input filenames must be unique")
-        if type(self.required_external_inputs) is not tuple or any(
-            type(filename) is not str
-            or not filename
-            or filename in {".", ".."}
-            or "/" in filename
-            or "\\" in filename
-            for filename in self.required_external_inputs
-        ):
-            raise ValueError("required_external_inputs must contain basenames")
-        if (
-            type(self.qualification) is not str
-            or not self.qualification
-            or self.qualification != self.qualification.strip()
-        ):
-            raise ValueError("qualification must be nonempty and stripped")
+from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
+from projectkoios.simulations.structure import StructureResolution
 
 
 class PwDftRelaxationIntegration(ABC):
@@ -93,9 +34,11 @@ class PwDftRelaxationIntegration(ABC):
 
     @abstractmethod
     def project(
-        self, request: PwDftRelaxationRequest
-    ) -> PwDftRelaxationInputProjection:
-        """Project common intent into deterministic calculator-native inputs."""
+        self,
+        request: PwDftRelaxationRequest,
+        structure: StructureResolution,
+    ) -> CalculatorInputRecord:
+        """Project common intent into exact calculator-input identity."""
         raise NotImplementedError
 
 
@@ -166,6 +109,12 @@ class PwDftRelaxationInputWrapper:
         *,
         integration_id: CalculatorIntegrationId,
         request: PwDftRelaxationRequest,
-    ) -> PwDftRelaxationInputProjection:
-        """Select the integration and return its native input projection."""
-        return self.registry.resolve(integration_id, request.scope).project(request)
+        structure: StructureResolution,
+    ) -> CalculatorInputRecord:
+        """Select the integration and return its exact prepared inputs."""
+        # Backend selection uses specification scope; occurrence identity has no
+        # authority to alter scientific degrees of freedom.
+        return self.registry.resolve(
+            integration_id,
+            request.specification.scope,
+        ).project(request, structure)

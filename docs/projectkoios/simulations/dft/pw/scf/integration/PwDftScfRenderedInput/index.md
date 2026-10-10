@@ -1,3 +1,0 @@
-# PwDftScfRenderedInput
-
-Fields: `filename`, `text`.

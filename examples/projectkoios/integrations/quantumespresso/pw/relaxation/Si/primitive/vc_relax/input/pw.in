@@ -15,9 +15,11 @@
     ntyp = 1
     ecutwfc = 40.0000000000
     ecutrho = 320.0000000000
+    occupations = 'fixed'
 /
 &ELECTRONS
     conv_thr = 1.0000000000e-06
+    electron_maxstep = 100
 /
 &IONS
     ion_dynamics = 'bfgs'

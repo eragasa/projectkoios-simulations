@@ -650,7 +650,7 @@ workflow_runner_total_path_count = 55
 workflow_runner_historical_manifest = "docs/provenance/deferred-provider-example-main-416be52.tsv"
 workflow_runner_historical_manifest_sha256 = "a941ad9efec74067fcf36dc80e05cc11834dd5a59be75c16f38ad61ad375c87f"
 workflow_runner_relocation_manifest = "docs/provenance/workflow-runner-relocation-main-416be52.tsv"
-workflow_runner_relocation_manifest_sha256 = "f510e2c9e9175d30d633fb74db2f1d1dd33f1fc159d6baea6e38aefc8f8dcdb7"
+workflow_runner_relocation_manifest_sha256 = "6407961f4f5334fdb705b584d7908242ebade606c14dba2f0e318413a14a2365"
 workflow_runner_replay_overlay_commit = "7b687fb23b9877b744bfba3455040db2cbf94292"
 workflow_runner_replay_overlay_path_count = 1
 workflow_runner_fixture_sha256 = "bfc9f867474c86d20359a23563cf3d6277928bcf435a126357fd2bdc4732f57e"
@@ -706,3 +706,17 @@ target = "tests/fixtures/pw_dft_scf/campaign-projections.json"
 role = "exact provider graph probe"
 source = "tests/support/exact_provider_graph_probe.py"
 target = "tests/support/exact_provider_graph_probe.py"
+
+[[extractions]]
+component = "projectkoios.integrations.materials_project"
+status = "adapted-structure-retrieval-and-elemental-hull-selection"
+source_repository = "https://github.com/eragasa/ksdft2effmass"
+source_commit = "c47d3cfcee7d4a46b66b14426650d5d811b3848d"
+source_tree = "011e125d5c6a9a686643ff96bd20a8b35e4c55d3"
+source_implementation_tree = "e3c7a01a94050a4e9e79099186ff872b634f420d"
+source_test_tree = "5bd346469a95f14577d9a546e1122d8c074f7ca2"
+namespace_from = "ksdft2effmass.integration.materials_project"
+namespace_to = "projectkoios.integrations.materials_project"
+adaptation = "Reused the explicit injected MPRester boundary and immediate immutable structure-copy design; replaced application-specific periodic and mass-conversion records with PhysKit unit cells; omitted the unrelated symmetry analyzer and serializer; added explicit pymatgen PhaseDiagram elemental-reference selection without live retrieval, calculation execution, or scientific acceptance."
+calculator_execution_performed = false
+network_retrieval_performed = false

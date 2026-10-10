@@ -39,6 +39,8 @@ class QeScfProjectionConfiguration:
     species: tuple[QeScfSpeciesConfiguration, ...]
     charge_density_cutoff_ratio: float = 8.0
     electronic_tolerance_ry: float = 1.0e-6
+    electronic_atol_ry: float = 1.0e-15
+    magnetic_moment_atol_mu_b: float = 1.0e-12
     prefix: str = "system"
     pseudo_dir: str = "./"
     outdir: str = "./tmp/"
@@ -66,6 +68,20 @@ class QeScfProjectionConfiguration:
             or self.electronic_tolerance_ry <= 0.0
         ):
             raise ValueError("electronic_tolerance_ry must be positive and finite")
+        # This tolerance applies to the neutral-eV-to-native-Ry comparison only;
+        # it is not an SCF convergence threshold and grants no acceptance policy.
+        if (
+            type(self.electronic_atol_ry) is not float
+            or not math.isfinite(self.electronic_atol_ry)
+            or self.electronic_atol_ry < 0.0
+        ):
+            raise ValueError("electronic_atol_ry must be finite and nonnegative")
+        if (
+            type(self.magnetic_moment_atol_mu_b) is not float
+            or not math.isfinite(self.magnetic_moment_atol_mu_b)
+            or self.magnetic_moment_atol_mu_b < 0.0
+        ):
+            raise ValueError("magnetic_moment_atol_mu_b must be finite and nonnegative")
         for label, value in (
             ("prefix", self.prefix),
             ("pseudo_dir", self.pseudo_dir),
@@ -73,6 +89,14 @@ class QeScfProjectionConfiguration:
         ):
             if not value or value != value.strip():
                 raise ValueError(f"{label} must be nonempty and stripped")
+        # The exact prepared-input record currently stages pseudopotentials in
+        # the run root and creates one calculator-state subdirectory. Reject
+        # alternate native layouts rather than rendering inputs that the
+        # production executor cannot stage faithfully.
+        if self.pseudo_dir != "./":
+            raise NotImplementedError("QE SCF pseudo_dir must be './'")
+        if self.outdir != "./tmp/":
+            raise NotImplementedError("QE SCF outdir must be './tmp/'")
         filename = self.input_filename
         if (
             not filename

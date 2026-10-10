@@ -52,6 +52,30 @@ this outward integration. Workflow orchestration, calculator execution,
 convergence campaigns, recipes, and scientific acceptance policy do not belong
 in the parser bundle.
 
+## Exact structures, supercells, and defect deltas
+
+`StructureLibrary` resolves exact manifest-declared primitive and conventional
+unit cells by stable identifier, representation, schema version, byte size,
+SHA-256, and immutable source provenance. `SuperCellBuilder` derives diagonal
+supercells with source-site provenance. `UnitCellDefectDelta` represents
+vacancies, interstitials, substitutions, and complexes through simultaneous
+original-index removals followed by declared additions. Applying a delta returns
+a base `UnitCell`; charge state remains separate configuration metadata.
+
+The reviewed examples include exact silicon primitive and conventional records
+and concrete neutral, unrelaxed Si:P and Si:B declarations based on a `(2, 2,
+2)` conventional supercell. See the
+[structure architecture](docs/architecture/projectkoios/simulations/structure/index.md).
+These data operations neither authorize calculator execution nor establish that
+a defect model is scientifically appropriate or relaxed.
+
+The optional
+[Materials Project integration](docs/architecture/projectkoios/integrations/materials_project/index.md)
+uses pymatgen convex hulls to select explicit elemental B and P reference entries
+from an injected `MPRester` client. Install the `materials-project` extra for
+that outward integration. It records a database- and compatibility-scheme-qualified
+reference choice; it does not claim a universal finite-temperature ground state.
+
 ## Local calculator and pseudopotential deployment
 
 [`local-execution.example.toml`](local-execution.example.toml) is the single
@@ -127,3 +151,15 @@ python3.14 -m venv .venv
 .venv/bin/python -m mypy
 .venv/bin/python -m build --wheel
 ```
+
+Tests marked `simulation` launch a real calculator and remain skipped unless the
+operator supplies explicit execution authorization. Select the marker to scope
+an authorized invocation:
+
+```bash
+.venv/bin/python -m pytest -m simulation \
+  --authorize-calculator-execution
+```
+
+The marker alone grants no execution authority. Rendering, parsing, retained
+artifact, and fake-executable tests are not simulation tests.

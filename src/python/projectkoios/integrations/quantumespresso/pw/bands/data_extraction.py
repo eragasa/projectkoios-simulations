@@ -6,14 +6,18 @@ import math
 from dataclasses import dataclass
 from typing import Protocol, cast
 
+import numpy as np
+
 from projectkoios.integrations.quantumespresso.pw.bands.path import (
     QeBandsPathProjection,
 )
 from projectkoios.integrations.quantumespresso.pw.data_extraction.qexsd import (
     QeQexsdData,
 )
+from projectkoios.physkit.periodic.unit_cell import UnitCell
+from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
 from projectkoios.simulations.dft.pw.bands import BandDiagramData
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from projectkoios.simulations.dft.pw.simulation import ResolvedPwDftSimulation
 
 # CODATA 2018 values used only for an explicit QEXSD Hartree/bohr conversion.
 _HARTREE_TO_EV = 27.211386245988
@@ -114,13 +118,9 @@ class QeBandsDataExtractor:
                 "QEXSD document must be produced by QuantumEspressoXsdDocumentParser"
             )
         parsed = cast("_QexsdBandDocument", document)
-        observed_simulation = PwDftSimulation(
-            unit_cell=qexsd.final_structure.unit_cell,
-            settings=projection.calculation.simulation.settings,
-        )
-        if not _simulations_use_same_cell(
+        if not _simulation_uses_same_cell(
             projection.calculation.simulation,
-            observed_simulation,
+            qexsd.final_structure.unit_cell,
             tolerance=self.cell_tolerance,
         ):
             raise QeBandsDataError(
@@ -198,23 +198,41 @@ class QeBandsDataExtractor:
         )
 
 
-def _simulations_use_same_cell(
-    expected: PwDftSimulation,
-    observed: PwDftSimulation,
+def _simulation_uses_same_cell(
+    expected: ResolvedPwDftSimulation,
+    observed: UnitCell,
     *,
     tolerance: float,
 ) -> bool:
-    if tuple(symbol for symbol, _ in expected.fractional_sites) != tuple(
-        symbol for symbol, _ in observed.fractional_sites
-    ):
+    observed_symbols = tuple(atom.symbol for atom in observed.atomic_basis.atoms)
+    if tuple(symbol for symbol, _ in expected.fractional_sites) != observed_symbols:
         return False
+    factor = MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
+        observed.H.unit,
+        PhysicalUnit("angstrom"),
+    )
+    matrix = np.asarray(observed.H.magnitude * factor, dtype=np.float64)
+    observed_values = (
+        *(
+            (
+                float(matrix[0, index]),
+                float(matrix[1, index]),
+                float(matrix[2, index]),
+            )
+            for index in range(3)
+        ),
+        *(
+            (
+                float(atom.position_fractional.magnitude[0]),
+                float(atom.position_fractional.magnitude[1]),
+                float(atom.position_fractional.magnitude[2]),
+            )
+            for atom in observed.atomic_basis.atoms
+        ),
+    )
     expected_values = (
         *expected.lattice_vectors_angstrom,
         *(position for _, position in expected.fractional_sites),
-    )
-    observed_values = (
-        *observed.lattice_vectors_angstrom,
-        *(position for _, position in observed.fractional_sites),
     )
     return len(expected_values) == len(observed_values) and all(
         _distance(left, right) <= tolerance

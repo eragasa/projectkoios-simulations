@@ -27,7 +27,7 @@ _EXAMPLE_ROOT = (
 _CONFIGURATION = _EXAMPLE_ROOT / "relax/calculation.toml"
 _STRUCTURE = _EXAMPLE_ROOT / "Si.primitive.json"
 _EXPECTED_INPUT_SHA256 = (
-    "f4990b1a4152c61d3d7ad7887b13543c0afa58e7470d82da27f066d1ea3b7b40"
+    "e30e5f549b2ac79f1b1b6d466dc623467043018b7b1990a8f16ef4c542f7d6c8"
 )
 
 
@@ -50,7 +50,7 @@ class QeRelaxationCalculationRunnerTest(unittest.TestCase):
                 {"input-manifest.json", "pw.in"},
             )
             manifest = json.loads(result.input_manifest.read_text(encoding="utf-8"))
-            self.assertEqual(manifest["schema_version"], 1)
+            self.assertEqual(manifest["schema_version"], 2)
             self.assertEqual(manifest["calculation_id"], "si-primitive-qe75-relax")
             self.assertEqual(
                 manifest["configuration_sha256"],

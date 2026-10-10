@@ -26,22 +26,14 @@ from projectkoios.physkit.units import (
     Unitless,
     VectorQuantity,
 )
-from projectkoios.simulations.dft.pw.settings import (
-    CalculationType,
-    PwDftSettings,
-)
-from projectkoios.simulations.dft.pw.simulation import PwDftSimulation
+from projectkoios.simulations.dft.pw.settings import CalculationType
 
 
 class PoscarWriterTest(unittest.TestCase):
     def test_projects_one_silicon_simulation_into_vasp(self) -> None:
         unit_cell = _silicon_unit_cell()
-        simulation = PwDftSimulation(
-            unit_cell=unit_cell,
-            settings=PwDftSettings(calculation_type=CalculationType.scf),
-        )
-        vasp_calculation = VaspCalculationProjector().project(simulation)
-        unit_cell_model = UnitCellModel(unit_cell=simulation.unit_cell)
+        vasp_calculation = VaspCalculationProjector().project(CalculationType.scf)
+        unit_cell_model = UnitCellModel(unit_cell=unit_cell)
         model = PoscarModel(
             comment="Silicon primitive cell",
             unit_cell_model=unit_cell_model,
@@ -49,7 +41,7 @@ class PoscarWriterTest(unittest.TestCase):
 
         rendered = PoscarWriter().render(model)
 
-        self.assertIs(unit_cell_model.unit_cell, simulation.unit_cell)
+        self.assertIs(unit_cell_model.unit_cell, unit_cell)
         self.assertEqual(
             tuple(
                 (assignment.tag, assignment.value)
