@@ -15,8 +15,8 @@ Exact conformance inputs reviewed for this proposal:
 | Input | Identity |
 |---|---|
 | Generic Workflow owner conformance target | `projectkoios.workflow.cpn-bindings@0.1.0`; Git `9ec0944dad3af1706edf01101e443e244da22ef5`; SHA-256 `e6428a8b0d8a47d4f9a6596300fe5ccc65bb16c12e1cc8ffe64884720bd513c2` |
-| Si-VC Workflow binding profile | Git `4ef67e49f11a00e66f5c6ed6f4f2d72eb441505a`; SHA-256 `e3496191b7299b2bdba11ba3ca4679a0eb80a421bd076eac1a7a8fdc3344dd06` |
-| Si-VC SCF saved-state lineage contract | Git `4ef67e49f11a00e66f5c6ed6f4f2d72eb441505a`; SHA-256 `e49bb8197069d8788aa9382ff823506471c2665bd605016669123bb2f2630183` |
+| Si-VC Workflow binding profile | Git `9ac2363908fca665fef29b5add5a334a69d98180`; SHA-256 `e3496191b7299b2bdba11ba3ca4679a0eb80a421bd076eac1a7a8fdc3344dd06` |
+| Si-VC SCF saved-state lineage contract | Git `9ac2363908fca665fef29b5add5a334a69d98180`; SHA-256 `639daaf0a6a316b269f556e5a5aae35ce11c7a38f7c265b1178e25a98ef6313c` |
 | Simulations preflight | SHA-256 `728862e4a68fb0cac85109c1e1abe84a54e45ca1a923b0c08fe6a7a88a152fb3` |
 | Simulations source revision | Git `33b7170fffb289f4e7205c63b7789a4f9468a74b` |
 | Authoritative SCF topology source | `src/python/projectkoios/simulations/workflows/pw_dft_scf/cpn/net.py`, SHA-256 `4d580f686382851b32fccfbb7aa775782e3c44daf9e6efcf6d1cd95ca9d2d563` |
@@ -841,8 +841,8 @@ consumer, and saved-state-lineage successors without creating reciprocal
 content-hash cycles.
 **Evidence:** Section 0 binds owner Git `9ec0944dad3af1706edf01101e443e244da22ef5`
 and SHA-256 `e6428a8b...`, plus consumer Git
-`4ef67e49f11a00e66f5c6ed6f4f2d72eb441505a` and exact primary/lineage SHA-256
-values `e3496191...` and `e49bb819...`. Those files were independently rehashed
+`9ac2363908fca665fef29b5add5a334a69d98180` and exact primary/lineage SHA-256
+values `e3496191...` and `639daaf0...`. Those files were independently rehashed
 and semantically checked before this focused commit. The consumer documents do
 not embed this later provider digest.
 **Consequence:** None at design level; no reciprocal future digest appears in a
