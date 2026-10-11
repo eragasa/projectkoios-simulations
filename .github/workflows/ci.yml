@@ -34,12 +34,8 @@ jobs:
           PIP_CONFIG_FILE: /dev/null
           PIP_DISABLE_PIP_VERSION_CHECK: "1"
         run: |
-          printf '%s\n' \
-            'projectkoios-physkit @ git+https://github.com/eragasa/projectkoios-physkit.git@13b3a16bb5cebca08c5c61ce22a072b85bc9af9e' \
-            > "$RUNNER_TEMP/constraints.txt"
           python -m pip install \
             --index-url https://pypi.org/simple \
-            --constraint "$RUNNER_TEMP/constraints.txt" \
             ".[development]"
 
       - name: Run tests
