@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import re
 import subprocess
 import tomllib
 from importlib.resources import files
@@ -10,6 +9,15 @@ from pathlib import Path
 from typing import Any
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
+PHYSKIT_RELEASE_COMMIT = "d6333208a1ff723682a557afd593a5c932058cb7"
+PHYSKIT_RELEASE_WHEEL_SHA256 = (
+    "79283d64707a4e7aa4dd7fcff85647a957f1f6d4a3894bf0350ea65ac745d38c"
+)
+PHYSKIT_RELEASE_DEPENDENCY = (
+    "projectkoios-physkit @ https://github.com/eragasa/projectkoios-physkit/"
+    "releases/download/v0.1.2/projectkoios_physkit-0.1.2-py3-none-any.whl"
+    f"#sha256={PHYSKIT_RELEASE_WHEEL_SHA256}"
+)
 
 
 def _transfer() -> dict[str, Any]:
@@ -394,8 +402,10 @@ def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     assert dependency["source_blob"] == "d98be473e19e17a59563fc7c3e00cca02fd822d3"
     assert dependency["destination_owner"] == "projectkoios.physkit.units.quantities"
     assert dependency["destination_owner_at_extraction"] == ("physkit.units.quantities")
-    assert dependency["distribution"] == "projectkoios-physkit>=0.1.0"
+    assert dependency["distribution"] == "projectkoios-physkit==0.1.2"
     assert dependency["distribution_at_extraction"] == "physkit>=0.1.0"
+    assert dependency["release_commit"] == PHYSKIT_RELEASE_COMMIT
+    assert dependency["release_wheel_sha256"] == PHYSKIT_RELEASE_WHEEL_SHA256
     assert dependency["commit"] == "97032f16c9125aa124750508f8513cca9f6dab02"
     assert dependency["blob"] == "686d075852ed01aab0a8d74fdec1be5a440c075d"
     assert len(extraction["file_mappings"]) == 7
@@ -407,11 +417,11 @@ def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     ]
 
 
-def test_physkit_runtime_dependency_has_a_compatible_lower_bound() -> None:
+def test_physkit_runtime_dependency_binds_the_exact_release_asset() -> None:
     with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as stream:
         project = tomllib.load(stream)["project"]
 
-    assert "projectkoios-physkit>=0.1.2" in project["dependencies"]
+    assert PHYSKIT_RELEASE_DEPENDENCY in project["dependencies"]
     assert not any("git+" in dependency for dependency in project["dependencies"])
     readme = (REPOSITORY_ROOT / "README.md").read_text()
     assert "projectkoios.integrations.wannier90/provenance.json" in readme
@@ -430,14 +440,9 @@ def test_physkit_runtime_dependency_has_a_compatible_lower_bound() -> None:
         Path("src/python/projectkoios/integrations/wannier90/provenance.json"),
     } <= relative_paths
 
-    forbidden_claim = re.compile(r"\b(?:pinned|offline|locked|lockfile)\b")
-    for path in metadata_paths:
-        text = path.read_text(encoding="utf-8")
-        contexts = re.split(r"(?m)(?=^#{1,6}\s)|\n\s*\n", text)
-        for context in contexts:
-            if "physkit" not in context.casefold():
-                continue
-            assert forbidden_claim.search(context.casefold()) is None, path
+    origins = (REPOSITORY_ROOT / "docs/provenance/origins.md").read_text()
+    assert PHYSKIT_RELEASE_COMMIT in origins
+    assert PHYSKIT_RELEASE_WHEEL_SHA256 in origins
 
 
 def test_wannier90_distribution_resource_binds_provenance() -> None:
@@ -454,8 +459,10 @@ def test_wannier90_distribution_resource_binds_provenance() -> None:
         "8b508c43979e6442980b80c9a7edf306b32e33f8",
     ]
     physkit = provenance["projectkoios-physkit"]
-    assert physkit["distribution"] == "projectkoios-physkit>=0.1.0"
+    assert physkit["distribution"] == "projectkoios-physkit==0.1.2"
     assert physkit["distribution_at_extraction"] == "physkit>=0.1.0"
+    assert physkit["release_commit"] == PHYSKIT_RELEASE_COMMIT
+    assert physkit["release_wheel_sha256"] == PHYSKIT_RELEASE_WHEEL_SHA256
     assert physkit["namespace"] == "projectkoios.physkit"
     assert physkit["namespace_at_extraction"] == "physkit"
     assert physkit["license_at_extraction"] == "MIT"

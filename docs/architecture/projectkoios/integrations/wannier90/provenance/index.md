@@ -14,10 +14,12 @@ resource in `projectkoios.integrations.wannier90`. The
 incidental package-facade dependencies. The only semantic in-repository
 dependency was the donor quantity module, blob
 `d98be473e19e17a59563fc7c3e00cca02fd822d3`. Generic quantity ownership is
-`projectkoios-physkit`, so the extraction depends on the current compatible
-`projectkoios-physkit>=0.1.2` distribution and imports
-`projectkoios.physkit.units.quantities` instead of copying it here. Commit
-`97032f16c9125aa124750508f8513cca9f6dab02` identifies the implementation
+`projectkoios-physkit`, so the extraction depends on the exact v0.1.2 release
+asset and imports `projectkoios.physkit.units.quantities` instead of copying it
+here. The release tag resolves to commit
+`d6333208a1ff723682a557afd593a5c932058cb7`; the wheel is pinned by SHA-256
+`79283d64707a4e7aa4dd7fcff85647a957f1f6d4a3894bf0350ea65ac745d38c`.
+Commit `97032f16c9125aa124750508f8513cca9f6dab02` identifies the implementation
 reviewed during extraction, not an installation pin.
 
 ## Residual scientific limits
