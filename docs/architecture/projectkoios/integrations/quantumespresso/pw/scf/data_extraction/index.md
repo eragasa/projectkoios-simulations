@@ -14,6 +14,14 @@ mechanical consistency observations. `QePwDftScfIntegration.analyze(...)`
 continues to return its required calculator-neutral observation by selecting
 `QeScfData.observation`.
 
+The maintained extractor combines bounded retained-artifact loading,
+provider-native parsing, and normalization in one public operation. These remain
+separate responsibilities: parsing decodes exact native bytes without changing
+their meaning, while normalization explicitly maps parsed provider facts and
+lineage into calculator-neutral records. See the
+[operation-boundary vocabulary](../operations/). Neither responsibility grants
+execution authority or scientific acceptance.
+
 ## Required defect extension
 
 For spin-polarized calculations, the stdout parser retains QE's total and
