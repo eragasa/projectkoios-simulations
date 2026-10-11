@@ -5,6 +5,12 @@ translates a calculator-neutral `PwDftScfRequest` plus an exact
 `StructureResolution` into deterministic `pw.x` input. The existing Python name
 uses “projection”; architecturally this is calculator-input translation.
 
+The maintained projector currently performs both translation and deterministic
+rendering before returning `CalculatorInputRecord`; neither step stages files or
+authorizes execution. See the [operation-boundary vocabulary](../operations/)
+for the exact distinction between projection/translation, rendering, parsing,
+and normalization.
+
 The neutral specification stores its scientific electronic convergence
 threshold in eV. QE configuration stores the native `electronic_tolerance_ry`
 and a separate `electronic_atol_ry`. The latter is only the absolute tolerance
