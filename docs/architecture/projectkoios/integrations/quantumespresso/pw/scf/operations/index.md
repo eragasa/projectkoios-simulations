@@ -2,19 +2,23 @@
 
 ## Status
 
-The maintained implementation exposes two combined public operations:
+The maintained implementation exposes these operation boundaries:
 
 - `QeScfInputProjector.project(...)` performs calculator-input translation and
   deterministic input rendering, returning an exact `CalculatorInputRecord`;
-- `QeScfDataExtractor.extract(...)` loads bounded retained artifacts, parses
-  native QE data, and normalizes the result into `QeScfData` and its
-  calculator-neutral `PwDftScfObservation`.
+- `QeScfOutputParser.action(...)` parses bounded supplied native stream bytes
+  without filesystem or process access;
+- `QeScfNormalizer.action(...)` maps parsed provider records and exact execution
+  lineage into `QeScfData` and its calculator-neutral `PwDftScfObservation`;
+- `QeScfDataExtractor.extract(...)` is the retained-artifact adapter: it loads
+  bounded artifacts and delegates to the same parser and normalizer.
 
 Projection, rendering, parsing, and normalization are distinct architectural
-responsibilities even when one maintained method currently performs more than
-one of them. Separate public actionizers for all four stages are deferred. This
-page defines their meanings; it does not claim that those future APIs exist or
-choose their class names, dependencies, or namespaces.
+responsibilities even when one maintained method performs more than one of
+them. Translation and rendering remain combined in the maintained projector;
+parsing and normalization now have explicit pure request/action/result
+boundaries. This page defines their meanings without choosing future input-stage
+class names, dependencies, or namespaces.
 
 ## Vocabulary
 
@@ -73,12 +77,12 @@ names, native units, explicit optionality, schema/version checks, and bounded
 malformed-input failure. It must preserve which exact artifact supplied each
 fact.
 
-Artifact lookup and file reading are not parsing. The current
-`QeScfDataExtractor` performs bounded retained-artifact loading before invoking
-parsers, but a future pure parser would consume bytes and artifact identities
-supplied by a separate retention boundary. Parsing must not invent missing
-values, treat `JOB DONE` as complete execution evidence, convert a native fact
-into scientific acceptance, or authorize another action.
+Artifact lookup and file reading are not parsing. `QeScfDataExtractor`
+performs bounded retained-artifact loading before invoking
+`QeScfOutputParser`; the pure parser consumes bytes and safe relative artifact
+identifiers supplied by that adapter or another retention boundary. Parsing
+must not invent missing values, treat `JOB DONE` as complete execution evidence,
+convert a native fact into scientific acceptance, or authorize another action.
 
 ### Normalization
 
@@ -138,12 +142,15 @@ Every arrow preserves exact source identity. Replay may repeat translation,
 rendering, parsing, or normalization over immutable supplied inputs without
 implying that execution occurred again.
 
-## Deferred decomposition
+## Decomposition status
 
-A future four-action decomposition is admissible only if it preserves the
-current exact structure, pseudopotential, charge, spin, prepared-input,
-execution, artifact, and evidence contracts. It must not introduce a parallel
-production model, a compatibility facade, a namespace relocation, machine-path
-content in portable records, or a dependency solely to recover an obsolete
-prototype. Until such an implementation is separately reviewed, the combined
-maintained methods above remain authoritative.
+The output side now has pure parsing and normalization actionizers, and the
+retained-artifact extractor delegates to them rather than maintaining a second
+implementation. Translation and rendering remain combined in the maintained
+projector.
+
+Any further decomposition must preserve the current exact structure,
+pseudopotential, charge, spin, prepared-input, execution, artifact, and evidence
+contracts. It must not introduce a parallel production model, a compatibility
+facade, a namespace relocation, machine-path content in portable records, or a
+dependency solely to recover an obsolete prototype.
