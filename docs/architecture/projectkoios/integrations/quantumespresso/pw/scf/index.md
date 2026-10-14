@@ -12,6 +12,11 @@ Input translation consumes the shared components declared by
 `pw.inputfile.base`; calculator-neutral SCF contracts remain under
 `simulations.dft.pw.scf`.
 
-The [saved-state candidate](saved_state_candidate/) is a path-free provider
-companion to an unchanged successful child terminal outcome. It remains distinct
-from managed-project scientific acceptance and later staging authority.
+The [saved-state artifact-set boundary](saved_state_artifact_set/) defines an
+immutable provider record, a strict canonical codec, retention-independent
+logical identity derivation, and the exact candidate fragment projected from
+canonical manifest bytes plus already-retained payload references. The
+[saved-state candidate](saved_state_candidate/) is a path-free provider
+companion to an unchanged successful child terminal outcome. Both remain
+distinct from retention authority, managed-project scientific acceptance, and
+later staging authority.

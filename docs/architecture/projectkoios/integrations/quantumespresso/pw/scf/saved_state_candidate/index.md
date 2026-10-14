@@ -13,6 +13,22 @@ outcome and history head.
 The record is provider evidence only. It does not establish Si-VC acceptance,
 scientific adequacy, staging authority, calculator authority, or publication.
 
+## Saved-state artifact-set derivation
+
+[`QeScfSavedStateArtifactSetProjector`](../saved_state_artifact_set/) consumes
+the canonical manifest bytes and ordered artifact-store references supplied by
+an outer authorized retention boundary. It produces an immutable artifact-set
+`DataObject`, a retention-independent logical identity derived from its exact
+saved-state semantics, and the exact `QeScfCandidateSavedState` fragment used
+here. Its separate canonical codec computes a payload digest over encoded bytes;
+that digest is not the logical artifact-set identity. This provides one checked
+projection path that derives the manifest digest, artifact count, byte total,
+and artifact-set identity together. Direct candidate construction remains
+possible and must satisfy the candidate's own invariants; the projection result
+additionally validates exact source correlation. The source-verification
+identity remains caller-supplied by the outer boundary and is bound, not
+established, by this pure projection.
+
 ## Pure encoding boundary
 
 `QeScfSavedStateCandidateJsonCodec`:
@@ -24,9 +40,12 @@ scientific adequacy, staging authority, calculator authority, or publication.
 4. rejects noncanonical bytes, duplicate or unknown keys, invalid types,
    machine paths, and bounded-field violations.
 
-An outer authorized artifact boundary must retain the returned bytes. Generic
-Workflow, not this provider module, assembles and admits the six-field payload
-reference using the immutable artifact identity returned by that boundary.
+An outer authorized artifact boundary may retain the returned bytes and must
+separately establish any retained reference. No accepted versioned Workflow
+artifact-envelope or payload-reference contract is currently consumed here.
+Future Workflow integration must adapt through its reviewed public contract;
+this provider module does not prescribe its fields, admission rules, or wire
+format.
 
 `QeScfSavedStateCandidateVerifier` checks the candidate against the exact
 canonical saved-state manifest bytes, `CalculatorInputRecord`, path-free
@@ -38,22 +57,20 @@ resolution and source-byte verification remain isolated worker operations.
 The codec requires `workflow.child_export_identity`, so changing or omitting the
 linked immutable child export changes or invalidates the candidate identity.
 The provider verifier does not resolve Workflow plans or terminal deliveries and
-must not accept a caller-asserted export as proof. Generic Workflow separately
-checks that this field equals the export selected by the retained child plan and
-terminal delivery.
+must not accept a caller-asserted export as proof. How an accepted Workflow
+contract establishes and correlates that opaque owner-issued identity remains a
+deferred cross-boundary concern.
 
-## Hierarchical delivery
+## Deferred Workflow delivery
 
-The Generic Workflow conformance target is
-`projectkoios.workflow.cpn-bindings@0.1.0`, contract SHA-256
-`e6428a8b0d8a47d4f9a6596300fe5ccc65bb16c12e1cc8ffe64884720bd513c2`.
-A successful SCF delivery requires the existing terminal payload first and one
-candidate companion at requirement ordinal `0`, retained in phase
-`post_terminal_pre_delivery_retained`. Known-failure classifications declare an
-empty companion tuple. The companion is not a CPN token and does not add or
-change any place, transition, arc, guard, expression, or marking.
+Historical design records proposed a post-terminal companion, an ordinal, and a
+retention phase. Those proposals are non-current and non-authoritative: Workflow
+has not accepted a public wire format, artifact envelope, companion-operation
+contract, or compatibility promise for this candidate. They are therefore not a
+conformance target for this module.
 
 The canonical SNAKES-to-Workflow exporter, compiled plan/export identities,
-golden parity fixture, artifact-store binding, and nested runtime integration
-remain unavailable. Their identities must be derived from future exact bytes;
-this module does not fabricate nominal substitutes.
+golden parity fixture, accepted artifact-reference binding, and nested runtime
+integration remain unavailable. Their identities must be derived by their
+owners from future exact contracts; this module does not fabricate nominal
+substitutes.
