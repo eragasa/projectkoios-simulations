@@ -45,6 +45,29 @@ license.
 - License SHA-256:
   `0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410`
 
+## projectkoios-workflow-sdk
+
+The QE SCF artifact-set integration pilot uses the unreleased Workflow SDK alpha
+as a separately installed Project Koios dependency. The SDK supplies immutable
+pure-firing records, nominal runtime-enforced abstract bases, and canonical JSON
+codecs; it supplies no effect lifecycle, scheduler, authority, persistence, or
+artifact retention operation.
+
+- Maintained repository: <https://github.com/eragasa/projectkoios-workflow>
+- Runtime dependency: exact `projectkoios-workflow-sdk==0.1.0a1`
+- Authorized local pilot wheel:
+  `projectkoios_workflow_sdk-0.1.0a1-py3-none-any.whl`
+- Wheel SHA-256:
+  `925f6974c49c8935ebf2f002b18c86d29375e1b11c3ffc17a29d305fb8095ff4`
+- Workflow repository base commit:
+  `63f127dd6922c16accb3dc857cfb2e28224a8958`
+- Import namespace: `projectkoios.workflow_sdk`
+- License: Apache-2.0
+
+The wheel digest is the pilot implementation identity; the base commit alone
+does not identify the authorized working-tree candidate from which the wheel
+was reproducibly built. This alpha is not a production compatibility promise.
+
 ## Pymatgen
 
 The optional Materials Project integration uses pymatgen for explicit elemental

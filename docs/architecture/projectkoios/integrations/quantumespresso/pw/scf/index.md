@@ -19,4 +19,6 @@ canonical manifest bytes plus already-retained payload references. The
 [saved-state candidate](saved_state_candidate/) is a path-free provider
 companion to an unchanged successful child terminal outcome. Both remain
 distinct from retention authority, managed-project scientific acceptance, and
-later staging authority.
+later staging authority. Its [Workflow SDK alpha pilot](saved_state_artifact_set/workflow_sdk/)
+wraps only the pure projection under a 4-MiB inline boundary and leaves CPN
+external-output admission to Workflow.

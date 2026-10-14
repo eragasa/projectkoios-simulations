@@ -15,6 +15,22 @@ The initial implementation was extracted from
 documentation Git trees and the namespace-only adaptation are recorded in
 [`../../TRANSFER.toml`](../../TRANSFER.toml).
 
+## Workflow SDK alpha pilot dependency
+
+The outward QE SCF artifact-set integration pilot consumes the exact unreleased
+`projectkoios-workflow-sdk==0.1.0a1` contract. The authorized local wheel is
+`projectkoios_workflow_sdk-0.1.0a1-py3-none-any.whl`, SHA-256
+`925f6974c49c8935ebf2f002b18c86d29375e1b11c3ffc17a29d305fb8095ff4`.
+It was reproducibly built by the Workflow owner from an authorized working-tree
+candidate based on Workflow commit
+`63f127dd6922c16accb3dc857cfb2e28224a8958`. The wheel digest, not that base
+commit alone, identifies the pilot SDK implementation.
+
+The alpha provides only pure-firing integration records and validation. It does
+not establish calculator authority, retention authority, CPN external-output
+admission, production compatibility, numerical verification, or scientific
+validation.
+
 ## Reusable simulation-workflow capability migration
 
 The reusable SCF and relaxation workflow capabilities were originally migrated
