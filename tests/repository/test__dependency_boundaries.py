@@ -9,6 +9,10 @@ PROJECTKOIOS_ROOT = (
 )
 SOURCE_ROOT = PROJECTKOIOS_ROOT / "simulations"
 SIMULATION_WORKFLOWS_ROOT = SOURCE_ROOT / "workflows"
+_ALLOWED_WORKFLOW_PROJECT_ROOTS = (
+    "projectkoios.simulations",
+    "projectkoios.simulations.workflows",
+)
 
 
 def _projectkoios_imports(path: Path) -> tuple[str, ...]:
@@ -62,6 +66,13 @@ def _absolute_imports(path: Path) -> tuple[str, ...]:
     return tuple(names)
 
 
+def _workflow_project_import_is_allowed(imported_name: str) -> bool:
+    return any(
+        imported_name == root or imported_name.startswith(f"{root}.")
+        for root in _ALLOWED_WORKFLOW_PROJECT_ROOTS
+    )
+
+
 def test_relative_provider_imports_resolve_outside_the_neutral_namespace() -> None:
     parsed = ast.parse("from .....integrations import quantum_espresso")
     node = parsed.body[0]
@@ -69,6 +80,18 @@ def test_relative_provider_imports_resolve_outside_the_neutral_namespace() -> No
     path = SOURCE_ROOT / "dft" / "pw" / "scf" / "example.py"
 
     assert _resolve_import_from(path, node) == "projectkoios.integrations"
+
+
+def test_relative_workflow_escape_is_rejected_by_boundary_policy() -> None:
+    parsed = ast.parse("from ....workflow import runtime")
+    node = parsed.body[0]
+    assert isinstance(node, ast.ImportFrom)
+    path = SIMULATION_WORKFLOWS_ROOT / "pw_dft_scf" / "example.py"
+
+    imported_name = _resolve_import_from(path, node)
+
+    assert imported_name == "projectkoios.workflow"
+    assert not _workflow_project_import_is_allowed(imported_name)
 
 
 def test_protected_simulations_core_cannot_import_workflows_or_outward_code() -> None:
@@ -98,25 +121,19 @@ def test_protected_simulations_core_cannot_import_workflows_or_outward_code() ->
 
 def test_simulation_workflows_import_only_standard_library_and_core() -> None:
     invalid: list[tuple[Path, str]] = []
-    allowed_project_roots = (
-        "projectkoios.simulations",
-        "projectkoios.simulations.workflows",
-    )
 
     for path in SIMULATION_WORKFLOWS_ROOT.rglob("*.py"):
+        for imported_name in _projectkoios_imports(path):
+            if not _workflow_project_import_is_allowed(imported_name):
+                invalid.append(
+                    (path.relative_to(SIMULATION_WORKFLOWS_ROOT), imported_name)
+                )
         for imported_name in _absolute_imports(path):
-            if not imported_name:
-                continue
-            if imported_name == "projectkoios" or imported_name.startswith(
-                "projectkoios."
+            if (
+                not imported_name
+                or imported_name == "projectkoios"
+                or imported_name.startswith("projectkoios.")
             ):
-                if not any(
-                    imported_name == root or imported_name.startswith(f"{root}.")
-                    for root in allowed_project_roots
-                ):
-                    invalid.append(
-                        (path.relative_to(SIMULATION_WORKFLOWS_ROOT), imported_name)
-                    )
                 continue
             import_root = imported_name.split(".", 1)[0]
             is_local_cpn = (
