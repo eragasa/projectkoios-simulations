@@ -4,13 +4,13 @@
 
 This pilot adapts the existing pure
 `QeScfSavedStateArtifactSetProjector.action(...)` operation to the independently
-installed `projectkoios-workflow-sdk==0.1.0a1` `Firer` boundary. It is an
-integration fixture, not a production Workflow binding, release compatibility
-promise, artifact-retention operation, or calculator-execution path. The
-initial `artifact_set`-as-output shape established bounded alpha evidence; the
-current pilot implements the selected owner result shape in which the logical
-artifact-set identity is the sole external-state output and the canonical
-artifact-set document is SDK evidence.
+installed `projectkoios-workflow-sdk==0.1.0a1` `Firer` boundary. It now also
+provides an outward owner-source adapter and cross-repository evidence for one
+complete experimental durable pure-action path. It is not a released production
+Workflow binding, compatibility promise, calculator-execution path, complete
+scheduler, or full CPN-bindings implementation. The logical artifact-set
+identity is the sole external-state output and the canonical artifact-set
+document is SDK evidence.
 
 The exact locally retained SDK pilot wheel is:
 
@@ -62,7 +62,9 @@ stricter 256-byte ASCII bound.
 extending the SDK `Firer`. It retains the SDK's non-overridable `fire(...)`
 template and makes the owner `_fire(...)` adapter non-overridable by concrete
 projectors. `QeScfSavedStateArtifactSetProjectorFirer` supplies the existing pure
-projector operation.
+projector operation. `QeScfSavedStateArtifactSetProjectorIntegration` is the
+SDK worker composition root and binds that exact firer to an immutable manifest
+whose distribution digest is supplied by deployment.
 
 The immutable descriptor advertises:
 
@@ -146,16 +148,37 @@ The pilot does not modify:
 - artifact-set schema, codec, media type, or canonical bytes; or
 - the existing candidate schema or canonical wire contract.
 
-The adapter performs no filesystem access, network access, subprocess launch,
-QE execution, retention, staging, delivery, scheduling, authority issuance, or
-scientific acceptance.
+The SDK adapter performs no filesystem access, network access, subprocess
+launch, QE execution, staging, delivery, scheduling, authority issuance, or
+scientific acceptance. The separate outward
+`QeScfSavedStateProjectionRequestSourceRepository` performs only owner-private,
+content-addressed request retention and bounded source loading. It never exposes
+a private path to Workflow and never replaces an existing revision.
 
-## Remaining Workflow-owned gate
+## Experimental runtime evidence
 
-SDK `0.1.0a1` does not define how admitted owner payload bytes become an
-identified CPN external-output binding. This pilot therefore stops after the
-correlated SDK result. Mapping `artifact_set_identity` opaquely into an exact
-selected CPN binding, predecessor revalidation, output/evidence admission,
-persistence, and retained firing history remain gated work. Workflow owns
-admission and persistence and must fail closed until those contracts are
-reviewed and published.
+The real-owner vertical slice now maps `artifact_set_identity` opaquely into the
+exact declared CPN string variable, revalidates the predecessor and immutable
+source, fires the pure CPN transition, and atomically retains compact commit,
+CPN replay evidence, lifecycle transition, and marking advancement. Compact
+replay, durable CPN refiring, lifecycle replay, and safety-state reconstruction
+all succeed after the owner source directory is removed and without a second
+owner invocation. Workflow persistence does not contain the owner request or
+artifact-set evidence bodies.
+
+See [implementation](implementation.md) and [schematic](schematic.md).
+
+## Adoption conclusion
+
+This path is preferred for pure operations that specifically require durable
+source authority, atomic state advancement, and replay without owner
+reinvocation. It is not preferred as a wholesale replacement for the existing
+`PwDftScfWorkflowFacade` and local SNAKES lifecycle, which remain simpler and
+better aligned with typed SCF registration, submission, completion, failure,
+and analysis.
+
+Remaining gates are release packaging for the full Workflow runtime, real
+OS-process worker isolation, full plan/profile closure required by supported
+owners, a second structurally independent owner, and effectful lifecycle
+semantics. Until those gates pass, further internal Workflow infrastructure and
+an SCF lifecycle migration are deprioritized.

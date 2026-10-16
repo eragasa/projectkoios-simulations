@@ -30,6 +30,7 @@ from projectkoios.integrations.quantumespresso.pw.scf.saved_state_artifact_set_w
     QeScfSavedStateArtifactSetIdentityAsciiCodec,
     QeScfSavedStateArtifactSetProjectionRequestJsonCodec,
     QeScfSavedStateArtifactSetProjectorFirer,
+    QeScfSavedStateArtifactSetProjectorIntegration,
     QeScfSavedStateArtifactSetWorkflowFirer,
 )
 from projectkoios.integrations.quantumespresso.saved_state import (
@@ -202,6 +203,26 @@ def test_descriptor_and_fixture_binding_are_exact_immutable_sdk_records() -> Non
 
     with pytest.raises(FrozenInstanceError):
         descriptor.sdk_contract_version = "changed"  # type: ignore[misc]
+
+
+def test_worker_integration_exposes_exact_manifest_and_firer() -> None:
+    integration = QeScfSavedStateArtifactSetProjectorIntegration(
+        package_version="0.1.0.dev0",
+        distribution_sha256="9" * 64,
+    )
+
+    assert integration.manifest_identity == integration.manifest.identity
+    assert integration.manifest.package_name == "projectkoios-simulations"
+    assert integration.manifest.package_version == "0.1.0.dev0"
+    assert integration.manifest.distribution_sha256 == "9" * 64
+    assert integration.manifest.firer_descriptors == (
+        QE_SCF_SAVED_STATE_ARTIFACT_SET_FIRER_DESCRIPTOR,
+    )
+    assert len(integration.firers()) == 1
+    assert type(integration.firers()[0]) is QeScfSavedStateArtifactSetProjectorFirer
+    assert integration.firers()[0].descriptor == (
+        QE_SCF_SAVED_STATE_ARTIFACT_SET_FIRER_DESCRIPTOR
+    )
 
 
 def test_concrete_firer_outputs_identity_and_retains_artifact_set_evidence() -> None:

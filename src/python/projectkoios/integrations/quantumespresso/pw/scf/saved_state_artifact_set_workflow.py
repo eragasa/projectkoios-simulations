@@ -39,12 +39,18 @@ from projectkoios.workflow_sdk.identities import (
     WorkflowDefinitionIdentity,
     WorkflowFirerIdentity,
     WorkflowFirerImplementationIdentity,
+    WorkflowIntegrationIdentity,
+    WorkflowIntegrationManifestIdentity,
     WorkflowPayloadCodecIdentity,
     WorkflowPayloadOwnerIdentity,
     WorkflowPayloadRepresentationIdentity,
     WorkflowPayloadSchemaIdentity,
     WorkflowPayloadTypeIdentity,
     WorkflowTransitionIdentity,
+)
+from projectkoios.workflow_sdk.integration import (
+    WorkflowIntegrationManifest,
+    WorkflowWorkerIntegration,
 )
 from projectkoios.workflow_sdk.payloads import (
     WorkflowInlinePayload,
@@ -107,6 +113,8 @@ _FIRER_IDENTITY = "projectkoios.simulations.qe-scf-saved-state-artifact-set.proj
 _FIRER_IMPLEMENTATION_IDENTITY = (
     "projectkoios.simulations.qe-scf-saved-state-artifact-set.project:0.1.0a1.2"
 )
+_INTEGRATION_IDENTITY = "projectkoios.simulations.qe-scf-saved-state-artifact-set"
+_PACKAGE_NAME = "projectkoios-simulations"
 _FIXTURE_DEFINITION_IDENTITY = (
     "projectkoios.workflow.fixture.qe-scf-saved-state-artifact-set:1"
 )
@@ -642,6 +650,57 @@ class QeScfSavedStateArtifactSetProjectorFirer(QeScfSavedStateArtifactSetWorkflo
         return QeScfSavedStateArtifactSetProjector().action(request=request)
 
 
+class QeScfSavedStateArtifactSetProjectorIntegration(WorkflowWorkerIntegration):
+    """Expose the exact QE projector firer through one worker composition root."""
+
+    __slots__ = ("_firers", "_manifest")
+
+    def __init__(
+        self,
+        *,
+        package_version: str,
+        distribution_sha256: str,
+        firer: QeScfSavedStateArtifactSetWorkflowFirer | None = None,
+    ) -> None:
+        selected_firer = firer or QeScfSavedStateArtifactSetProjectorFirer()
+        if not isinstance(
+            selected_firer,
+            QeScfSavedStateArtifactSetWorkflowFirer,
+        ):
+            raise TypeError(
+                "firer must implement QeScfSavedStateArtifactSetWorkflowFirer"
+            )
+        if selected_firer.descriptor != (
+            QE_SCF_SAVED_STATE_ARTIFACT_SET_FIRER_DESCRIPTOR
+        ):
+            raise ValueError("firer descriptor differs from the QE projection contract")
+        self._firers = (selected_firer,)
+        self._manifest = WorkflowIntegrationManifest(
+            integration_identity=WorkflowIntegrationIdentity(_INTEGRATION_IDENTITY),
+            package_name=_PACKAGE_NAME,
+            package_version=package_version,
+            distribution_sha256=distribution_sha256,
+            sdk_contract_version=(
+                QE_SCF_SAVED_STATE_ARTIFACT_SET_FIRER_DESCRIPTOR.sdk_contract_version
+            ),
+            firer_descriptors=(QE_SCF_SAVED_STATE_ARTIFACT_SET_FIRER_DESCRIPTOR,),
+        )
+
+    @property
+    def manifest(self) -> WorkflowIntegrationManifest:
+        """Return the exact immutable manifest supplied to Workflow linking."""
+        return self._manifest
+
+    @property
+    def manifest_identity(self) -> WorkflowIntegrationManifestIdentity:
+        """Return the identity implemented by this worker composition."""
+        return self._manifest.identity
+
+    def firers(self) -> tuple[Firer, ...]:
+        """Return the sole exact pure QE projector firer."""
+        return self._firers
+
+
 __all__ = [
     "QE_SCF_SAVED_STATE_ARTIFACT_SET_EVIDENCE_CONTRACT",
     "QE_SCF_SAVED_STATE_ARTIFACT_SET_FIRER_DESCRIPTOR",
@@ -651,5 +710,6 @@ __all__ = [
     "QeScfSavedStateArtifactSetIdentityAsciiCodec",
     "QeScfSavedStateArtifactSetProjectionRequestJsonCodec",
     "QeScfSavedStateArtifactSetProjectorFirer",
+    "QeScfSavedStateArtifactSetProjectorIntegration",
     "QeScfSavedStateArtifactSetWorkflowFirer",
 ]
