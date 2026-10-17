@@ -16,6 +16,7 @@ authors = [
 dependencies = [
     "numpy>=2.3,<3",
     "projectkoios-physkit @ https://github.com/eragasa/projectkoios-physkit/releases/download/v0.1.2/projectkoios_physkit-0.1.2-py3-none-any.whl#sha256=79283d64707a4e7aa4dd7fcff85647a957f1f6d4a3894bf0350ea65ac745d38c",
+    "projectkoios-workflow-sdk==0.1.0a1",
 ]
 
 [project.urls]
@@ -25,6 +26,9 @@ Documentation = "https://github.com/eragasa/projectkoios-simulations/tree/main/d
 [project.optional-dependencies]
 cpn = [
     "projectkoios-snakes @ git+https://github.com/eragasa/projectkoios-snakes.git@c959528c3b35c12563b7ba291ca036e1ebb58f7e",
+]
+workflow-runtime = [
+    "projectkoios-workflow==0.0.0",
 ]
 visualization = [
     "plotly>=6.5,<7",
@@ -63,6 +67,7 @@ namespaces = true
 [tool.setuptools.package-data]
 "projectkoios.simulations" = ["py.typed"]
 "projectkoios.integrations" = ["py.typed"]
+"projectkoios.adapters" = ["py.typed"]
 "projectkoios.integrations.wannier90" = ["provenance.json"]
 
 [tool.pytest.ini_options]

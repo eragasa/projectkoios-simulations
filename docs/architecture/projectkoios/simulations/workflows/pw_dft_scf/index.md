@@ -62,9 +62,21 @@ transferred byte-for-byte from Applications. Its SNAKES `PetriNet` defines the
 typed places, transitions, input/output arcs, guards, and token expressions. A
 conformance test binds its name sets to `PwDftScfWorkflowDefinition`.
 
-The optional `cpn` subtree remains authoritative until WORKFLOWS extracts the
-engine adapter and defines its canonical runtime-neutral plan contract. It
-consumes only neutral SCF domain values and never executes a calculator.
+The optional `cpn` subtree remains the current authoritative local lifecycle
+implementation. The durable QE artifact-set Workflow pilot is additive: it is
+better suited to one pure operation requiring source authorization, atomic
+commit, and owner-independent replay, but it does not replace this facade or its
+registration, submission, completion, failure, and analysis lifecycle.
+
+A future Workflow-backed facade is not current work. It requires accepted effect
+dispatch and reconciliation semantics, behavioral equivalence for every typed
+action/event/status/outcome path, and an explicit owner migration decision. The
+current local CPN consumes only neutral SCF domain values and never executes a
+calculator.
+
+The experimental full Workflow runtime adapter remains in the outward
+`projectkoios.adapters` namespace behind an optional dependency. It must not
+become a dependency of this reusable workflow capability.
 
 Repository tools under `tools/pw_dft_scf` may call public QE/VASP projection or
 parsing APIs. The compact example tree contains only reviewed declarations,

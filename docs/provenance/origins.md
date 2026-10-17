@@ -15,6 +15,34 @@ The initial implementation was extracted from
 documentation Git trees and the namespace-only adaptation are recorded in
 [`../../TRANSFER.toml`](../../TRANSFER.toml).
 
+## Workflow SDK alpha pilot dependency
+
+The outward QE SCF artifact-set integration pilot consumes the exact unreleased
+`projectkoios-workflow-sdk==0.1.0a1` contract. The authorized local wheel is
+`projectkoios_workflow_sdk-0.1.0a1-py3-none-any.whl`, SHA-256
+`925f6974c49c8935ebf2f002b18c86d29375e1b11c3ffc17a29d305fb8095ff4`.
+It was reproducibly built by the Workflow owner from an authorized working-tree
+candidate based on Workflow commit
+`63f127dd6922c16accb3dc857cfb2e28224a8958`. The wheel digest, not that base
+commit alone, identifies the pilot SDK implementation.
+
+Development CI separately checks out exact public Workflow source revision
+`fe600fa1b857cd030832b226a8e21e0a30f4f1b6` without persisted credentials,
+asserts that revision, and builds only its `sdk/` project before installing the
+Simulations development environment. The eight packaged SDK Python and
+`py.typed` files at that revision are byte-identical to the authorized retained
+wheel contents. The CI-built wheel is source-parity evidence, not a claim that
+its archive bytes have retained wheel SHA-256
+`925f6974c49c8935ebf2f002b18c86d29375e1b11c3ffc17a29d305fb8095ff4`.
+Simulations package metadata continues to require the standalone
+`projectkoios-workflow-sdk==0.1.0a1` distribution rather than a source or VCS
+runtime dependency.
+
+The alpha provides only pure-firing integration records and validation. It does
+not establish calculator authority, retention authority, CPN external-output
+admission, production compatibility, numerical verification, or scientific
+validation.
+
 ## Reusable simulation-workflow capability migration
 
 The reusable SCF and relaxation workflow capabilities were originally migrated

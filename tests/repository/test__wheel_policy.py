@@ -26,8 +26,10 @@ OWNED_NAMESPACE_PREFIXES = (
 EXPECTED_PACKAGE_DATA = {
     "projectkoios.simulations": ["py.typed"],
     "projectkoios.integrations": ["py.typed"],
+    "projectkoios.adapters": ["py.typed"],
     "projectkoios.integrations.wannier90": ["provenance.json"],
 }
+WORKFLOW_SDK_SOURCE_REVISION = "fe600fa1b857cd030832b226a8e21e0a30f4f1b6"
 
 
 def _pyproject() -> dict[str, Any]:
@@ -81,6 +83,33 @@ def test_optional_cpn_and_visualization_dependencies_are_not_core_runtime() -> N
     assert project["optional-dependencies"]["visualization"] == [plotly]
     assert snakes in project["optional-dependencies"]["development"]
     assert plotly in project["optional-dependencies"]["development"]
+
+
+def test_experimental_workflow_runtime_adapter_is_not_a_core_dependency() -> None:
+    project = _pyproject()["project"]
+    runtime = "projectkoios-workflow==0.0.0"
+
+    assert runtime not in project["dependencies"]
+    assert project["optional-dependencies"]["workflow-runtime"] == [runtime]
+
+
+def test_ci_bootstraps_unreleased_workflow_sdk_from_exact_public_source() -> None:
+    workflow = (REPOSITORY_ROOT / ".github/workflows/ci.yml").read_text(
+        encoding="utf-8"
+    )
+
+    for required in (
+        "repository: eragasa/projectkoios-workflow",
+        f"ref: {WORKFLOW_SDK_SOURCE_REVISION}",
+        f"WORKFLOW_SDK_REVISION: {WORKFLOW_SDK_SOURCE_REVISION}",
+        "persist-credentials: false",
+        ".ci/workflow-sdk-source/sdk",
+        "projectkoios_workflow_sdk-0.1.0a1-*.whl",
+        "python -m pip check",
+        "rm -rf .ci/workflow-sdk-source",
+    ):
+        assert required in workflow
+    assert "projectkoios-workflow==0.0.0" not in workflow
 
 
 def test_replay_overlay_has_one_exclusive_package_shape() -> None:

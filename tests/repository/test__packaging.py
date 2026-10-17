@@ -18,4 +18,5 @@ def test_provider_runtime_dependencies_are_declared() -> None:
             "projectkoios_physkit-0.1.2-py3-none-any.whl#sha256="
             "79283d64707a4e7aa4dd7fcff85647a957f1f6d4a3894bf0350ea65ac745d38c"
         ),
+        "projectkoios-workflow-sdk==0.1.0a1",
     }

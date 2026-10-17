@@ -41,6 +41,13 @@ repository tools. The local SNAKES CPN is isolated in the optional `cpn`
 subtree; no other production module imports it. Tools consume public workflow
 and integration records rather than being imported by production code.
 
+The outward QE artifact-set Workflow adapter may import the optional full
+Workflow runtime because it is not part of this reusable package. Its durable
+pure-action evidence does not authorize adding Workflow runtime imports here or
+replacing `LocalPwDftScfWorkflow`. Any future replacement must first satisfy the
+Workflow effectful-integration gate and owner-controlled facade behavioral-
+equivalence tests.
+
 ## Validation and tests
 
 Direct tests cover:

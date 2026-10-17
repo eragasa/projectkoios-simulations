@@ -24,19 +24,46 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check out pinned Workflow SDK source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: eragasa/projectkoios-workflow
+          ref: fe600fa1b857cd030832b226a8e21e0a30f4f1b6
+          path: .ci/workflow-sdk-source
+          fetch-depth: 1
+          persist-credentials: false
+
       - name: Set up Python 3.14
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: "3.14"
 
-      - name: Install Python dependencies
+      - name: Build pinned Workflow SDK and install Python dependencies
         env:
           PIP_CONFIG_FILE: /dev/null
           PIP_DISABLE_PIP_VERSION_CHECK: "1"
+          WORKFLOW_SDK_REVISION: fe600fa1b857cd030832b226a8e21e0a30f4f1b6
         run: |
+          test "$(git -C .ci/workflow-sdk-source rev-parse HEAD)" = \
+            "$WORKFLOW_SDK_REVISION"
+          rm -rf "$RUNNER_TEMP/workflow-sdk"
+          mkdir -p "$RUNNER_TEMP/workflow-sdk"
+          python -m pip wheel \
+            --index-url https://pypi.org/simple \
+            --no-deps \
+            --wheel-dir "$RUNNER_TEMP/workflow-sdk" \
+            .ci/workflow-sdk-source/sdk
+          shopt -s nullglob
+          workflow_sdk_wheels=(
+            "$RUNNER_TEMP"/workflow-sdk/projectkoios_workflow_sdk-0.1.0a1-*.whl
+          )
+          test "${#workflow_sdk_wheels[@]}" -eq 1
           python -m pip install \
             --index-url https://pypi.org/simple \
+            "${workflow_sdk_wheels[0]}" \
             ".[development]"
+          python -m pip check
+          rm -rf .ci/workflow-sdk-source
 
       - name: Run tests
         run: python -m pytest -q

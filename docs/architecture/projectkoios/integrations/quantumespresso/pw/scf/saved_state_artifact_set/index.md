@@ -138,3 +138,10 @@ The required acyclic ordering is:
 
 Workflow validates and carries an accepted opaque reference; it does not import
 or reconstruct this simulations-owned Python object.
+
+The separately bounded [Workflow SDK alpha pilot](workflow_sdk/) transports the
+existing pure projection request, emits the owner logical artifact-set identity
+as its sole external-state output, and carries the artifact-set canonical bytes
+as SDK evidence under the SDK's inline limits. It does not define a
+retained-reference envelope or the Workflow-owned mapping from the admitted
+owner identity to a CPN external-output binding.
