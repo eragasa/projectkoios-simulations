@@ -199,7 +199,11 @@ def test_real_qe_owner_action_commits_and_replays_without_reinvocation(
     source_repository = QeScfSavedStateProjectionRequestSourceRepository(
         tmp_path / "owner-private-sources"
     )
-    source_reference = source_repository.retain(_domain_request())
+    domain_request = _domain_request()
+    source_reference = source_repository.retain(domain_request)
+    assert source_reference.identity.value == (
+        "03eb0408eb031e2e951b79a265048219d2c3800b3556576026e441341e75ae39"
+    )
     firer = _CountingProjectorFirer()
     integration = QeScfSavedStateArtifactSetProjectorIntegration(
         package_version="0.1.0.dev0",
@@ -209,6 +213,18 @@ def test_real_qe_owner_action_commits_and_replays_without_reinvocation(
         firer=firer,
     )
     input_bindings = _input_bindings(integration, definition)
+    assert integration.manifest.identity.value == (
+        "140197dc0fd386c7c9e433f3ff47c609d5b9ddfef4dd3b3620cecf1d73bf8644"
+    )
+    assert input_bindings.input_plan.execution_plan.identity.value == (
+        "a0f9aa9d5abd12da4e5099cc60c9f26063505cdd988d00898c3b8f1250a98271"
+    )
+    assert input_bindings.execution_bindings.identity.value == (
+        "a54ebcbbf88998d7fd3215bc00a13c885f514790febcab40364e3b1aea02126f"
+    )
+    assert input_bindings.identity.value == (
+        "ca98772a5cce04065134cdb4d3d57a39712c0c655aab0076b0d75812ca7493e5"
+    )
     cpn_plan = ExperimentalWorkflowPureActionCpnPlanFactory().execute(
         input_plan=input_bindings.input_plan,
         definition=definition,
@@ -240,6 +256,9 @@ def test_real_qe_owner_action_commits_and_replays_without_reinvocation(
     )
     assert authorized_result.authorized_inputs is not None
     authorized = authorized_result.authorized_inputs
+    assert authorized.identity.value == (
+        "a69fcf048f90500b0b35ea7153ccd8e15a1b7553ffd36a9aab0e2d53acb09b3d"
+    )
 
     durable_repository = ExperimentalSQLitePureActionReservationRepository(
         tmp_path / "workflow-private" / "pure-action.sqlite3",
@@ -305,10 +324,22 @@ def test_real_qe_owner_action_commits_and_replays_without_reinvocation(
     assert cpn_plan.identity.value == (
         "3ba808794b16953f3fceb20b9f18b204912582ea6dbe3d36100bf321b81b3411"
     )
+    assert cpn_plan.execution_profile.identity.value == (
+        "3321f8a87314f964af4a8fb1c8cc732e80c2b7686f1f2fbe68329d708d931173"
+    )
     assert reserved.reservation.identity.value == (
         "38596e52afac8f80438b5e26fdf506f3d41dc4a500a3d40ec8b8be05377fddb6"
     )
+    assert invocation.identity.value == (
+        "b8cf4187884dc9e087ea4de9760e51fd016378cfba7d29ce6f62df275ac7dc52"
+    )
+    assert firing.identity.value == (
+        "4fb981884ffee5577ab25cec6e0a940a1137a8a6a99f6707a06fdef6e81288b5"
+    )
     assert firing.firing_result is not None
+    assert firing.firing_result.identity.value == (
+        "fa47c1246ee164eab15723cd8fe9ff8ac556259e5939d4db630135911d111ccf"
+    )
     assert firing.firing_result.successor_marking.identity.value == (
         "70ae79097bc2005a6992057373fbbcc7540b1167f7485d7d29c12945cdb45fb6"
     )
@@ -317,24 +348,36 @@ def test_real_qe_owner_action_commits_and_replays_without_reinvocation(
     )
 
     owner_request_bytes = authorized.admitted_inputs.request.inputs[0].payload
-    assert owner_request_bytes not in durable_repository.database_path.read_bytes()
     assert invocation.result is not None
     owner_evidence_bytes = invocation.result.evidence[0].payload
-    assert owner_evidence_bytes not in durable_repository.database_path.read_bytes()
+    private_owner_values = (
+        str(source_repository.root).encode("utf-8"),
+        domain_request.manifest_reference.value.encode("ascii"),
+        *(
+            artifact.payload_reference.value.encode("ascii")
+            for artifact in domain_request.retained_artifacts
+        ),
+    )
+    database_path = durable_repository.database_path
+    for forbidden in (owner_request_bytes, owner_evidence_bytes, *private_owner_values):
+        assert forbidden not in database_path.read_bytes()
 
     shutil.rmtree(source_repository.root)
+    reopened_repository = ExperimentalSQLitePureActionReservationRepository(
+        database_path
+    )
     owner_calls = firer.calls
     compact = ExperimentalWorkflowPureActionCommittedReplayService(
-        durable_repository
+        reopened_repository
     ).execute(reserved.reservation.identity)
     refired = ExperimentalWorkflowPureActionDurableCpnReplayService(
-        durable_repository
+        reopened_repository
     ).execute(commit.identity)
     lifecycle = ExperimentalWorkflowPureActionReservationLifecycleReplayService(
-        durable_repository
+        reopened_repository
     ).execute(reserved.reservation.identity)
     safety = ExperimentalWorkflowPureActionSafetyStateReplayService(
-        durable_repository
+        reopened_repository
     ).execute(reserved.reservation.identity)
 
     assert (
@@ -351,11 +394,29 @@ def test_real_qe_owner_action_commits_and_replays_without_reinvocation(
         ExperimentalWorkflowPureActionReservationLifecycleState.RESERVED,
         ExperimentalWorkflowPureActionReservationLifecycleState.COMMITTED,
     )
+    assert tuple(event.identity.value for event in lifecycle.events) == (
+        "2f59dd5b34f32717b6928f27be19b449ede6d9ee2d4418b2daa0bc3e7bdced54",
+        "a8fef9583c9dd56558099b8d1e1209164ce04544909ccfe9e2d2a28bcd39a103",
+    )
+    assert compact.event_sha256 == (
+        "f6968d85a163d28563de41a287f37f91a489a88e7bf8f65307d098c68aa1a61a"
+    )
+    retained_reservation = lifecycle.events[0].reservation
+    assert (
+        retained_reservation.execution_plan_identity
+        == input_bindings.input_plan.execution_plan.identity
+    )
+    assert (
+        retained_reservation.execution_bindings_identity
+        == input_bindings.execution_bindings.identity
+    )
     assert safety.status is ExperimentalWorkflowPureActionSafetyStateReadStatus.FOUND
     assert safety.snapshot is not None
     assert safety.snapshot.committed_snapshot.record.commit_identity == commit.identity
     assert refired.firing_result == firing.firing_result
     assert safety.snapshot.successor_marking == firing.firing_result.successor_marking
+    for forbidden in (owner_request_bytes, owner_evidence_bytes, *private_owner_values):
+        assert forbidden not in database_path.read_bytes()
     assert firer.calls == owner_calls == 1
 
 
