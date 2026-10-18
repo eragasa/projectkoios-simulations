@@ -29,6 +29,13 @@ from projectkoios.simulations.execution import (
     CalculatorOutputEmissionError,
     ExecutionStatus,
 )
+from projectkoios.simulations.execution import (
+    _executor as execution_executor_module,
+)
+from projectkoios.simulations.execution import (
+    _process_group as process_group_module,
+)
+from projectkoios.simulations.execution import _streaming as streaming_module
 
 pytestmark = pytest.mark.integration
 
@@ -219,36 +226,37 @@ def test_execution_contract_uses_data_objects_and_an_actionizer() -> None:
     assert isinstance(actionizer, CalculatorExecutor)
 
 
-def test_execution_module_uses_actionizer_methods_not_dangling_functions() -> None:
-    module_path = Path(execution_module.__file__)
-    syntax = ast.parse(module_path.read_text(encoding="utf-8"))
+def test_execution_package_uses_actionizer_methods_not_dangling_functions() -> None:
+    package_directory = Path(execution_module.__file__).parent
 
-    assert not any(
-        isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
-        for node in syntax.body
-    )
-    for node in syntax.body:
-        if not isinstance(node, ast.ClassDef):
-            continue
-        for member in node.body:
-            if not isinstance(member, ast.FunctionDef):
+    for module_path in sorted(package_directory.glob("*.py")):
+        syntax = ast.parse(module_path.read_text(encoding="utf-8"))
+        assert not any(
+            isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+            for node in syntax.body
+        )
+        for node in syntax.body:
+            if not isinstance(node, ast.ClassDef):
                 continue
-            decorator_names = {
-                decorator.id
-                for decorator in member.decorator_list
-                if isinstance(decorator, ast.Name)
-            }
-            assert "staticmethod" not in decorator_names
-            assert "classmethod" not in decorator_names
+            for member in node.body:
+                if not isinstance(member, ast.FunctionDef):
+                    continue
+                decorator_names = {
+                    decorator.id
+                    for decorator in member.decorator_list
+                    if isinstance(decorator, ast.Name)
+                }
+                assert "staticmethod" not in decorator_names
+                assert "classmethod" not in decorator_names
 
 
 def test_starts_exactly_one_process_for_one_request() -> None:
-    real_popen = execution_module.subprocess.Popen
+    real_popen = execution_executor_module.subprocess.Popen
     with tempfile.TemporaryDirectory() as temporary_directory:
         working_directory = Path(temporary_directory)
 
         with patch.object(
-            execution_module.subprocess,
+            execution_executor_module.subprocess,
             "Popen",
             side_effect=real_popen,
         ) as start:
@@ -419,7 +427,7 @@ def test_stream_finish_preserves_parent_sink_backpressure() -> None:
     read_descriptor, write_descriptor = os.pipe()
     emission_started = threading.Event()
     emission_release = threading.Event()
-    failures: list[execution_module._StreamPumpFailure] = []
+    failures: list[streaming_module._StreamPumpFailure] = []
 
     def emit_with_backpressure(_name: str, _chunk: bytes) -> None:
         emission_started.set()
@@ -628,7 +636,7 @@ def test_termination_failure_aborts_reads_from_surviving_descendant() -> None:
             worker.join(timeout=3.0)
             completed_before_descendant_cleanup = not worker.is_alive()
             with contextlib.suppress(ProcessLookupError):
-                os.kill(descendant_pid, execution_module.signal.SIGKILL)
+                os.kill(descendant_pid, process_group_module.signal.SIGKILL)
             worker.join(timeout=3.0)
 
         assert completed_before_descendant_cleanup
@@ -653,24 +661,24 @@ def test_post_kill_wait_is_bounded_and_reports_termination_failure() -> None:
 
     with (
         patch.object(
-            execution_module,
+            process_group_module,
             "_PROCESS_GROUP_TERMINATION_GRACE_SECONDS",
             0.0,
         ),
-        patch.object(execution_module, "_PROCESS_GROUP_KILL_WAIT_SECONDS", 0.02),
-        patch.object(execution_module, "_PROCESS_GROUP_POLL_SECONDS", 0.0),
+        patch.object(process_group_module, "_PROCESS_GROUP_KILL_WAIT_SECONDS", 0.02),
+        patch.object(process_group_module, "_PROCESS_GROUP_POLL_SECONDS", 0.0),
         patch.object(CalculatorExecutor, "_process_group_exists", return_value=True),
         patch.object(CalculatorExecutor, "_signal_process_group") as signal_group,
         pytest.raises(
-            execution_module._ProcessTerminationError,
+            process_group_module._ProcessTerminationError,
             match="did not terminate after kill",
         ),
     ):
         CalculatorExecutor()._terminate_process_group(process)
 
     assert signal_group.call_args_list == [
-        call(12345, execution_module.signal.SIGTERM),
-        call(12345, execution_module.signal.SIGKILL),
+        call(12345, process_group_module.signal.SIGTERM),
+        call(12345, process_group_module.signal.SIGKILL),
     ]
     process.poll.assert_called()
     process.wait.assert_not_called()
@@ -733,7 +741,7 @@ def test_post_timeout_cleanup_error_retains_timeout_detail() -> None:
 
         def fail_after_finish(
             _executor: CalculatorExecutor,
-            pumps: tuple[execution_module._StreamPump, ...],
+            pumps: tuple[streaming_module._StreamPump, ...],
             *,
             abort_reads: bool = False,
         ) -> None:
