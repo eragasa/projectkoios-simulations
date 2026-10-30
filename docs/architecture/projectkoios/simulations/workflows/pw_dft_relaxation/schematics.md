@@ -46,14 +46,47 @@ The cleaned `qe_projection.py` example follows the first edge only. Its
 historical `execute_relaxation.py` source name remains in provenance, not in the
 current example surface.
 
+## Planned zero-pressure qualification flow
+
+```text
+exact starting structure
++ provisional numerical qualification Q_i@S_i
++ explicit cell mode, zero-pressure target, force/pressure policy
+                         |
+                         v
+non-authorizing relaxation requirement
+                         |
+             separately admitted occurrence
+                         |
+                         v
+normalized result + exact evidence
+                         |
+                         v
+zero-pressure mechanical assessment
+        |                |                 |
+      passed           failed         inconclusive
+        |
+        v
+exact mechanically qualified structure S_(i+1)
+```
+
+This planned flow is not implemented by the current projection handoff. Provider
+completion and optimizer convergence are inputs to assessment, not substitutes
+for normalized force, pressure, and cell-consistency checks.
+
+Cross-stage composition performs fresh numerical confirmation on `S_(i+1)`. If
+that confirmation selects a changed setting, it emits a new relaxation
+requirement; no relaxation module or provider runner activates it automatically.
+
 ## Dependency direction
 
 ```text
-QE example composition -> public QE relaxation integration
-            |                         |
-            v                         v
+outward tool / first-party adapter -> public relaxation integrations
+            |                                  |
+            v                                  v
 pw_dft_relaxation workflow -> protected neutral relaxation contracts
 ```
 
-The production workflow capability does not import the QE example or outward
-integration.
+The production workflow capability does not import outward tools, adapters,
+examples, or integrations. Each provider process requires separate external
+admission and authorization.

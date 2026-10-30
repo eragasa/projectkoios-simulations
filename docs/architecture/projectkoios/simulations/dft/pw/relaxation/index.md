@@ -60,14 +60,15 @@ write and does not mutate `StructureLibrary`.
 
 ## Cell degrees of freedom
 
-`ATOMIC_POSITIONS_AND_CELL` currently says only that cell degrees are available.
-The specification must be extended with an explicit cell-relaxation mode before
-defect manifests are frozen. The closed set must distinguish at least volume-
-only, shape at fixed volume, constrained lattice components, and unrestricted
-lattice-vector relaxation. No default is inferred from a calculator.
+`PwDftRelaxationDegreesOfFreedom` and `PwDftCellRelaxationMode` already require
+an explicit calculator-neutral cell-relaxation mode. The implemented closed set
+distinguishes fixed cell, volume only, shape at fixed volume, selected strain
+components, and unrestricted lattice vectors. Selected-component mode carries
+an explicit six-component mask. No default is inferred from a calculator.
 
-This document records the required explicit choice but does not select which
-mode the Si:P and Si:B study will use.
+The protected contract validates the declared choice but does not select which
+mode a silicon or another scientific campaign will use. Provider capability and
+projection remain separately qualified.
 
 ## Symmetry and initialization
 
@@ -76,6 +77,23 @@ initial atomic displacement policy, starting spin state, and whether several
 initial conditions form separate calculations. These fields prevent provider
 defaults from silently restricting a defect relaxation. Selection of one policy
 for the silicon studies remains workflow-owned.
+
+## Bulk qualification boundary
+
+The protected records retain exact requests, normalized observations, result
+correlation, and pure publication. They do not decide that a structure is
+zero-pressure qualified or that numerical settings transfer from its starting
+lattice. The planned
+[`pw_dft_bulk_qualification`](../../../workflows/pw_dft_bulk_qualification/index.md)
+composition uses public relaxation and SCF workflow contracts to assess force,
+pressure residual, allowed cell changes, and fresh final-setting confirmation.
+The protected core does not import that workflow.
+
+The existing relaxation specification remains unchanged. Bulk qualification
+references an additive neutral wavefunction and density/potential cutoff
+realization. First-party adapter evidence proves that the exact provider input
+realizes it; QE `ecutrho` and `charge_density_cutoff_ratio` do not enter
+protected relaxation records or the neutral terminal handoff.
 
 ## Authority boundary
 

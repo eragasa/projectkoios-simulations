@@ -22,6 +22,17 @@ neutral base request and produce immutable requests or coordinates:
 Recipes select scientific coordinates; they do not select executable paths or
 grant execution authority.
 
+The current joint grid varies cubic integer mesh density and wavefunction cutoff
+and is the convergence algorithm reused by
+[`pw_dft_bulk_qualification`](../pw_dft_bulk_qualification/index.md). Its
+observations and assessments do not carry structure, request, occurrence, or
+evidence identity. An additive typed correlation must bind every coordinate to
+exact neutral cutoff realization, projected request/specification, prepared
+input, selected occurrence, normalized evidence bytes, and adapter mapping
+before selecting the highest tested mesh/cutoff corner from an accepted
+correlation and scoping it as `Q0@S0` or `Q1@S1`. No generalized coordinate or
+replacement assessor is required.
+
 ## Result comparison
 
 `PwDftScfComparator` performs a pure ordered comparison after two child SCF
@@ -32,7 +43,7 @@ absolute-energy equivalence.
 
 ## Convergence
 
-The convergence subtree owns:
+The implemented convergence subtree owns:
 
 - axes, coordinates, energy observations, and assessment records;
 - one-dimensional and joint-grid assessors;
@@ -40,6 +51,13 @@ The convergence subtree owns:
 - typed controller decisions to extend, accept, or report budget exhaustion;
 - qualified comparison of like-for-like convergence tests; and
 - replay of already normalized convergence evidence.
+
+Bulk qualification reuses `PwDftScfConvergenceAssessment` unchanged but needs a
+new typed correlation record around it. The current replay evidence's untyped
+source string does not establish structure/specification/occurrence lineage.
+Final-setting confirmation reruns the existing recipe and assessment on the
+exact relaxed structure and creates a fresh typed correlation; a single
+calculation at the candidate is not convergence evidence.
 
 The replay contract is
 `PwDftScfConvergenceReplayRequest` →
@@ -67,6 +85,10 @@ engine adapter and defines its canonical runtime-neutral plan contract. It
 consumes only neutral SCF domain values and never executes a calculator.
 
 Repository tools under `tools/pw_dft_scf` may call public QE/VASP projection or
-parsing APIs. The compact example tree contains only reviewed declarations,
+parsing APIs. A planned `tools/pw_dft_bulk_qualification` will own provider
+selection, operational configuration, and route invocation for the broader
+qualification composition, while first-party `projectkoios.adapters` will own
+native/neutral mapping. Neither surface exists merely because it is documented.
+The compact example tree contains only reviewed declarations,
 structures, and small demonstrations. Provider integrations and tools never
 become dependencies of the neutral workflow modules.

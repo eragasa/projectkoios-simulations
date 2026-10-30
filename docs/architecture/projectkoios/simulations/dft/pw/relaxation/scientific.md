@@ -25,6 +25,21 @@ The workflow decides whether several initializations are required and how their
 results are compared. The protected relaxation result reports each completed
 calculation without selecting the scientifically preferred minimum.
 
+## Structure-scoped numerical settings
+
+A cutoff and reciprocal-sampling study performed on a seed structure supplies a
+provisional setting for relaxation, not an automatically transferable
+qualification for the final lattice. Changing the cell changes its reciprocal
+lattice and may change force, pressure, and energy sensitivity to numerical
+settings. Fresh confirmation on the exact relaxed structure is therefore a
+separate scientific operation.
+
+If that confirmation selects a changed setting, a single final-energy
+calculation does not requalify the structure under the new force/stress surface.
+Reusable bulk composition must re-relax and reconfirm within an explicit budget.
+These dependency semantics belong to the workflow layer; the protected result
+retains the exact facts from each immutable occurrence.
+
 ## Fixed-cell defect relaxation
 
 For the ion-only stage, the host-supercell lattice remains fixed while defect
@@ -51,6 +66,15 @@ energy comparison.
 At nonzero pressure, a variable-cell calculation is associated with a
 pressure-dependent thermodynamic potential. A total-energy difference must not
 be called strain energy without an explicit common-potential contract.
+
+## Zero-pressure meaning
+
+A declared target pressure of zero and a provider convergence marker do not by
+themselves establish zero-pressure qualification. The normalized final pressure
+or stress, force observation, allowed cell-mode changes, exact artifacts, and
+missing-evidence behavior must be assessed against a prospective workflow
+policy. Optimizer convergence also does not prove dynamical stability or a
+global minimum.
 
 ## Acceptance boundary
 

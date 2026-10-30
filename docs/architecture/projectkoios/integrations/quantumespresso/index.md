@@ -10,6 +10,10 @@ resolves exact repository pseudopotentials, stages verified inputs, and executes
 closed TOML declaration into inherited QE input cards, verifies and stages a
 parent SCF state, executes only with separate authorization, and emits a typed
 saved-state handoff for `pw2wannier90.x`.
+[`pw2wannier90`](pw2wannier90/index.md) owns native converter configuration,
+projection, execution effects, streams, and route-specific artifact inspection;
+its planned artifact closure keeps ordinary AMN/MMN localization distinct from
+explicit optional UNK-producing routes.
 [`pw.bands`](pw/bands/index.md) projects branched reciprocal paths and extracts
 full-precision QEXSD spectra into calculator-neutral diagram records without
 using `bands.x` or plotting files.
