@@ -20,3 +20,22 @@ native stream record remains unchanged.
 
 The package does not define a third QE calculation mode or duplicate QEXSD XML
 parsing.
+
+## Planned bulk-qualification boundary
+
+This integration owns QE-native preparation, one-process execution,
+authentication, parsing, and normalization only. It does not decide that a
+structure is zero-pressure qualified, choose force or pressure thresholds,
+transfer a cutoff/k-point result between structures, schedule final-setting
+confirmation, or request re-relaxation after a changed setting.
+
+QE relaxation configuration represents explicit `ecutwfc` and `ecutrho`
+values. These remain provider evidence. A first-party outward
+`projectkoios.adapters` surface proves the exact native input realizes the
+neutral wavefunction and density/potential cutoff setting and maps authenticated
+QE observations to public neutral contracts. `tools/pw_dft_bulk_qualification`
+owns provider selection, operational configuration, and route invocation.
+
+Every `relax` or `vc-relax` process remains one separately admitted occurrence
+requiring external authorization. A preceding SCF qualification or subsequent
+confirmation requirement supplies no execution authority.

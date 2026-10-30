@@ -5,7 +5,7 @@
 ```text
 PwDftRelaxationSpecification
   structure + charge + spin
-  scope + cell-relaxation mode
+  scope + explicit cell-relaxation mode
   sampling + convergence controls
                 |
                 v
@@ -63,15 +63,37 @@ PwDftRelaxedStructurePublisher
 ObservedStructureProvenance + exact base-UnitCell bytes
 ```
 
-A relaxation result does not mutate the structure library by itself.
+A relaxation result does not mutate the structure library by itself. Publication
+proves exact mechanical correlation; it does not apply a workflow-owned
+zero-pressure acceptance policy.
+
+## Planned bulk qualification use
+
+```text
+provisional numerical qualification Q0@S0
+  -> exact relaxation specification using S0 and Q0
+  -> normalized protected relaxation result
+  -> workflow-owned force/pressure/cell assessment
+  -> exact published structure S1
+  -> fresh SCF setting confirmation Q1@S1
+```
+
+If `Q1` changes the selected setting, workflow composition requests a new
+relaxation and confirmation. The protected result remains immutable and does not
+schedule or authorize that successor.
+
+The protected specification remains unchanged. The bulk composition references
+a neutral wavefunction and density/potential cutoff realization, and adapter
+evidence proves the exact provider input realizes it; no provider keyword or QE
+ratio enters this protected schema or the neutral terminal handoff.
 
 ## Dependency direction
 
 ```text
-integrations ---------------------> dft.pw.relaxation
+integrations / outward adapters --> dft.pw.relaxation
 simulations.workflows -----------> dft.pw.relaxation
 simulations.evidence ------------> dft.pw.relaxation records
 
 dft.pw.relaxation -X-> integrations
-protected relaxation -X-> workflows or live runtime
+protected relaxation -X-> workflows, adapters, tools, or live runtime
 ```

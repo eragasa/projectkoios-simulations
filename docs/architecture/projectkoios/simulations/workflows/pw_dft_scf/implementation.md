@@ -18,6 +18,13 @@
 - `cpn/net.py`, `runtime.py`, and `workflow.py` — authoritative local SNAKES
   topology, bounded firing wrapper, and facade implementation.
 
+The implemented convergence records cover energy observations over cubic mesh
+and wavefunction-cutoff coordinates and are reused unchanged by the planned
+bulk qualification route. They are not structure/evidence scoped. An additive
+typed correlation owned by the reusable SCF/bulk workflow layer must bind them
+to exact requests, occurrences, and evidence without replacing assessor
+behavior.
+
 ## Contract preservation
 
 Public records are frozen, slotted dataclasses rooted in neutral SCF contracts.
@@ -29,6 +36,22 @@ keeps its established operation identity even though its Python namespace moved.
 The old `PwDftScfConvergenceReplayer` and flat `pw_dft_scf.replay` module remain
 absent. Only the typed convergence replay Actionizer contract exists.
 
+## Bulk-qualification reuse boundary
+
+Bulk qualification uses the existing grid recipe, assessor, and controller at
+each exact structure. A new typed correlation binds the exact structure,
+scientific request/specification, neutral coupled-cutoff realization, full
+sampling policy, every coordinate/observation, projected request, prepared
+input, selected occurrence, normalized evidence bytes, adapter mapping, and the
+unchanged assessment. Only an accepted correlation selects its highest tested
+mesh/cutoff corner.
+
+QE cutoff controls and ratios remain in outward integration/adapter evidence.
+The terminal handoff references the neutral cutoff realization. Current
+convergence coordinates and assessor behavior remain unchanged; noncubic
+coordinates and independently varying the density/potential cutoff remain
+outside the first route.
+
 ## Import boundary
 
 Production SCF workflow modules may import standard-library modules, protected
@@ -36,8 +59,12 @@ Production SCF workflow modules may import standard-library modules, protected
 Applications, or a live generic Workflow runtime. The optional `cpn` subtree
 alone imports the pinned `snakes` namespace.
 
-Provider selection, input projection, and artifact parsing occur only in
-repository tools. The local SNAKES CPN is isolated in the optional `cpn`
+Provider selection, input projection, and artifact parsing currently occur only
+in repository tools. Future provider-to-neutral evidence mapping for bulk
+qualification belongs in first-party `projectkoios.adapters`, and provider
+selection, operational configuration, and route invocation belong in
+`tools/pw_dft_bulk_qualification`. Neither outward surface becomes a dependency
+of this package. The local SNAKES CPN is isolated in the optional `cpn`
 subtree; no other production module imports it. Tools consume public workflow
 and integration records rather than being imported by production code.
 
@@ -47,7 +74,7 @@ Direct tests cover:
 
 - recipe coordinates and request projection;
 - single-result comparison and energy alignment;
-- axis/grid convergence assessment;
+- axis/grid convergence assessment over the implemented coordinate model;
 - controller extension, acceptance, and budget exhaustion;
 - convergence-test comparison;
 - replay identity, evidence, action, results, errors, and retained QE evidence;
@@ -55,6 +82,14 @@ Direct tests cover:
 - conformance between the SCF inventory and authoritative Petri-net names; and
 - the local CPN workflow and eight-campaign rendering in their production/tool
   test suites.
+
+Future bulk-qualification tests must additionally prove complete typed
+correlation and reject mixed structure, request/specification, model,
+pseudopotential, neutral cutoff, provider mapping, sampling, occurrence,
+evidence bytes, or artifact identities and prove that a changed setting after
+structural relaxation cannot
+be accepted without re-relaxation and fresh confirmation. Those tests must use
+synthetic or retained evidence and do not authorize calculators.
 
 Repository tests additionally prove normalized namespace equivalence, public
 API signatures, absence of the old import path, dependency boundaries, one

@@ -43,6 +43,35 @@ path, reusable authority, or live Workflow runtime state.
   is no
   executable relaxation Petri net in this package.
 
+### Planned plane-wave DFT bulk qualification composition
+
+[`pw_dft_bulk_qualification`](pw_dft_bulk_qualification/index.md) specifies a
+planned provider-neutral composition for joint plane-wave-cutoff and
+reciprocal-sampling qualification on an exact seed structure, zero-pressure
+structural qualification, and fresh final-setting confirmation on the resulting
+exact structure. A changed confirmed setting requires a new relaxation and
+confirmation within an explicit budget. No production package, public API,
+adapter, repository tool, or executable topology exists.
+
+The planned capability produces an exact accepted structure/setting pair for
+downstream parent-state requirements. Its child SCF and relaxation calculations
+remain separately authorized occurrences. First-party native/neutral mapping is
+planned under `projectkoios.adapters`; provider selection, operational
+configuration, and route invocation are planned under
+`tools/pw_dft_bulk_qualification`.
+
+### Planned plane-wave DFT Wannierization composition
+
+[`pw_dft_wannierization`](pw_dft_wannierization/index.md) specifies a planned,
+provider-neutral route from exact plane-wave parent evidence through a
+source-ordered uniform-grid Bloch frame, localization preprocessing, interface
+generation, and localization to correlated representation evidence. No
+production package, public API, or executable topology exists. Quantum ESPRESSO
+native behavior remains in its outward integration, while the current
+Wannier90 integration remains parser-only until a separate reviewed
+preprocessing/localization change is implemented. The planned workflow carries
+no provider object, executable path, runtime state, or execution authority.
+
 ### Planned chained defect-formation composition
 
 [`pw_dft_defect_formation`](pw_dft_defect_formation/index.md) inventories the
@@ -61,9 +90,12 @@ runtime rather than to a batch executor.
 
 ## Tools and examples
 
-Operational commands live under `tools/pw_dft_scf`, outside package discovery.
-They provide calculator-input rendering, replay, planning, two forms of
-comparison, and visualization over public workflow and integration contracts.
+Current operational commands live under `tools/pw_dft_scf`, outside package
+discovery. They provide calculator-input rendering, replay, planning, two forms
+of comparison, and visualization over public workflow and integration contracts.
+The planned bulk qualification capability requires a separate
+`tools/pw_dft_bulk_qualification` surface; documenting it does not make that tool
+available.
 
 The compact `examples/workflows` tree contains only reviewed campaign,
 comparison, and structure declarations plus small replay and relaxation

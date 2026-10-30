@@ -14,8 +14,10 @@ src/python/projectkoios/simulations/dft/pw/relaxation/
 ```
 
 The request, observation, result, and publication contracts are implemented.
-QE output normalization is implemented; VASP normalization, complete normalized
-per-atom force vectors, and richer cell-relaxation modes remain future work.
+The request already carries explicit fixed, volume-only, fixed-volume-shape,
+selected-component, and unrestricted-vector cell modes. QE output normalization
+is implemented; VASP normalization and complete normalized per-atom force
+vectors remain future work.
 
 ## Observation fields
 
@@ -61,7 +63,18 @@ record, scope, and stable publication operation.
 
 This is a pure transformation. It writes no catalog or structure file, grants no
 calculator authority, and applies no force, pressure, or scientific acceptance
-threshold beyond the retained convergence facts.
+threshold beyond the retained convergence facts. In particular, publication is
+not a zero-pressure workflow decision and does not make numerical convergence
+from the starting structure transferable to the published structure.
+
+## Bulk cutoff lineage
+
+The current specification records wavefunction cutoff and k-point sampling and
+remains unchanged. Bulk qualification references a neutral physical
+wavefunction and density/potential cutoff realization, while first-party
+adapter evidence proves the exact provider input realizes it across convergence,
+relaxation, and confirmation. No QE field or ratio is added to the protected
+relaxation schema or neutral handoff.
 
 ## Outward adapters
 
@@ -72,7 +85,9 @@ evidence. Provider-specific parsers remain outward.
 
 Provider adapters must identify which source supplied every normalized value and
 must retain disagreements rather than silently choosing between stdout, XML,
-or other files.
+or other files. First-party cross-layer mapping for a future reusable bulk route
+belongs in `projectkoios.adapters`; the protected core never imports that
+namespace.
 
 ## Fixed-cell normalization
 
@@ -97,6 +112,15 @@ intent. The prepared input record proves how those values were rendered. The
 observation retains provider-reported total magnetization or spin populations
 when available. Relaxation evidence with incompatible charge or spin cannot be
 bound into the same defect energy series.
+
+## Workflow assessment boundary
+
+The protected result records facts and exact correlation. A reusable
+zero-pressure assessor belongs to `projectkoios.simulations.workflows`, where it
+can compare normalized force and pressure residuals with explicit policy and
+compose failed, inconclusive, or accepted decisions. Cross-stage re-relaxation
+after a changed final setting also belongs to workflow composition. Neither
+behavior is added to the protected core by this documentation.
 
 ## Required verification
 
