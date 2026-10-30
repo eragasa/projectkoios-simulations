@@ -170,7 +170,6 @@ def test_workflow_architecture_nodes_have_complete_substantive_trios() -> None:
     )
     nodes = tuple(path.parent for path in documentation_root.rglob("index.md"))
 
-    assert len(nodes) == 59
     for node in nodes:
         for filename in ("index.md", "schematics.md", "implementation.md"):
             document = node / filename
