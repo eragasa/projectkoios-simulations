@@ -46,9 +46,13 @@ ordered `(source, target, reciprocal_shift)` inventory. A permutation is valid
 only when explicitly represented and applied consistently to every correlated
 artifact.
 
-Set equality, independent sorting, or coordinate rounding is insufficient.
-Coordinate comparisons state reciprocal basis, wrapping policy, metric, and
-absolute tolerance and reject ambiguous matches.
+Set equality, independent sorting, or ad hoc coordinate rounding is insufficient.
+Coordinate comparisons state reciprocal basis, wrapping policy, metric, canonical
+source, and absolute tolerance and reject ambiguous matches. WIN is the canonical
+reciprocal-point source for localization transformation outputs. NNKP is a derived
+native topology representation whose lower decimal presentation precision is correlated
+to WIN under an explicit serialization tolerance; it is not substituted as a
+higher-precision canonical reference.
 
 ## Output closure and dimensions
 

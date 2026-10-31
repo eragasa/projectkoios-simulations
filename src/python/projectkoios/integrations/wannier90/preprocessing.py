@@ -19,8 +19,8 @@ from projectkoios.physkit.periodic import DirectLattice3D, ReciprocalLattice3D
 from projectkoios.physkit.periodic.unit_cell import UnitCell
 from projectkoios.physkit.units import (
     MatrixQuantity,
-    ModelSystemUnitConverter,
     PhysicalUnit,
+    PintUnitConverter,
     ScalarQuantity,
     Unitless,
 )
@@ -149,7 +149,7 @@ class Wannier90PreprocessingInput:
     @property
     def lattice_vectors_angstrom(self) -> Wannier90LatticeVectors:
         """Return source-ordered physical lattice vectors as angstrom rows."""
-        factor = ModelSystemUnitConverter.conversion_factor(
+        factor = PintUnitConverter().conversion_factor(
             self.unit_cell.H.unit,
             _ANGSTROM,
         )
@@ -199,10 +199,9 @@ class Wannier90PreprocessingInput:
         )
         outer_window_ev = _window_magnitudes(self.outer_window, _ELECTRON_VOLT)
         frozen_window_ev = _window_magnitudes(self.frozen_window, _ELECTRON_VOLT)
-        disentanglement_tolerance_angstrom2 = (
-            _quantity_magnitude(
+        disentanglement_fractional_tolerance = (
+            _unitless_magnitude(
                 self.disentanglement_tolerance,
-                _ANGSTROM_SQUARED,
                 "disentanglement_tolerance",
             )
             if self.disentanglement_tolerance is not None
@@ -266,7 +265,7 @@ class Wannier90PreprocessingInput:
                 )
             )
         if self.disentanglement_iterations is not None:
-            assert disentanglement_tolerance_angstrom2 is not None
+            assert disentanglement_fractional_tolerance is not None
             assert self.disentanglement_convergence_window is not None
             assert disentanglement_mix_ratio is not None
             lines.extend(
@@ -274,7 +273,7 @@ class Wannier90PreprocessingInput:
                     f"dis_num_iter = {self.disentanglement_iterations}",
                     "dis_conv_tol = "
                     + _format_scalar(
-                        disentanglement_tolerance_angstrom2,
+                        disentanglement_fractional_tolerance,
                         self.coordinate_precision,
                     ),
                     f"dis_conv_window = {self.disentanglement_convergence_window}",
@@ -520,7 +519,7 @@ def _quantity_magnitude(
     if type(quantity) is not ScalarQuantity:
         raise TypeError(f"{name} must be a PhysKit ScalarQuantity")
     try:
-        converted = ModelSystemUnitConverter.convert_scalar(quantity, target)
+        converted = PintUnitConverter().convert_scalar(quantity, target)
     except ValueError as error:
         raise ValueError(f"{name} has incompatible physical units") from error
     return converted.magnitude
@@ -553,6 +552,13 @@ def _nonnegative_quantity_magnitude(
     value = _quantity_magnitude(quantity, target, name)
     if value < 0.0:
         raise ValueError(f"{name} must be nonnegative")
+    return value
+
+
+def _positive_unitless_magnitude(quantity: ScalarQuantity, name: str) -> float:
+    value = _unitless_magnitude(quantity, name)
+    if value <= 0.0:
+        raise ValueError(f"{name} must be positive")
     return value
 
 
@@ -678,11 +684,7 @@ def _validate_disentanglement(
     assert convergence_window is not None
     assert mix_ratio is not None
     _positive_integer(iterations, "disentanglement_iterations")
-    _positive_quantity_magnitude(
-        tolerance,
-        _ANGSTROM_SQUARED,
-        "disentanglement_tolerance",
-    )
+    _positive_unitless_magnitude(tolerance, "disentanglement_tolerance")
     _positive_integer(convergence_window, "disentanglement_convergence_window")
     mix_value = _unitless_magnitude(mix_ratio, "disentanglement_mix_ratio")
     if not 0.0 < mix_value <= 1.0:

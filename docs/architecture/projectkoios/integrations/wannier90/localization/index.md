@@ -1,32 +1,35 @@
-# Planned Wannier90 localization execution integration
+# Wannier90 localization execution integration
 
 ## Status
 
-This node specifies a planned outward provider capability. No production
-localization-execution package, public request/result type, runner, or execution
-API described here exists. The current `localization.py` implementation parses
-caller-supplied `.wout` text; it does not stage inputs or invoke
-`wannier90.x`. This architecture does not rename that parser, reserve a future
-Python namespace, or alter the integration's current parser-only status.
+`localization_execution.py` implements the first rank-reducing, ordinary non-spin
+AMN/MMN provider profile. `Wannier90LocalizationInputPreparer` creates and correlates
+a closed WIN/NNKP/EIG/AMN/MMN inventory without resolving an executable.
+`Wannier90LocalizationRunner` verifies that manifest, the exact executable identity,
+resource bounds, and explicit authorization before submitting at most one process to
+the generic single-attempt executor. `Wannier90LocalizationOutputVerifier` applies the
+same authenticated provider checks to an existing occurrence without invoking a
+calculator.
 
-A separate reviewed implementation is required before ProjectKoios may claim a
-Wannier90 localization runner. This documentation grants no execution
-authority and does not establish that a complete native input set is available.
+The existing `localization.py` remains the execution-independent `.wout` parser. The
+runner does not grant execution authority, discover executables, retry, restart, or
+accept a scientific Wannier representation.
 
 ## Purpose
 
-The future capability will own one provider-native localization occurrence. It
-will:
+The capability owns one provider-native localization occurrence. It:
 
-1. consume an exact preprocessing identity and a route-specific authenticated
-   interface artifact set;
-2. stage one closed, seed-consistent native input inventory;
-3. verify the exact `wannier90.x` executable and occurrence resources;
-4. submit at most one separately authorized localization process through the
+1. consumes exact preprocessing and converter identities plus a route-specific
+   authenticated interface artifact set;
+2. stages one closed, seed-consistent native input inventory;
+3. verifies the exact `wannier90.x` executable and occurrence resources;
+4. submits at most one separately authorized localization process through the
    generic single-attempt executor;
-5. retain exact process and native output evidence; and
-6. parse supported localization, gauge, disentanglement, and real-space
-   Hamiltonian outputs into provider observations.
+5. retains exact process and native output evidence; and
+6. parses supported localization, gauge, disentanglement, and real-space
+   Hamiltonian outputs into provider observations; and
+7. supports no-calculator reverification of retained outputs against the canonical WIN
+   reciprocal-point order.
 
 The runner must separate process completion, native-reported localization
 status, output-set closure, parser success, route correlation, and scientific
@@ -51,7 +54,7 @@ parents fail before execution.
 
 ## Ownership boundary
 
-The future outward integration owns native staging, seedname/basename rules,
+The outward integration owns native staging, seedname/basename rules,
 localization command projection, exact native output manifests, provider
 parsing, and provider-level correlation. It does not own:
 
@@ -80,6 +83,11 @@ the authenticated `.wout`; they are not standalone artifacts. Any separately
 requested native center-output file is an additional explicitly declared
 artifact with its own identity and parser contract. Absence and presence are
 both explicit; no output is accepted by basename alone.
+
+Gauge and disentanglement k-points are compared with the canonical WIN k-point block,
+not the lower-precision NNKP presentation. NNKP is separately correlated to WIN under
+the native serialization bound. This prevents a formatting-only precision difference
+from being misclassified as source-order disagreement.
 
 A completed localization produces a candidate provider representation. It does
 not prove convergence, interpolation accuracy, operator fidelity, or

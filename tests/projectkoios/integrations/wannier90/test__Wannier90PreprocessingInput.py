@@ -198,10 +198,7 @@ class TestWannier90PreprocessingInput:
                 ScalarQuantity(5.0, _ELECTRON_VOLT),
             ),
             disentanglement_iterations=300,
-            disentanglement_tolerance=ScalarQuantity(
-                1.0e-12,
-                _ANGSTROM_SQUARED,
-            ),
+            disentanglement_tolerance=ScalarQuantity(1.0e-12, Unitless()),
             disentanglement_convergence_window=5,
             disentanglement_mix_ratio=ScalarQuantity(0.5, Unitless()),
         ).render()
@@ -280,10 +277,7 @@ class TestWannier90PreprocessingInput:
                     ScalarQuantity(2.0, _ELECTRON_VOLT),
                 ),
                 disentanglement_iterations=100,
-                disentanglement_tolerance=ScalarQuantity(
-                    1.0e-10,
-                    _ANGSTROM_SQUARED,
-                ),
+                disentanglement_tolerance=ScalarQuantity(1.0e-10, Unitless()),
                 disentanglement_convergence_window=3,
                 disentanglement_mix_ratio=ScalarQuantity(0.5, Unitless()),
             )

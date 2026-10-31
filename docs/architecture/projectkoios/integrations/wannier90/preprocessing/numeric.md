@@ -45,7 +45,11 @@ inverse or cross-product implementation. Direct-lattice
 values, reciprocal-lattice values, and fractional k points use separate
 Pint-backed PhysKit `ScalarQuantity` tolerances passed to the verification
 method. Unit compatibility is checked before conversion to angstrom, inverse
-angstrom, or unitless native values. No
+angstrom, or unitless native values. In particular, Wannier90 3.1.0 evaluates
+`dis_conv_tol` against the dimensionless fractional change
+`Omega_I(i-1) / Omega_I(i) - 1`; the preprocessing contract therefore requires an
+explicitly unitless disentanglement tolerance. This is distinct from the
+square-angstrom Wannierisation `conv_tol`. No
 hidden scientific tolerance or cross-unit comparison is inferred. Parse success
 alone does not establish complete semantic correlation with the input
 declaration.

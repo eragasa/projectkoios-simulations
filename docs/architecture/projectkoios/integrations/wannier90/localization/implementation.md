@@ -1,17 +1,22 @@
-# Planned Wannier90 localization execution implementation rules
+# Wannier90 localization execution implementation
 
-## No current API
+## Current API
 
-This architecture constrains a future implementation without choosing public
-class, function, module, schema, or error names. The current parser modules and
-public parser records remain the only implemented Wannier90 surfaces described
-by the integration root. No compatibility promise follows from provisional
-terms in these documents.
+`Wannier90LocalizationInputPreparer` authenticates and correlates the first closed
+rank-reducing non-spin input profile. `Wannier90LocalizationRunner` consumes its exact
+manifest and a separately authorized `Wannier90LocalizationRunRequest`.
+`Wannier90LocalizationOutputVerifier` can reverify an already retained occurrence
+without resolving or invoking a calculator. Immutable request, manifest,
+preparation-result, run-result, and retained-output-error records are public from
+`projectkoios.integrations.wannier90`.
+
+This first implementation deliberately does not support non-disentangled, spin,
+spinor, UNK-consuming, checkpoint-restart, or selective-localization profiles.
 
 ## Prepared occurrence
 
-A future localization implementation must separate pure preparation from
-execution. Preparation validates and correlates a closed route-specific native
+The implementation separates pure preparation from execution. Preparation validates
+and correlates a closed route-specific native
 input inventory, then creates exact prepared-input evidence without resolving
 an executable or granting authority.
 
@@ -28,8 +33,8 @@ a permissive superset.
 
 ## Execution preflight
 
-Before creating an occurrence output directory or starting a process, the
-future provider runner must verify:
+Before creating an occurrence output directory or starting a process, the provider
+runner verifies:
 
 - the complete prepared-input manifest and every staged artifact by size and
   SHA-256;
@@ -47,7 +52,7 @@ prepared-input record does not authorize execution.
 
 ## Single-attempt execution
 
-The future runner stages immutable input bytes and submits one no-shell command
+The runner stages immutable input bytes and submits one no-shell command
 to `projectkoios.simulations.execution`. It starts at most one subprocess,
 provides no interactive stdin, and retains stdout and stderr independently. It
 must not run preprocessing, invoke `pw2wannier90.x`, schedule another
@@ -69,7 +74,8 @@ It records process status separately from:
 - presence and exact identity of required outputs;
 - native completion markers;
 - parsed localization convergence/status observations;
-- dimensional and source-order correlation; and
+- dimensional and source-order correlation against the canonical WIN k-point block;
+  and
 - provider handoff completion.
 
 Timeout, signal, nonzero exit, a missing or undeclared selected retained-output
@@ -81,9 +87,19 @@ private work directory. Incidental files are ignored or separately inventoried
 and are never silently promoted to route evidence. A process can return zero
 while the provider result remains failed or inconclusive.
 
+NNKP writes reciprocal coordinates with lower native presentation precision than WIN
+and the transformation-matrix files. The provider therefore uses WIN as the canonical
+source-order reference for `u` and `u_dis`. It separately correlates NNKP to WIN under
+the declared native serialization bound. It must not compare the more precise matrix
+coordinates directly against lossy NNKP presentation bytes under a tighter tolerance.
+
+Retained-output reverification authenticates the occurrence input manifest and staged
+input bytes before applying the same output checks. It returns immutable JSON bytes and
+never invokes, retries, or discovers a calculator.
+
 ## Dependency and adaptation boundaries
 
-A future production runner may import same-integration parser components and
+The production runner imports same-integration parser components and
 protected calculator-input, execution, and artifact/evidence contracts. It
 must not import `projectkoios.simulations.workflows`, downstream projects,
 repository tools/examples, or live Workflow runtime objects.
@@ -112,6 +128,8 @@ Tests use deterministic native fixtures and fake executables and must prove:
 - durable output for timeout, signal, nonzero exit, missing output, parse
   failure, reported nonconvergence, and dimension mismatch;
 - exact authentication before native parsing;
+- canonical WIN correlation despite lower-precision native NNKP serialization;
+- no-calculator retained-output reverification without occurrence mutation;
 - separation of process success from localization status and acceptance;
 - absence of workflow imports from provider production modules; and
 - no scientific calculator execution in ordinary checks.
