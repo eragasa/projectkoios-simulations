@@ -24,11 +24,31 @@ provider verifies:
 - positive integer band, projection, and Wannier counts; and
 - an explicit spin/component declaration.
 
-A provider renderer must be deterministic for the same complete declaration.
-Presentation whitespace participates in byte identity after rendering even when
-it does not change native semantics. A caller-supplied exact input follows a
-separate authenticated-input path and is not claimed to equal rendered bytes
-unless exact equality is checked.
+The current `Wannier90PreprocessingInput` renderer is deterministic for the
+same complete declaration. Presentation whitespace participates in byte
+identity after rendering even when it does not change native semantics. A
+future caller-supplied exact-input path must remain separate and must not claim
+equality with rendered bytes unless exact equality is checked.
+
+`Wannier90PreprocessingNnkpOutput` currently computes the observed output byte
+size and SHA-256 and binds the seed-derived `.nnkp` filename to the prepared
+`.win` input record. These computed values are observations, not independent
+authentication. Retained-artifact identity and replay authentication belong to
+the future execution-evidence persistence boundary, not this observed-output
+value object.
+`verify_source_lattices_kpoints_and_excluded_bands()` checks the ordered direct
+lattice, the reciprocal lattice derived with the native `2 pi`
+convention, reciprocal-fractional k points, and excluded bands. Reciprocal
+construction delegates to PhysKit `ReciprocalLattice3D.from_direct_lattice()`
+from a PhysKit `DirectLattice3D`; the integration does not maintain a competing
+inverse or cross-product implementation. Direct-lattice
+values, reciprocal-lattice values, and fractional k points use separate
+Pint-backed PhysKit `ScalarQuantity` tolerances passed to the verification
+method. Unit compatibility is checked before conversion to angstrom, inverse
+angstrom, or unitless native values. No
+hidden scientific tolerance or cross-unit comparison is inferred. Parse success
+alone does not establish complete semantic correlation with the input
+declaration.
 
 ## Topology cardinality and ordering
 

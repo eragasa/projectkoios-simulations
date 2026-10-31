@@ -1,29 +1,69 @@
-# Planned Wannier90 preprocessing implementation rules
+# Wannier90 preprocessing implementation rules
 
-## No current API
+## Current implementation boundary
 
-This document defines implementation constraints, not public symbol names or
-signatures. No source module, request type, result type, projector, runner, or
-codec is created by this architecture-only change. A future API review must
-select names and package shape without implying compatibility with provisional
-document terminology.
+The first source increment provides the immutable value object
+`projectkoios.integrations.wannier90.Wannier90PreprocessingInput`. Its
+constructor validates the bounded generic non-spin spectral subset from typed
+native parameters. Structure is a PhysKit `UnitCell`; reciprocal-fractional
+points are a unitless PhysKit `MatrixQuantity`; and energy, spread, mixing, and
+comparison values use Pint-backed PhysKit `ScalarQuantity` records. Ranks,
+projections, optional excluded bands and projection selection, mesh,
+localization controls, and complete disentanglement controls remain explicit.
+
+Calling `Wannier90PreprocessingInput(...).render()` deterministically produces
+exact newline-terminated `.win` bytes. Calling `prepare()` authenticates those
+bytes and returns an existing `CalculatorInputRecord`. Construction, rendering,
+and preparation have no filesystem or process side effects.
+
+The input object reports its seed-derived `.win` and `.nnkp` basenames.
+`Wannier90PreprocessingNnkpOutput` binds exact observed
+`.nnkp` bytes to the preprocessing declaration, derives the native basename
+from its seed, computes byte size and SHA-256, and delegates parsing to the
+existing bounded `Wannier90NnkpParser`. It does not redundantly retain the
+prepared record produced deterministically by that declaration.
+Its `verify_source_lattices_kpoints_and_excluded_bands()` method compares the
+ordered direct lattice, derived reciprocal lattice including the native `2 pi`
+convention, reciprocal-fractional k points, and excluded bands against the
+source input. `verify_source_selected_projection_indices()` separately checks
+that any selected projection indices address the expanded native inventory; it
+does not reproduce Wannier90's projection-expansion rules. Physical direct
+vectors are represented with PhysKit `DirectLattice3D`, and PhysKit
+`ReciprocalLattice3D.from_direct_lattice()` owns
+the reciprocal construction. Direct lengths, reciprocal lengths, and fractional
+k points use separate Pint-backed PhysKit scalar tolerances supplied explicitly
+to the verification call in their respective units; comparison policy is not
+observation state. The observed output itself reports the seed-derived filename,
+byte size, and SHA-256. Persistence belongs to the future execution-evidence
+boundary.
+
+This increment does **not** yet authenticate arbitrary caller-rendered input,
+verify expanded native projection values or independently reproduce the
+neighbor inventory, stage files, resolve an
+executable, or run Wannier90. The typed source reference identifies the
+caller-owned construction declaration and energy reference.
+Validation establishes representability within the bounded input object, not
+scientific suitability or production acceptance.
 
 The existing Wannier90 parser modules remain execution-independent. They are
-not relocated, re-exported, or converted into runner facades by this plan.
+not relocated, re-exported, or converted into runner facades.
 
 ## Separation of rendering and execution
 
 The first renderer subset is reusable generic non-spin spectral Wannier90 input,
 not a silicon-specific profile. A consuming project supplies every exact
 structure, projection, energy window, k-point mesh, rank, and localization
-control. The future implementation must provide a pure render-or-bind phase
-that can:
+control. The implemented pure rendering phase:
 
-- validate that complete provider-native construction input;
-- deterministically render exact `.win` bytes or authenticate caller-supplied
-  exact bytes;
-- report required native resources and expected outputs; and
-- construct a prepared-input record without resolving or running an executable.
+- validates the bounded provider-native construction input in the immutable
+  input constructor;
+- deterministically renders exact `.win` bytes;
+- reports singular seed-derived `input_filename` and `nnkp_filename` values; and
+- separately prepares an authenticated calculator-input record without
+  resolving or running an executable.
+
+Reporting execution resources remains to be added before the complete
+preprocessing provider boundary exists.
 
 A separate execution phase may stage the prepared input and submit one process
 only after external authorization has been supplied at the existing
@@ -88,12 +128,16 @@ do not import integrations, and integrations do not import workflows.
 
 ## Verification requirements
 
-Implementation tests must use deterministic native fixtures and fake
+Current execution-independent tests establish deterministic byte-exact
+rendering, constructor rejection of inconsistent ranks, meshes, windows, and
+controls, seed-derived input and NNKP basenames, observed NNKP byte
+count and checksum calculation, bounded native
+parsing, supported ordered semantic verification, and operation without
+executable discovery or process startup.
+
+Future execution tests must use deterministic native fixtures and fake
 executables. They must establish:
 
-- deterministic byte-exact rendering or exact caller-input authentication;
-- render-only operation without executable discovery or process startup;
-- rejection of execution resources in render-only mode;
 - rejection of missing external authorization before process startup;
 - at most one subprocess and no implicit retry;
 - exact command arguments without a shell or interactive stdin;

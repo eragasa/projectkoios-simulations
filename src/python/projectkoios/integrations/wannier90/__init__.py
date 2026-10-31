@@ -43,12 +43,20 @@ from projectkoios.integrations.wannier90.nnkp import (
     Wannier90NnkpParser,
     Wannier90NnkpProjection,
 )
+from projectkoios.integrations.wannier90.preprocessing import (
+    WANNIER90_INTEGRATION_ID,
+    Wannier90PreprocessingInput,
+    Wannier90PreprocessingNnkpOutput,
+)
 from projectkoios.integrations.wannier90.unitary_matrices import (
     Wannier90UnitaryMatrixData,
     Wannier90UnitaryMatrixParser,
 )
 
 __all__ = [
+    "WANNIER90_INTEGRATION_ID",
+    "Wannier90PreprocessingInput",
+    "Wannier90PreprocessingNnkpOutput",
     "Wannier90DisentanglementMatrixData",
     "Wannier90DisentanglementMatrixParser",
     "Wannier90HamiltonianBlockData",

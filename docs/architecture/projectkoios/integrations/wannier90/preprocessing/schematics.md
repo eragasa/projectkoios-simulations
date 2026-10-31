@@ -8,13 +8,13 @@ behavior.
 ```mermaid
 flowchart TD
     declaration[Caller-owned exact construction declaration]
-    render[Future deterministic native render or exact input binding]
-    prepared[Protected prepared-input record]
+    render[Current deterministic native rendering]
+    prepared[Current authenticated prepared-input record]
     authority[Separate external execution authorization]
     preflight[Future provider preflight]
     executor[Existing single-attempt executor]
     native[Retained native stdout, stderr, and topology artifact]
-    parse[Existing native topology parser]
+    parse[Current observed-byte bounded topology parser]
     observation[Future provider preprocessing observation]
 
     declaration --> render --> prepared
@@ -32,9 +32,10 @@ for the occurrence.
 
 ```text
 exact construction declaration
-  -> validate provider-native values
-  -> render or authenticate exact input bytes
-  -> retain prepared-input identity and expected output roles
+  -> construct and validate typed provider-native input
+  -> render exact input bytes
+  -> report the input and NNKP basenames
+  -> optionally prepare an authenticated CalculatorInputRecord
   -> stop
 ```
 
@@ -98,8 +99,14 @@ manifests, but its exact schema is not fixed here. The invariants are:
 
 ## Status boundary
 
-The boxes labeled “future” do not correspond to present public APIs. Current
-ProjectKoios can parse caller-supplied supported Wannier90 artifacts, but it
-does not render preprocessing input or invoke `wannier90.x -pp`. These diagrams
-do not alter that parser-only status, grant execution authority, or establish
-numerical or scientific acceptance.
+The rendering and prepared-input boxes correspond to the current `render()`
+and `prepare()` methods on `Wannier90PreprocessingInput`. Observed-byte parsing
+of caller-supplied `.nnkp` content corresponds to
+`Wannier90PreprocessingNnkpOutput.parse()`. Its explicitly named source-
+verification method checks the currently supported ordered semantics using
+Pint-backed PhysKit quantities. Retained-artifact identity and replay
+verification remain future execution-evidence work, as do preflight, execution,
+complete semantic verification, and the provider observation. ProjectKoios
+does not invoke `wannier90.x -pp`; these diagrams
+grant no execution authority and establish no numerical or scientific
+acceptance.

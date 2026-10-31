@@ -2,18 +2,33 @@
 
 ## Status
 
-This node specifies a planned outward provider capability. No production
-preprocessing package, public request or result type, projector, runner, or
-execution API described here exists. The current
-`projectkoios.integrations.wannier90` implementation remains an
-execution-independent parser of caller-supplied native artifacts. This
-documentation does not change that status and grants no calculator execution
-authority.
+A bounded render-only API now exists as
+`projectkoios.integrations.wannier90.Wannier90PreprocessingInput`. It validates
+the generic non-spin spectral subset, deterministically renders exact `.win`
+bytes, separately prepares an authenticated calculator-input record, and
+reports singular seed-derived `input_filename` and `nnkp_filename` values. The
+`Wannier90PreprocessingNnkpOutput` value object binds exact observed `.nnkp`
+bytes to their preprocessing declaration, derives the filename from its seed,
+reports the observed byte size and SHA-256, and delegates bounded native
+parsing. The separately available `prepare()` result is not redundantly stored
+on this observation. Its
+`verify_source_lattices_kpoints_and_excluded_bands()` method checks the ordered
+direct lattice, derived reciprocal lattice including `2 pi`, reciprocal-
+fractional k points, and excluded bands. The separately named
+`verify_source_selected_projection_indices()` method bounds any selected source
+indices against the expanded native projection inventory without reimplementing
+Wannier90 projection expansion. Direct, reciprocal, and fractional coordinates
+use separate Pint-backed PhysKit scalar tolerances supplied explicitly to the
+verification call rather than stored as output state. The output
+reports its observed filename, byte size, and SHA-256, but no separate retained
+artifact identity exists before the execution-evidence persistence boundary is
+implemented.
 
-Implementation requires a separate reviewed change. Until that change exists,
-consumers must not cite this node as evidence that ProjectKoios can render a
-Wannier90 input, invoke `wannier90.x -pp`, or produce a verified preprocessing
-handoff.
+No production preprocessing runner, execution request or result type, complete
+semantic input/output correlation, or verified topology handoff exists. The
+current implementation does not invoke
+`wannier90.x -pp`, grant execution authority, or establish calculator
+compatibility or scientific acceptance.
 
 ## Purpose
 
@@ -88,7 +103,8 @@ Preprocessing does not localize orbitals, generate the QE interface artifacts,
 prove that a later localization will converge, or accept a Wannier
 representation.
 
-See [`implementation.md`](implementation.md) for the future implementation
-boundary, [`schematics.md`](schematics.md) for authority and adaptation flows,
-[`scientific.md`](scientific.md) for native semantic limits, and
+See [`implementation.md`](implementation.md) for the current rendering seam and
+remaining implementation boundary, [`schematics.md`](schematics.md) for
+authority and adaptation flows, [`scientific.md`](scientific.md) for native
+semantic limits, and
 [`numeric.md`](numeric.md) for exact identity, ordering, and dimension rules.
