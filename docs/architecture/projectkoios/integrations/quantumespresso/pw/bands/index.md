@@ -13,7 +13,7 @@ The computational sequence is:
 
 1. complete a compatible SCF calculation and retain its saved state;
 2. run `pw.x` with `calculation = 'bands'` against that state;
-3. supply the resulting parsed `data-file-schema.xml` as `QeQexsdData`;
+3. supply the resulting parsed `data-file-schema.xml` as `QexsdData`;
 4. validate the observed k-points against the declared path;
 5. convert the schema-defined native spectral values into neutral diagram data;
 6. pass that neutral data to an application-owned renderer.
@@ -79,7 +79,7 @@ plot file is rounded and discards QEXSD metadata, so it is not consumed by
 
 ## `QeBandsDataExtractor`
 
-The extractor accepts an already constructed `QeQexsdData`; it does not parse
+The extractor accepts an already constructed `QexsdData`; it does not parse
 XML or open paths. The retained parsed document must expose the fields produced
 by `QuantumEspressoXsdDocumentParser`, including:
 
@@ -88,7 +88,7 @@ by `QuantumEspressoXsdDocumentParser`, including:
 - source-ordered k-points;
 - eigenvalues and optional occupations;
 - declared sample and band counts;
-- source identity retained by `QeQexsdData`.
+- source identity retained by `QexsdData`.
 
 Before interpreting k-points, the extractor reconstructs the QEXSD final
 `UnitCell` and compares its source-ordered lattice vectors, atom symbols, and
@@ -136,11 +136,10 @@ is
      * 2π / (alat_bohr * bohr_to_angstrom)
 ```
 
-using:
-
-```text
-bohr_to_angstrom = 0.529177210903
-```
+where `bohr_to_angstrom` is obtained from PhysKit's
+`ModelSystemUnitConverter` for `PhysicalUnit("bohr")` to
+`PhysicalUnit("angstrom")`. The integration does not own a duplicate conversion
+constant.
 
 Distances accumulate only within a declared branch. At a branch boundary, the
 new branch starts at the preceding branch's final scalar coordinate; the
@@ -149,13 +148,9 @@ physical jump is intentionally not included.
 ### Energy and occupation handling
 
 For the supported `Hartree atomic units` declaration, QEXSD eigenvalues are
-converted as:
-
-```text
-E_eV = E_hartree * 27.211386245988
-```
-
-The conversion uses the CODATA 2018 Hartree-to-eV value. Occupations are
+converted with PhysKit's `ModelSystemUnitConverter` from
+`PhysicalUnit("hartree")` to `PhysicalUnit("eV")`. This integration does not
+retain a local Hartree-to-eV constant. Occupations are
 retained exactly as parsed; they are not rescaled or interpreted. The extractor
 creates one neutral spin channel from one source row per projected k-point.
 Spin-expanded layouts that do not have exactly one row per projected sample are

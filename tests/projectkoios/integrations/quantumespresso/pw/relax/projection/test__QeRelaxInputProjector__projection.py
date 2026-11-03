@@ -10,10 +10,10 @@ from projectkoios.integrations.quantumespresso.pw.inputfile.cell import (
     QeCellDegreesOfFreedom,
     QeCellDynamics,
 )
-from projectkoios.integrations.quantumespresso.pw.inputfile.ions import QeIonDynamics
-from projectkoios.integrations.quantumespresso.pw.relax.configuration import (  # noqa: E501
-    QeRelaxProjectionConfiguration,
+from projectkoios.integrations.quantumespresso.pw.inputfile.configuration import (  # noqa: E501
+    QeRelaxationInputConfiguration,
 )
+from projectkoios.integrations.quantumespresso.pw.inputfile.ions import QeIonDynamics
 from projectkoios.integrations.quantumespresso.pw.relax.integration import (  # noqa: E501
     QePwRelaxIntegration,
 )
@@ -50,8 +50,10 @@ from tests.projectkoios.simulations.dft.pw.support import silicon_structure_reso
 
 
 class QeRelaxInputProjectorTest(unittest.TestCase):
-    def test_renders_fixed_cell_input_from_shared_components(self) -> None:
-        projection = QeRelaxInputProjector(_configuration()).project(
+    def test__QeRelaxInputProjector__renders_fixed_cell_input_from_shared_components(
+        self,
+    ) -> None:
+        projection = QeRelaxInputProjector(self._configuration()).project(
             silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS),
             silicon_structure_resolution(),
         )
@@ -61,7 +63,7 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
             projection.preparation_operation,
             "projectkoios.qe.pw.relaxation.prepare",
         )
-        text = _text(projection)
+        text = self._text(projection)
         self.assertIn("calculation = 'relax'", text)
         self.assertNotIn("&CELL", text)
         self.assertIn("K_POINTS automatic\n 4 4 4 0 0 0", text)
@@ -73,7 +75,9 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
             ("Si.test.UPF",),
         )
 
-    def test_translates_disabled_spatial_and_time_reversal_symmetry(self) -> None:
+    def test__QeRelaxInputProjector__translates_disabled_symmetry(
+        self,
+    ) -> None:
         request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
         request = replace(
             request,
@@ -87,8 +91,8 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
             ),
         )
 
-        text = _text(
-            QeRelaxInputProjector(_configuration()).project(
+        text = self._text(
+            QeRelaxInputProjector(self._configuration()).project(
                 request, silicon_structure_resolution()
             )
         )
@@ -96,7 +100,9 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
         self.assertIn("nosym = .true.", text)
         self.assertIn("noinv = .true.", text)
 
-    def test_translates_charge_and_constrained_collinear_spin(self) -> None:
+    def test__QeRelaxInputProjector__translates_charge_and_constrained_collinear_spin(
+        self,
+    ) -> None:
         request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
         request = replace(
             request,
@@ -130,8 +136,8 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
             ),
         )
 
-        text = _text(
-            QeRelaxInputProjector(_configuration()).project(
+        text = self._text(
+            QeRelaxInputProjector(self._configuration()).project(
                 request, silicon_structure_resolution()
             )
         )
@@ -139,7 +145,9 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
         self.assertIn("nspin = 2", text)
         self.assertIn("tot_magnetization = 1", text)
 
-    def test_rejects_unsupported_spin_orbit_treatment(self) -> None:
+    def test__QeRelaxInputProjector__rejects_unsupported_spin_orbit_treatment(
+        self,
+    ) -> None:
         request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
         request = replace(
             request,
@@ -155,13 +163,15 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
             ),
         )
         with self.assertRaisesRegex(NotImplementedError, "only unpolarized"):
-            QeRelaxInputProjector(_configuration()).project(
+            QeRelaxInputProjector(self._configuration()).project(
                 request,
                 silicon_structure_resolution(),
             )
 
-    def test_generic_wrapper_selects_fixed_cell_integration(self) -> None:
-        integration = QePwRelaxIntegration(_configuration())
+    def test__QeRelaxInputProjector__generic_wrapper_selects_fixed_cell_integration(
+        self,
+    ) -> None:
+        integration = QePwRelaxIntegration(self._configuration())
         wrapper = PwDftRelaxationInputWrapper(
             registry=PwDftRelaxationIntegrationRegistry(integrations=(integration,))
         )
@@ -172,12 +182,14 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
         )
         self.assertEqual(projection.integration_id.value, "quantum-espresso")
 
-    def test_generic_wrapper_selects_mode_by_scope(self) -> None:
+    def test__QeRelaxInputProjector__generic_wrapper_selects_mode_by_scope(
+        self,
+    ) -> None:
         wrapper = PwDftRelaxationInputWrapper(
             registry=PwDftRelaxationIntegrationRegistry(
                 integrations=(
-                    QePwRelaxIntegration(_configuration()),
-                    QePwVcRelaxIntegration(_vc_configuration()),
+                    QePwRelaxIntegration(self._configuration()),
+                    QePwVcRelaxIntegration(self._vc_configuration()),
                 )
             )
         )
@@ -193,53 +205,50 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
             ),
             structure=silicon_structure_resolution(),
         )
-        self.assertIn("calculation = 'relax'", _text(fixed))
-        self.assertIn("calculation = 'vc-relax'", _text(variable))
+        self.assertIn("calculation = 'relax'", self._text(fixed))
+        self.assertIn("calculation = 'vc-relax'", self._text(variable))
 
-    def test_rejects_variable_cell_scope(self) -> None:
+    def test__QeRelaxInputProjector__rejects_variable_cell_scope(self) -> None:
         with self.assertRaisesRegex(ValueError, "atomic-positions-only"):
-            QeRelaxInputProjector(_configuration()).project(
+            QeRelaxInputProjector(self._configuration()).project(
                 silicon_relaxation_request(
                     PwDftRelaxationScope.ATOMIC_POSITIONS_AND_CELL
                 ),
                 silicon_structure_resolution(),
             )
 
+    def _text(self, prepared_input: CalculatorInputRecord) -> str:
+        return prepared_input.artifacts[0].content.decode("ascii")
 
-def _text(prepared_input: CalculatorInputRecord) -> str:
-    return prepared_input.artifacts[0].content.decode("ascii")
+    def _configuration(self) -> QeRelaxationInputConfiguration:
+        return QeRelaxationInputConfiguration(
+            species=(QeAtomicSpecies("Si", 28.086, "Si.test.UPF"),),
+            ion_dynamics=QeIonDynamics.BFGS,
+            charge_density_cutoff_ratio=8.0,
+            electronic_tolerance_ry=1.0e-8,
+            electronic_atol_ry=1.0e-15,
+            prefix="system",
+            pseudo_dir="./",
+            outdir="./tmp/",
+            input_filename="pw.in",
+            coordinate_precision=8,
+        )
 
-
-def _configuration() -> QeRelaxProjectionConfiguration:
-    return QeRelaxProjectionConfiguration(
-        species=(QeAtomicSpecies("Si", 28.086, "Si.test.UPF"),),
-        ion_dynamics=QeIonDynamics.BFGS,
-        charge_density_cutoff_ratio=8.0,
-        electronic_tolerance_ry=1.0e-8,
-        electronic_atol_ry=1.0e-15,
-        prefix="system",
-        pseudo_dir="./",
-        outdir="./tmp/",
-        input_filename="pw.in",
-        coordinate_precision=8,
-    )
-
-
-def _vc_configuration() -> QeVcRelaxProjectionConfiguration:
-    return QeVcRelaxProjectionConfiguration(
-        species=(QeAtomicSpecies("Si", 28.086, "Si.test.UPF"),),
-        ion_dynamics=QeIonDynamics.BFGS,
-        charge_density_cutoff_ratio=8.0,
-        electronic_tolerance_ry=1.0e-8,
-        electronic_atol_ry=1.0e-15,
-        prefix="system",
-        pseudo_dir="./",
-        outdir="./tmp/",
-        input_filename="pw.in",
-        coordinate_precision=8,
-        cell_dynamics=QeCellDynamics.BFGS,
-        cell_degrees_of_freedom=QeCellDegreesOfFreedom.ALL,
-    )
+    def _vc_configuration(self) -> QeVcRelaxProjectionConfiguration:
+        return QeVcRelaxProjectionConfiguration(
+            species=(QeAtomicSpecies("Si", 28.086, "Si.test.UPF"),),
+            ion_dynamics=QeIonDynamics.BFGS,
+            charge_density_cutoff_ratio=8.0,
+            electronic_tolerance_ry=1.0e-8,
+            electronic_atol_ry=1.0e-15,
+            prefix="system",
+            pseudo_dir="./",
+            outdir="./tmp/",
+            input_filename="pw.in",
+            coordinate_precision=8,
+            cell_dynamics=QeCellDynamics.BFGS,
+            cell_degrees_of_freedom=QeCellDegreesOfFreedom.ALL,
+        )
 
 
 if __name__ == "__main__":

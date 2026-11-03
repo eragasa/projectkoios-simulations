@@ -23,7 +23,7 @@ import pytest
 
 from projectkoios.integrations.quantumespresso.qexsd.records import QexsdSource
 
-from ..resources.qexsd_fixtures import CONTROLLED_QEXSD, QexsdFixtureResources
+from ..resources.qexsd_fixtures import CONTROLLED_QEXSD, QEXSD_FIXTURES
 
 SUT = QexsdSource
 pytestmark = pytest.mark.software_verification
@@ -32,14 +32,16 @@ pytestmark = pytest.mark.software_verification
 class TestQexsdSource:
     """Own this module's maintained software-verification evidence."""
 
-    def test_constructor__source_identity__maps_exact_immutable_bytes(self) -> None:
+    def test__QexsdSource__constructor_source_identity_maps_exact_immutable_bytes(
+        self,
+    ) -> None:
         """Evidence ID: SV-PERIODIC-001
 
         Requirement: Valid exact bytes, canonical path, SHA-256, and count are retained.
 
         Acceptance: Fields equal the supplied values and frozen assignment is rejected.
         """
-        digest, count = QexsdFixtureResources.controlled_source_bytes()
+        digest, count = QEXSD_FIXTURES.controlled_source_bytes()
         source = QexsdSource(
             "/external/data-file-schema.xml", digest, count, CONTROLLED_QEXSD
         )
@@ -56,7 +58,7 @@ class TestQexsdSource:
             pytest.param("/external/source.xml", None, 1, id="byte_count_mismatch"),
         ],
     )
-    def test_constructor__source_contract__rejects_invalid_identity(
+    def test__QexsdSource__constructor_source_contract_rejects_invalid_identity(
         self, path: str, digest: str | None, count: int | None
     ) -> None:
         """Evidence ID: SV-PERIODIC-002
@@ -66,7 +68,7 @@ class TestQexsdSource:
 
         Acceptance: Every named invalid partition raises ValueError.
         """
-        actual_digest, actual_count = QexsdFixtureResources.controlled_source_bytes()
+        actual_digest, actual_count = QEXSD_FIXTURES.controlled_source_bytes()
         with pytest.raises(ValueError):
             QexsdSource(
                 path,
@@ -75,7 +77,9 @@ class TestQexsdSource:
                 CONTROLLED_QEXSD,
             )
 
-    def test_constructor__semantic_types__rejects_coercible_values(self) -> None:
+    def test__QexsdSource__constructor_semantic_types_rejects_coercible_values(
+        self,
+    ) -> None:
         """Evidence ID: SV-PERIODIC-003
 
         Requirement: Source public fields reject wrong semantic types without coercion.
@@ -83,7 +87,7 @@ class TestQexsdSource:
         Acceptance: Digest bytes, a Boolean count, and mutable bytes each raise
         ``TypeError``.
         """
-        digest, count = QexsdFixtureResources.controlled_source_bytes()
+        digest, count = QEXSD_FIXTURES.controlled_source_bytes()
         with pytest.raises(TypeError):
             QexsdSource(
                 "/external/source.xml",

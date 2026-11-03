@@ -5,7 +5,6 @@ from __future__ import annotations
 import math
 import re
 from dataclasses import dataclass
-from typing import Protocol, cast
 
 from projectkoios.integrations.quantumespresso.pw.data_extraction.base import (
     QePwCapturedStreamData,
@@ -14,54 +13,17 @@ from projectkoios.integrations.quantumespresso.pw.data_extraction.base import (
     QePwNativeArtifact,
 )
 from projectkoios.integrations.quantumespresso.pw.data_extraction.qexsd import (
-    QeQexsdData,
+    QexsdData,
 )
 from projectkoios.integrations.quantumespresso.pw.relaxation.structure import (
-    QeQexsdFinalStructure,
+    QexsdFinalStructure,
 )
+from projectkoios.integrations.quantumespresso.qexsd.records import QexsdDocument
 from projectkoios.simulations.execution import CalculatorExecutionRecord
 
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
-_REQUIRED_FIELDS = (
-    "source_path",
-    "source_sha256",
-    "source_byte_count",
-    "qexsd_version",
-    "producing_application",
-    "producing_application_version",
-    "declared_unit_system_label",
-    "k_points",
-    "k_point_weights",
-    "sampled_k_point_count",
-    "k_point_source_label",
-    "eigenvalues",
-    "occupations",
-    "eigenvalue_source_label",
-    "band_count",
-    "exit_status",
-)
-
 type _Vector3 = tuple[float, float, float]
 type _Spectrum = tuple[tuple[float, ...], ...]
-
-
-class _QexsdNscfDocument(Protocol):
-    source_path: str
-    source_sha256: str
-    source_byte_count: int
-    qexsd_version: str
-    producing_application: str
-    producing_application_version: str | None
-    declared_unit_system_label: str
-    k_points: tuple[_Vector3, ...]
-    k_point_weights: tuple[float, ...]
-    sampled_k_point_count: int
-    k_point_source_label: str
-    eigenvalues: _Spectrum
-    occupations: _Spectrum | None
-    eigenvalue_source_label: str
-    band_count: int
-    exit_status: int
 
 
 @dataclass(frozen=True, slots=True)
@@ -188,8 +150,8 @@ class QeNscfData:
     def __post_init__(self) -> None:
         if type(self.sources) is not QePwDataSources:
             raise TypeError("sources must be QePwDataSources")
-        if type(self.sources.qexsd) is not QeQexsdData:
-            raise TypeError("NSCF sources require QeQexsdData")
+        if type(self.sources.qexsd) is not QexsdData:
+            raise TypeError("NSCF sources require QexsdData")
         if type(self.spectral) is not QeNscfSpectralData:
             raise TypeError("spectral must be QeNscfSpectralData")
         if type(self.consistency) is not QeNscfConsistency:
@@ -226,9 +188,9 @@ class QeNscfData:
         return self.sources.streams
 
     @property
-    def qexsd(self) -> QeQexsdData:
+    def qexsd(self) -> QexsdData:
         qexsd = self.sources.qexsd
-        assert type(qexsd) is QeQexsdData
+        assert type(qexsd) is QexsdData
         return qexsd
 
     @property
@@ -246,11 +208,11 @@ class QeNscfData:
         return self.streams.stderr_artifact
 
     @property
-    def final_structure(self) -> QeQexsdFinalStructure:
+    def final_structure(self) -> QexsdFinalStructure:
         return self.qexsd.final_structure
 
     @property
-    def document(self) -> object:
+    def document(self) -> QexsdDocument:
         return self.qexsd.document
 
     @property
@@ -320,39 +282,46 @@ class QeNscfData:
 
 @dataclass(frozen=True, slots=True)
 class QeNscfDataExtractor:
-    """Extract captured streams and QEXSD into one NSCF data facade."""
+    """Extract NSCF data under explicit shape and artifact-path declarations."""
+
+    expected_band_count: int
+    expected_kpoint_count: int
+    stdout_relative_path: str
+    stderr_relative_path: str
+
+    def __post_init__(self) -> None:
+        if type(self.expected_band_count) is not int or self.expected_band_count <= 0:
+            raise ValueError("expected_band_count must be positive")
+        if (
+            type(self.expected_kpoint_count) is not int
+            or self.expected_kpoint_count <= 0
+        ):
+            raise ValueError("expected_kpoint_count must be positive")
 
     def extract(
         self,
         *,
         stdout_payload: bytes,
         stderr_payload: bytes,
-        qexsd_document: object,
-        expected_band_count: int,
-        expected_kpoint_count: int,
+        qexsd_document: QexsdDocument,
         execution: CalculatorExecutionRecord | None = None,
-        stdout_relative_path: str = "pw.out",
-        stderr_relative_path: str = "pw.err",
     ) -> QeNscfData:
         """Extract native arrays and fail closed on declared shape mismatch."""
-        if type(expected_band_count) is not int or expected_band_count <= 0:
-            raise ValueError("expected_band_count must be positive")
-        if type(expected_kpoint_count) is not int or expected_kpoint_count <= 0:
-            raise ValueError("expected_kpoint_count must be positive")
-        if any(not hasattr(qexsd_document, field) for field in _REQUIRED_FIELDS):
-            raise TypeError(
-                "qexsd_document must be produced by QuantumEspressoXsdDocumentParser"
-            )
-        document = cast("_QexsdNscfDocument", qexsd_document)
+        expected_band_count = self.expected_band_count
+        expected_kpoint_count = self.expected_kpoint_count
+        if type(qexsd_document) is not QexsdDocument:
+            raise TypeError("qexsd_document must be a QexsdDocument")
+        document = qexsd_document
         if document.band_count != expected_band_count:
             raise ValueError("QEXSD band count disagrees with the NSCF declaration")
         if document.sampled_k_point_count != expected_kpoint_count:
             raise ValueError("QEXSD k-point count disagrees with the NSCF declaration")
-        streams = QePwCapturedStreamDataExtractor().extract(
+        streams = QePwCapturedStreamDataExtractor(
+            stdout_relative_path=self.stdout_relative_path,
+            stderr_relative_path=self.stderr_relative_path,
+        ).extract(
             stdout_payload=stdout_payload,
             stderr_payload=stderr_payload,
-            stdout_relative_path=stdout_relative_path,
-            stderr_relative_path=stderr_relative_path,
         )
         if streams.stdout.k_point_count is not None and (
             streams.stdout.k_point_count != expected_kpoint_count
@@ -376,7 +345,7 @@ class QeNscfDataExtractor:
             band_count=document.band_count,
             exit_status=document.exit_status,
         )
-        qexsd = QeQexsdData.from_document(qexsd_document)
+        qexsd = QexsdData.from_document(qexsd_document)
         consistency = QeNscfConsistency(
             terminal_status_matches=(
                 streams.stdout.job_completed == (document.exit_status == 0)

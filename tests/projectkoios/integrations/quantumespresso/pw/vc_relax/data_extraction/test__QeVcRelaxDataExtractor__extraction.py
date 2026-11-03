@@ -4,14 +4,18 @@ import unittest
 
 from projectkoios.integrations.quantumespresso.pw.relaxation.data import QeRelaxData
 from projectkoios.integrations.quantumespresso.pw.vc_relax.data_extraction import (  # noqa: E501
-    QeVcRelaxData,
     QeVcRelaxDataExtractor,
 )
 
 
 class QeVcRelaxDataExtractorTest(unittest.TestCase):
-    def test_extracts_variable_cell_native_data(self) -> None:
-        data = QeVcRelaxDataExtractor().extract(
+    def test__QeVcRelaxDataExtractor__extracts_variable_cell_native_data(
+        self,
+    ) -> None:
+        data = QeVcRelaxDataExtractor(
+            stdout_relative_path="pw.out",
+            stderr_relative_path="pw.err",
+        ).extract(
             stdout_payload=(
                 b"Program PWSCF v.7.5\n"
                 b"! total energy = -10.001000 Ry\n"
@@ -34,7 +38,6 @@ class QeVcRelaxDataExtractorTest(unittest.TestCase):
         )
 
         self.assertIsInstance(data, QeRelaxData)
-        self.assertIs(QeVcRelaxData, QeRelaxData)
         self.assertEqual(data.calculation, "vc-relax")
         self.assertTrue(data.job_completed)
         self.assertTrue(data.streams.stdout.geometry_optimization_converged)

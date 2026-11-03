@@ -1,4 +1,4 @@
-# `QeQexsdData`
+# `QexsdData`
 
 Common immutable facade over a document supplied by the maintained
 `QuantumEspressoXsdDocumentParser` and the calculator-neutral final structure

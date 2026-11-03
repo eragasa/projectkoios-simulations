@@ -8,8 +8,8 @@ from projectkoios.integrations.quantumespresso.pw.inputfile.base import QeAtomic
 from projectkoios.integrations.quantumespresso.pw.inputfile.cell import (
     QeCellDegreesOfFreedom,
 )
-from projectkoios.integrations.quantumespresso.pw.relax.configuration import (  # noqa: E501
-    QeRelaxProjectionConfiguration,
+from projectkoios.integrations.quantumespresso.pw.inputfile.configuration import (  # noqa: E501
+    QeRelaxationInputConfiguration,
 )
 from projectkoios.integrations.quantumespresso.pw.relax.projection import (  # noqa: E501
     QeRelaxInputProjector,
@@ -52,14 +52,15 @@ from .calculation import QeRelaxationCalculationConfiguration
 
 @dataclass(frozen=True, slots=True)
 class QeRelaxationCalculationRenderer:
-    """Project a calculation configuration and exact structure into QE input."""
+    """Project one calculation configuration and exact structure into QE input."""
 
-    def render(
-        self,
-        configuration: QeRelaxationCalculationConfiguration,
-        structure: StructureResolution,
-    ) -> str:
+    configuration: QeRelaxationCalculationConfiguration
+    structure: StructureResolution
+
+    def render(self) -> str:
         """Return one phase-specific Quantum ESPRESSO input document."""
+        configuration = self.configuration
+        structure = self.structure
         if type(configuration) is not QeRelaxationCalculationConfiguration:
             raise TypeError(
                 "configuration must be a QeRelaxationCalculationConfiguration"
@@ -147,14 +148,14 @@ class QeRelaxationCalculationRenderer:
                     use_spatial_symmetry=True,
                     use_time_reversal=True,
                 ),
-                wavefunction_cutoff_ev=_convert(
+                wavefunction_cutoff_ev=self._convert(
                     configuration.wavefunction_cutoff_ry,
                     "Ry",
                     "eV",
                 ),
                 occupation=DftOccupationPolicy(method=DftOccupationMethod.FIXED),
                 electronic_convergence=PwDftElectronicConvergencePolicy(
-                    energy_tolerance_ev=_convert(
+                    energy_tolerance_ev=self._convert(
                         configuration.electronic_tolerance_ry,
                         "Ry",
                         "eV",
@@ -170,12 +171,12 @@ class QeRelaxationCalculationRenderer:
                 ),
                 ionic_convergence=PwDftRelaxationConvergencePolicy(
                     maximum_ionic_steps=ionic_options.maximum_steps,
-                    total_energy_tolerance_ev=_convert(
+                    total_energy_tolerance_ev=self._convert(
                         ionic_options.total_energy_tolerance_ry,
                         "Ry",
                         "eV",
                     ),
-                    force_tolerance_ev_per_angstrom=_convert(
+                    force_tolerance_ev_per_angstrom=self._convert(
                         ionic_options.force_tolerance_ry_per_bohr,
                         "Ry/bohr",
                         "eV/angstrom",
@@ -206,7 +207,7 @@ class QeRelaxationCalculationRenderer:
         )
         if phase == "relax":
             projection = QeRelaxInputProjector(
-                QeRelaxProjectionConfiguration(
+                QeRelaxationInputConfiguration(
                     species=species,
                     ion_dynamics=ionic_options.dynamics,
                     charge_density_cutoff_ratio=ratio,
@@ -246,9 +247,8 @@ class QeRelaxationCalculationRenderer:
             raise ValueError("QE relaxation input must contain one primary artifact")
         return primary[0].content.decode("ascii")
 
-
-def _convert(value: float, source: str, target: str) -> float:
-    return value * ModelSystemUnitConverter.conversion_factor(
-        PhysicalUnit(source),
-        PhysicalUnit(target),
-    )
+    def _convert(self, value: float, source: str, target: str) -> float:
+        return value * ModelSystemUnitConverter.conversion_factor(
+            PhysicalUnit(source),
+            PhysicalUnit(target),
+        )

@@ -47,7 +47,15 @@ class QeRelaxationStructureOverride:
             or self.structure_id != self.structure_id.strip()
         ):
             raise ValueError("structure_id must be a nonempty stripped string")
-        _validate_sha256(self.sha256, "sha256")
+        self._validate_sha256(self.sha256, "sha256")
+
+    def _validate_sha256(self, value: str, label: str) -> None:
+        if (
+            type(value) is not str
+            or len(value) != 64
+            or any(character not in "0123456789abcdef" for character in value)
+        ):
+            raise ValueError(f"{label} must be lowercase SHA-256")
 
 
 @dataclass(frozen=True, slots=True)
@@ -107,11 +115,11 @@ class QeRelaxationCalculationRunResult:
 class QeRelaxationCalculationRunner:
     """Verify identities, render input, and optionally invoke ``pw.x``."""
 
-    def run(
-        self,
-        request: QeRelaxationCalculationRunRequest,
-    ) -> QeRelaxationCalculationRunResult:
+    request: QeRelaxationCalculationRunRequest
+
+    def run(self) -> QeRelaxationCalculationRunResult:
         """Run one calculation after all declared resources pass preflight."""
+        request = self.request
         if type(request) is not QeRelaxationCalculationRunRequest:
             raise TypeError("request must be a QeRelaxationCalculationRunRequest")
         configuration_path = request.configuration_path.absolute()
@@ -127,7 +135,7 @@ class QeRelaxationCalculationRunner:
                 override=request.structure_override,
             )
         )
-        _verify_file(
+        self._verify_file(
             structure_path,
             expected_sha256=structure_sha256,
             expected_size=structure_size,
@@ -169,25 +177,25 @@ class QeRelaxationCalculationRunner:
                 result_sha256=structure_sha256,
             ),
         )
-        rendered = QeRelaxationCalculationRenderer().render(
-            configuration,
-            StructureResolution(
+        rendered = QeRelaxationCalculationRenderer(
+            configuration=configuration,
+            structure=StructureResolution(
                 record=structure_record,
                 path=structure_path.resolve(strict=True),
                 unit_cell=unit_cell,
             ),
-        )
+        ).render()
 
         if request.execute:
             assert request.executable is not None
             assert request.pseudopotential is not None
-            _verify_file(
+            self._verify_file(
                 request.executable,
                 expected_sha256=configuration.calculator.sha256,
                 expected_size=configuration.calculator.byte_size,
                 label="calculator",
             )
-            _verify_file(
+            self._verify_file(
                 request.pseudopotential,
                 expected_sha256=configuration.pseudopotential.sha256,
                 expected_size=configuration.pseudopotential.byte_size,
@@ -198,7 +206,7 @@ class QeRelaxationCalculationRunner:
         input_path = output / configuration.input_filename
         input_path.write_text(rendered, encoding="ascii")
         input_manifest = output / "input-manifest.json"
-        _write_json(
+        self._write_json(
             input_manifest,
             {
                 "calculation_id": configuration.calculation_id,
@@ -209,11 +217,11 @@ class QeRelaxationCalculationRunner:
                     "sha256": configuration.calculator.sha256,
                     "source_revision": configuration.calculator_source_revision,
                 },
-                "configuration_sha256": _sha256(configuration_path),
+                "configuration_sha256": self._sha256(configuration_path),
                 "energy_convergence_tolerance_mev_per_atom": (
                     configuration.energy_convergence_tolerance_mev_per_atom
                 ),
-                "input": _file_observation(input_path),
+                "input": self._file_observation(input_path),
                 "phase": configuration.phase,
                 "pseudopotential": {
                     "byte_size": configuration.pseudopotential.byte_size,
@@ -275,7 +283,7 @@ class QeRelaxationCalculationRunner:
             output / "tmp" / f"{configuration.prefix}.save" / "data-file-schema.xml"
         )
         artifacts = {
-            name: _file_observation(output / name)
+            name: self._file_observation(output / name)
             for name in (
                 configuration.input_filename,
                 configuration.pseudopotential_filename,
@@ -285,9 +293,9 @@ class QeRelaxationCalculationRunner:
             )
         }
         if xml_path.is_file():
-            artifacts["data-file-schema.xml"] = _file_observation(xml_path)
+            artifacts["data-file-schema.xml"] = self._file_observation(xml_path)
         artifact_manifest = output / "artifact-manifest.json"
-        _write_json(
+        self._write_json(
             artifact_manifest,
             {
                 "artifacts": artifacts,
@@ -303,8 +311,8 @@ class QeRelaxationCalculationRunner:
             execution_requested=True,
         )
 
-    @staticmethod
     def _resolve_structure(
+        self,
         *,
         configuration: QeRelaxationCalculationConfiguration,
         configuration_directory: Path,
@@ -326,45 +334,33 @@ class QeRelaxationCalculationRunner:
             None,
         )
 
+    def _verify_file(
+        self,
+        path: Path,
+        *,
+        expected_sha256: str,
+        expected_size: int | None,
+        label: str,
+    ) -> None:
+        if not path.is_file() or path.is_symlink():
+            raise ValueError(f"{label} must be a regular nonsymlink file")
+        if expected_size is not None and path.stat().st_size != expected_size:
+            raise ValueError(f"{label} byte-size mismatch")
+        if self._sha256(path) != expected_sha256:
+            raise ValueError(f"{label} SHA-256 mismatch")
 
-def _verify_file(
-    path: Path,
-    *,
-    expected_sha256: str,
-    expected_size: int | None,
-    label: str,
-) -> None:
-    if not path.is_file() or path.is_symlink():
-        raise ValueError(f"{label} must be a regular nonsymlink file")
-    if expected_size is not None and path.stat().st_size != expected_size:
-        raise ValueError(f"{label} byte-size mismatch")
-    if _sha256(path) != expected_sha256:
-        raise ValueError(f"{label} SHA-256 mismatch")
+    def _file_observation(self, path: Path) -> dict[str, object]:
+        return {"byte_size": path.stat().st_size, "sha256": self._sha256(path)}
 
+    def _write_json(self, path: Path, payload: dict[str, object]) -> None:
+        path.write_text(
+            json.dumps(payload, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
 
-def _file_observation(path: Path) -> dict[str, object]:
-    return {"byte_size": path.stat().st_size, "sha256": _sha256(path)}
-
-
-def _write_json(path: Path, payload: dict[str, object]) -> None:
-    path.write_text(
-        json.dumps(payload, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
-
-
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
-    with path.open("rb") as stream:
-        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
-            digest.update(chunk)
-    return digest.hexdigest()
-
-
-def _validate_sha256(value: str, label: str) -> None:
-    if (
-        type(value) is not str
-        or len(value) != 64
-        or any(character not in "0123456789abcdef" for character in value)
-    ):
-        raise ValueError(f"{label} must be lowercase SHA-256")
+    def _sha256(self, path: Path) -> str:
+        digest = hashlib.sha256()
+        with path.open("rb") as stream:
+            for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(chunk)
+        return digest.hexdigest()

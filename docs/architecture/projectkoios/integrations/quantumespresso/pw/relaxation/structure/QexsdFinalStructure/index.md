@@ -1,4 +1,4 @@
-# `QeQexsdFinalStructure`
+# `QexsdFinalStructure`
 
 Retains the extracted `unit_cell` with `source_path`, `source_sha256`,
 `source_byte_count`, `qexsd_version`, `producing_application`,

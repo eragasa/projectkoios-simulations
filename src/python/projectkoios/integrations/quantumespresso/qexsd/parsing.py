@@ -11,13 +11,20 @@ from __future__ import annotations
 
 import math
 import xml.etree.ElementTree as ET
+from dataclasses import dataclass
 from typing import ClassVar
 
 from .records import QexsdDocument, QexsdSource, Spectrum, Vector3
 
 
+@dataclass(frozen=True, slots=True)
 class QuantumEspressoXsdDocumentParser:
     """Parse an explicit :class:`QexsdSource` into native immutable values.
+
+    Parameters
+    ----------
+    source
+        Explicit bytes and already verified source identity.
 
     Attributes
     ----------
@@ -41,13 +48,14 @@ class QuantumEspressoXsdDocumentParser:
         "25.05.21",
     )
 
-    def execute(self, source: QexsdSource) -> QexsdDocument:
-        """Return the mechanically parsed immutable QEXSD document.
+    source: QexsdSource
 
-        Parameters
-        ----------
-        source
-            Explicit bytes and already verified source identity.
+    def __post_init__(self) -> None:
+        if type(self.source) is not QexsdSource:
+            raise TypeError("source must be a QexsdSource")
+
+    def execute(self) -> QexsdDocument:
+        """Return the mechanically parsed immutable QEXSD document.
 
         Returns
         -------
@@ -56,15 +64,12 @@ class QuantumEspressoXsdDocumentParser:
 
         Raises
         ------
-        TypeError
-            If ``source`` is not a :class:`QexsdSource`.
         ValueError
             If XML syntax, namespace, root, version, required structure,
             singleton cardinality, numeric values, dimensions, references,
             grids, or exit status violate the supported contract.
         """
-        if not isinstance(source, QexsdSource):
-            raise TypeError("source must be a QexsdSource")
+        source = self.source
         if b"<!DOCTYPE" in source.content.upper():
             raise ValueError("QEXSD document type declarations are unsupported")
         try:
@@ -126,15 +131,18 @@ class QuantumEspressoXsdDocumentParser:
             species_name = self._attribute(atom, "name", "atom")
             atoms.append((index, species_name, self._vector(atom, "atomic position")))
         cell = self._single(structure, "cell")
-        direct = tuple(
-            self._vector(self._single(cell, name), name) for name in ("a1", "a2", "a3")
+        direct = (
+            self._vector(self._single(cell, "a1"), "a1"),
+            self._vector(self._single(cell, "a2"), "a2"),
+            self._vector(self._single(cell, "a3"), "a3"),
         )
 
         basis_set = self._single(output, "basis_set")
         reciprocal = self._single(basis_set, "reciprocal_lattice")
-        reciprocal_vectors = tuple(
-            self._vector(self._single(reciprocal, name), name)
-            for name in ("b1", "b2", "b3")
+        reciprocal_vectors = (
+            self._vector(self._single(reciprocal, "b1"), "b1"),
+            self._vector(self._single(reciprocal, "b2"), "b2"),
+            self._vector(self._single(reciprocal, "b3"), "b3"),
         )
         fft_grid = self._grid(self._single(basis_set, "fft_grid"), "fft_grid")
         fft_smooth = self._grid(self._single(basis_set, "fft_smooth"), "fft_smooth")
@@ -227,39 +235,34 @@ class QuantumEspressoXsdDocumentParser:
             exit_status=exit_status,
         )
 
-    @staticmethod
-    def _children(parent: ET.Element, tag: str) -> list[ET.Element]:
+    def _children(self, parent: ET.Element, tag: str) -> list[ET.Element]:
         """Return direct unqualified children in source order."""
         return [child for child in parent if child.tag == tag]
 
-    @classmethod
-    def _single(cls, parent: ET.Element, tag: str) -> ET.Element:
+    def _single(self, parent: ET.Element, tag: str) -> ET.Element:
         """Return one required direct child and reject missing or duplicates."""
-        children = cls._children(parent, tag)
+        children = self._children(parent, tag)
         if not children:
             raise ValueError(f"missing required QEXSD section: {tag}")
         if len(children) != 1:
             raise ValueError(f"duplicated singleton section: {tag}")
         return children[0]
 
-    @staticmethod
-    def _attribute(element: ET.Element, name: str, context: str) -> str:
+    def _attribute(self, element: ET.Element, name: str, context: str) -> str:
         """Return one required nonempty XML attribute without normalization."""
         value = element.attrib.get(name)
         if value is None or value == "":
             raise ValueError(f"{context} requires nonempty attribute {name}")
         return value
 
-    @staticmethod
-    def _text(element: ET.Element, context: str) -> str:
+    def _text(self, element: ET.Element, context: str) -> str:
         """Return stripped nonempty element text for native token content."""
         value = element.text
         if value is None or value.strip() == "":
             raise ValueError(f"{context} requires text")
         return value.strip()
 
-    @classmethod
-    def _finite_float(cls, text: str, context: str) -> float:
+    def _finite_float(self, text: str, context: str) -> float:
         """Parse one finite XML floating-point token without unit conversion."""
         try:
             value = float(text)
@@ -269,53 +272,47 @@ class QuantumEspressoXsdDocumentParser:
             raise ValueError(f"{context} must be finite")
         return value
 
-    @classmethod
-    def _numeric_sequence(cls, element: ET.Element, context: str) -> tuple[float, ...]:
+    def _numeric_sequence(self, element: ET.Element, context: str) -> tuple[float, ...]:
         """Parse an ordered nonempty whitespace-delimited finite sequence."""
-        tokens = cls._text(element, context).split()
+        tokens = self._text(element, context).split()
         if not tokens:
             raise ValueError(f"{context} must not be empty")
-        return tuple(cls._finite_float(token, context) for token in tokens)
+        return tuple(self._finite_float(token, context) for token in tokens)
 
-    @classmethod
-    def _vector(cls, element: ET.Element, context: str) -> Vector3:
+    def _vector(self, element: ET.Element, context: str) -> Vector3:
         """Parse one ordered native three-vector."""
-        values = cls._numeric_sequence(element, context)
+        values = self._numeric_sequence(element, context)
         if len(values) != 3:
             raise ValueError(f"{context} must have exactly three components")
         return (values[0], values[1], values[2])
 
-    @classmethod
-    def _scalar(cls, element: ET.Element, context: str) -> float:
+    def _scalar(self, element: ET.Element, context: str) -> float:
         """Parse exactly one finite floating-point value."""
-        values = cls._numeric_sequence(element, context)
+        values = self._numeric_sequence(element, context)
         if len(values) != 1:
             raise ValueError(f"{context} must contain exactly one value")
         return values[0]
 
-    @classmethod
-    def _integer(cls, element: ET.Element, context: str) -> int:
+    def _integer(self, element: ET.Element, context: str) -> int:
         """Parse one exact base-ten integer token without float coercion."""
-        text = cls._text(element, context)
+        text = self._text(element, context)
         try:
             return int(text, 10)
         except ValueError as error:
             raise ValueError(f"{context} must be an integer") from error
 
-    @classmethod
-    def _positive_int(cls, element: ET.Element, context: str) -> int:
+    def _positive_int(self, element: ET.Element, context: str) -> int:
         """Parse one strictly positive represented integer."""
-        value = cls._integer(element, context)
+        value = self._integer(element, context)
         if value <= 0:
             raise ValueError(f"{context} must be positive")
         return value
 
-    @classmethod
     def _positive_int_attribute(
-        cls, element: ET.Element, name: str, context: str
+        self, element: ET.Element, name: str, context: str
     ) -> int:
         """Parse one required strictly positive integer attribute."""
-        text = cls._attribute(element, name, context)
+        text = self._attribute(element, name, context)
         try:
             value = int(text, 10)
         except ValueError as error:
@@ -324,19 +321,17 @@ class QuantumEspressoXsdDocumentParser:
             raise ValueError(f"{context}.{name} must be positive")
         return value
 
-    @classmethod
-    def _grid(cls, element: ET.Element, context: str) -> tuple[int, int, int]:
+    def _grid(self, element: ET.Element, context: str) -> tuple[int, int, int]:
         """Parse three required positive FFT-grid dimensions."""
         return tuple(
-            cls._positive_int_attribute(element, name, context)
+            self._positive_int_attribute(element, name, context)
             for name in ("nr1", "nr2", "nr3")
         )  # type: ignore[return-value]
 
-    @classmethod
     def _check_declared_size(
-        cls, element: ET.Element, values: tuple[float, ...], context: str
+        self, element: ET.Element, values: tuple[float, ...], context: str
     ) -> None:
         """Check a required native size attribute against parsed values."""
-        declared = cls._positive_int_attribute(element, "size", context)
+        declared = self._positive_int_attribute(element, "size", context)
         if declared != len(values):
             raise ValueError(f"{context} declared size disagrees with values")

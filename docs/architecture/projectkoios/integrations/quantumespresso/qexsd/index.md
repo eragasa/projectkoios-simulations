@@ -2,7 +2,8 @@
 
 This package owns mechanically faithful parsing of explicit Quantum ESPRESSO
 QEXSD bytes. `QexsdSource` binds exact bytes to an independently supplied
-canonical path, SHA-256 digest, and byte count. `QuantumEspressoXsdDocumentParser`
+canonical path, SHA-256 digest, and byte count. The
+`QuantumEspressoXsdDocumentParser` constructor requires that source; `execute()`
 accepts the observed QEXSD `23.03.10` and `25.05.21` formats under the QES 1.0
 namespace and returns an immutable `QexsdDocument`.
 

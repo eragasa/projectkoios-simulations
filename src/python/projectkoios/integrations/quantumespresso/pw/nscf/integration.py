@@ -15,6 +15,7 @@ from projectkoios.integrations.quantumespresso.pw.nscf.projection import (
     QeNscfInputProjection,
     QeNscfInputProjector,
 )
+from projectkoios.integrations.quantumespresso.qexsd.records import QexsdDocument
 from projectkoios.simulations.execution import CalculatorExecutionRecord
 from projectkoios.simulations.structure import StructureResolution
 
@@ -40,15 +41,18 @@ class QeNscfIntegration:
         *,
         stdout_payload: bytes,
         stderr_payload: bytes,
-        qexsd_document: object,
+        qexsd_document: QexsdDocument,
         execution: CalculatorExecutionRecord | None = None,
     ) -> QeNscfData:
         """Extract native NSCF evidence against the configured dimensions."""
-        return QeNscfDataExtractor().extract(
+        return QeNscfDataExtractor(
+            expected_band_count=self.projection_configuration.band_count,
+            expected_kpoint_count=len(self.projection_configuration.kpoints),
+            stdout_relative_path="pw.out",
+            stderr_relative_path="pw.err",
+        ).extract(
             stdout_payload=stdout_payload,
             stderr_payload=stderr_payload,
             qexsd_document=qexsd_document,
-            expected_band_count=self.projection_configuration.band_count,
-            expected_kpoint_count=len(self.projection_configuration.kpoints),
             execution=execution,
         )

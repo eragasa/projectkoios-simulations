@@ -16,5 +16,5 @@ fractional coordinates.
 
 ## Public symbols
 
-- `QeQexsdFinalStructure`
-- `QeQexsdFinalStructureExtractor`
+- `QexsdFinalStructure`
+- `QexsdFinalStructureExtractor`

@@ -4,7 +4,6 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from types import SimpleNamespace
 
 import pytest
 
@@ -25,6 +24,9 @@ from projectkoios.simulations.dft.pw.scf.base import (
 from tests.projectkoios.integrations.quantumespresso.pw.scf import (
     support as qe_support,
 )
+from tests.projectkoios.integrations.quantumespresso.resources.qexsd_fixtures import (
+    QEXSD_FIXTURES,
+)
 
 pytestmark = pytest.mark.integration
 
@@ -32,10 +34,12 @@ MAXIMUM_TEST_ARTIFACT_BYTES = 200
 
 
 class QeScfDataExtractorTest(unittest.TestCase):
-    def test_preserves_retained_qe_values_and_ieee_warnings(self) -> None:
+    def test__QeScfDataExtractor__preserves_retained_qe_values_and_ieee_warnings(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            _write_successful_run(root)
+            self._write_successful_run(root)
 
             data = qe_data_extraction.QeScfDataExtractor(artifact_root=root).extract(
                 "run/pw.out"
@@ -105,10 +109,12 @@ class QeScfDataExtractorTest(unittest.TestCase):
             )
         )
 
-    def test_normalizes_collinear_total_magnetization(self) -> None:
+    def test__QeScfDataExtractor__normalizes_collinear_total_magnetization(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            run = _write_successful_run(root)
+            run = self._write_successful_run(root)
             magnetic_output = qe_support.QE_PW_OUTPUT.replace(
                 "JOB DONE.",
                 "     total magnetization = 0.74 Bohr mag/cell\n"
@@ -124,11 +130,13 @@ class QeScfDataExtractorTest(unittest.TestCase):
         self.assertEqual(data.total_magnetization_electrons, 0.74)
         self.assertEqual(data.observation.total_magnetization_electrons, 0.74)
 
-    def test_facades_optional_qexsd_without_changing_neutral_observation(self) -> None:
+    def test__QeScfDataExtractor__facades_optional_qexsd(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            _write_successful_run(root)
-            document = _qexsd_document()
+            self._write_successful_run(root)
+            document = QEXSD_FIXTURES.scf_document()
 
             data = qe_data_extraction.QeScfDataExtractor(artifact_root=root).extract(
                 "run/pw.out", qexsd_document=document
@@ -142,10 +150,12 @@ class QeScfDataExtractorTest(unittest.TestCase):
         self.assertTrue(data.consistency.qexsd_atom_count_matches)
         self.assertEqual(data.observation.atom_count, qe_support.EXPECTED_ATOM_COUNT)
 
-    def test_rejects_output_not_named_by_execution_evidence(self) -> None:
+    def test__QeScfDataExtractor__rejects_output_not_named_by_execution_evidence(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            run = _write_successful_run(root)
+            run = self._write_successful_run(root)
             mismatched_record = {
                 **qe_support.QE_SUCCESSFUL_EXECUTION_RECORD,
                 "stdout_filename": "different.out",
@@ -163,10 +173,12 @@ class QeScfDataExtractorTest(unittest.TestCase):
                     "run/pw.out"
                 )
 
-    def test_rejects_an_output_larger_than_the_declared_bound(self) -> None:
+    def test__QeScfDataExtractor__rejects_an_output_larger_than_the_declared_bound(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
-            _write_successful_run(root)
+            self._write_successful_run(root)
 
             with self.assertRaisesRegex(
                 qe_data_extraction.QeScfArtifactError,
@@ -177,43 +189,16 @@ class QeScfDataExtractorTest(unittest.TestCase):
                     maximum_artifact_bytes=MAXIMUM_TEST_ARTIFACT_BYTES,
                 ).extract("run/pw.out")
 
-
-def _qexsd_document() -> SimpleNamespace:
-    return SimpleNamespace(
-        source_path="/retained/data-file-schema.xml",
-        source_sha256="a" * 64,
-        source_byte_count=123,
-        qexsd_version="25.05.21",
-        producing_application="Quantum ESPRESSO",
-        producing_application_version="7.5",
-        declared_unit_system_label="Hartree atomic units",
-        atomic_structure_alat=2.0,
-        direct_lattice_vectors=(
-            (2.0, 0.0, 0.0),
-            (0.0, 2.0, 0.0),
-            (0.0, 0.0, 2.0),
-        ),
-        direct_lattice_source_label="output/atomic_structure/cell/a1,a2,a3",
-        atoms=(
-            (1, "Si", (0.0, 0.0, 0.0)),
-            (2, "Si", (0.5, 0.5, 0.5)),
-        ),
-        declared_atom_count=2,
-        atomic_positions_source_label="output/atomic_structure/atomic_positions",
-        exit_status=0,
-    )
-
-
-def _write_successful_run(root: Path) -> Path:
-    run = root / "run"
-    run.mkdir()
-    (run / "pw.out").write_text(qe_support.QE_PW_OUTPUT, encoding="utf-8")
-    (run / "pw.err").write_text(qe_support.QE_STDERR, encoding="utf-8")
-    (run / "execution.json").write_text(
-        json.dumps(qe_support.QE_SUCCESSFUL_EXECUTION_RECORD),
-        encoding="utf-8",
-    )
-    return run
+    def _write_successful_run(self, root: Path) -> Path:
+        run = root / "run"
+        run.mkdir()
+        (run / "pw.out").write_text(qe_support.QE_PW_OUTPUT, encoding="utf-8")
+        (run / "pw.err").write_text(qe_support.QE_STDERR, encoding="utf-8")
+        (run / "execution.json").write_text(
+            json.dumps(qe_support.QE_SUCCESSFUL_EXECUTION_RECORD),
+            encoding="utf-8",
+        )
+        return run
 
 
 if __name__ == "__main__":

@@ -6,10 +6,10 @@ from examples.workflows.pw_dft_relaxation.qe_projection import compose
 from projectkoios.integrations.quantumespresso.pw.inputfile.base import (
     QeAtomicSpecies,
 )
-from projectkoios.integrations.quantumespresso.pw.inputfile.ions import QeIonDynamics
-from projectkoios.integrations.quantumespresso.pw.relax.configuration import (
-    QeRelaxProjectionConfiguration,
+from projectkoios.integrations.quantumespresso.pw.inputfile.configuration import (
+    QeRelaxationInputConfiguration,
 )
+from projectkoios.integrations.quantumespresso.pw.inputfile.ions import QeIonDynamics
 from projectkoios.integrations.quantumespresso.pw.relax.integration import (
     QePwRelaxIntegration,
 )
@@ -24,9 +24,9 @@ from tests.projectkoios.simulations.workflows.support import silicon_relaxation_
 
 
 class QuantumEspressoRelaxationCompositionTest(unittest.TestCase):
-    def test_composes_real_projection_but_exposes_no_execution_authority(self) -> None:
+    def test__QuantumEspressoRelaxationComposition__projects_safely(self) -> None:
         integration = QePwRelaxIntegration(
-            QeRelaxProjectionConfiguration(
+            QeRelaxationInputConfiguration(
                 species=(QeAtomicSpecies("Si", 28.086, "Si.test.UPF"),),
                 ion_dynamics=QeIonDynamics.BFGS,
                 charge_density_cutoff_ratio=8.0,

@@ -10,6 +10,7 @@ from pathlib import PurePosixPath
 from typing import ClassVar
 
 type Vector3 = tuple[float, float, float]
+type Matrix3 = tuple[Vector3, Vector3, Vector3]
 type Vector3Sequence = tuple[Vector3, ...]
 type SpeciesDeclaration = tuple[str, float, str]
 type AtomDeclaration = tuple[int, str, Vector3]
@@ -120,9 +121,9 @@ class QexsdDocument:
     producing_application_version: str | None
     declared_unit_system_label: str
     atomic_structure_alat: float
-    direct_lattice_vectors: Vector3Sequence
+    direct_lattice_vectors: Matrix3
     direct_lattice_source_label: str
-    reciprocal_lattice_coefficients: Vector3Sequence
+    reciprocal_lattice_coefficients: Matrix3
     reciprocal_lattice_source_label: str
     species: tuple[SpeciesDeclaration, ...]
     atoms: tuple[AtomDeclaration, ...]
@@ -279,24 +280,21 @@ class QexsdDocument:
         if not 0 <= self.exit_status <= 255:
             raise ValueError("exit_status must be in 0..255")
 
-    @staticmethod
-    def _positive_integer(value: int, name: str) -> None:
+    def _positive_integer(self, value: int, name: str) -> None:
         if type(value) is not int:
             raise TypeError(f"{name} must be a built-in integer")
         if value <= 0:
             raise ValueError(f"{name} must be positive")
 
-    @classmethod
-    def _vectors(cls, vectors: Vector3Sequence, name: str, count: int | None) -> None:
+    def _vectors(self, vectors: Vector3Sequence, name: str, count: int | None) -> None:
         if type(vectors) is not tuple:
             raise TypeError(f"{name} vectors must be a tuple")
         if count is not None and len(vectors) != count:
             raise ValueError(f"{name} must contain exactly {count} vectors")
         for vector in vectors:
-            cls._vector(vector, name)
+            self._vector(vector, name)
 
-    @staticmethod
-    def _vector(vector: Vector3, name: str) -> None:
+    def _vector(self, vector: Vector3, name: str) -> None:
         if type(vector) is not tuple:
             raise TypeError(f"{name} must be a tuple")
         if len(vector) != 3:
@@ -306,8 +304,7 @@ class QexsdDocument:
         if any(not math.isfinite(value) for value in vector):
             raise ValueError(f"{name} components must be finite")
 
-    @staticmethod
-    def _row(row: tuple[float, ...], name: str) -> None:
+    def _row(self, row: tuple[float, ...], name: str) -> None:
         if type(row) is not tuple:
             raise TypeError(f"{name} rows must be tuples")
         if not row:

@@ -32,16 +32,18 @@ _EXPECTED_INPUT_SHA256 = (
 
 
 class QeRelaxationCalculationRunnerTest(unittest.TestCase):
-    def test_render_only_writes_a_configuration_bound_manifest(self) -> None:
+    def test__QeRelaxationCalculationRunner__writes_bound_manifest(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             output = Path(temporary_directory) / "rendered"
 
-            result = QeRelaxationCalculationRunner().run(
+            result = QeRelaxationCalculationRunner(
                 QeRelaxationCalculationRunRequest(
                     configuration_path=_CONFIGURATION,
                     output_directory=output,
                 )
-            )
+            ).run()
 
             self.assertFalse(result.execution_requested)
             self.assertIsNone(result.artifact_manifest)
@@ -58,7 +60,9 @@ class QeRelaxationCalculationRunnerTest(unittest.TestCase):
             )
             self.assertEqual(manifest["input"]["sha256"], _EXPECTED_INPUT_SHA256)
 
-    def test_committed_vc_relax_manifest_matches_its_static_fixture(self) -> None:
+    def test__QeRelaxationCalculationRunner__verifies_static_manifest(
+        self,
+    ) -> None:
         configuration_path = _EXAMPLE_ROOT / "vc_relax/calculation.toml"
         manifest = json.loads(
             (_EXAMPLE_ROOT / "vc_relax/input/input-manifest.json").read_text(
@@ -81,7 +85,9 @@ class QeRelaxationCalculationRunnerTest(unittest.TestCase):
             ).hexdigest(),
         )
 
-    def test_configuration_symlink_is_not_resolved_around_preflight(self) -> None:
+    def test__QeRelaxationCalculationRunner__rejects_configuration_symlink(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
             configuration_link = root / "calculation.toml"
@@ -92,16 +98,18 @@ class QeRelaxationCalculationRunnerTest(unittest.TestCase):
                 ValueError,
                 "configuration must be a bounded regular file",
             ):
-                QeRelaxationCalculationRunner().run(
+                QeRelaxationCalculationRunner(
                     QeRelaxationCalculationRunRequest(
                         configuration_path=configuration_link,
                         output_directory=output,
                     )
-                )
+                ).run()
 
             self.assertFalse(output.exists())
 
-    def test_structure_hash_failure_precedes_output_creation(self) -> None:
+    def test__QeRelaxationCalculationRunner__rejects_structure_hash(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             output = Path(temporary_directory) / "must-not-exist"
             request = QeRelaxationCalculationRunRequest(
@@ -115,11 +123,13 @@ class QeRelaxationCalculationRunnerTest(unittest.TestCase):
             )
 
             with self.assertRaisesRegex(ValueError, "structure SHA-256 mismatch"):
-                QeRelaxationCalculationRunner().run(request)
+                QeRelaxationCalculationRunner(request).run()
 
             self.assertFalse(output.exists())
 
-    def test_execution_resource_failure_precedes_output_creation(self) -> None:
+    def test__QeRelaxationCalculationRunner__rejects_execution_resource(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
             executable = root / "pw.x"
@@ -136,7 +146,7 @@ class QeRelaxationCalculationRunnerTest(unittest.TestCase):
             )
 
             with self.assertRaisesRegex(ValueError, "calculator byte-size mismatch"):
-                QeRelaxationCalculationRunner().run(request)
+                QeRelaxationCalculationRunner(request).run()
 
             self.assertFalse(output.exists())
 

@@ -19,15 +19,16 @@ from projectkoios.integrations.quantumespresso.pw.data_extraction.base import (
     QePwNativeArtifact,
 )
 from projectkoios.integrations.quantumespresso.pw.data_extraction.qexsd import (
-    QeQexsdData,
+    QexsdData,
 )
 from projectkoios.integrations.quantumespresso.pw.relaxation.structure import (
-    QeQexsdFinalStructure,
+    QexsdFinalStructure,
 )
 from projectkoios.integrations.quantumespresso.pw.relaxation.trajectory import (
     QeRelaxationTrajectory,
     QeRelaxationTrajectoryStep,
 )
+from projectkoios.integrations.quantumespresso.qexsd.records import QexsdDocument
 from projectkoios.physkit.mechanics.stress import (
     StressSignConvention,
     StressTensor,
@@ -48,8 +49,6 @@ from projectkoios.simulations.execution import CalculatorExecutionRecord
 from projectkoios.simulations.structure import StructureResolution
 
 _QE_INTEGRATION_ID = CalculatorIntegrationId("quantum-espresso")
-
-QeQexsdRelaxationData = QeQexsdData
 
 
 @dataclass(frozen=True, slots=True)
@@ -90,7 +89,7 @@ class QeRelaxationConsistency:
     def compare(
         cls,
         stdout: QePwStdoutFileResult,
-        qexsd: QeQexsdRelaxationData | None,
+        qexsd: QexsdData | None,
     ) -> QeRelaxationConsistency:
         """Compare only unambiguous native identity and terminal observations."""
         if type(stdout) is not QePwStdoutFileResult:
@@ -103,12 +102,11 @@ class QeRelaxationConsistency:
                 terminal_status_matches=None,
                 atom_count_matches=None,
             )
-        if type(qexsd) is not QeQexsdRelaxationData:
-            raise TypeError("qexsd must be QeQexsdRelaxationData or None")
-        document_atom_count = getattr(qexsd.document, "declared_atom_count", None)
+        if type(qexsd) is not QexsdData:
+            raise TypeError("qexsd must be QexsdData or None")
         atom_count_matches = (
-            stdout.atom_count == document_atom_count
-            if stdout.atom_count is not None and type(document_atom_count) is int
+            stdout.atom_count == qexsd.document.declared_atom_count
+            if stdout.atom_count is not None
             else None
         )
         return cls(
@@ -143,9 +141,9 @@ class QeRelaxData:
         if self.stdout_trajectory.summary != self.streams.stdout:
             raise ValueError("trajectory summary must equal the captured stdout result")
         if self.sources.qexsd is not None and (
-            type(self.sources.qexsd) is not QeQexsdRelaxationData
+            type(self.sources.qexsd) is not QexsdData
         ):
-            raise TypeError("qexsd must be QeQexsdRelaxationData or None")
+            raise TypeError("qexsd must be QexsdData or None")
         if type(self.consistency) is not QeRelaxationConsistency:
             raise TypeError("consistency must be QeRelaxationConsistency")
         expected_consistency = QeRelaxationConsistency.compare(
@@ -166,7 +164,7 @@ class QeRelaxData:
         return self.sources.streams
 
     @property
-    def qexsd(self) -> QeQexsdRelaxationData | None:
+    def qexsd(self) -> QexsdData | None:
         return self.sources.qexsd
 
     @property
@@ -206,7 +204,7 @@ class QeRelaxData:
         return self.stdout_trajectory.steps
 
     @property
-    def final_structure(self) -> QeQexsdFinalStructure | None:
+    def final_structure(self) -> QexsdFinalStructure | None:
         """Expose the interpreted final QEXSD structure when available."""
         return self.qexsd.final_structure if self.qexsd is not None else None
 
@@ -299,8 +297,8 @@ class QeRelaxData:
             else observed_unit_cell
         )
         artifacts = [
-            _normalized_artifact(self.stdout_artifact),
-            _normalized_artifact(self.stderr_artifact),
+            self._normalized_artifact(self.stdout_artifact),
+            self._normalized_artifact(self.stderr_artifact),
         ]
         if self.qexsd is not None:
             artifacts.append(
@@ -321,13 +319,13 @@ class QeRelaxData:
                 if self.calculation == "vc-relax"
                 else None
             ),
-            final_total_energy_ev=_convert_scalar(
+            final_total_energy_ev=self._convert_scalar(
                 stdout.total_energy_ry,
                 "rydberg",
                 "electron_volt",
             ),
             maximum_force_ev_per_angstrom=(
-                _convert_scalar(
+                self._convert_scalar(
                     maximum_force_ry_per_bohr,
                     "rydberg / bohr",
                     "electron_volt / angstrom",
@@ -344,44 +342,47 @@ class QeRelaxData:
             native_artifacts=tuple(artifacts),
         )
 
+    def _convert_scalar(self, value: float, source: str, target: str) -> float:
+        return ModelSystemUnitConverter.convert_scalar(
+            ScalarQuantity(value, PhysicalUnit(source)),
+            PhysicalUnit(target),
+        ).magnitude
 
-def _convert_scalar(value: float, source: str, target: str) -> float:
-    return ModelSystemUnitConverter.convert_scalar(
-        ScalarQuantity(value, PhysicalUnit(source)),
-        PhysicalUnit(target),
-    ).magnitude
+    def _normalized_artifact(
+        self, artifact: QePwNativeArtifact
+    ) -> PwDftRelaxationNativeArtifact:
+        return PwDftRelaxationNativeArtifact(
+            integration_id=_QE_INTEGRATION_ID,
+            artifact_id=artifact.relative_path,
+            sha256=artifact.sha256,
+            byte_size=artifact.byte_size,
+        )
 
 
-def _normalized_artifact(artifact: QePwNativeArtifact) -> PwDftRelaxationNativeArtifact:
-    return PwDftRelaxationNativeArtifact(
-        integration_id=_QE_INTEGRATION_ID,
-        artifact_id=artifact.relative_path,
-        sha256=artifact.sha256,
-        byte_size=artifact.byte_size,
-    )
+@dataclass(frozen=True, slots=True)
+class QeRelaxDataAssembler:
+    """Assemble one relaxation facade from independently extracted sources."""
 
+    calculation: Literal["relax", "vc-relax"]
+    streams: QePwCapturedStreamData
+    stdout_trajectory: QeRelaxationTrajectory
+    qexsd_document: QexsdDocument | None
+    execution: CalculatorExecutionRecord | None
 
-def assemble_qe_relax_data(
-    *,
-    calculation: Literal["relax", "vc-relax"],
-    streams: QePwCapturedStreamData,
-    stdout_trajectory: QeRelaxationTrajectory,
-    qexsd_document: object | None,
-    execution: CalculatorExecutionRecord | None,
-) -> QeRelaxData:
-    """Assemble one facade from independently extracted native sources."""
-    qexsd = (
-        QeQexsdData.from_document(qexsd_document)
-        if qexsd_document is not None
-        else None
-    )
-    return QeRelaxData(
-        calculation=calculation,
-        sources=QePwDataSources(
-            streams=streams,
-            qexsd=qexsd,
-            execution=execution,
-        ),
-        stdout_trajectory=stdout_trajectory,
-        consistency=QeRelaxationConsistency.compare(streams.stdout, qexsd),
-    )
+    def assemble(self) -> QeRelaxData:
+        """Return one correlated immutable relaxation facade."""
+        qexsd = (
+            QexsdData.from_document(self.qexsd_document)
+            if self.qexsd_document is not None
+            else None
+        )
+        return QeRelaxData(
+            calculation=self.calculation,
+            sources=QePwDataSources(
+                streams=self.streams,
+                qexsd=qexsd,
+                execution=self.execution,
+            ),
+            stdout_trajectory=self.stdout_trajectory,
+            consistency=QeRelaxationConsistency.compare(self.streams.stdout, qexsd),
+        )

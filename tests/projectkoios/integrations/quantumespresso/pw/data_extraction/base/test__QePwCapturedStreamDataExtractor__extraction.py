@@ -15,15 +15,18 @@ from projectkoios.simulations.execution import (
 
 
 class QePwCapturedStreamDataExtractorTest(unittest.TestCase):
-    def test_binds_exact_stream_identities_to_parsed_data(self) -> None:
+    def test__QePwCapturedStreamDataExtractor__binds_exact_stream_identities(
+        self,
+    ) -> None:
         stdout = b"Program PWSCF v.7.5\nJOB DONE.\n"
         stderr = b"IEEE_UNDERFLOW_FLAG\n"
 
-        data = QePwCapturedStreamDataExtractor().extract(
-            stdout_payload=stdout,
-            stderr_payload=stderr,
+        data = QePwCapturedStreamDataExtractor(
             stdout_relative_path="run/pw.out",
             stderr_relative_path="run/pw.err",
+        ).extract(
+            stdout_payload=stdout,
+            stderr_payload=stderr,
         )
 
         self.assertEqual(
@@ -37,8 +40,13 @@ class QePwCapturedStreamDataExtractorTest(unittest.TestCase):
         self.assertTrue(data.stdout.job_completed)
         self.assertEqual(data.stderr.ieee_flags, ("IEEE_UNDERFLOW_FLAG",))
 
-    def test_data_sources_reject_unsafe_execution_filenames(self) -> None:
-        streams = QePwCapturedStreamDataExtractor().extract(
+    def test__QePwCapturedStreamDataExtractor__rejects_unsafe_execution_filenames(
+        self,
+    ) -> None:
+        streams = QePwCapturedStreamDataExtractor(
+            stdout_relative_path="pw.out",
+            stderr_relative_path="pw.err",
+        ).extract(
             stdout_payload=b"Program PWSCF v.7.5\nJOB DONE.\n",
             stderr_payload=b"",
         )
@@ -55,7 +63,9 @@ class QePwCapturedStreamDataExtractorTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "basename"):
             QePwDataSources(streams=streams, execution=execution)
 
-    def test_native_artifact_rejects_unsafe_relative_path(self) -> None:
+    def test__QePwCapturedStreamDataExtractor__rejects_unsafe_relative_path(
+        self,
+    ) -> None:
         with self.assertRaisesRegex(ValueError, "safe relative POSIX path"):
             QePwNativeArtifact(
                 relative_path="../pw.out",

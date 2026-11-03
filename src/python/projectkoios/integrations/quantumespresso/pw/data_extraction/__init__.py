@@ -8,13 +8,13 @@ from .plane_wave_frame import (
     QeUnkFourierConvention,
     QeWavefunctionOverlapMetric,
 )
-from .qexsd import QeQexsdData
+from .qexsd import QexsdData
 
 __all__ = [
     "QeFftGVectorMapping",
     "QePlaneWaveFrame",
     "QePlaneWaveFrameExtractor",
-    "QeQexsdData",
+    "QexsdData",
     "QeReciprocalScaleConvention",
     "QeUnkFourierConvention",
     "QeWavefunctionOverlapMetric",

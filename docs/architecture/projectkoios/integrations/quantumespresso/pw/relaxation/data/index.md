@@ -22,7 +22,7 @@ without discarding their source records.
 terminal status and atom count. It does not decide scientific acceptance,
 convergence quality, or numerical equivalence.
 
-`QeQexsdRelaxationData.document` deliberately retains the entire immutable
+`QexsdData.document` deliberately retains the entire immutable
 document record supplied by `QuantumEspressoXsdDocumentParser`. The facade does
 not further truncate that record to the interpreted final structure and does
 not reimplement XML parsing. Which XML sections the document record models
@@ -35,7 +35,8 @@ projection. Full stdout is not buffered. SHA-256 is computed from the completed
 stored artifact after the tee leaves the process-output hot path. The ordinary
 offline `extract()` methods remain available.
 
-`QeVcRelaxData` is a compatibility alias of `QeRelaxData`.
+Both extractors return `QeRelaxData` directly; no mode-specific compatibility
+alias is retained.
 
 ## Required neutral observation adapter
 

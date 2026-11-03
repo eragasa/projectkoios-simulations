@@ -4,7 +4,6 @@ import hashlib
 import io
 import tempfile
 import unittest
-from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
@@ -18,7 +17,15 @@ from projectkoios.integrations.quantumespresso.pw.relax.data_extraction import (
 from projectkoios.integrations.quantumespresso.pw.relaxation.data import QeRelaxData
 from projectkoios.physkit.mechanics.stress import StressSignConvention
 from projectkoios.physkit.units import PhysicalUnit
+from tests.projectkoios.integrations.quantumespresso.resources.qexsd_fixtures import (
+    QEXSD_FIXTURES,
+)
 from tests.projectkoios.simulations.dft.pw.support import silicon_structure_resolution
+
+_RELAX_DATA_EXTRACTOR = QeRelaxDataExtractor(
+    stdout_relative_path="run/pw.out",
+    stderr_relative_path="run/pw.err",
+)
 
 _STDOUT = b"""Program PWSCF v.7.5 starts on 1Jan2026
 axis vectors are left-handed
@@ -47,38 +54,11 @@ JOB DONE.
 _STDERR = b"IEEE_UNDERFLOW_FLAG\n"
 
 
-@dataclass(frozen=True, slots=True)
-class _ParsedQexsdDocument:
-    source_path: str = "/evidence/data-file-schema.xml"
-    source_sha256: str = "a" * 64
-    source_byte_count: int = 123
-    qexsd_version: str = "25.05.21"
-    producing_application: str = "Quantum ESPRESSO"
-    producing_application_version: str | None = "7.5"
-    declared_unit_system_label: str = "Hartree atomic units"
-    atomic_structure_alat: float = 2.0
-    direct_lattice_vectors: tuple[tuple[float, float, float], ...] = (
-        (2.0, 0.0, 0.0),
-        (0.0, 2.0, 0.0),
-        (0.0, 0.0, 2.0),
-    )
-    direct_lattice_source_label: str = "output/atomic_structure/cell/a1,a2,a3"
-    atoms: tuple[tuple[int, str, tuple[float, float, float]], ...] = (
-        (1, "Si", (0.0, 0.0, 0.0)),
-        (2, "Si", (0.5, 0.5, 0.5)),
-    )
-    declared_atom_count: int = 2
-    atomic_positions_source_label: str = "output/atomic_structure/atomic_positions"
-    exit_status: int = 0
-
-
 class QeRelaxDataExtractorTest(unittest.TestCase):
-    def test_extracts_fixed_cell_native_data(self) -> None:
-        data = QeRelaxDataExtractor().extract(
+    def test__QeRelaxDataExtractor__extracts_fixed_cell_native_data(self) -> None:
+        data = _RELAX_DATA_EXTRACTOR.extract(
             stdout_payload=_STDOUT,
             stderr_payload=_STDERR,
-            stdout_relative_path="run/pw.out",
-            stderr_relative_path="run/pw.err",
         )
 
         self.assertIsInstance(data, QeRelaxData)
@@ -93,6 +73,7 @@ class QeRelaxDataExtractorTest(unittest.TestCase):
         self.assertTrue(data.job_completed)
         self.assertTrue(data.optimizer_converged)
         self.assertTrue(data.stdout.left_handed_axis_warning)
+        assert data.streams.stdout.bfgs_energy_change_ry is not None
         self.assertAlmostEqual(data.streams.stdout.bfgs_energy_change_ry, 0.0001)
         self.assertEqual(len(data.steps), 1)
         self.assertEqual(data.trajectory.steps[0].total_energy_ry, -10.001)
@@ -106,15 +87,15 @@ class QeRelaxDataExtractorTest(unittest.TestCase):
         self.assertFalse(data.consistency.qexsd_present)
         self.assertIsNone(data.execution)
 
-    def test_streams_exact_stdout_to_storage_and_returns_data_facade(self) -> None:
+    def test__QeRelaxDataExtractor__streams_stdout_exactly(
+        self,
+    ) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             destination = Path(temporary_directory) / "pw.out"
-            data = QeRelaxDataExtractor().extract_stream(
+            data = _RELAX_DATA_EXTRACTOR.extract_stream(
                 stdout_source=io.BytesIO(_STDOUT),
                 stdout_destination=destination,
                 stderr_payload=_STDERR,
-                stdout_relative_path="run/pw.out",
-                stderr_relative_path="run/pw.err",
             )
             persisted = destination.read_bytes()
 
@@ -128,12 +109,12 @@ class QeRelaxDataExtractorTest(unittest.TestCase):
         self.assertTrue(data.optimizer_converged)
         self.assertEqual(data.trajectory.steps[0].total_energy_ry, -10.001)
 
-    def test_facades_the_complete_qexsd_document_and_interpreted_structure(
+    def test__QeRelaxDataExtractor__facades_qexsd_and_structure(
         self,
     ) -> None:
-        document = _ParsedQexsdDocument()
+        document = QEXSD_FIXTURES.scf_document()
 
-        data = QeRelaxDataExtractor().extract(
+        data = _RELAX_DATA_EXTRACTOR.extract(
             stdout_payload=_STDOUT,
             stderr_payload=_STDERR,
             qexsd_document=document,
@@ -162,6 +143,7 @@ class QeRelaxDataExtractorTest(unittest.TestCase):
         self.assertTrue(
             np.all(np.diag(observation.stress_tensor.components.magnitude) < 0.0)
         )
+        assert observation.pressure_kbar is not None
         self.assertAlmostEqual(
             observation.pressure_kbar,
             observation.stress_tensor.hydrostatic_pressure.magnitude / 1.0e8,
@@ -180,8 +162,10 @@ class QeRelaxDataExtractorTest(unittest.TestCase):
         self.assertEqual(observation.ionic_step_count, 2)
         self.assertEqual(len(observation.native_artifacts), 3)
 
-    def test_does_not_manufacture_success_from_empty_stderr(self) -> None:
-        data = QeRelaxDataExtractor().extract(
+    def test__QeRelaxDataExtractor__does_not_manufacture_success_from_empty_stderr(
+        self,
+    ) -> None:
+        data = _RELAX_DATA_EXTRACTOR.extract(
             stdout_payload=b"Program PWSCF v.7.5\n",
             stderr_payload=b"",
         )

@@ -25,12 +25,11 @@ import pytest
 from projectkoios.integrations.quantumespresso.qexsd.parsing import (
     QuantumEspressoXsdDocumentParser,
 )
-from projectkoios.integrations.quantumespresso.qexsd.records import QexsdSource
 
 from ..resources.qexsd_fixtures import (
     CONTROLLED_QEXSD,
     CONTROLLED_QEXSD_250521,
-    QexsdFixtureResources,
+    QEXSD_FIXTURES,
 )
 
 SUT = QuantumEspressoXsdDocumentParser
@@ -39,30 +38,6 @@ pytestmark = pytest.mark.software_verification
 
 class TestQuantumEspressoXsdDocumentParser:
     """Own this module's maintained software-verification evidence."""
-
-    @staticmethod
-    def make_source(content: bytes = CONTROLLED_QEXSD) -> QexsdSource:
-        """Build an explicit controlled source for parser evidence.
-
-        Evidence ID: Helper owns no identifier.
-
-        Requirement: Support the named tests without owning evidence.
-
-        Method: Hash the supplied controlled bytes and construct the explicit source.
-
-        Oracle: Standard-library SHA-256 and the public QexsdSource identity contract.
-
-        Acceptance: Return deterministic controlled support data.
-
-        Interpretation: Failure blocks the consuming parser evidence without owning a
-        separate claim.
-
-        Limitations: This helper performs no parsing or scientific interpretation.
-
-        Provenance: Module-local controlled fixture bytes.
-        """
-        digest, count = QexsdFixtureResources.controlled_source_bytes(content)
-        return QexsdSource("/controlled/data-file-schema.xml", digest, count, content)
 
     @pytest.mark.parametrize(
         ("content", "expected_qexsd_version", "expected_producer_version"),
@@ -81,7 +56,7 @@ class TestQuantumEspressoXsdDocumentParser:
             ),
         ],
     )
-    def test_method__execute__extracts_native_order_and_dimensions(
+    def test__QuantumEspressoXsdDocumentParser__extracts_native_order(
         self,
         monkeypatch: pytest.MonkeyPatch,
         content: bytes,
@@ -116,9 +91,9 @@ class TestQuantumEspressoXsdDocumentParser:
                 AssertionError("unexpected open")
             ),
         )
-        document = QuantumEspressoXsdDocumentParser().execute(
-            TestQuantumEspressoXsdDocumentParser.make_source(content)
-        )
+        document = QuantumEspressoXsdDocumentParser(
+            QEXSD_FIXTURES.source("/controlled/data-file-schema.xml", content)
+        ).execute()
         assert QuantumEspressoXsdDocumentParser.SUPPORTED_QEXSD_VERSIONS == (
             "23.03.10",
             "25.05.21",
@@ -160,7 +135,7 @@ class TestQuantumEspressoXsdDocumentParser:
             ),
         ],
     )
-    def test_method__execute__rejects_unsupported_or_malformed_xml(
+    def test__QuantumEspressoXsdDocumentParser__rejects_unsupported_xml(
         self, content: bytes
     ) -> None:
         """Evidence ID: SV-PERIODIC-005
@@ -182,9 +157,9 @@ class TestQuantumEspressoXsdDocumentParser:
         Provenance: Module-local controlled fixture mutations.
         """
         with pytest.raises(ValueError):
-            QuantumEspressoXsdDocumentParser().execute(
-                TestQuantumEspressoXsdDocumentParser.make_source(content)
-            )
+            QuantumEspressoXsdDocumentParser(
+                QEXSD_FIXTURES.source("/controlled/data-file-schema.xml", content)
+            ).execute()
 
     @pytest.mark.parametrize(
         "content",
@@ -239,7 +214,7 @@ class TestQuantumEspressoXsdDocumentParser:
             ),
         ],
     )
-    def test_method__execute__rejects_structural_invariant_failures(
+    def test__QuantumEspressoXsdDocumentParser__rejects_structural_failures(
         self, content: bytes
     ) -> None:
         """Evidence ID: SV-PERIODIC-006
@@ -264,6 +239,6 @@ class TestQuantumEspressoXsdDocumentParser:
         Provenance: Module-local controlled fixture mutations.
         """
         with pytest.raises(ValueError):
-            QuantumEspressoXsdDocumentParser().execute(
-                TestQuantumEspressoXsdDocumentParser.make_source(content)
-            )
+            QuantumEspressoXsdDocumentParser(
+                QEXSD_FIXTURES.source("/controlled/data-file-schema.xml", content)
+            ).execute()

@@ -22,15 +22,9 @@ from typing import Literal
 
 import pytest
 
-from projectkoios.integrations.quantumespresso.qexsd.parsing import (
-    QuantumEspressoXsdDocumentParser,
-)
-from projectkoios.integrations.quantumespresso.qexsd.records import (
-    QexsdDocument,
-    QexsdSource,
-)
+from projectkoios.integrations.quantumespresso.qexsd.records import QexsdDocument
 
-from ..resources.qexsd_fixtures import CONTROLLED_QEXSD, QexsdFixtureResources
+from ..resources.qexsd_fixtures import QEXSD_FIXTURES
 
 SUT = QexsdDocument
 pytestmark = pytest.mark.software_verification
@@ -39,22 +33,9 @@ pytestmark = pytest.mark.software_verification
 class TestQexsdDocument:
     """Own this module's maintained software-verification evidence."""
 
-    @staticmethod
-    def make_document() -> QexsdDocument:
-        """Parse the controlled fixture into the class-owned SUT.
-
-        Evidence ID: Helper owns no identifier.
-
-        Requirement: Support the named tests without owning evidence.
-
-        Acceptance: Return deterministic controlled support data.
-        """
-        digest, count = QexsdFixtureResources.controlled_source_bytes()
-        return QuantumEspressoXsdDocumentParser().execute(
-            QexsdSource("/controlled/source.xml", digest, count, CONTROLLED_QEXSD)
-        )
-
-    def test_constructor__immutable_state__retains_nested_tuples(self) -> None:
+    def test__QexsdDocument__constructor_immutable_state_retains_nested_tuples(
+        self,
+    ) -> None:
         """Evidence ID: SV-PERIODIC-007
 
         Requirement: Retained native collections are deeply immutable ordered tuples.
@@ -62,7 +43,7 @@ class TestQexsdDocument:
         Acceptance: Nested state is tuple-backed and field reassignment raises
         FrozenInstanceError.
         """
-        document = TestQexsdDocument.make_document()
+        document = QEXSD_FIXTURES.controlled_document("23.03.10")
         assert type(document.atoms) is tuple and type(document.atoms[0][2]) is tuple
         assert (
             type(document.eigenvalues) is tuple
@@ -85,7 +66,7 @@ class TestQexsdDocument:
             pytest.param("exit_status", id="exit_status"),
         ],
     )
-    def test_constructor__intrinsic_relationships__rejects_invalid_state(
+    def test__QexsdDocument__constructor_intrinsic_relationships_rejects_invalid_state(
         self,
         case: Literal[
             "source_digest",
@@ -106,7 +87,7 @@ class TestQexsdDocument:
 
         Acceptance: Every named invalid replacement raises TypeError or ValueError.
         """
-        document = TestQexsdDocument.make_document()
+        document = QEXSD_FIXTURES.controlled_document("23.03.10")
         with pytest.raises((TypeError, ValueError)):
             match case:
                 case "source_digest":
@@ -146,7 +127,7 @@ class TestQexsdDocument:
             pytest.param("boolean_exit_status", id="boolean_exit_status"),
         ],
     )
-    def test_constructor__semantic_types__raise_type_error(
+    def test__QexsdDocument__constructor_semantic_types_raise_type_error(
         self,
         case: Literal[
             "boolean_byte_count",
@@ -168,7 +149,7 @@ class TestQexsdDocument:
 
         Acceptance: Every named wrong-type partition raises ``TypeError`` exactly.
         """
-        document = TestQexsdDocument.make_document()
+        document = QEXSD_FIXTURES.controlled_document("23.03.10")
         with pytest.raises(TypeError):
             match case:
                 case "boolean_byte_count":
@@ -212,7 +193,7 @@ class TestQexsdDocument:
             pytest.param("out_of_range_exit_status", id="out_of_range_exit_status"),
         ],
     )
-    def test_constructor__typed_invariants__raise_value_error(
+    def test__QexsdDocument__constructor_typed_invariants_raise_value_error(
         self,
         case: Literal[
             "negative_byte_count",
@@ -233,7 +214,7 @@ class TestQexsdDocument:
 
         Acceptance: Every named invalid-value partition raises ``ValueError`` exactly.
         """
-        document = TestQexsdDocument.make_document()
+        document = QEXSD_FIXTURES.controlled_document("23.03.10")
         with pytest.raises(ValueError):
             match case:
                 case "negative_byte_count":

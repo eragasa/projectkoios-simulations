@@ -5,7 +5,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 from enum import StrEnum
-from typing import Protocol, Self, cast
+from typing import Self, cast
 
 import numpy as np
 
@@ -13,23 +13,7 @@ from projectkoios.integrations.quantumespresso.pseudopotential import (
     QePseudopotentialFile,
 )
 from projectkoios.integrations.quantumespresso.pw.data_extraction.qexsd import (
-    QeQexsdData,
-)
-
-_BOHR_TO_ANGSTROM = 0.529177210903
-_REQUIRED_FIELDS = (
-    "declared_unit_system_label",
-    "atomic_structure_alat",
-    "direct_lattice_vectors",
-    "direct_lattice_source_label",
-    "reciprocal_lattice_coefficients",
-    "reciprocal_lattice_source_label",
-    "species",
-    "k_points",
-    "k_point_source_label",
-    "sampled_k_point_count",
-    "band_count",
-    "fft_grid",
+    QexsdData,
 )
 
 type Vector3 = tuple[float, float, float]
@@ -82,7 +66,7 @@ class QePlaneWaveFrame:
     implemented here.
     """
 
-    qexsd: QeQexsdData
+    qexsd: QexsdData
     pseudopotentials: tuple[QePseudopotentialFile, ...]
     reciprocal_scale_convention: QeReciprocalScaleConvention
     fft_g_vector_mapping: QeFftGVectorMapping
@@ -104,7 +88,7 @@ class QePlaneWaveFrame:
     def _from_extracted(
         cls,
         *,
-        qexsd: QeQexsdData,
+        qexsd: QexsdData,
         pseudopotentials: tuple[QePseudopotentialFile, ...],
         reciprocal_scale_convention: QeReciprocalScaleConvention,
         fft_g_vector_mapping: QeFftGVectorMapping,
@@ -142,8 +126,8 @@ class QePlaneWaveFrame:
         return instance
 
     def __post_init__(self) -> None:
-        if type(self.qexsd) is not QeQexsdData:
-            raise TypeError("qexsd must be QeQexsdData")
+        if type(self.qexsd) is not QexsdData:
+            raise TypeError("qexsd must be QexsdData")
         if type(self.pseudopotentials) is not tuple or not self.pseudopotentials:
             raise ValueError("pseudopotentials must be a nonempty tuple")
         if any(
@@ -164,8 +148,8 @@ class QePlaneWaveFrame:
         ):
             if type(value) is not enum_type:
                 raise TypeError(f"{label} has the wrong enum type")
-        _validate_matrix(self.direct_lattice_bohr, "direct_lattice_bohr")
-        _validate_matrix(
+        self._validate_matrix(self.direct_lattice_bohr, "direct_lattice_bohr")
+        self._validate_matrix(
             self.reciprocal_lattice_per_bohr, "reciprocal_lattice_per_bohr"
         )
         for label, vectors in (
@@ -175,7 +159,7 @@ class QePlaneWaveFrame:
             if type(vectors) is not tuple or not vectors:
                 raise ValueError(f"{label} must be a nonempty tuple")
             for vector in vectors:
-                _validate_vector(vector, label)
+                self._validate_vector(vector, label)
         if len(self.kpoints_reduced) != len(self.kpoints_per_bohr):
             raise ValueError("k-point representations must have equal lengths")
         if (
@@ -193,8 +177,7 @@ class QePlaneWaveFrame:
         ) is not int or self.spinor_component_count not in {1, 2}:
             raise ValueError("spinor_component_count must be one or two")
 
-    @staticmethod
-    def signed_fft_frequency(index: int, size: int) -> int:
+    def signed_fft_frequency(self, index: int, size: int) -> int:
         """Return QE's signed frequency for one zero-based full-grid index."""
         if type(index) is not int or type(size) is not int:
             raise TypeError("index and size must be built-in integers")
@@ -238,7 +221,9 @@ class QePlaneWaveFrame:
     def g_per_bohr(self, grid_index: tuple[int, int, int]) -> Vector3:
         """Return the physical Cartesian G vector for one full-grid index."""
         reduced = self.g_reduced(grid_index)
-        return _row_vector_matrix_product(reduced, self.reciprocal_lattice_per_bohr)
+        return self._row_vector_matrix_product(
+            reduced, self.reciprocal_lattice_per_bohr
+        )
 
     def kinetic_energy_hartree(
         self, kpoint_index: int, grid_index: tuple[int, int, int]
@@ -255,28 +240,39 @@ class QePlaneWaveFrame:
             for k_component, g_component in zip(k_vector, g_vector, strict=True)
         )
 
+    def _validate_matrix(self, value: Matrix3, label: str) -> None:
+        if type(value) is not tuple or len(value) != 3:
+            raise ValueError(f"{label} must contain three vectors")
+        for vector in value:
+            self._validate_vector(vector, label)
 
-class _QexsdPlaneWaveDocument(Protocol):
-    declared_unit_system_label: str
-    atomic_structure_alat: float
-    direct_lattice_vectors: Matrix3
-    direct_lattice_source_label: str
-    reciprocal_lattice_coefficients: Matrix3
-    reciprocal_lattice_source_label: str
-    species: tuple[tuple[str, float, str], ...]
-    k_points: tuple[Vector3, ...]
-    k_point_source_label: str
-    sampled_k_point_count: int
-    band_count: int
-    fft_grid: tuple[int, int, int]
+    def _validate_vector(self, value: Vector3, label: str) -> None:
+        if type(value) is not tuple or len(value) != 3:
+            raise ValueError(f"{label} vectors must contain three components")
+        if any(
+            type(component) is not float or not math.isfinite(component)
+            for component in value
+        ):
+            raise ValueError(f"{label} components must be finite built-in floats")
+
+    def _row_vector_matrix_product(
+        self, vector: tuple[int, int, int], matrix: Matrix3
+    ) -> Vector3:
+        return cast(
+            Vector3,
+            tuple(
+                math.fsum(vector[row] * matrix[row][column] for row in range(3))
+                for column in range(3)
+            ),
+        )
 
 
 @dataclass(frozen=True, slots=True)
 class QePlaneWaveFrameExtractor:
     """Build one frame from the already parsed QEXSD document and UPF records."""
 
-    duality_absolute_tolerance: float = 1.0e-10
-    kpoint_reconstruction_tolerance: float = 1.0e-12
+    duality_absolute_tolerance: float
+    kpoint_reconstruction_tolerance: float
 
     def __post_init__(self) -> None:
         for label, value in (
@@ -288,7 +284,7 @@ class QePlaneWaveFrameExtractor:
 
     def extract(
         self,
-        qexsd: QeQexsdData,
+        qexsd: QexsdData,
         *,
         pseudopotentials: tuple[QePseudopotentialFile, ...],
         overlap_metric: QeWavefunctionOverlapMetric,
@@ -296,12 +292,8 @@ class QePlaneWaveFrameExtractor:
         spinor_component_count: int,
     ) -> QePlaneWaveFrame:
         """Return a fail-closed frame without reparsing or rediscovering XML."""
-        if type(qexsd) is not QeQexsdData:
-            raise TypeError("qexsd must be QeQexsdData")
-        if any(not hasattr(qexsd.document, name) for name in _REQUIRED_FIELDS):
-            raise TypeError(
-                "QEXSD document must be produced by QuantumEspressoXsdDocumentParser"
-            )
+        if type(qexsd) is not QexsdData:
+            raise TypeError("qexsd must be QexsdData")
         if type(pseudopotentials) is not tuple or not pseudopotentials:
             raise ValueError("pseudopotentials must be a nonempty tuple")
         if any(type(item) is not QePseudopotentialFile for item in pseudopotentials):
@@ -317,7 +309,7 @@ class QePlaneWaveFrameExtractor:
             2,
         }:
             raise ValueError("spinor_component_count must be one or two")
-        document = cast("_QexsdPlaneWaveDocument", qexsd.document)
+        document = qexsd.document
         if document.declared_unit_system_label != "Hartree atomic units":
             raise ValueError("unsupported QEXSD declared unit system")
         if document.sampled_k_point_count != len(document.k_points):
@@ -326,15 +318,15 @@ class QePlaneWaveFrameExtractor:
         bound_pseudos = tuple(item.filename for item in pseudopotentials)
         if source_pseudos != bound_pseudos:
             raise ValueError("QEXSD pseudopotential labels disagree with bound UPFs")
-        _validate_overlap_metric(pseudopotentials, overlap_metric)
+        self._validate_overlap_metric(pseudopotentials, overlap_metric)
         if (
             type(document.atomic_structure_alat) is not float
             or not math.isfinite(document.atomic_structure_alat)
             or document.atomic_structure_alat <= 0.0
         ):
             raise ValueError("QEXSD alat must be positive and finite")
-        _validate_matrix(document.direct_lattice_vectors, "QEXSD direct lattice")
-        _validate_matrix(
+        self._validate_matrix(document.direct_lattice_vectors, "QEXSD direct lattice")
+        self._validate_matrix(
             document.reciprocal_lattice_coefficients,
             "QEXSD reciprocal lattice",
         )
@@ -390,97 +382,87 @@ class QePlaneWaveFrameExtractor:
             overlap_metric=overlap_metric,
             direct_lattice_bohr=document.direct_lattice_vectors,
             reciprocal_lattice_per_bohr=reciprocal_matrix,
-            kpoints_reduced=_array_vectors(reduced_array),
-            kpoints_per_bohr=_array_vectors(physical_kpoints),
+            kpoints_reduced=self._array_vectors(reduced_array),
+            kpoints_per_bohr=self._array_vectors(physical_kpoints),
             fft_grid=document.fft_grid,
             band_count=document.band_count,
             spin_channel_count=spin_channel_count,
             spinor_component_count=spinor_component_count,
         )
 
+    def _validate_overlap_metric(
+        self,
+        pseudopotentials: tuple[QePseudopotentialFile, ...],
+        overlap_metric: QeWavefunctionOverlapMetric,
+    ) -> None:
+        formalisms = tuple(
+            self._classify_pseudopotential_formalism(item.pseudopotential.formalism)
+            for item in pseudopotentials
+        )
+        observed = set(formalisms)
+        has_ultrasoft = _QePseudopotentialFormalism.ultrasoft in observed
+        has_paw = _QePseudopotentialFormalism.paw in observed
+        if overlap_metric is QeWavefunctionOverlapMetric.identity and observed != {
+            _QePseudopotentialFormalism.norm_conserving
+        }:
+            raise ValueError(
+                "identity overlap requires only bound norm-conserving UPFs"
+            )
+        if overlap_metric is QeWavefunctionOverlapMetric.ultrasoft_generalized and (
+            not has_ultrasoft or has_paw
+        ):
+            raise ValueError("ultrasoft overlap requires ultrasoft and no PAW UPFs")
+        if overlap_metric is QeWavefunctionOverlapMetric.paw_generalized and (
+            not has_paw or has_ultrasoft
+        ):
+            raise ValueError("PAW overlap requires PAW and no ultrasoft UPFs")
 
-def _validate_overlap_metric(
-    pseudopotentials: tuple[QePseudopotentialFile, ...],
-    overlap_metric: QeWavefunctionOverlapMetric,
-) -> None:
-    formalisms = tuple(
-        _classify_pseudopotential_formalism(item.pseudopotential.formalism)
-        for item in pseudopotentials
-    )
-    observed = set(formalisms)
-    has_ultrasoft = _QePseudopotentialFormalism.ultrasoft in observed
-    has_paw = _QePseudopotentialFormalism.paw in observed
-    if overlap_metric is QeWavefunctionOverlapMetric.identity and observed != {
-        _QePseudopotentialFormalism.norm_conserving
-    }:
-        raise ValueError("identity overlap requires only bound norm-conserving UPFs")
-    if overlap_metric is QeWavefunctionOverlapMetric.ultrasoft_generalized and (
-        not has_ultrasoft or has_paw
-    ):
-        raise ValueError("ultrasoft overlap requires ultrasoft and no PAW UPFs")
-    if overlap_metric is QeWavefunctionOverlapMetric.paw_generalized and (
-        not has_paw or has_ultrasoft
-    ):
-        raise ValueError("PAW overlap requires PAW and no ultrasoft UPFs")
+    def _classify_pseudopotential_formalism(
+        self,
+        value: str,
+    ) -> _QePseudopotentialFormalism:
+        normalized = " ".join(
+            value.casefold().replace("-", " ").replace("_", " ").split()
+        )
+        aliases = {
+            "norm conserving": _QePseudopotentialFormalism.norm_conserving,
+            "nc": _QePseudopotentialFormalism.norm_conserving,
+            "ncpp": _QePseudopotentialFormalism.norm_conserving,
+            "ultrasoft": _QePseudopotentialFormalism.ultrasoft,
+            "ultra soft": _QePseudopotentialFormalism.ultrasoft,
+            "uspp": _QePseudopotentialFormalism.ultrasoft,
+            "paw": _QePseudopotentialFormalism.paw,
+            "projector augmented wave": _QePseudopotentialFormalism.paw,
+        }
+        try:
+            return aliases[normalized]
+        except KeyError as error:
+            raise ValueError(
+                f"unsupported QE pseudopotential formalism: {value!r}"
+            ) from error
 
+    def _array_vectors(
+        self,
+        array: np.ndarray[tuple[int, ...], np.dtype[np.float64]],
+    ) -> tuple[Vector3, ...]:
+        if array.ndim != 2 or array.shape[1] != 3:
+            raise ValueError("array must have shape (count, 3)")
+        return tuple((float(row[0]), float(row[1]), float(row[2])) for row in array)
 
-def _classify_pseudopotential_formalism(
-    value: str,
-) -> _QePseudopotentialFormalism:
-    normalized = " ".join(value.casefold().replace("-", " ").replace("_", " ").split())
-    aliases = {
-        "norm conserving": _QePseudopotentialFormalism.norm_conserving,
-        "nc": _QePseudopotentialFormalism.norm_conserving,
-        "ncpp": _QePseudopotentialFormalism.norm_conserving,
-        "ultrasoft": _QePseudopotentialFormalism.ultrasoft,
-        "ultra soft": _QePseudopotentialFormalism.ultrasoft,
-        "uspp": _QePseudopotentialFormalism.ultrasoft,
-        "paw": _QePseudopotentialFormalism.paw,
-        "projector augmented wave": _QePseudopotentialFormalism.paw,
-    }
-    try:
-        return aliases[normalized]
-    except KeyError as error:
-        raise ValueError(
-            f"unsupported QE pseudopotential formalism: {value!r}"
-        ) from error
+    def _validate_matrix(self, value: Matrix3, label: str) -> None:
+        if type(value) is not tuple or len(value) != 3:
+            raise ValueError(f"{label} must contain three vectors")
+        for vector in value:
+            self._validate_vector(vector, label)
 
-
-def _array_vectors(
-    array: np.ndarray[tuple[int, ...], np.dtype[np.float64]],
-) -> tuple[Vector3, ...]:
-    if array.ndim != 2 or array.shape[1] != 3:
-        raise ValueError("array must have shape (count, 3)")
-    return tuple((float(row[0]), float(row[1]), float(row[2])) for row in array)
-
-
-def _validate_matrix(value: Matrix3, label: str) -> None:
-    if type(value) is not tuple or len(value) != 3:
-        raise ValueError(f"{label} must contain three vectors")
-    for vector in value:
-        _validate_vector(vector, label)
-
-
-def _validate_vector(value: Vector3, label: str) -> None:
-    if type(value) is not tuple or len(value) != 3:
-        raise ValueError(f"{label} vectors must contain three components")
-    if any(
-        type(component) is not float or not math.isfinite(component)
-        for component in value
-    ):
-        raise ValueError(f"{label} components must be finite built-in floats")
-
-
-def _row_vector_matrix_product(
-    vector: tuple[int, int, int], matrix: Matrix3
-) -> Vector3:
-    return cast(
-        Vector3,
-        tuple(
-            math.fsum(vector[row] * matrix[row][column] for row in range(3))
-            for column in range(3)
-        ),
-    )
+    def _validate_vector(self, value: Vector3, label: str) -> None:
+        if type(value) is not tuple or len(value) != 3:
+            raise ValueError(f"{label} vectors must contain three components")
+        if any(
+            type(component) is not float or not math.isfinite(component)
+            for component in value
+        ):
+            raise ValueError(f"{label} components must be finite built-in floats")
 
 
 __all__ = [

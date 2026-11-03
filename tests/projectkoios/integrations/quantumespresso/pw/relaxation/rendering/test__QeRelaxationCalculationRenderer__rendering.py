@@ -29,7 +29,7 @@ _EXAMPLE_ROOT = (
 
 
 class QeRelaxationCalculationRendererTest(unittest.TestCase):
-    def test_renders_the_declared_fixed_cell_input_deterministically(self) -> None:
+    def test__QeRelaxationCalculationRenderer__renders_fixed_cell(self) -> None:
         path = _EXAMPLE_ROOT / "relax/calculation.toml"
         configuration = QeRelaxationCalculationTomlLoader().load(path)
         structure_path = path.parent / configuration.structure.repository_path
@@ -37,9 +37,9 @@ class QeRelaxationCalculationRendererTest(unittest.TestCase):
             structure_path.read_text(encoding="utf-8"),
             expected_structure_id=configuration.structure.structure_id,
         )
-        rendered = QeRelaxationCalculationRenderer().render(
-            configuration,
-            StructureResolution(
+        rendered = QeRelaxationCalculationRenderer(
+            configuration=configuration,
+            structure=StructureResolution(
                 record=StructureRecord(
                     structure_id=configuration.structure.structure_id,
                     representation=StructureRepresentation.primitive,
@@ -57,7 +57,7 @@ class QeRelaxationCalculationRendererTest(unittest.TestCase):
                 path=structure_path.resolve(),
                 unit_cell=unit_cell,
             ),
-        )
+        ).render()
 
         self.assertEqual(
             hashlib.sha256(rendered.encode("ascii")).hexdigest(),
@@ -65,7 +65,7 @@ class QeRelaxationCalculationRendererTest(unittest.TestCase):
         )
         self.assertNotIn("&CELL", rendered)
 
-    def test_renders_the_declared_variable_cell_input_deterministically(self) -> None:
+    def test__QeRelaxationCalculationRenderer__renders_variable_cell(self) -> None:
         path = _EXAMPLE_ROOT / "vc_relax/calculation.toml"
         configuration = QeRelaxationCalculationTomlLoader().load(path)
         structure_path = path.parent / configuration.structure.repository_path
@@ -73,9 +73,9 @@ class QeRelaxationCalculationRendererTest(unittest.TestCase):
             structure_path.read_text(encoding="utf-8"),
             expected_structure_id=configuration.structure.structure_id,
         )
-        rendered = QeRelaxationCalculationRenderer().render(
-            configuration,
-            StructureResolution(
+        rendered = QeRelaxationCalculationRenderer(
+            configuration=configuration,
+            structure=StructureResolution(
                 record=StructureRecord(
                     structure_id=configuration.structure.structure_id,
                     representation=StructureRepresentation.primitive,
@@ -93,7 +93,7 @@ class QeRelaxationCalculationRendererTest(unittest.TestCase):
                 path=structure_path.resolve(),
                 unit_cell=unit_cell,
             ),
-        )
+        ).render()
 
         self.assertEqual(
             hashlib.sha256(rendered.encode("ascii")).hexdigest(),
