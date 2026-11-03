@@ -336,6 +336,75 @@ git_blob = "75988b31d42bc3cb06a55f51da51f6245a5f3961"
 target = "src/python/projectkoios/integrations/lammps/_files.py"
 
 [[extractions]]
+component = "quantum-espresso-qexsd-native-parser"
+repository = "https://github.com/eragasa/ksdft2effmass"
+commit = "aa4098b3d32fe05436a1ba8dab18903a4347b20d"
+tree = "bf89bcd6132e4a5c66a41f26f47fe9ef961421da"
+source_namespace = "ksdft2effmass.integration.quantum_espresso.qexsd"
+target_namespace = "projectkoios.integrations.quantumespresso.qexsd"
+license = "Apache-2.0"
+license_file = "LICENSE"
+license_sha256 = "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+authorization = "Explicit operator authorization for the recommended upstream-first QEXSD ownership migration."
+test_adaptation = "Rewrote namespaces and resource paths, removed the singular compatibility constant, and bound existing provider extraction tests to the nominal QexsdDocument owner."
+documentation_target = "docs/architecture/projectkoios/integrations/quantumespresso/qexsd"
+summary = "Transferred only mechanically faithful native QEXSD source/document/parsing capability; excluded KSD Kohn-Sham semantic construction, Workflow policy, and calculator execution."
+
+[[extractions.files]]
+role = "implementation"
+path = "python/src/ksdft2effmass/integration/quantum_espresso/qexsd/parsing.py"
+git_blob = "a6bfa0471aefe7199de1446fa192e31e2ee200ef"
+target = "src/python/projectkoios/integrations/quantumespresso/qexsd/parsing.py"
+
+[[extractions.files]]
+role = "implementation"
+path = "python/src/ksdft2effmass/integration/quantum_espresso/qexsd/records.py"
+git_blob = "60a6b0d7293aa837952e4352c84545fd893de4fe"
+target = "src/python/projectkoios/integrations/quantumespresso/qexsd/records.py"
+
+[[extractions.files]]
+role = "test"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/qexsd/test__QexsdDocument.py"
+git_blob = "d2c25fa2b95f3d53b9f060cc6499c9777a996549"
+target = "tests/projectkoios/integrations/quantumespresso/qexsd/test__QexsdDocument.py"
+
+[[extractions.files]]
+role = "test"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/qexsd/test__QexsdSource.py"
+git_blob = "05d3f3cdd9a36e214d7bacb3e53ce347a8ea7eb9"
+target = "tests/projectkoios/integrations/quantumespresso/qexsd/test__QexsdSource.py"
+
+[[extractions.files]]
+role = "test"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/qexsd/test__QuantumEspressoXsdDocumentParser.py"
+git_blob = "abc3deb4a4041caa73b246f3e56bbfea6ae0da98"
+target = "tests/projectkoios/integrations/quantumespresso/qexsd/test__QuantumEspressoXsdDocumentParser.py"
+
+[[extractions.files]]
+role = "test-support"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/resources/qexsd_fixtures.py"
+git_blob = "b19b4100760fe6df856a8f6acba288796b7b9f9d"
+target = "tests/projectkoios/integrations/quantumespresso/resources/qexsd_fixtures.py"
+
+[[extractions.files]]
+role = "controlled-fixture"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/resources/qexsd/qexsd-23.03.10.xml"
+git_blob = "054ddb166cc752559221549f393cce15b2d373d7"
+target = "tests/projectkoios/integrations/quantumespresso/resources/qexsd/qexsd-23.03.10.xml"
+
+[[extractions.files]]
+role = "controlled-fixture"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/resources/qexsd/qexsd-25.05.21.xml"
+git_blob = "e6fb66147a24f15abeea9cd221117d0435981ba4"
+target = "tests/projectkoios/integrations/quantumespresso/resources/qexsd/qexsd-25.05.21.xml"
+
+[[extractions.exclusions]]
+path = "python/src/ksdft2effmass/integration/quantum_espresso/qexsd/construction.py"
+git_blob = "8310e5518d36072176a84da1c41b440a135859e4"
+owner_boundary = "ksdft2effmass"
+reason = "KSD scientific interpretation into Kohn-Sham plane-wave records"
+
+[[extractions]]
 component = "wannier90-native-artifact-parsers"
 repository = "https://github.com/eragasa/ksdft2effmass"
 commit = "7bd913151f7e61ed2bdba593df920be36573b502"

@@ -109,11 +109,12 @@ The original software lineage comes from the historical
 [PyPosPack](https://github.com/eragasa/pypospack) projects. Their notices and
 license texts remain available in [`licenses/`](licenses/) and
 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The extractions from
-`projectkoios-frankenstein`, the provenance-bound Wannier90 parser donor, and
-the reusable workflow migration from `projectkoios-applications` are bound to
-exact commits and Git trees in [`TRANSFER.toml`](TRANSFER.toml).
-Installed Wannier parser provenance is available as the machine-readable
-package resource `projectkoios.integrations.wannier90/provenance.json`.
+`projectkoios-frankenstein`, the provenance-bound Wannier90 and QEXSD parser
+donors, and the reusable workflow migration from `projectkoios-applications`
+are bound to exact commits and Git trees in [`TRANSFER.toml`](TRANSFER.toml).
+Installed parser provenance is available through the machine-readable package
+resources `projectkoios.integrations.wannier90/provenance.json` and
+`projectkoios.integrations.quantumespresso.qexsd/provenance.json`.
 
 Research provenance is documented in [`CITATIONS.md`](CITATIONS.md) and
 [`docs/provenance/origins.md`](docs/provenance/origins.md). In particular:

@@ -10,8 +10,7 @@ $$
 
 The vectors and positions use bohr in the supported QEXSD semantic record.
 This module extracts a PhysKit `UnitCell` from the immutable document produced
-by
-`ksdft2effmass.integration.quantum_espresso.qexsd.QuantumEspressoXsdDocumentParser`.
+by `projectkoios.integrations.quantumespresso.qexsd.parsing.QuantumEspressoXsdDocumentParser`.
 It does not parse XML, discover files, reorder lattice vectors, or wrap
 fractional coordinates.
 

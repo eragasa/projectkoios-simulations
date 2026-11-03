@@ -130,8 +130,11 @@ The separately distributed Apache-2.0 projectkoios-physkit successor supplies
 the maintained runtime namespace. The Wannier90 parser extraction reuses its
 generic unit and immutable quantity contracts
 rather than copying that infrastructure into the simulations distribution. The
-parser donor and this repository share the exact Apache-2.0 text identified by
-the wheel-carried Wannier90 `provenance.json` resource.
+parser donors and this repository share the exact Apache-2.0 text identified by
+the wheel-carried Wannier90 and Quantum ESPRESSO QEXSD `provenance.json`
+resources. The QEXSD transfer is bound to `ksdft2effmass` commit
+`aa4098b3d32fe05436a1ba8dab18903a4347b20d` and excludes KSD scientific
+interpretation owners.
 
 These notices document origin and preserve upstream terms. They do not mean the
 historical projects endorse this repository, and they do not turn research

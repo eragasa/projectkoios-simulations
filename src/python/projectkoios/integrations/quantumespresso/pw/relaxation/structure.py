@@ -104,7 +104,7 @@ class QeQexsdFinalStructure:
 
 @dataclass(frozen=True, slots=True)
 class QeQexsdFinalStructureExtractor:
-    """Convert structure values emitted by the maintained ksdft2effmass parser."""
+    """Convert structure values emitted by the maintained QEXSD parser."""
 
     def extract(self, document: object) -> QeQexsdFinalStructure:
         """Extract a PhysKit unit cell without parsing or rediscovering XML."""
@@ -186,7 +186,7 @@ class QeQexsdFinalStructureExtractor:
             direct_lattice_source_label=parsed.direct_lattice_source_label,
             atomic_positions_source_label=parsed.atomic_positions_source_label,
             transformation=(
-                "ksdft2effmass QEXSD Cartesian direct vectors and atomic positions "
+                "Project Koios QEXSD Cartesian direct vectors and atomic positions "
                 "in bohr; fractional positions solved against the source-ordered "
                 "cell; no vector reordering or coordinate wrapping"
             ),

@@ -364,6 +364,62 @@ def test_preserved_historical_license_files_have_declared_identities() -> None:
         assert hashlib.sha256(path.read_bytes()).hexdigest() == origin["license_sha256"]
 
 
+def test_qexsd_extraction_is_bound_to_exact_source_files() -> None:
+    transfer = _transfer()
+    extraction = next(
+        item
+        for item in transfer["extractions"]
+        if item["component"] == "quantum-espresso-qexsd-native-parser"
+    )
+
+    assert extraction["commit"] == "aa4098b3d32fe05436a1ba8dab18903a4347b20d"
+    assert extraction["tree"] == "bf89bcd6132e4a5c66a41f26f47fe9ef961421da"
+    assert extraction["source_namespace"] == (
+        "ksdft2effmass.integration.quantum_espresso.qexsd"
+    )
+    assert extraction["target_namespace"] == (
+        "projectkoios.integrations.quantumespresso.qexsd"
+    )
+    assert extraction["license_sha256"] == (
+        "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    )
+    assert [item["git_blob"] for item in extraction["files"]] == [
+        "a6bfa0471aefe7199de1446fa192e31e2ee200ef",
+        "60a6b0d7293aa837952e4352c84545fd893de4fe",
+        "d2c25fa2b95f3d53b9f060cc6499c9777a996549",
+        "05d3f3cdd9a36e214d7bacb3e53ce347a8ea7eb9",
+        "abc3deb4a4041caa73b246f3e56bbfea6ae0da98",
+        "b19b4100760fe6df856a8f6acba288796b7b9f9d",
+        "054ddb166cc752559221549f393cce15b2d373d7",
+        "e6fb66147a24f15abeea9cd221117d0435981ba4",
+    ]
+    assert extraction["exclusions"] == [
+        {
+            "path": (
+                "python/src/ksdft2effmass/integration/quantum_espresso/"
+                "qexsd/construction.py"
+            ),
+            "git_blob": "8310e5518d36072176a84da1c41b440a135859e4",
+            "owner_boundary": "ksdft2effmass",
+            "reason": (
+                "KSD scientific interpretation into Kohn-Sham plane-wave records"
+            ),
+        }
+    ]
+
+
+def test_qexsd_distribution_resource_binds_provenance() -> None:
+    package = files("projectkoios.integrations.quantumespresso.qexsd")
+    provenance = json.loads(package.joinpath("provenance.json").read_text())
+
+    assert provenance["donor"]["commit"] == ("aa4098b3d32fe05436a1ba8dab18903a4347b20d")
+    assert len(provenance["source_files"]) == 2
+    assert len(provenance["test_files"]) == 6
+    assert provenance["excluded_donor_owners"][0]["blob"] == (
+        "8310e5518d36072176a84da1c41b440a135859e4"
+    )
+
+
 def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     transfer = _transfer()
     extraction = next(
