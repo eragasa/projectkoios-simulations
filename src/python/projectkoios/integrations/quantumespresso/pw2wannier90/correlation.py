@@ -30,10 +30,9 @@ from projectkoios.integrations.wannier90.nnkp import Wannier90NnkpData
 from projectkoios.integrations.wannier90.unitary_matrices import (
     Wannier90UnitaryMatrixData,
 )
+from projectkoios.physkit.units import ModelSystemUnitConverter, PhysicalUnit
 
 from ..pw.data_extraction import QePlaneWaveFrame
-
-_BOHR_TO_ANGSTROM = 0.529177210903
 
 
 @dataclass(frozen=True, slots=True)
@@ -159,27 +158,24 @@ class QeWannier90ProviderCorrelationValidator:
                     "decoded UNK dimensions disagree with the provider frame"
                 )
 
-    @staticmethod
     def _qexsd_identity(
+        self,
         manifest: QeWannier90PlaneWaveArtifactManifest,
         frame: QePlaneWaveFrame,
     ) -> None:
         document = frame.qexsd.document
         if (
-            getattr(document, "source_sha256", None) != manifest.qexsd.sha256
-            or getattr(document, "source_byte_count", None) != manifest.qexsd.byte_size
+            document.source_sha256 != manifest.qexsd.sha256
+            or document.source_byte_count != manifest.qexsd.byte_size
         ):
             raise ValueError("plane-wave frame does not use the manifest QEXSD")
-        source_path = getattr(document, "source_path", None)
-        if type(source_path) is not str:
-            raise ValueError("QEXSD source path is unavailable")
-        source_parts = PurePosixPath(source_path).parts
+        source_parts = PurePosixPath(document.source_path).parts
         relative_parts = PurePosixPath(manifest.qexsd.relative_path).parts
         if source_parts[-len(relative_parts) :] != relative_parts:
             raise ValueError("QEXSD source path does not match the manifest binding")
 
-    @staticmethod
     def _pseudopotential_identities(
+        self,
         manifest: QeWannier90PlaneWaveArtifactManifest,
         frame: QePlaneWaveFrame,
     ) -> None:
@@ -203,9 +199,13 @@ class QeWannier90ProviderCorrelationValidator:
         gauge: Wannier90UnitaryMatrixData,
         disentanglement: Wannier90DisentanglementMatrixData,
     ) -> None:
-        expected_real = np.asarray(frame.direct_lattice_bohr) * _BOHR_TO_ANGSTROM
+        bohr_to_angstrom = ModelSystemUnitConverter.conversion_factor(
+            PhysicalUnit("bohr"),
+            PhysicalUnit("angstrom"),
+        )
+        expected_real = np.asarray(frame.direct_lattice_bohr) * bohr_to_angstrom
         expected_reciprocal = (
-            np.asarray(frame.reciprocal_lattice_per_bohr) / _BOHR_TO_ANGSTROM
+            np.asarray(frame.reciprocal_lattice_per_bohr) / bohr_to_angstrom
         )
         nnkp_kpoints = np.asarray(nnkp.kpoints)
         if not np.allclose(

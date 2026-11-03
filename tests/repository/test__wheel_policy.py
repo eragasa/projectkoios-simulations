@@ -26,6 +26,7 @@ OWNED_NAMESPACE_PREFIXES = (
 EXPECTED_PACKAGE_DATA = {
     "projectkoios.simulations": ["py.typed"],
     "projectkoios.integrations": ["py.typed"],
+    "projectkoios.integrations.quantumespresso.qexsd": ["provenance.json"],
     "projectkoios.integrations.wannier90": ["provenance.json"],
 }
 

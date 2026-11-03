@@ -15,19 +15,20 @@ from projectkoios.integrations.quantumespresso.pw.data_extraction.base import ( 
     QePwNativeArtifact,
 )
 from projectkoios.integrations.quantumespresso.pw.data_extraction.qexsd import (
-    QeQexsdData,
+    QexsdData,
 )
 from projectkoios.integrations.quantumespresso.pw.relaxation.structure import (
-    QeQexsdFinalStructure,
+    QexsdFinalStructure,
 )
 from projectkoios.integrations.quantumespresso.pw.scf import (
     projection as qe_projection,
 )
+from projectkoios.integrations.quantumespresso.qexsd.records import QexsdDocument
 from projectkoios.physkit.core.actions import DataObjectActionizer
 from projectkoios.physkit.core.data import DataObject
 from projectkoios.physkit.core.results import ResultsObject
 from projectkoios.physkit.units import (
-    MODEL_SYSTEM_UNIT_CONVERTER,
+    ModelSystemUnitConverter,
     PhysicalUnit,
     ScalarQuantity,
 )
@@ -148,11 +149,12 @@ class QeScfOutputParser(
         """Return provider-native stream records and their exact identities."""
         if type(request) is not QeScfOutputParsingRequest:
             raise TypeError("request must be a QeScfOutputParsingRequest")
-        streams = QePwCapturedStreamDataExtractor().extract(
-            stdout_payload=request.stdout_payload,
-            stderr_payload=request.stderr_payload,
+        streams = QePwCapturedStreamDataExtractor(
             stdout_relative_path=request.stdout_relative_path,
             stderr_relative_path=request.stderr_relative_path,
+        ).extract(
+            stdout_payload=request.stdout_payload,
+            stderr_payload=request.stderr_payload,
         )
         return QeScfOutputParsingResult(request=request, streams=streams)
 
@@ -237,11 +239,11 @@ class QeScfData:
         return artifact
 
     @property
-    def qexsd(self) -> QeQexsdData | None:
+    def qexsd(self) -> QexsdData | None:
         return self.sources.qexsd
 
     @property
-    def final_structure(self) -> QeQexsdFinalStructure | None:
+    def final_structure(self) -> QexsdFinalStructure | None:
         """Expose the interpreted final QEXSD structure when supplied."""
         return self.qexsd.final_structure if self.qexsd is not None else None
 
@@ -420,7 +422,7 @@ class QeScfNormalizer(
         return QeScfNormalizationResult(request=request, data=data)
 
     def _ry_to_ev(self, value: float) -> float:
-        converted = MODEL_SYSTEM_UNIT_CONVERTER.convert_scalar(
+        converted = ModelSystemUnitConverter.convert_scalar(
             ScalarQuantity(
                 magnitude=value,
                 unit=PhysicalUnit(expression="Ry"),
@@ -450,7 +452,7 @@ class QeScfDataExtractor:
         self,
         output_artifact_id: str,
         *,
-        qexsd_document: object | None = None,
+        qexsd_document: QexsdDocument | None = None,
     ) -> QeScfData:
         """Validate retained evidence and assemble one immutable SCF facade."""
         output_path = self._resolve(output_artifact_id)
@@ -475,7 +477,7 @@ class QeScfDataExtractor:
             )
         )
         qexsd = (
-            QeQexsdData.from_document(qexsd_document)
+            QexsdData.from_document(qexsd_document)
             if qexsd_document is not None
             else None
         )
@@ -541,7 +543,6 @@ class QeScfDataExtractor:
             raise QeScfArtifactError(f"artifact exceeds byte limit: {path}")
         return path.read_bytes()
 
-    @staticmethod
-    def _validate_basename(value: str, label: str) -> None:
+    def _validate_basename(self, value: str, label: str) -> None:
         if not value or value in {".", ".."} or "/" in value or "\\" in value:
             raise QeScfArtifactError(f"{label} must be a basename")

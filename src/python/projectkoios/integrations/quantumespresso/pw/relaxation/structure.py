@@ -5,10 +5,10 @@ from __future__ import annotations
 import math
 import re
 from dataclasses import dataclass
-from typing import Protocol, cast
 
 import numpy as np
 
+from projectkoios.integrations.quantumespresso.qexsd.records import QexsdDocument
 from projectkoios.physkit.periodic.lattice import DirectLattice3D
 from projectkoios.physkit.periodic.unit_cell import Atom, AtomicBasis, UnitCell
 from projectkoios.physkit.units import (
@@ -19,46 +19,10 @@ from projectkoios.physkit.units import (
 )
 
 _SHA256 = re.compile(r"[0-9a-f]{64}\Z")
-_REQUIRED_DOCUMENT_FIELDS = (
-    "source_path",
-    "source_sha256",
-    "source_byte_count",
-    "qexsd_version",
-    "producing_application",
-    "producing_application_version",
-    "declared_unit_system_label",
-    "atomic_structure_alat",
-    "direct_lattice_vectors",
-    "direct_lattice_source_label",
-    "atoms",
-    "declared_atom_count",
-    "atomic_positions_source_label",
-    "exit_status",
-)
-
-type _Vector3 = tuple[float, float, float]
-type _AtomDeclaration = tuple[int, str, _Vector3]
-
-
-class _QexsdStructureDocument(Protocol):
-    source_path: str
-    source_sha256: str
-    source_byte_count: int
-    qexsd_version: str
-    producing_application: str
-    producing_application_version: str | None
-    declared_unit_system_label: str
-    atomic_structure_alat: float
-    direct_lattice_vectors: tuple[_Vector3, ...]
-    direct_lattice_source_label: str
-    atoms: tuple[_AtomDeclaration, ...]
-    declared_atom_count: int
-    atomic_positions_source_label: str
-    exit_status: int
 
 
 @dataclass(frozen=True, slots=True)
-class QeQexsdFinalStructure:
+class QexsdFinalStructure:
     """Retain an observed final structure and its QEXSD source identity."""
 
     unit_cell: UnitCell
@@ -103,17 +67,18 @@ class QeQexsdFinalStructure:
 
 
 @dataclass(frozen=True, slots=True)
-class QeQexsdFinalStructureExtractor:
-    """Convert structure values emitted by the maintained ksdft2effmass parser."""
+class QexsdFinalStructureExtractor:
+    """Convert one maintained QEXSD document into a final structure."""
 
-    def extract(self, document: object) -> QeQexsdFinalStructure:
+    document: QexsdDocument
+
+    def __post_init__(self) -> None:
+        if type(self.document) is not QexsdDocument:
+            raise TypeError("document must be a QexsdDocument")
+
+    def extract(self) -> QexsdFinalStructure:
         """Extract a PhysKit unit cell without parsing or rediscovering XML."""
-        if any(not hasattr(document, name) for name in _REQUIRED_DOCUMENT_FIELDS):
-            raise TypeError(
-                "document must be a QexsdDocument produced by "
-                "QuantumEspressoXsdDocumentParser"
-            )
-        parsed = cast("_QexsdStructureDocument", document)
+        parsed = self.document
         if parsed.declared_unit_system_label != "Hartree atomic units":
             raise ValueError("unsupported QEXSD declared unit system")
         if (
@@ -174,7 +139,7 @@ class QeQexsdFinalStructureExtractor:
             ),
             atomic_basis=AtomicBasis(atoms=tuple(fractional_atoms)),
         )
-        return QeQexsdFinalStructure(
+        return QexsdFinalStructure(
             unit_cell=unit_cell,
             source_path=parsed.source_path,
             source_sha256=parsed.source_sha256,
@@ -186,7 +151,7 @@ class QeQexsdFinalStructureExtractor:
             direct_lattice_source_label=parsed.direct_lattice_source_label,
             atomic_positions_source_label=parsed.atomic_positions_source_label,
             transformation=(
-                "ksdft2effmass QEXSD Cartesian direct vectors and atomic positions "
+                "Project Koios QEXSD Cartesian direct vectors and atomic positions "
                 "in bohr; fractional positions solved against the source-ordered "
                 "cell; no vector reordering or coordinate wrapping"
             ),

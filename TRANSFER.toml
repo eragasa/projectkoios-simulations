@@ -64,7 +64,7 @@ source_commit = "3eb562f2d6167ec20d6f2c892c517509a7abf283"
 source_tree = "e5daec9f5a16e03f998afb9158a101246acd40d1"
 namespace_from = "projectkoios.frankensteins.integrations.vasp"
 namespace_to = "projectkoios.integrations.vasp"
-dependency_adaptation = "Initially replaced the commit-bound PhysKit direct URL with physkit>=0.1.0; the maintained target now uses the exact projectkoios-physkit v0.1.2 release wheel and imports projectkoios.physkit."
+dependency_adaptation = "Initially replaced the commit-bound PhysKit direct URL with physkit>=0.1.0; the maintained target now pins exact projectkoios-physkit main commit 7120b735c7e3e450aa8924780a71deb59d812632 and imports projectkoios.physkit."
 neutral_contract_adaptation = "Added explicit, default-false authorization to CalculatorExecutionRequest and enforced it before CalculatorExecutor creates files or starts a process."
 example_adaptation = "Retained only provider-native static inputs and raw failure evidence. Removed seven application-layer campaign and convergence paths and routed them generically to the projectkoios.applications composition owner in projectkoios-applications; pw_dft_scf remains one composable capability rather than a standalone application."
 summary = "Removed the incubation namespace segment, adapted repository-root test discovery, and retained fail-closed execution and scientific-claim boundaries."
@@ -160,7 +160,7 @@ source_commit = "3eb562f2d6167ec20d6f2c892c517509a7abf283"
 source_tree = "e5daec9f5a16e03f998afb9158a101246acd40d1"
 namespace_from = "projectkoios.frankensteins.integrations.quantumespresso"
 namespace_to = "projectkoios.integrations.quantumespresso"
-dependency_adaptation = "Initially replaced the commit-bound PhysKit direct URL with physkit>=0.1.0; the maintained target now uses the exact projectkoios-physkit v0.1.2 release wheel and imports projectkoios.physkit."
+dependency_adaptation = "Initially replaced the commit-bound PhysKit direct URL with physkit>=0.1.0; the maintained target now pins exact projectkoios-physkit main commit 7120b735c7e3e450aa8924780a71deb59d812632 and imports projectkoios.physkit."
 neutral_contract_adaptation = "Added explicit, default-false authorization to CalculatorExecutionRequest and enforced it before CalculatorExecutor creates files or starts a process."
 test_adaptation = "Removed the VASP half of one cross-provider registry test so this independently reviewable Quantum ESPRESSO migration does not depend on a separate provider migration; Quantum ESPRESSO stable-ID resolution remains covered. Added data-only verification of every retained convergence-evidence identity."
 example_adaptation = "Retained provider-native static fixtures and raw provider evidence. Removed ten application-layer runner, replay, campaign, convergence-policy, and workflow paths and routed them generically to the projectkoios.applications composition owner in projectkoios-applications; pw_dft_scf remains one composable capability rather than a standalone application. Reworded two static relaxation-fixture qualification strings and their manifest copy to deny current acceptance-policy ownership."
@@ -336,6 +336,75 @@ git_blob = "75988b31d42bc3cb06a55f51da51f6245a5f3961"
 target = "src/python/projectkoios/integrations/lammps/_files.py"
 
 [[extractions]]
+component = "quantum-espresso-qexsd-native-parser"
+repository = "https://github.com/eragasa/ksdft2effmass"
+commit = "aa4098b3d32fe05436a1ba8dab18903a4347b20d"
+tree = "bf89bcd6132e4a5c66a41f26f47fe9ef961421da"
+source_namespace = "ksdft2effmass.integration.quantum_espresso.qexsd"
+target_namespace = "projectkoios.integrations.quantumespresso.qexsd"
+license = "Apache-2.0"
+license_file = "LICENSE"
+license_sha256 = "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+authorization = "Explicit operator authorization for the recommended upstream-first QEXSD ownership migration."
+test_adaptation = "Rewrote namespaces and resource paths, removed the singular compatibility constant, and bound existing provider extraction tests to the nominal QexsdDocument owner."
+documentation_target = "docs/architecture/projectkoios/integrations/quantumespresso/qexsd"
+summary = "Transferred only mechanically faithful native QEXSD source/document/parsing capability; excluded KSD Kohn-Sham semantic construction, Workflow policy, and calculator execution."
+
+[[extractions.files]]
+role = "implementation"
+path = "python/src/ksdft2effmass/integration/quantum_espresso/qexsd/parsing.py"
+git_blob = "a6bfa0471aefe7199de1446fa192e31e2ee200ef"
+target = "src/python/projectkoios/integrations/quantumespresso/qexsd/parsing.py"
+
+[[extractions.files]]
+role = "implementation"
+path = "python/src/ksdft2effmass/integration/quantum_espresso/qexsd/records.py"
+git_blob = "60a6b0d7293aa837952e4352c84545fd893de4fe"
+target = "src/python/projectkoios/integrations/quantumespresso/qexsd/records.py"
+
+[[extractions.files]]
+role = "test"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/qexsd/test__QexsdDocument.py"
+git_blob = "d2c25fa2b95f3d53b9f060cc6499c9777a996549"
+target = "tests/projectkoios/integrations/quantumespresso/qexsd/test__QexsdDocument.py"
+
+[[extractions.files]]
+role = "test"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/qexsd/test__QexsdSource.py"
+git_blob = "05d3f3cdd9a36e214d7bacb3e53ce347a8ea7eb9"
+target = "tests/projectkoios/integrations/quantumespresso/qexsd/test__QexsdSource.py"
+
+[[extractions.files]]
+role = "test"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/qexsd/test__QuantumEspressoXsdDocumentParser.py"
+git_blob = "abc3deb4a4041caa73b246f3e56bbfea6ae0da98"
+target = "tests/projectkoios/integrations/quantumespresso/qexsd/test__QuantumEspressoXsdDocumentParser.py"
+
+[[extractions.files]]
+role = "test-support"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/resources/qexsd_fixtures.py"
+git_blob = "b19b4100760fe6df856a8f6acba288796b7b9f9d"
+target = "tests/projectkoios/integrations/quantumespresso/resources/qexsd_fixtures.py"
+
+[[extractions.files]]
+role = "controlled-fixture"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/resources/qexsd/qexsd-23.03.10.xml"
+git_blob = "054ddb166cc752559221549f393cce15b2d373d7"
+target = "tests/projectkoios/integrations/quantumespresso/resources/qexsd/qexsd-23.03.10.xml"
+
+[[extractions.files]]
+role = "controlled-fixture"
+path = "python/tests/software_verification/ksdft2effmass/integration/quantum_espresso/resources/qexsd/qexsd-25.05.21.xml"
+git_blob = "e6fb66147a24f15abeea9cd221117d0435981ba4"
+target = "tests/projectkoios/integrations/quantumespresso/resources/qexsd/qexsd-25.05.21.xml"
+
+[[extractions.exclusions]]
+path = "python/src/ksdft2effmass/integration/quantum_espresso/qexsd/construction.py"
+git_blob = "8310e5518d36072176a84da1c41b440a135859e4"
+owner_boundary = "ksdft2effmass"
+reason = "KSD scientific interpretation into Kohn-Sham plane-wave records"
+
+[[extractions]]
 component = "wannier90-native-artifact-parsers"
 repository = "https://github.com/eragasa/ksdft2effmass"
 commit = "7bd913151f7e61ed2bdba593df920be36573b502"
@@ -385,10 +454,11 @@ license_scope = "extraction-reviewed PhysKit snapshot"
 successor_license = "Apache-2.0"
 license_file = "licenses/PHYSKIT-MIT.txt"
 license_sha256 = "0c4bfe022416818496cdcd7cf6fcd39af30c12a8e982cfb92d7a565d57dcc410"
-distribution = "projectkoios-physkit==0.1.2"
+distribution = "projectkoios-physkit==0.1.3.dev0"
 distribution_at_extraction = "physkit>=0.1.0"
-release_commit = "d6333208a1ff723682a557afd593a5c932058cb7"
-release_wheel_sha256 = "79283d64707a4e7aa4dd7fcff85647a957f1f6d4a3894bf0350ea65ac745d38c"
+runtime_source_ref = "main"
+runtime_commit = "7120b735c7e3e450aa8924780a71deb59d812632"
+runtime_tree = "1539545b7a69dfef66bdddb4928389dbfc42ff8e"
 semantic_note = "Used quantity classes have the donor behavior plus nominal PhysKit base classes; numeric storage, units, validation, and immutability are unchanged."
 
 [[extractions.consumer_closure]]

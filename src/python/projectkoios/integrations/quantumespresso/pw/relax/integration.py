@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 
-from projectkoios.integrations.quantumespresso.pw.relax.configuration import (  # noqa: E501
-    QeRelaxProjectionConfiguration,
+from projectkoios.integrations.quantumespresso.pw.inputfile.configuration import (  # noqa: E501
+    QeRelaxationInputConfiguration,
 )
 from projectkoios.integrations.quantumespresso.pw.relax.projection import (  # noqa: E501
     QeRelaxInputProjector,
@@ -28,11 +28,11 @@ from projectkoios.simulations.structure import StructureResolution
 class QePwRelaxIntegration(PwDftRelaxationIntegration):
     """Implement the calculator-neutral fixed-cell relaxation contract."""
 
-    configuration: QeRelaxProjectionConfiguration
+    configuration: QeRelaxationInputConfiguration
 
     def __post_init__(self) -> None:
-        if type(self.configuration) is not QeRelaxProjectionConfiguration:
-            raise TypeError("configuration must be a QeRelaxProjectionConfiguration")
+        if type(self.configuration) is not QeRelaxationInputConfiguration:
+            raise TypeError("configuration must be a QeRelaxationInputConfiguration")
 
     @property
     def description(self) -> PwDftRelaxationBackendDescription:

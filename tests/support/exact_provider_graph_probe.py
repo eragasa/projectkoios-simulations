@@ -35,6 +35,10 @@ def main() -> int:
         sys.modules[f"physkit.{suffix}"] = importlib.import_module(
             f"projectkoios.physkit.{suffix}"
         )
+    units = sys.modules["physkit.units"]
+    # The authenticated archive predates PhysKit's converter-name cleanup. Keep
+    # this compatibility witness local to the historical import probe.
+    units.__dict__["MODEL_SYSTEM_UNIT_CONVERTER"] = units.ModelSystemUnitConverter
     projectkoios.simulations.__path__.append(
         str(repository / "src/python/projectkoios/simulations")
     )

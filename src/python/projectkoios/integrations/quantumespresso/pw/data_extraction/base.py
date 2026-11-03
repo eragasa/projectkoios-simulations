@@ -18,7 +18,7 @@ from projectkoios.integrations.quantumespresso.outputs.pw_stdout import (
     QePwStdoutFileResult,
 )
 from projectkoios.integrations.quantumespresso.pw.data_extraction.qexsd import (
-    QeQexsdData,
+    QexsdData,
 )
 from projectkoios.simulations.execution import (
     CalculatorExecutionRecord,
@@ -95,7 +95,14 @@ class QePwExecutionData:
             ("stdout_filename", self.stdout_filename),
             ("stderr_filename", self.stderr_filename),
         ):
-            _validate_basename(value, label)
+            if (
+                type(value) is not str
+                or not value
+                or value in {".", ".."}
+                or "/" in value
+                or "\\" in value
+            ):
+                raise ValueError(f"{label} must be a basename")
 
 
 @dataclass(frozen=True, slots=True)
@@ -103,15 +110,15 @@ class QePwDataSources:
     """Compose distinct native ``pw.x`` data sources without merging them."""
 
     streams: QePwCapturedStreamData
-    qexsd: QeQexsdData | None = None
+    qexsd: QexsdData | None = None
     execution: QePwExecutionData | CalculatorExecutionRecord | None = None
     execution_artifact: QePwNativeArtifact | None = None
 
     def __post_init__(self) -> None:
         if type(self.streams) is not QePwCapturedStreamData:
             raise TypeError("streams must be QePwCapturedStreamData")
-        if self.qexsd is not None and type(self.qexsd) is not QeQexsdData:
-            raise TypeError("qexsd must be QeQexsdData or None")
+        if self.qexsd is not None and type(self.qexsd) is not QexsdData:
+            raise TypeError("qexsd must be QexsdData or None")
         if self.execution is not None and type(self.execution) not in {
             QePwExecutionData,
             CalculatorExecutionRecord,
@@ -129,14 +136,12 @@ class QePwDataSources:
         elif type(self.execution) is CalculatorExecutionRecord:
             if self.execution.status is not ExecutionStatus.succeeded:
                 raise ValueError("retained execution record must have succeeded")
-            _validate_basename(
-                self.execution.stdout_filename,
-                "execution stdout_filename",
-            )
-            _validate_basename(
-                self.execution.stderr_filename,
-                "execution stderr_filename",
-            )
+            for label, value in (
+                ("execution stdout_filename", self.execution.stdout_filename),
+                ("execution stderr_filename", self.execution.stderr_filename),
+            ):
+                if not value or value in {".", ".."} or "/" in value or "\\" in value:
+                    raise ValueError(f"{label} must be a basename")
             stdout_filename = self.execution.stdout_filename
             stderr_filename = self.execution.stderr_filename
         else:
@@ -153,28 +158,37 @@ class QePwDataSources:
 
 @dataclass(frozen=True, slots=True)
 class QePwCapturedStreamDataExtractor:
-    """Extract reusable native stream data without deciding mode acceptance."""
+    """Extract reusable native stream data at two configured artifact paths."""
+
+    stdout_relative_path: str
+    stderr_relative_path: str
+
+    def __post_init__(self) -> None:
+        for label, value in (
+            ("stdout_relative_path", self.stdout_relative_path),
+            ("stderr_relative_path", self.stderr_relative_path),
+        ):
+            if type(value) is not str or not value:
+                raise ValueError(f"{label} must be a nonempty string")
 
     def extract(
         self,
         *,
         stdout_payload: bytes,
         stderr_payload: bytes,
-        stdout_relative_path: str = "pw.out",
-        stderr_relative_path: str = "pw.err",
     ) -> QePwCapturedStreamData:
         """Parse exact captured bytes and bind their cryptographic identities."""
         if type(stdout_payload) is not bytes or type(stderr_payload) is not bytes:
             raise TypeError("captured stream payloads must be bytes")
-        stdout_artifact = self._artifact(stdout_relative_path, stdout_payload)
-        stderr_artifact = self._artifact(stderr_relative_path, stderr_payload)
+        stdout_artifact = self._artifact(self.stdout_relative_path, stdout_payload)
+        stderr_artifact = self._artifact(self.stderr_relative_path, stderr_payload)
         stdout = QePwStdoutFileParser().parse(
             stdout_payload,
-            output_file=QePwStdoutFile(relative_path=stdout_relative_path),
+            output_file=QePwStdoutFile(relative_path=self.stdout_relative_path),
         )
         stderr = QePwStderrFileParser().parse(
             stderr_payload,
-            output_file=QePwStderrFile(relative_path=stderr_relative_path),
+            output_file=QePwStderrFile(relative_path=self.stderr_relative_path),
         )
         return QePwCapturedStreamData(
             stdout_artifact=stdout_artifact,
@@ -183,21 +197,9 @@ class QePwCapturedStreamDataExtractor:
             stderr=stderr,
         )
 
-    @staticmethod
-    def _artifact(relative_path: str, payload: bytes) -> QePwNativeArtifact:
+    def _artifact(self, relative_path: str, payload: bytes) -> QePwNativeArtifact:
         return QePwNativeArtifact(
             relative_path=relative_path,
             sha256=hashlib.sha256(payload).hexdigest(),
             byte_size=len(payload),
         )
-
-
-def _validate_basename(value: str, label: str) -> None:
-    if (
-        type(value) is not str
-        or not value
-        or value in {".", ".."}
-        or "/" in value
-        or "\\" in value
-    ):
-        raise ValueError(f"{label} must be a basename")

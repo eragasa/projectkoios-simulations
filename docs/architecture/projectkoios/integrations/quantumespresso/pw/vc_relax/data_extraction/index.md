@@ -4,4 +4,4 @@
 unified [`QeRelaxData`](../../relaxation/data/index.md) facade with
 `calculation == "vc-relax"`.
 
-`QeVcRelaxData` remains a compatibility alias, not a nominal subclass.
+No mode-specific data alias is exposed; callers consume `QeRelaxData` directly.

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from projectkoios.integrations.quantumespresso.pw.relax.configuration import (  # noqa: E501
-    QeRelaxProjectionConfiguration,
+from projectkoios.integrations.quantumespresso.pw.inputfile.configuration import (  # noqa: E501
+    QeRelaxationInputConfiguration,
 )
 from projectkoios.integrations.quantumespresso.pw.relaxation.projection import (  # noqa: E501
     project_relaxation_input,
@@ -20,11 +20,11 @@ from projectkoios.simulations.structure import StructureResolution
 class QeRelaxInputProjector:
     """Render fixed-cell ionic relaxation with no ``&CELL`` namelist."""
 
-    configuration: QeRelaxProjectionConfiguration
+    configuration: QeRelaxationInputConfiguration
 
     def __post_init__(self) -> None:
-        if type(self.configuration) is not QeRelaxProjectionConfiguration:
-            raise TypeError("configuration must be a QeRelaxProjectionConfiguration")
+        if type(self.configuration) is not QeRelaxationInputConfiguration:
+            raise TypeError("configuration must be a QeRelaxationInputConfiguration")
 
     def project(
         self,

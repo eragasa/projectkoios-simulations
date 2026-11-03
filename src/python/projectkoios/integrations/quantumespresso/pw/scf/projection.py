@@ -21,7 +21,7 @@ from projectkoios.integrations.quantumespresso.pw.scf import (
     configuration as qe_configuration,
 )
 from projectkoios.physkit.units import (
-    MODEL_SYSTEM_UNIT_CONVERTER,
+    ModelSystemUnitConverter,
     PhysicalUnit,
     ScalarQuantity,
 )
@@ -500,7 +500,7 @@ class QeScfInputProjector:
 
     @staticmethod
     def _ev_to_ry(value: float) -> float:
-        converted = MODEL_SYSTEM_UNIT_CONVERTER.convert_scalar(
+        converted = ModelSystemUnitConverter.convert_scalar(
             ScalarQuantity(
                 magnitude=value,
                 unit=PhysicalUnit(expression="eV"),

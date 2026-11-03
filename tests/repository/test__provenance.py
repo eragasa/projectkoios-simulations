@@ -9,14 +9,11 @@ from pathlib import Path
 from typing import Any
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
-PHYSKIT_RELEASE_COMMIT = "d6333208a1ff723682a557afd593a5c932058cb7"
-PHYSKIT_RELEASE_WHEEL_SHA256 = (
-    "79283d64707a4e7aa4dd7fcff85647a957f1f6d4a3894bf0350ea65ac745d38c"
-)
-PHYSKIT_RELEASE_DEPENDENCY = (
-    "projectkoios-physkit @ https://github.com/eragasa/projectkoios-physkit/"
-    "releases/download/v0.1.2/projectkoios_physkit-0.1.2-py3-none-any.whl"
-    f"#sha256={PHYSKIT_RELEASE_WHEEL_SHA256}"
+PHYSKIT_RUNTIME_COMMIT = "7120b735c7e3e450aa8924780a71deb59d812632"
+PHYSKIT_RUNTIME_TREE = "1539545b7a69dfef66bdddb4928389dbfc42ff8e"
+PHYSKIT_RUNTIME_DEPENDENCY = (
+    "projectkoios-physkit @ git+https://github.com/eragasa/"
+    f"projectkoios-physkit.git@{PHYSKIT_RUNTIME_COMMIT}"
 )
 
 
@@ -364,6 +361,62 @@ def test_preserved_historical_license_files_have_declared_identities() -> None:
         assert hashlib.sha256(path.read_bytes()).hexdigest() == origin["license_sha256"]
 
 
+def test_qexsd_extraction_is_bound_to_exact_source_files() -> None:
+    transfer = _transfer()
+    extraction = next(
+        item
+        for item in transfer["extractions"]
+        if item["component"] == "quantum-espresso-qexsd-native-parser"
+    )
+
+    assert extraction["commit"] == "aa4098b3d32fe05436a1ba8dab18903a4347b20d"
+    assert extraction["tree"] == "bf89bcd6132e4a5c66a41f26f47fe9ef961421da"
+    assert extraction["source_namespace"] == (
+        "ksdft2effmass.integration.quantum_espresso.qexsd"
+    )
+    assert extraction["target_namespace"] == (
+        "projectkoios.integrations.quantumespresso.qexsd"
+    )
+    assert extraction["license_sha256"] == (
+        "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    )
+    assert [item["git_blob"] for item in extraction["files"]] == [
+        "a6bfa0471aefe7199de1446fa192e31e2ee200ef",
+        "60a6b0d7293aa837952e4352c84545fd893de4fe",
+        "d2c25fa2b95f3d53b9f060cc6499c9777a996549",
+        "05d3f3cdd9a36e214d7bacb3e53ce347a8ea7eb9",
+        "abc3deb4a4041caa73b246f3e56bbfea6ae0da98",
+        "b19b4100760fe6df856a8f6acba288796b7b9f9d",
+        "054ddb166cc752559221549f393cce15b2d373d7",
+        "e6fb66147a24f15abeea9cd221117d0435981ba4",
+    ]
+    assert extraction["exclusions"] == [
+        {
+            "path": (
+                "python/src/ksdft2effmass/integration/quantum_espresso/"
+                "qexsd/construction.py"
+            ),
+            "git_blob": "8310e5518d36072176a84da1c41b440a135859e4",
+            "owner_boundary": "ksdft2effmass",
+            "reason": (
+                "KSD scientific interpretation into Kohn-Sham plane-wave records"
+            ),
+        }
+    ]
+
+
+def test_qexsd_distribution_resource_binds_provenance() -> None:
+    package = files("projectkoios.integrations.quantumespresso.qexsd")
+    provenance = json.loads(package.joinpath("provenance.json").read_text())
+
+    assert provenance["donor"]["commit"] == ("aa4098b3d32fe05436a1ba8dab18903a4347b20d")
+    assert len(provenance["source_files"]) == 2
+    assert len(provenance["test_files"]) == 6
+    assert provenance["excluded_donor_owners"][0]["blob"] == (
+        "8310e5518d36072176a84da1c41b440a135859e4"
+    )
+
+
 def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     transfer = _transfer()
     extraction = next(
@@ -402,10 +455,11 @@ def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     assert dependency["source_blob"] == "d98be473e19e17a59563fc7c3e00cca02fd822d3"
     assert dependency["destination_owner"] == "projectkoios.physkit.units.quantities"
     assert dependency["destination_owner_at_extraction"] == ("physkit.units.quantities")
-    assert dependency["distribution"] == "projectkoios-physkit==0.1.2"
+    assert dependency["distribution"] == "projectkoios-physkit==0.1.3.dev0"
     assert dependency["distribution_at_extraction"] == "physkit>=0.1.0"
-    assert dependency["release_commit"] == PHYSKIT_RELEASE_COMMIT
-    assert dependency["release_wheel_sha256"] == PHYSKIT_RELEASE_WHEEL_SHA256
+    assert dependency["runtime_source_ref"] == "main"
+    assert dependency["runtime_commit"] == PHYSKIT_RUNTIME_COMMIT
+    assert dependency["runtime_tree"] == PHYSKIT_RUNTIME_TREE
     assert dependency["commit"] == "97032f16c9125aa124750508f8513cca9f6dab02"
     assert dependency["blob"] == "686d075852ed01aab0a8d74fdec1be5a440c075d"
     assert len(extraction["file_mappings"]) == 7
@@ -417,12 +471,12 @@ def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     ]
 
 
-def test_physkit_runtime_dependency_binds_the_exact_release_asset() -> None:
+def test_physkit_runtime_dependency_binds_the_exact_main_commit() -> None:
     with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as stream:
         project = tomllib.load(stream)["project"]
 
-    assert PHYSKIT_RELEASE_DEPENDENCY in project["dependencies"]
-    assert not any("git+" in dependency for dependency in project["dependencies"])
+    assert PHYSKIT_RUNTIME_DEPENDENCY in project["dependencies"]
+    assert sum("git+" in dependency for dependency in project["dependencies"]) == 1
     readme = (REPOSITORY_ROOT / "README.md").read_text()
     assert "projectkoios.integrations.wannier90/provenance.json" in readme
 
@@ -441,8 +495,8 @@ def test_physkit_runtime_dependency_binds_the_exact_release_asset() -> None:
     } <= relative_paths
 
     origins = (REPOSITORY_ROOT / "docs/provenance/origins.md").read_text()
-    assert PHYSKIT_RELEASE_COMMIT in origins
-    assert PHYSKIT_RELEASE_WHEEL_SHA256 in origins
+    assert PHYSKIT_RUNTIME_COMMIT in origins
+    assert PHYSKIT_RUNTIME_TREE in origins
 
 
 def test_wannier90_distribution_resource_binds_provenance() -> None:
@@ -459,10 +513,11 @@ def test_wannier90_distribution_resource_binds_provenance() -> None:
         "8b508c43979e6442980b80c9a7edf306b32e33f8",
     ]
     physkit = provenance["projectkoios-physkit"]
-    assert physkit["distribution"] == "projectkoios-physkit==0.1.2"
+    assert physkit["distribution"] == "projectkoios-physkit==0.1.3.dev0"
     assert physkit["distribution_at_extraction"] == "physkit>=0.1.0"
-    assert physkit["release_commit"] == PHYSKIT_RELEASE_COMMIT
-    assert physkit["release_wheel_sha256"] == PHYSKIT_RELEASE_WHEEL_SHA256
+    assert physkit["runtime_source_ref"] == "main"
+    assert physkit["runtime_commit"] == PHYSKIT_RUNTIME_COMMIT
+    assert physkit["runtime_tree"] == PHYSKIT_RUNTIME_TREE
     assert physkit["namespace"] == "projectkoios.physkit"
     assert physkit["namespace_at_extraction"] == "physkit"
     assert physkit["license_at_extraction"] == "MIT"

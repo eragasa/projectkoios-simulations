@@ -12,7 +12,7 @@ import numpy as np
 from numpy.typing import NDArray
 
 from projectkoios.physkit.periodic.unit_cell import Atom, UnitCell
-from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
+from projectkoios.physkit.units import ModelSystemUnitConverter, PhysicalUnit
 
 POSCAR_DOCUMENTATION_URL = "https://vasp.at/wiki/POSCAR"
 _ANGSTROM = PhysicalUnit("angstrom")
@@ -62,7 +62,7 @@ class PoscarWriter:
         if type(model) is not PoscarModel:
             raise TypeError("model must be a PoscarModel")
         unit_cell = model.unit_cell_model.unit_cell
-        conversion_factor = MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
+        conversion_factor = ModelSystemUnitConverter.conversion_factor(
             unit_cell.H.unit,
             _ANGSTROM,
         )
