@@ -15,7 +15,7 @@ from projectkoios.integrations.quantumespresso.pw.scf import (
     projection as qe_projection,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.calculator.input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.scf.base import PwDftScfObservation
 from projectkoios.simulations.dft.pw.scf.integration import PwDftScfIntegration
 from projectkoios.simulations.dft.pw.scf.request import PwDftScfRequest

@@ -8,7 +8,7 @@ import numpy as np
 from projectkoios.physkit.periodic.unit_cell import Atom, AtomicBasis, UnitCell
 from projectkoios.physkit.units import Unitless, VectorQuantity
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.calculator_input import (
+from projectkoios.simulations.calculator.input import (
     CalculatorInputArtifact,
     CalculatorInputRecord,
 )

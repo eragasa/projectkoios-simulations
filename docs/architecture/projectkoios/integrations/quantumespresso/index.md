@@ -26,7 +26,11 @@ without applying scientific acceptance policy.
 
 The package binds represented data to Quantum ESPRESSO formats without selecting
 scientific settings, accessing undeclared external files, or implicitly
-executing calculator processes.
+executing calculator processes. The
+[execution-evidence boundary qualification](../../../../provenance/quantumespresso-execution-evidence-boundary.md)
+maps the reusable execution-evidence boundary, identifies current partial
+owners, and separates missing provider capability from consumer Workflow
+correlation.
 
 ## Extraction boundary
 

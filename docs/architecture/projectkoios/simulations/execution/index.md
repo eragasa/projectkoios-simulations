@@ -70,7 +70,9 @@ The future seam is an execution-runtime concern. It is not a field of a
 scientific specification and cannot infer completion, convergence, acceptance,
 or authority from displayed output.
 
-See [`implementation.md`](implementation.md) for process and evidence rules,
-[`schematics.md`](schematics.md) for the single-attempt and campaign boundaries,
-[`scientific.md`](scientific.md) for the limit of execution evidence, and
-[`numeric.md`](numeric.md) for byte, stream, timeout, and cardinality contracts.
+See [exact executable preparation](_executable/index.md) for read-only identity
+checks, [`implementation.md`](implementation.md) for process and evidence rules,
+[`schematics.md`](schematics.md) for the single-attempt and
+campaign boundaries, [`scientific.md`](scientific.md) for the limit of execution
+evidence, and [`numeric.md`](numeric.md) for byte, stream, timeout, and
+cardinality contracts.

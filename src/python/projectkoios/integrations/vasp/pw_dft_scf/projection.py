@@ -27,7 +27,7 @@ from projectkoios.integrations.vasp.pw_dft_scf.configuration import (
     VaspScfProjectionConfiguration,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.calculator_input import (
+from projectkoios.simulations.calculator.input import (
     CalculatorExternalInputRequirement,
     CalculatorInputArtifact,
     CalculatorInputMapping,

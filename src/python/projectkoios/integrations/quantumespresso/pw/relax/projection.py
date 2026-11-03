@@ -10,7 +10,7 @@ from projectkoios.integrations.quantumespresso.pw.inputfile.configuration import
 from projectkoios.integrations.quantumespresso.pw.relaxation.projection import (  # noqa: E501
     project_relaxation_input,
 )
-from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.calculator.input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.relaxation.base import PwDftRelaxationScope
 from projectkoios.simulations.dft.pw.relaxation.request import PwDftRelaxationRequest
 from projectkoios.simulations.structure import StructureResolution

@@ -27,7 +27,7 @@ from projectkoios.integrations.quantumespresso.pw.vc_relax.integration import ( 
     QePwVcRelaxIntegration,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.calculator.input import CalculatorInputRecord
 from projectkoios.simulations.dft.electronic import (
     DftChargeState,
     DftSpinMode,
@@ -53,6 +53,7 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
     def test__QeRelaxInputProjector__renders_fixed_cell_input_from_shared_components(
         self,
     ) -> None:
+        """Verify renders fixed cell input from shared components."""
         projection = QeRelaxInputProjector(self._configuration()).project(
             silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS),
             silicon_structure_resolution(),
@@ -78,6 +79,7 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
     def test__QeRelaxInputProjector__translates_disabled_symmetry(
         self,
     ) -> None:
+        """Verify translates disabled symmetry."""
         request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
         request = replace(
             request,
@@ -103,6 +105,7 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
     def test__QeRelaxInputProjector__translates_charge_and_constrained_collinear_spin(
         self,
     ) -> None:
+        """Verify translates charge and constrained collinear spin."""
         request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
         request = replace(
             request,
@@ -148,6 +151,7 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
     def test__QeRelaxInputProjector__rejects_unsupported_spin_orbit_treatment(
         self,
     ) -> None:
+        """Verify rejects unsupported spin orbit treatment."""
         request = silicon_relaxation_request(PwDftRelaxationScope.ATOMIC_POSITIONS)
         request = replace(
             request,
@@ -171,6 +175,7 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
     def test__QeRelaxInputProjector__generic_wrapper_selects_fixed_cell_integration(
         self,
     ) -> None:
+        """Verify generic wrapper selects fixed cell integration."""
         integration = QePwRelaxIntegration(self._configuration())
         wrapper = PwDftRelaxationInputWrapper(
             registry=PwDftRelaxationIntegrationRegistry(integrations=(integration,))
@@ -185,6 +190,7 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
     def test__QeRelaxInputProjector__generic_wrapper_selects_mode_by_scope(
         self,
     ) -> None:
+        """Verify generic wrapper selects mode by scope."""
         wrapper = PwDftRelaxationInputWrapper(
             registry=PwDftRelaxationIntegrationRegistry(
                 integrations=(
@@ -209,6 +215,7 @@ class QeRelaxInputProjectorTest(unittest.TestCase):
         self.assertIn("calculation = 'vc-relax'", self._text(variable))
 
     def test__QeRelaxInputProjector__rejects_variable_cell_scope(self) -> None:
+        """Verify rejects variable cell scope."""
         with self.assertRaisesRegex(ValueError, "atomic-positions-only"):
             QeRelaxInputProjector(self._configuration()).project(
                 silicon_relaxation_request(

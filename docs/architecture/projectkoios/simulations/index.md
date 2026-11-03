@@ -27,9 +27,9 @@ absent; no alias or compatibility facade was introduced.
   derived supercells, and generic ideal defect deltas.
 - [`library`](library/index.md) specifies exact authenticated manifest-backed
   resolution of immutable SCF and relaxation specifications.
-- [`calculator_input`](calculator_input/index.md) specifies exact rendered
-  calculator inputs and external-file requirements without carrying execution
-  authority.
+- [`calculator`](calculator/index.md) defines stable integration identity;
+  [`calculator.input`](calculator/input/index.md) specifies exact rendered inputs
+  and external-file requirements without carrying execution authority.
 - [`execution`](execution/index.md) defines one explicitly authorized,
   synchronous calculator attempt and the boundary between retained native
   artifacts, MVP console emission, and future runtime control.

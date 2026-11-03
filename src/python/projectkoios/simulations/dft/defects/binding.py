@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.calculator.input import CalculatorInputRecord
 from projectkoios.simulations.defects import (
     DefectContentReference,
     DefectEnergyEvidence,
