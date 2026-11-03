@@ -9,14 +9,11 @@ from pathlib import Path
 from typing import Any
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
-PHYSKIT_RELEASE_COMMIT = "d6333208a1ff723682a557afd593a5c932058cb7"
-PHYSKIT_RELEASE_WHEEL_SHA256 = (
-    "79283d64707a4e7aa4dd7fcff85647a957f1f6d4a3894bf0350ea65ac745d38c"
-)
-PHYSKIT_RELEASE_DEPENDENCY = (
-    "projectkoios-physkit @ https://github.com/eragasa/projectkoios-physkit/"
-    "releases/download/v0.1.2/projectkoios_physkit-0.1.2-py3-none-any.whl"
-    f"#sha256={PHYSKIT_RELEASE_WHEEL_SHA256}"
+PHYSKIT_RUNTIME_COMMIT = "7120b735c7e3e450aa8924780a71deb59d812632"
+PHYSKIT_RUNTIME_TREE = "1539545b7a69dfef66bdddb4928389dbfc42ff8e"
+PHYSKIT_RUNTIME_DEPENDENCY = (
+    "projectkoios-physkit @ git+https://github.com/eragasa/"
+    f"projectkoios-physkit.git@{PHYSKIT_RUNTIME_COMMIT}"
 )
 
 
@@ -458,10 +455,11 @@ def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     assert dependency["source_blob"] == "d98be473e19e17a59563fc7c3e00cca02fd822d3"
     assert dependency["destination_owner"] == "projectkoios.physkit.units.quantities"
     assert dependency["destination_owner_at_extraction"] == ("physkit.units.quantities")
-    assert dependency["distribution"] == "projectkoios-physkit==0.1.2"
+    assert dependency["distribution"] == "projectkoios-physkit==0.1.3.dev0"
     assert dependency["distribution_at_extraction"] == "physkit>=0.1.0"
-    assert dependency["release_commit"] == PHYSKIT_RELEASE_COMMIT
-    assert dependency["release_wheel_sha256"] == PHYSKIT_RELEASE_WHEEL_SHA256
+    assert dependency["runtime_source_ref"] == "main"
+    assert dependency["runtime_commit"] == PHYSKIT_RUNTIME_COMMIT
+    assert dependency["runtime_tree"] == PHYSKIT_RUNTIME_TREE
     assert dependency["commit"] == "97032f16c9125aa124750508f8513cca9f6dab02"
     assert dependency["blob"] == "686d075852ed01aab0a8d74fdec1be5a440c075d"
     assert len(extraction["file_mappings"]) == 7
@@ -473,12 +471,12 @@ def test_wannier90_extraction_is_bound_to_exact_source_and_dependency() -> None:
     ]
 
 
-def test_physkit_runtime_dependency_binds_the_exact_release_asset() -> None:
+def test_physkit_runtime_dependency_binds_the_exact_main_commit() -> None:
     with (REPOSITORY_ROOT / "pyproject.toml").open("rb") as stream:
         project = tomllib.load(stream)["project"]
 
-    assert PHYSKIT_RELEASE_DEPENDENCY in project["dependencies"]
-    assert not any("git+" in dependency for dependency in project["dependencies"])
+    assert PHYSKIT_RUNTIME_DEPENDENCY in project["dependencies"]
+    assert sum("git+" in dependency for dependency in project["dependencies"]) == 1
     readme = (REPOSITORY_ROOT / "README.md").read_text()
     assert "projectkoios.integrations.wannier90/provenance.json" in readme
 
@@ -497,8 +495,8 @@ def test_physkit_runtime_dependency_binds_the_exact_release_asset() -> None:
     } <= relative_paths
 
     origins = (REPOSITORY_ROOT / "docs/provenance/origins.md").read_text()
-    assert PHYSKIT_RELEASE_COMMIT in origins
-    assert PHYSKIT_RELEASE_WHEEL_SHA256 in origins
+    assert PHYSKIT_RUNTIME_COMMIT in origins
+    assert PHYSKIT_RUNTIME_TREE in origins
 
 
 def test_wannier90_distribution_resource_binds_provenance() -> None:
@@ -515,10 +513,11 @@ def test_wannier90_distribution_resource_binds_provenance() -> None:
         "8b508c43979e6442980b80c9a7edf306b32e33f8",
     ]
     physkit = provenance["projectkoios-physkit"]
-    assert physkit["distribution"] == "projectkoios-physkit==0.1.2"
+    assert physkit["distribution"] == "projectkoios-physkit==0.1.3.dev0"
     assert physkit["distribution_at_extraction"] == "physkit>=0.1.0"
-    assert physkit["release_commit"] == PHYSKIT_RELEASE_COMMIT
-    assert physkit["release_wheel_sha256"] == PHYSKIT_RELEASE_WHEEL_SHA256
+    assert physkit["runtime_source_ref"] == "main"
+    assert physkit["runtime_commit"] == PHYSKIT_RUNTIME_COMMIT
+    assert physkit["runtime_tree"] == PHYSKIT_RUNTIME_TREE
     assert physkit["namespace"] == "projectkoios.physkit"
     assert physkit["namespace_at_extraction"] == "physkit"
     assert physkit["license_at_extraction"] == "MIT"

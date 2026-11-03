@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 import plotly.graph_objects as go
 
-from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
+from projectkoios.physkit.units import ModelSystemUnitConverter, PhysicalUnit
 from tools.pw_dft_scf.environment import (
     WorkflowRunnerEnvironment,
 )
@@ -27,7 +27,7 @@ class StructurePlotRunner:
         loaded = self.environment.loader.load(campaign_path)
         unit_cell = loaded.structure.unit_cell
         lattice_matrix = unit_cell.A.magnitude
-        angstrom_factor = MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
+        angstrom_factor = ModelSystemUnitConverter.conversion_factor(
             unit_cell.H.unit,
             PhysicalUnit("angstrom"),
         )

@@ -92,9 +92,9 @@ The facade's serialization adapter would also load serialization tree
 Those incidental operators, solvers, Hamiltonians, workflows, and serializers
 are not parser requirements and were not extracted. External dependencies of
 the generic donor quantity module remain owned through the compatible
-exact `projectkoios-physkit` v0.1.2 release distribution, while NumPy is also
-declared directly because parser
-modules import it.
+`projectkoios-physkit` distribution pinned to exact `main` commit
+`7120b735c7e3e450aa8924780a71deb59d812632`, while NumPy is also declared
+directly because parser modules import it.
 
 ## Campaign-consumer closure explicitly excluded
 

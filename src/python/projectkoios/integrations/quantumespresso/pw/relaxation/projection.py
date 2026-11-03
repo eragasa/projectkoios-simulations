@@ -32,7 +32,7 @@ from projectkoios.integrations.quantumespresso.pw.relaxation.options import (
     QeIonicRelaxationOptions,
     QeLatticeVectorRelaxationOptions,
 )
-from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
+from projectkoios.physkit.units import ModelSystemUnitConverter, PhysicalUnit
 from projectkoios.simulations.calculator import CalculatorIntegrationId
 from projectkoios.simulations.calculator_input import (
     CalculatorExternalInputRequirement,
@@ -627,7 +627,7 @@ def _build_relaxation_cell_parameters_card(
     precision: int,
 ) -> QeCellParametersCard:
     unit_cell = simulation.unit_cell
-    length_factor = MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
+    length_factor = ModelSystemUnitConverter.conversion_factor(
         unit_cell.H.unit,
         PhysicalUnit("angstrom"),
     )
@@ -656,7 +656,7 @@ def _build_relaxation_atomic_positions_card(
 
 
 def _conversion_factor(source: str, target: str) -> float:
-    return MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
+    return ModelSystemUnitConverter.conversion_factor(
         PhysicalUnit(source), PhysicalUnit(target)
     )
 

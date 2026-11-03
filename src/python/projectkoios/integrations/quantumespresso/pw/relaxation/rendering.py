@@ -20,7 +20,7 @@ from projectkoios.integrations.quantumespresso.pw.vc_relax.configuration import 
 from projectkoios.integrations.quantumespresso.pw.vc_relax.projection import (  # noqa: E501
     QeVcRelaxInputProjector,
 )
-from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
+from projectkoios.physkit.units import ModelSystemUnitConverter, PhysicalUnit
 from projectkoios.simulations.dft.electronic import (
     DftExchangeCorrelationIdentifierScheme,
     DftExchangeCorrelationModel,
@@ -248,7 +248,7 @@ class QeRelaxationCalculationRenderer:
 
 
 def _convert(value: float, source: str, target: str) -> float:
-    return value * MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
+    return value * ModelSystemUnitConverter.conversion_factor(
         PhysicalUnit(source),
         PhysicalUnit(target),
     )

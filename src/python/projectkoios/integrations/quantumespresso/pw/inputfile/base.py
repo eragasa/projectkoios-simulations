@@ -17,7 +17,7 @@ from projectkoios.integrations.quantumespresso.pw.inputfile.model import (
     QePwInputFile,
 )
 from projectkoios.physkit.periodic.unit_cell import UnitCell
-from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
+from projectkoios.physkit.units import ModelSystemUnitConverter, PhysicalUnit
 from projectkoios.simulations.dft.pw.settings import CalculationType
 
 _ELEMENT_SYMBOL = re.compile(r"[A-Z][a-z]?")
@@ -390,7 +390,7 @@ def _structure_groups(
         raise ValueError("coordinate_precision must be a positive integer")
     lattice_matrix = unit_cell.A.magnitude
     if cell_parameters_unit != "alat":
-        conversion_factor = MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
+        conversion_factor = ModelSystemUnitConverter.conversion_factor(
             unit_cell.H.unit,
             PhysicalUnit(cell_parameters_unit),
         )

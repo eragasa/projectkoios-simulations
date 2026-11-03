@@ -9,7 +9,7 @@ from numpy.typing import NDArray
 
 from projectkoios.physkit.core.data import DataObject
 from projectkoios.physkit.periodic.unit_cell import UnitCell
-from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
+from projectkoios.physkit.units import ModelSystemUnitConverter, PhysicalUnit
 from projectkoios.simulations.dft.electronic import (
     DftChargeState,
     DftExchangeCorrelationModel,
@@ -159,7 +159,7 @@ class ResolvedPwDftSimulation(DataObject):
     @property
     def lattice_vectors_angstrom(self) -> PwMatrix3:
         """Return source-ordered physical lattice vectors as immutable rows."""
-        factor = MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
+        factor = ModelSystemUnitConverter.conversion_factor(
             self.unit_cell.H.unit,
             _ANGSTROM,
         )

@@ -27,7 +27,7 @@ from projectkoios.physkit.core.actions import DataObjectActionizer
 from projectkoios.physkit.core.data import DataObject
 from projectkoios.physkit.core.results import ResultsObject
 from projectkoios.physkit.units import (
-    MODEL_SYSTEM_UNIT_CONVERTER,
+    ModelSystemUnitConverter,
     PhysicalUnit,
     ScalarQuantity,
 )
@@ -420,7 +420,7 @@ class QeScfNormalizer(
         return QeScfNormalizationResult(request=request, data=data)
 
     def _ry_to_ev(self, value: float) -> float:
-        converted = MODEL_SYSTEM_UNIT_CONVERTER.convert_scalar(
+        converted = ModelSystemUnitConverter.convert_scalar(
             ScalarQuantity(
                 magnitude=value,
                 unit=PhysicalUnit(expression="Ry"),

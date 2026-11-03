@@ -125,12 +125,11 @@ operator, Hamiltonian, workflow, calculator, execution, or campaign package was
 copied. The extraction-reviewed PhysKit snapshot's MIT text is retained in
 [`../../licenses/PHYSKIT-MIT.txt`](../../licenses/PHYSKIT-MIT.txt); the
 maintained projectkoios-physkit successor is separately distributed under
-Apache-2.0. The maintained dependency is the v0.1.2 release at commit
-`d6333208a1ff723682a557afd593a5c932058cb7`. Its release wheel is pinned directly
-with SHA-256
-`79283d64707a4e7aa4dd7fcff85647a957f1f6d4a3894bf0350ea65ac745d38c`;
-the historical extraction commit remains provenance rather than installation
-authority.
+Apache-2.0. The maintained dependency pins the exact `main` commit
+`7120b735c7e3e450aa8924780a71deb59d812632`, source tree
+`1539545b7a69dfef66bdddb4928389dbfc42ff8e`, and distribution version
+`0.1.3.dev0`; the historical extraction commit remains provenance rather than
+installation authority.
 
 The extracted parsers only adapt caller-supplied bytes and correlate logical
 names, byte counts, and SHA-256 identities. They do not run Wannier90, perform

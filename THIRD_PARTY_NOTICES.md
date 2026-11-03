@@ -33,10 +33,10 @@ license.
 - Repository name at extraction: <https://github.com/eragasa/physkit>
 - Extraction-reviewed source commit: `97032f16c9125aa124750508f8513cca9f6dab02`
 - Extraction-reviewed source Git tree: `3a323d2436d4b5e86fe312e810e03c5d21ce37b3`
-- Runtime dependency: exact `projectkoios-physkit` v0.1.2 release wheel
-- Release commit: `d6333208a1ff723682a557afd593a5c932058cb7`
-- Release wheel SHA-256:
-  `79283d64707a4e7aa4dd7fcff85647a957f1f6d4a3894bf0350ea65ac745d38c`
+- Runtime dependency: exact `projectkoios-physkit` main source commit
+- Runtime commit: `7120b735c7e3e450aa8924780a71deb59d812632`
+- Runtime source tree: `1539545b7a69dfef66bdddb4928389dbfc42ff8e`
+- Runtime distribution version: `0.1.3.dev0`
 - Import namespace: `projectkoios.physkit`
 - Dependency at extraction: `physkit>=0.1.0`, imported as `physkit`
 - Extraction-reviewed snapshot license: MIT

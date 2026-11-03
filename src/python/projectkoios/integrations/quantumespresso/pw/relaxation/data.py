@@ -34,8 +34,8 @@ from projectkoios.physkit.mechanics.stress import (
 )
 from projectkoios.physkit.periodic.unit_cell import UnitCell
 from projectkoios.physkit.units import (
-    MODEL_SYSTEM_UNIT_CONVERTER,
     MatrixQuantity,
+    ModelSystemUnitConverter,
     PhysicalUnit,
     ScalarQuantity,
 )
@@ -268,7 +268,7 @@ class QeRelaxData:
             else stdout.maximum_atomic_force_ry_per_bohr
         )
         pressure_kbar = (
-            MODEL_SYSTEM_UNIT_CONVERTER.convert_scalar(
+            ModelSystemUnitConverter.convert_scalar(
                 stress_tensor.hydrostatic_pressure,
                 PhysicalUnit("kilobar"),
             ).magnitude
@@ -346,7 +346,7 @@ class QeRelaxData:
 
 
 def _convert_scalar(value: float, source: str, target: str) -> float:
-    return MODEL_SYSTEM_UNIT_CONVERTER.convert_scalar(
+    return ModelSystemUnitConverter.convert_scalar(
         ScalarQuantity(value, PhysicalUnit(source)),
         PhysicalUnit(target),
     ).magnitude

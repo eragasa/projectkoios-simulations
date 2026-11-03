@@ -15,7 +15,7 @@ from projectkoios.integrations.quantumespresso.pw.data_extraction.qexsd import (
     QeQexsdData,
 )
 from projectkoios.physkit.periodic.unit_cell import UnitCell
-from projectkoios.physkit.units import MODEL_SYSTEM_UNIT_CONVERTER, PhysicalUnit
+from projectkoios.physkit.units import ModelSystemUnitConverter, PhysicalUnit
 from projectkoios.simulations.dft.pw.bands import BandDiagramData
 from projectkoios.simulations.dft.pw.simulation import ResolvedPwDftSimulation
 
@@ -207,7 +207,7 @@ def _simulation_uses_same_cell(
     observed_symbols = tuple(atom.symbol for atom in observed.atomic_basis.atoms)
     if tuple(symbol for symbol, _ in expected.fractional_sites) != observed_symbols:
         return False
-    factor = MODEL_SYSTEM_UNIT_CONVERTER.conversion_factor(
+    factor = ModelSystemUnitConverter.conversion_factor(
         observed.H.unit,
         PhysicalUnit("angstrom"),
     )

@@ -15,7 +15,7 @@ from projectkoios.integrations.quantumespresso.pw.scf import (
     data_extraction as qe_data_extraction,
 )
 from projectkoios.physkit.units import (
-    MODEL_SYSTEM_UNIT_CONVERTER,
+    ModelSystemUnitConverter,
     PhysicalUnit,
     ScalarQuantity,
 )
@@ -50,14 +50,14 @@ class QeScfDataExtractorTest(unittest.TestCase):
         self.assertTrue(data.consistency.stdout_completion_matches_execution)
         observation = data
 
-        expected_energy = MODEL_SYSTEM_UNIT_CONVERTER.convert_scalar(
+        expected_energy = ModelSystemUnitConverter.convert_scalar(
             ScalarQuantity(
                 magnitude=qe_support.EXPECTED_TOTAL_ENERGY_RY,
                 unit=PhysicalUnit(expression="Ry"),
             ),
             PhysicalUnit(expression="eV"),
         ).magnitude
-        expected_cutoff = MODEL_SYSTEM_UNIT_CONVERTER.convert_scalar(
+        expected_cutoff = ModelSystemUnitConverter.convert_scalar(
             ScalarQuantity(
                 magnitude=qe_support.EXPECTED_WAVEFUNCTION_CUTOFF_RY,
                 unit=PhysicalUnit(expression="Ry"),
@@ -134,8 +134,10 @@ class QeScfDataExtractorTest(unittest.TestCase):
                 "run/pw.out", qexsd_document=document
             )
 
-        self.assertIs(data.qexsd.document, document)
-        self.assertIs(data.final_structure, data.qexsd.final_structure)
+        qexsd = data.qexsd
+        assert qexsd is not None
+        self.assertIs(qexsd.document, document)
+        self.assertIs(data.final_structure, qexsd.final_structure)
         self.assertTrue(data.consistency.qexsd_terminal_status_matches)
         self.assertTrue(data.consistency.qexsd_atom_count_matches)
         self.assertEqual(data.observation.atom_count, qe_support.EXPECTED_ATOM_COUNT)
