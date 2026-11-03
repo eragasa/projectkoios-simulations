@@ -87,6 +87,22 @@ they are not represented as unchanged upstream files. Historical lineage does
 not by itself establish behavioral conformance, numerical verification, or
 scientific validation.
 
+## Quantum ESPRESSO QEXSD parser extraction
+
+The mechanically faithful QEXSD source, document, and parser owners under
+`projectkoios.integrations.quantumespresso.qexsd` were transferred from
+`ksdft2effmass` commit `aa4098b3d32fe05436a1ba8dab18903a4347b20d`
+(root tree `bf89bcd6132e4a5c66a41f26f47fe9ef961421da`). Exact source,
+test, and controlled-fixture Git blob identities are recorded in
+[`../../TRANSFER.toml`](../../TRANSFER.toml) and in the installed
+`projectkoios.integrations.quantumespresso.qexsd/provenance.json` resource.
+
+The transfer excludes KSD's QEXSD-to-Kohn–Sham construction action because that
+is KSD scientific interpretation rather than reusable calculator-native parsing.
+The maintained parser recognizes only the two observed reduced fixture versions,
+performs no calculator execution or scientific acceptance, and carries the same
+Apache-2.0 license text as this distribution.
+
 ## Wannier90 native-artifact parser extraction
 
 The outward parser bundle under `projectkoios.integrations.wannier90` was
