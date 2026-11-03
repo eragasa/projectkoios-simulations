@@ -7,7 +7,7 @@ import json
 from dataclasses import asdict
 from typing import Any, cast
 
-from projectkoios.simulations.calculator_input import CalculatorInputSourceReference
+from projectkoios.simulations.calculator.input import CalculatorInputSourceReference
 from projectkoios.simulations.dft.electronic import (
     DftChargeState,
     DftExchangeCorrelationIdentifierScheme,

@@ -11,7 +11,7 @@ import numpy as np
 
 from projectkoios.physkit.mechanics.stress import StressSignConvention
 from projectkoios.physkit.periodic.unit_cell import UnitCellJsonCodec
-from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.calculator.input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.relaxation.base import PwDftRelaxationScope
 from projectkoios.simulations.dft.pw.relaxation.observation import (
     PwDftRelaxationObservation,

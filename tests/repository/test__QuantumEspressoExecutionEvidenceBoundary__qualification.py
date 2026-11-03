@@ -32,22 +32,27 @@ from projectkoios.integrations.quantumespresso.pw.nscf.data_extraction import (
 )
 from projectkoios.integrations.quantumespresso.pw.scf.data_extraction import QeScfData
 from projectkoios.integrations.quantumespresso.saved_state import QeSavedStateManifest
-from projectkoios.simulations.calculator_input import (
+from projectkoios.simulations.calculator.input import (
     CalculatorExternalInputRequirement,
     CalculatorInputArtifact,
     CalculatorInputRecord,
 )
 from projectkoios.simulations.execution import (
+    CalculatorExecutableBinding,
+    CalculatorExecutableIdentity,
+    CalculatorExecutablePreparationFailure,
+    CalculatorExecutablePreparer,
     CalculatorExecutionRecord,
     CalculatorExecutionRequest,
     CalculatorExecutor,
+    CalculatorPreparedExecutable,
     ExecutionStatus,
 )
 
 _REPOSITORY_ROOT = Path(__file__).resolve().parents[2]
 _CROSSWALK = (
-    _REPOSITORY_ROOT / "docs/architecture/projectkoios/integrations/quantumespresso/"
-    "execution_evidence/crosswalk.json"
+    _REPOSITORY_ROOT
+    / "docs/provenance/quantumespresso-execution-evidence-boundary.json"
 )
 
 
@@ -82,6 +87,17 @@ class _Manifest(TypedDict):
 # ``getattr``. This makes each accepted nominal boundary visible during review and
 # ensures a renamed or removed owner fails collection instead of passing structurally.
 _SYMBOLS: dict[str, type] = {
+    "projectkoios.simulations.execution."
+    "CalculatorExecutableBinding": CalculatorExecutableBinding,
+    "projectkoios.simulations.execution."
+    "CalculatorExecutableIdentity": CalculatorExecutableIdentity,
+    "projectkoios.simulations.execution.CalculatorExecutablePreparationFailure": (
+        CalculatorExecutablePreparationFailure
+    ),
+    "projectkoios.simulations.execution."
+    "CalculatorExecutablePreparer": CalculatorExecutablePreparer,
+    "projectkoios.simulations.execution."
+    "CalculatorPreparedExecutable": CalculatorPreparedExecutable,
     "projectkoios.integrations.quantumespresso.outputs.pw_stderr."
     "QePwStderrFileParser": QePwStderrFileParser,
     "projectkoios.integrations.quantumespresso.outputs.pw_stderr."
@@ -110,11 +126,11 @@ _SYMBOLS: dict[str, type] = {
     "QeScfData": QeScfData,
     "projectkoios.integrations.quantumespresso.saved_state."
     "QeSavedStateManifest": QeSavedStateManifest,
-    "projectkoios.simulations.calculator_input."
+    "projectkoios.simulations.calculator.input."
     "CalculatorExternalInputRequirement": CalculatorExternalInputRequirement,
-    "projectkoios.simulations.calculator_input."
+    "projectkoios.simulations.calculator.input."
     "CalculatorInputArtifact": CalculatorInputArtifact,
-    "projectkoios.simulations.calculator_input."
+    "projectkoios.simulations.calculator.input."
     "CalculatorInputRecord": CalculatorInputRecord,
     "projectkoios.simulations.execution."
     "CalculatorExecutionRecord": CalculatorExecutionRecord,

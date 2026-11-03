@@ -12,7 +12,7 @@ from projectkoios.integrations.quantumespresso.saved_state import (
     QeSavedStateManifest,
     QeSavedStateManifestJsonCodec,
 )
-from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.calculator.input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.scf.base import PwDftScfWorkflowSucceeded
 from projectkoios.simulations.evidence import SimulationEvidenceRecord
 

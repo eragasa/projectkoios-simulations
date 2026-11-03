@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from typing import ClassVar
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.calculator_input import CalculatorInputSourceReference
+from projectkoios.simulations.calculator.input import CalculatorInputSourceReference
 from projectkoios.simulations.evidence.artifact import EvidenceArtifactReference
 
 _SHA256 = re.compile(r"[0-9a-f]{64}")

@@ -11,7 +11,7 @@ from projectkoios.integrations.quantumespresso.pw.execution import (
 from projectkoios.integrations.quantumespresso.pw.scf import (
     integration as qe_integration,
 )
-from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.calculator.input import CalculatorInputRecord
 from projectkoios.simulations.dft.pseudopotential import PseudopotentialFile
 from projectkoios.simulations.dft.pseudopotential.library import (
     PseudopotentialLibrary,
@@ -34,18 +34,43 @@ from projectkoios.simulations.dft.pw.scf.handler import (
     PwDftScfHandlerTask,
 )
 from projectkoios.simulations.execution import (
+    CalculatorExecutableBinding,
     CalculatorExecutionError,
 )
 
 
 @dataclass(frozen=True, slots=True)
 class QePwDftScfTask(PwDftScfHandlerTask):
-    """Bind one QE simulation and operator resources to workflow identities."""
+    """Bind one QE simulation and operator resources to workflow identities.
+
+    Parameters
+    ----------
+    evaluation_id
+        Stable workflow evaluation identity inherited from the common task.
+    task_id
+        Stable calculator-attempt identity inherited from the common task.
+    output_artifact_id
+        Retained QE output artifact identity inherited from the common task.
+    prepared_input
+        Exact rendered QE input record.
+    pseudopotentials
+        Exact pseudopotential requirements selected by the simulation.
+    pseudopotential_library
+        Explicit deployment library used to resolve matching bytes.
+    executable
+        Exact QE executable identity and absolute deployment binding.
+    working_directory
+        Existing nonsymlink directory for this one attempt.
+    timeout_seconds
+        Positive process timeout in seconds, or ``None``.
+    execution_authorized
+        Explicit authority for this one QE attempt.
+    """
 
     prepared_input: CalculatorInputRecord
     pseudopotentials: tuple[PseudopotentialFile, ...]
     pseudopotential_library: PseudopotentialLibrary
-    executable: Path
+    executable: CalculatorExecutableBinding
     working_directory: Path
     timeout_seconds: float | None = None
     execution_authorized: bool = False
@@ -62,8 +87,8 @@ class QePwDftScfTask(PwDftScfHandlerTask):
             raise TypeError("pseudopotentials must contain PseudopotentialFile values")
         if type(self.pseudopotential_library) is not PseudopotentialLibrary:
             raise TypeError("pseudopotential_library must be a PseudopotentialLibrary")
-        if not isinstance(self.executable, Path) or not self.executable.is_absolute():
-            raise ValueError("executable must be an absolute Path")
+        if type(self.executable) is not CalculatorExecutableBinding:
+            raise TypeError("executable must be a CalculatorExecutableBinding")
         if not isinstance(self.working_directory, Path):
             raise TypeError("working_directory must be a Path")
         if not self.working_directory.is_dir() or self.working_directory.is_symlink():
@@ -84,7 +109,17 @@ class QePwDftScfTask(PwDftScfHandlerTask):
 
 @dataclass(frozen=True, slots=True)
 class QePwDftScfActionHandler(PwDftScfActionHandler):
-    """Compose QE staging/execution and common retained-data extraction."""
+    """Compose QE staging/execution and common retained-data extraction.
+
+    Parameters
+    ----------
+    integration
+        QE projection and retained-output analysis integration.
+    tasks
+        Nonempty exact QE task declarations owned by this handler.
+    executor
+        Provider-specific staging action used for authorized task submission.
+    """
 
     integration: qe_integration.QePwDftScfIntegration
     tasks: tuple[QePwDftScfTask, ...]

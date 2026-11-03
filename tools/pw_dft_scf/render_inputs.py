@@ -13,7 +13,7 @@ from projectkoios.integrations.vasp.pw_dft_scf.projection import (
     VASP_SCF_INTEGRATION_ID,
     VaspScfInputProjector,
 )
-from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.calculator.input import CalculatorInputRecord
 from tools.pw_dft_scf.environment import (
     WorkflowRunnerEnvironment,
 )

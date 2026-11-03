@@ -6,7 +6,7 @@ import re
 from dataclasses import dataclass
 
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.calculator.input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.relaxation.integration import (
     PwDftRelaxationInputWrapper,
     PwDftRelaxationIntegrationRegistry,

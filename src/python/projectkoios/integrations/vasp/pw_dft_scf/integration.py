@@ -16,7 +16,7 @@ from projectkoios.integrations.vasp.pw_dft_scf.projection import (
     VaspScfInputProjector,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.calculator.input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.scf.base import PwDftScfObservation
 from projectkoios.simulations.dft.pw.scf.integration import PwDftScfIntegration
 from projectkoios.simulations.dft.pw.scf.request import PwDftScfRequest

@@ -20,7 +20,7 @@ from projectkoios.integrations.quantumespresso.pw.relaxation.projection import (
 from projectkoios.integrations.quantumespresso.pw.vc_relax.configuration import (  # noqa: E501
     QeVcRelaxProjectionConfiguration,
 )
-from projectkoios.simulations.calculator_input import CalculatorInputRecord
+from projectkoios.simulations.calculator.input import CalculatorInputRecord
 from projectkoios.simulations.dft.pw.relaxation.base import (
     PwDftCellRelaxationMode,
     PwDftRelaxationScope,

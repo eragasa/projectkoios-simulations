@@ -8,7 +8,7 @@ from projectkoios.integrations.quantumespresso.pseudopotential import (
     QePseudopotentialFile,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.calculator_input import (
+from projectkoios.simulations.calculator.input import (
     CalculatorExternalInputRequirement,
     CalculatorInputArtifact,
     CalculatorInputRecord,

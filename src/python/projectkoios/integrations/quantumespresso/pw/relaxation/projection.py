@@ -34,7 +34,7 @@ from projectkoios.integrations.quantumespresso.pw.relaxation.options import (
 )
 from projectkoios.physkit.units import ModelSystemUnitConverter, PhysicalUnit
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.calculator_input import (
+from projectkoios.simulations.calculator.input import (
     CalculatorExternalInputRequirement,
     CalculatorInputArtifact,
     CalculatorInputMapping,

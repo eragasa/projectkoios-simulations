@@ -26,7 +26,7 @@ from projectkoios.physkit.units import (
     ScalarQuantity,
 )
 from projectkoios.simulations.calculator import CalculatorIntegrationId
-from projectkoios.simulations.calculator_input import (
+from projectkoios.simulations.calculator.input import (
     CalculatorExternalInputRequirement,
     CalculatorInputArtifact,
     CalculatorInputMapping,
