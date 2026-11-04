@@ -6,6 +6,7 @@ import hashlib
 import math
 import re
 from dataclasses import dataclass
+from enum import Enum
 
 from projectkoios.physkit.core.actions import DataObjectActionizer
 from projectkoios.physkit.core.data import DataObject
@@ -87,17 +88,49 @@ class CalculatorExecutionArtifactObservation(DataObject):
             raise ValueError("content does not match content_identity")
 
 
-@dataclass(frozen=True, slots=True)
-class CalculatorNormalExit(DataObject):
-    """Represent one exact normal process exit code."""
+class CalculatorExitDisposition(Enum):
+    """Classify one normal process exit without exposing numeric conventions."""
 
-    exit_code: int
+    succeeded = "succeeded"
+    failed = "failed"
+
+
+@dataclass(frozen=True, slots=True)
+class CalculatorExitCode(DataObject):
+    """Retain an exact normal process exit code and expose its disposition.
+
+    Parameters
+    ----------
+    value
+        Exact nonnegative operating-system process exit code. The numeric value is
+        retained for provenance and serialization; consumers use ``disposition``.
+    """
+
+    value: int
 
     def __post_init__(self) -> None:
-        if type(self.exit_code) is not int:
-            raise TypeError("exit_code must be a built-in int excluding bool")
-        if self.exit_code < 0:
-            raise ValueError("exit_code must be nonnegative")
+        if type(self.value) is not int:
+            raise TypeError("value must be a built-in int excluding bool")
+        if self.value < 0:
+            raise ValueError("value must be nonnegative")
+
+    @property
+    def disposition(self) -> CalculatorExitDisposition:
+        """Return the portable success/failure meaning of this normal exit."""
+        if self.value == 0:
+            return CalculatorExitDisposition.succeeded
+        return CalculatorExitDisposition.failed
+
+
+@dataclass(frozen=True, slots=True)
+class CalculatorNormalExit(DataObject):
+    """Represent one exact normal process exit."""
+
+    exit_code: CalculatorExitCode
+
+    def __post_init__(self) -> None:
+        if type(self.exit_code) is not CalculatorExitCode:
+            raise TypeError("exit_code must be CalculatorExitCode")
 
 
 @dataclass(frozen=True, slots=True)
@@ -360,16 +393,21 @@ class CalculatorExecutionObservationAssembler(
         if record.status is ExecutionStatus.succeeded:
             if type(termination) is not CalculatorNormalExit:
                 raise ValueError("successful execution requires a normal exit")
-            if termination.exit_code != 0 or record.returncode != 0:
-                raise ValueError("successful execution requires return code zero")
+            if (
+                termination.exit_code.disposition
+                is not CalculatorExitDisposition.succeeded
+                or record.returncode != termination.exit_code.value
+            ):
+                raise ValueError("successful execution requires a successful exit")
         elif record.status is ExecutionStatus.failed:
             if type(termination) is CalculatorNormalExit:
                 if (
-                    termination.exit_code == 0
-                    or record.returncode != termination.exit_code
+                    termination.exit_code.disposition
+                    is not CalculatorExitDisposition.failed
+                    or record.returncode != termination.exit_code.value
                 ):
                     raise ValueError(
-                        "failed normal exit requires one matching nonzero return code"
+                        "failed normal exit requires one matching failed exit code"
                     )
             elif type(termination) is CalculatorSignalTermination:
                 if record.returncode != -termination.signal_number:

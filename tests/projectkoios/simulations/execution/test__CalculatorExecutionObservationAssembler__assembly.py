@@ -12,6 +12,8 @@ from projectkoios.simulations.execution import (
     CalculatorExecutionObservationRequest,
     CalculatorExecutionRecord,
     CalculatorExecutionRecordSerializer,
+    CalculatorExitCode,
+    CalculatorExitDisposition,
     CalculatorNormalExit,
     CalculatorSignalTermination,
     CalculatorTimeout,
@@ -22,6 +24,17 @@ pytestmark = pytest.mark.software_verification
 
 
 class TestCalculatorExecutionObservationAssembler:
+    def test_exit_code_exposes_disposition_without_consumer_magic_numbers(self) -> None:
+        successful_exit = CalculatorExitCode(0)
+        failed_exit = CalculatorExitCode(7)
+
+        assert successful_exit.disposition is CalculatorExitDisposition.succeeded
+        assert failed_exit.disposition is CalculatorExitDisposition.failed
+        with pytest.raises(TypeError, match="built-in int"):
+            CalculatorExitCode(True)
+        with pytest.raises(ValueError, match="nonnegative"):
+            CalculatorExitCode(-1)
+
     def test_assembles_exact_success_evidence_without_effects(self) -> None:
         record = self._record(
             status=ExecutionStatus.succeeded,
@@ -29,6 +42,7 @@ class TestCalculatorExecutionObservationAssembler:
         )
         stdout_bytes = b"complete\n"
         stderr_bytes = b""
+        successful_exit = CalculatorExitCode(0)
         assembler = CalculatorExecutionObservationAssembler(
             CalculatorExecutionRecordSerializer(schema_version=1)
         )
@@ -38,7 +52,7 @@ class TestCalculatorExecutionObservationAssembler:
                 record=record,
                 record_filename="execution.json",
                 process_entered=True,
-                termination=CalculatorNormalExit(0),
+                termination=CalculatorNormalExit(successful_exit),
                 wall_duration_nanoseconds=17,
                 stdout_bytes=stdout_bytes,
                 stderr_bytes=stderr_bytes,
@@ -48,7 +62,8 @@ class TestCalculatorExecutionObservationAssembler:
         assert type(result) is CalculatorExecutionObservation
         assert result.record is record
         assert result.process_entered is True
-        assert result.termination == CalculatorNormalExit(0)
+        assert result.termination == CalculatorNormalExit(successful_exit)
+        assert successful_exit.disposition is CalculatorExitDisposition.succeeded
         assert result.wall_duration_nanoseconds == 17
         assert result.stdout is not None
         assert result.stderr is not None
@@ -162,7 +177,7 @@ class TestCalculatorExecutionObservationAssembler:
                     record=record,
                     record_filename="execution.json",
                     process_entered=False,
-                    termination=CalculatorNormalExit(0),
+                    termination=CalculatorNormalExit(CalculatorExitCode(0)),
                     wall_duration_nanoseconds=None,
                     stdout_bytes=b"",
                     stderr_bytes=b"",

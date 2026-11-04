@@ -57,9 +57,14 @@ from unavailable evidence. The assembler has no filesystem, process, authority,
 diagnostic, retry, or scientific-policy effect.
 
 A pre-entry observation carries neither a process duration nor a termination variant.
-An entered attempt carries a monotonic duration. Successful, ordinary failed, timed
-out, and failed-to-terminate statuses must agree with their explicit terminal facts.
-A signal requires a matching negative record return code, while timeout requires an
+An entered attempt carries a monotonic duration. `CalculatorExitCode` retains the
+exact nonnegative operating-system value for provenance while exposing only
+`CalculatorExitDisposition.succeeded` or `CalculatorExitDisposition.failed` to
+consumer logic. Numeric zero comparisons are confined to that nominal owner; adapters
+and domain consumers do not branch on unexplained exit-code integers. Successful,
+ordinary failed, timed out, and failed-to-terminate statuses must agree with their
+explicit terminal facts. A signal requires a matching negative record return code,
+while timeout requires an
 absent return code; neither variant is inferred from that field. `failed-output`
 remains capable of representing either side of process entry because
 retained-artifact setup or capture can fail at either stage.
