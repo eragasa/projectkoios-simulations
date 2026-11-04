@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
-import json
 import os
 import tempfile
 from pathlib import Path
 
+from projectkoios.simulations.execution._record_serialization import (
+    CalculatorExecutionRecordSerializer,
+)
 from projectkoios.simulations.execution._records import (
     CalculatorExecutionRecord,
     CalculatorExecutionRequest,
@@ -45,30 +47,11 @@ class _ExecutionRecordSupport:
         path: Path,
         record: CalculatorExecutionRecord,
     ) -> None:
-        payload = (
-            json.dumps(
-                {
-                    "command": record.command,
-                    "error_message": record.error_message,
-                    "error_type": record.error_type,
-                    "required_input_filenames": record.required_input_filenames,
-                    "returncode": record.returncode,
-                    "schema_version": 1,
-                    "status": record.status.value,
-                    "stderr_filename": record.stderr_filename,
-                    "stdout_filename": record.stdout_filename,
-                    "working_directory": record.working_directory,
-                },
-                indent=2,
-                sort_keys=True,
-            )
-            + "\n"
-        )
+        payload = CalculatorExecutionRecordSerializer(schema_version=1).execute(record)
         temporary_name: str | None = None
         try:
             with tempfile.NamedTemporaryFile(
-                mode="w",
-                encoding="utf-8",
+                mode="wb",
                 dir=path.parent,
                 prefix=f".{path.name}.",
                 delete=False,

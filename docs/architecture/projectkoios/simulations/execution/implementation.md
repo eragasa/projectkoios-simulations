@@ -31,6 +31,39 @@ must:
 No plural request, batch method, campaign loop, convergence loop, retry loop, or
 background process registry belongs in this class.
 
+## Exact execution-observation assembly
+
+The provider-owned effect-free action path is:
+
+```text
+CalculatorExecutionObservationRequest
+    -> CalculatorExecutionObservationAssembler
+    -> CalculatorExecutionObservation
+```
+
+The request must carry an exact `CalculatorExecutionRecord` instance and explicit
+facts for process entry, termination, monotonic duration, and available retained
+stream bytes. The assembler validates status correlation without reconstructing a
+signal or timeout from `returncode`. It computes SHA-256 and byte count directly from
+the supplied immutable bytes and retains the exact record instance in the result.
+
+`CalculatorExecutionRecordSerializer(schema_version=1)` is the sole public owner of
+the established `execution.json` encoding. The existing executor persistence path uses
+that serializer, so exposing canonical bytes does not create a second wire. The
+assembler includes those exact bytes and their identity in its observation. For each
+available stream and for the execution record, it defines content identity directly as
+`byte_size = len(content)` and `sha256 = SHA256(content)`. Empty content is distinct
+from unavailable evidence. The assembler has no filesystem, process, authority,
+diagnostic, retry, or scientific-policy effect.
+
+A pre-entry observation carries neither a process duration nor a termination variant.
+An entered attempt carries a monotonic duration. Successful, ordinary failed, timed
+out, and failed-to-terminate statuses must agree with their explicit terminal facts.
+A signal requires a matching negative record return code, while timeout requires an
+absent return code; neither variant is inferred from that field. `failed-output`
+remains capable of representing either side of process entry because
+retained-artifact setup or capture can fail at either stage.
+
 ## MVP output tee
 
 The implemented stdout path is a byte-preserving tee:

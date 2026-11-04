@@ -38,6 +38,30 @@ flowchart TD
 The live stream and retained artifact observe the same calculator bytes, but
 only the retained artifact participates in evidence identity.
 
+## Effect-free evidence assembly
+
+```mermaid
+flowchart LR
+    record[Exact CalculatorExecutionRecord instance]
+    terminal[Explicit process-entry and termination facts]
+    duration[Monotonic duration]
+    streams[Exact retained stream bytes]
+    serializer[Provider execution.json serializer]
+    assembler[CalculatorExecutionObservationAssembler]
+    observation[CalculatorExecutionObservation]
+
+    record --> serializer --> assembler
+    record --> assembler
+    terminal --> assembler
+    duration --> assembler
+    streams --> assembler
+    assembler --> observation
+```
+
+The assembler performs no process entry or filesystem access. It rejects disagreement
+between the record status and explicit terminal variant instead of inferring that
+variant from a return code or error message.
+
 ## Workflow sequencing at concurrency one
 
 ```mermaid

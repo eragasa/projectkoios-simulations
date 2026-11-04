@@ -38,7 +38,18 @@ The MVP provides live output observability:
   authorization.
 
 The retained artifacts are authoritative evidence. Console output is
-operational observability only. The MVP requires POSIX process-group isolation:
+operational observability only.
+
+`CalculatorExecutionObservationAssembler` is the effect-free evidence boundary for
+callers that already possess exact terminal facts. It retains the exact
+`CalculatorExecutionRecord` instance, explicit process-entry fact, explicit normal
+exit, signal, or timeout variant, monotonic nanosecond duration, exact stdout and
+stderr byte identities, and the exact canonical `execution.json` bytes. It never
+infers a signal or timeout from a return code, accesses the filesystem, starts a
+process, or interprets calculator output. `CalculatorExecutionRecordSerializer` owns
+the existing schema-version-one wire and preserves its bytes unchanged.
+
+The MVP requires POSIX process-group isolation:
 each attempt starts a new session, and timeout terminates the complete group with
 a bounded terminate-then-kill sequence followed by bounded verification that the
 direct child and complete group are gone. Termination failure has its own

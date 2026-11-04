@@ -23,6 +23,13 @@ zero under the recorded invocation. It does not establish:
 Those conclusions require provider-normalized observations, exact evidence, and
 separately declared scientific policies.
 
+`CalculatorExecutionObservation` narrows only the mechanical uncertainty: it can state
+whether process entry occurred, which explicit terminal variant was observed, the
+monotonic duration, and the exact identities of available retained streams and
+`execution.json`. It does not classify completion markers, diagnose calculator text,
+identify native scientific outputs, or decide whether an attempted calculation is
+usable.
+
 ## Native output and evidence
 
 ```mermaid
